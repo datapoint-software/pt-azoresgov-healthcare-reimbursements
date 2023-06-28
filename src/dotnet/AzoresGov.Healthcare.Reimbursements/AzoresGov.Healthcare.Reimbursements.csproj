@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<Import Project="../AzoresGov.Healthcare.Reimbursements.config" />
+
+	<PropertyGroup>
+		<IsPackable>false</IsPackable>
+		<RootNamespace>AzoresGov.Healthcare.Reimbursements</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Datapoint.AspNetCore.ErrorResponses" Version="7.0.0-a.27" />
+		<PackageReference Include="Datapoint.AspNetCore.HealthChecks" Version="7.0.0-a.27" />
+		<PackageReference Include="Datapoint.Configuration.Extensions.DependencyInjection" Version="7.0.0-a.27" />
+		<PackageReference Include="Datapoint.Mediator.Extensions.DependencyInjection" Version="7.0.0-a.27" />
+		<PackageReference Include="Datapoint.Mediator.FluentValidation.Extensions.DependencyInjection" Version="7.0.0-a.27" />
+		<PackageReference Include="Datapoint.UnitOfWork.EntityFrameworkCore.Extensions.DependencyInjection" Version="7.0.0-a.27" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Abstractions\AzoresGov.Healthcare.Reimbursements.Abstractions.csproj" />
+		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Api\AzoresGov.Healthcare.Reimbursements.Api.csproj" />
+		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Authentication\AzoresGov.Healthcare.Reimbursements.Authentication.csproj" />
+		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Configuration\AzoresGov.Healthcare.Reimbursements.Configuration.csproj" />
+		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Middleware\AzoresGov.Healthcare.Reimbursements.Middleware.csproj" />
+		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.UnitOfWork\AzoresGov.Healthcare.Reimbursements.UnitOfWork.csproj" />
+	</ItemGroup>
+
+</Project>
