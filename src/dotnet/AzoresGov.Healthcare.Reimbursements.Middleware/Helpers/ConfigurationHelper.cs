@@ -10,5 +10,9 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Helpers
         internal static Task<UserPasswordHashOptions> GetUserPasswordHashOptionsAsync(this IConfiguration configuration, CancellationToken ct) =>
 
             configuration.GetOptionsAsync<UserPasswordHashOptions>(ct);
+
+        internal static Task<UserSessionOptions> GetUserSessionOptionsAsync(this IConfiguration configuration, CancellationToken ct) =>
+
+            configuration.GetOptionsAsync<UserSessionOptions>(ct);
     }
 }

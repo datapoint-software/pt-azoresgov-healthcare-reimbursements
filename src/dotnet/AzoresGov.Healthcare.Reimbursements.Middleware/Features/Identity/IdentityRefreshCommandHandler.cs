@@ -2,11 +2,9 @@
 using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities;
 using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories;
 using Datapoint;
+using Datapoint.Configuration;
 using Datapoint.Mediator;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,10 +14,13 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.Identity
     {
         private const string GenericUserMessage = "A sua sessão expirou.";
 
+        private readonly IConfiguration _configuration;
+
         private readonly IUserSessionRepository _userSessions;
 
-        public IdentityRefreshCommandHandler(IUserSessionRepository userSessions)
+        public IdentityRefreshCommandHandler(IConfiguration configuration, IUserSessionRepository userSessions)
         {
+            _configuration = configuration;
             _userSessions = userSessions;
         }
 
@@ -33,6 +34,11 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.Identity
                 command,
                 userSession);
 
+            await AssertUserSessionExpirationAsync(
+                command,
+                userSession,
+                ct);
+
             AssertUserSessionSecret(
                 command,
                 userSession);
@@ -45,10 +51,29 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.Identity
                 userSession.Secret);
         }
 
+        private async Task AssertUserSessionExpirationAsync(IdentityRefreshCommand command, UserSessionEntity userSession, CancellationToken ct)
+        {
+            var userSessionOptions = await _configuration.GetUserSessionOptionsAsync(ct);
+
+            if (userSessionOptions.Expiration.HasValue)
+            {
+                var lastSeenMinimum = userSession.LastSeen.AddSeconds(
+                    -userSessionOptions.Expiration.Value);
+
+                if (userSession.LastSeen < lastSeenMinimum)
+                {
+                    throw new AuthenticationException("User session moment of last seen is bellow minimum.")
+                        .WithCode("AAKWPU")
+                        .WithUserMessage(GenericUserMessage);
+                }
+            }
+        }
+
         private static void RefreshUserSession(UserSessionEntity userSession)
         {
             userSession.RowVersionId = Guid.NewGuid();
             userSession.Secret = UserSessionHelper.CreateSecret();
+            userSession.LastSeen = DateTimeOffset.UtcNow;
         }
 
         private void AssertUserSessionSecret(IdentityRefreshCommand command, UserSessionEntity userSession)

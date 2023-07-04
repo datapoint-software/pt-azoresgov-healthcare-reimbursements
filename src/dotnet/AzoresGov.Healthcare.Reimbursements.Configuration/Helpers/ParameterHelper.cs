@@ -24,7 +24,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Configuration.Helpers
 
         internal static bool TryGetValue<TValue>(this ParameterEntity? parameter, out TValue value)
         {
-            if (!string.IsNullOrEmpty(parameter?.JsonValue) && parameter.JsonValue != "null")
+            if (!string.IsNullOrEmpty(parameter?.JsonValue))
             {
                 try
                 {
