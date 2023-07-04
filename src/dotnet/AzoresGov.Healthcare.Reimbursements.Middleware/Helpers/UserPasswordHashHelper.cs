@@ -14,7 +14,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Helpers
 
         private const char BCryptMinorRevision = 'b';
 
-        public static string ComputePasswordHash(string password, int workFactor) =>
+        internal static string ComputePasswordHash(string password, int workFactor) =>
 
             BCrypt.Net.BCrypt.HashPassword(
                 password,
@@ -24,7 +24,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Helpers
                 BCryptEnhancedEntropy,
                 BCryptHashType);
 
-        public static bool ValidatePassword(string password, string passwordHash) =>
+        internal static bool ValidatePassword(string password, string passwordHash) =>
 
             BCrypt.Net.BCrypt.Verify(
                 password,
@@ -32,7 +32,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Helpers
                 BCryptEnhancedEntropy,
                 BCryptHashType);
 
-        public static bool ValidatePasswordHash(string passwordHash, int workFactor) =>
+        internal static bool ValidatePasswordHash(string passwordHash, int workFactor) =>
 
             !BCrypt.Net.BCrypt.PasswordNeedsRehash(
                 passwordHash,

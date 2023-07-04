@@ -48,11 +48,11 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
         {
             var userEmailAddress = await GetUserEmailAddressAsync(command, ct);
 
-            var user = await GetUserByUserEmailAddressAsync(
+            var user = await GetUserAsync(
                 userEmailAddress,
                 ct);
 
-            var userPassword = await GetLastUserPasswordByUserAsync(
+            var userPassword = await GetLastUserPasswordAsync(
                 user,
                 ct);
 
@@ -129,7 +129,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
                 userPassword.Hash = UserPasswordHashHelper.ComputePasswordHash(command.Password, userPasswordHashOptions.WorkFactor);
         }
 
-        private void EnsureUserPasswordHashMatch(SignInCommand command, UserPasswordEntity userPassword)
+        private static void EnsureUserPasswordHashMatch(SignInCommand command, UserPasswordEntity userPassword)
         {
             if (!UserPasswordHashHelper.ValidatePassword(command.Password, userPassword.Hash))
             {
@@ -139,7 +139,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
             }
         }
 
-        private async Task<UserPasswordEntity> GetLastUserPasswordByUserAsync(UserEntity user, CancellationToken ct)
+        private async Task<UserPasswordEntity> GetLastUserPasswordAsync(UserEntity user, CancellationToken ct)
         {
             var userPassword = await _userPasswords.GetLastByUserIdAsync(
                 user.Id, 
@@ -155,7 +155,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
             return userPassword;
         }
 
-        private async Task<UserEntity> GetUserByUserEmailAddressAsync(UserEmailAddressEntity userEmailAddress, CancellationToken ct)
+        private async Task<UserEntity> GetUserAsync(UserEmailAddressEntity userEmailAddress, CancellationToken ct)
         {
             var user = await _users.GetByUserEmailAddressIdAsync(
                 userEmailAddress.Id, 

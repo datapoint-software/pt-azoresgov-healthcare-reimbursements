@@ -6,4 +6,8 @@
 		<RootNamespace>AzoresGov.Healthcare.Reimbursements.Authentication</RootNamespace>
 	</PropertyGroup>
 
+	<ItemGroup>
+		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Abstractions\AzoresGov.Healthcare.Reimbursements.Abstractions.csproj" />
+	</ItemGroup>
+
 </Project>
