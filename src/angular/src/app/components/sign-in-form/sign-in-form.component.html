@@ -1,0 +1,116 @@
+<!-- Heading -->
+<h1 class="display-4 text-center mb-3">
+  Iniciar sessão
+</h1>
+<!-- Subheading -->
+<p class="text-muted text-center mb-5">
+  Inicie sessão através do seu endereço de correio eletrónico para aceder ao Sistema de Gestão de Reembolsos.
+</p>
+<p class="alert alert-danger" *ngIf="error">
+  {{ error.message }}
+</p>
+<!-- Form -->
+<form [formGroup]="form" autocomplete="off" (submit)="onSubmit($event)">
+  <!-- Email address -->
+  <div class="form-group">
+    <!-- Label -->
+    <label
+      [class.is-invalid]="(form.controls.emailAddress.dirty || form.controls.emailAddress.touched) && form.controls.emailAddress.invalid"
+      class="form-label"
+      for="emailAddress">
+      Correio eletrónico
+    </label>
+    <!-- Input -->
+    <input
+      [class.is-invalid]="(form.controls.emailAddress.dirty || form.controls.emailAddress.touched) && form.controls.emailAddress.invalid"
+      [formControlName]="'emailAddress'"
+      class="form-control"
+      id="emailAddress"
+      placeholder="exemplo@azores.gov.pt"
+      required
+      tabindex="1"
+      type="email" />
+    <div class="invalid-feedback" *ngIf="form.controls.emailAddress.errors?.['required']">
+      Este campo é de preenchimento obrigatório.
+    </div>
+    <div class="invalid-feedback" *ngIf="form.controls.emailAddress.errors?.['email']">
+      Este campo requere um endereço de correio eletrónico válido.
+    </div>
+    <div class="invalid-feedback" *ngIf="form.controls.emailAddress.errors?.['maxlength']">
+      Este campo excede o limite máximo de caractéres permitido.
+    </div>
+  </div>
+  <!-- Password -->
+  <div class="form-group">
+    <div class="row">
+      <div class="col">
+        <!-- Label -->
+        <label
+          [class.is-invalid]="(form.controls.password.dirty || form.controls.password.touched) && form.controls.password.invalid"
+          class="form-label"
+          for="password">
+          Palavra-passe
+        </label>
+      </div>
+      <div class="col-auto">
+        <!-- Help text -->
+        <a href="mailto:support@datapoint.software?subject=Acesso+Sistema+Gestão+Reembolsos" class="form-text small text-muted">
+          Esqueceu-se da palavra-passe?
+        </a>
+      </div>
+    </div> <!-- / .row -->
+    <!-- Input group -->
+    <div
+      [class.is-invalid]="(form.controls.password.dirty || form.controls.password.touched) && form.controls.password.invalid"
+      class="input-group input-group-merge">
+      <!-- Input -->
+      <input
+        [class.is-invalid]="(form.controls.password.dirty || form.controls.password.touched) && form.controls.password.invalid"
+        [formControlName]="'password'"
+        [type]="isPasswordVisible ? 'text' : 'password'"
+        class="form-control"
+        id="password"
+        placeholder="Palavra-passe"
+        required
+        tabindex="2" />
+      <!-- Icon -->
+      <button class="input-group-text" type="button" (click)="onPasswordButtonClick($event)">
+        <i [class]="isPasswordVisible ? 'fe-shield' : 'fe-shield-off'" class="fe"></i>
+      </button>
+    </div>
+    <div class="invalid-feedback" *ngIf="form.controls.password.errors?.['required']">
+      Este campo é de preenchimento obrigatório.
+    </div>
+    <div class="invalid-feedback" *ngIf="form.controls.password.errors?.['maxlength']">
+      Este campo excede o limite máximo de caractéres permitido.
+    </div>
+  </div>
+  <!-- Input group -->
+  <div class="form-group">
+    <div class="form-check">
+      <input
+        [class.is-invalid]="(form.controls.password.dirty || form.controls.password.touched) && form.controls.password.invalid"
+        [formControlName]="'persistent'"
+        [value]="true"
+        class="form-check-input"
+        id="persistent"
+        type="checkbox">
+      <label class="form-check-label" for="persistent">
+        Manter a sessão iniciada
+      </label>
+    </div>
+  </div>
+  <!-- Submit -->
+  <button
+    [disabled]="form.invalid"
+    class="btn btn-lg w-100 btn-primary mb-3"
+    tabindex="3">
+    Iniciar sessão
+  </button>
+  <!-- Link -->
+  <div class="text-center">
+    <small class="text-muted text-center">
+      Não tem acesso? Deixe-nos uma <a href="mailto:support@datapoint.software?subject=Acesso+Sistema+Gestão+Reembolsos">mensagem</a>.
+    </small>
+  </div>
+</form>

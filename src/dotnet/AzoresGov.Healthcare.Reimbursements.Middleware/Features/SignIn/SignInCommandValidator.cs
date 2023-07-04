@@ -15,8 +15,6 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
                 .NotEmpty()
                 .MaximumLength(1024);
 
-            RuleFor(x => x.Persistent);
-
             RuleFor(x => x.UserAgent)
                 .NotEmpty()
                 .MaximumLength(4096);
