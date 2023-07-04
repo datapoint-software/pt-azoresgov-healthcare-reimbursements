@@ -30,6 +30,20 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.SignIn
         }
 
         [AllowAnonymous]
+        [HttpGet("options")]
+        public async Task<SignInOptionsResultModel> GetOptionsAsync(CancellationToken ct)
+        {
+            var result = await _mediator.HandleQueryAsync<SignInOptionsQuery, SignInOptionsResult>(
+                new SignInOptionsQuery(),
+                ct);
+
+            return new SignInOptionsResultModel(
+                new SignInAuthenticationOptionsResultModel(
+                    result.Authentication.Enabled,
+                    result.Authentication.PersistentEnabled));
+        }
+
+        [AllowAnonymous]
         [HttpPost]
         public async Task<SignInResultModel> SignInAsync([FromBody] SignInModel model, CancellationToken ct)
         {
@@ -37,8 +51,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.SignIn
                 HttpContext.Request.GetUserAgent(),
                 HttpContext.Request.GetRemoteAddress(),
                 model.EmailAddress,
-                model.Password,
-                model.Persistent);
+                model.Password);
 
             var result = await _mediator.HandleCommandAsync<SignInCommand, SignInResult>(
                 command,

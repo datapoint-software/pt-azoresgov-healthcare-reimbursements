@@ -75,7 +75,8 @@
               "browserTarget": "azoresgov-healthcare-reimbursements:build:production"
             },
             "development": {
-              "browserTarget": "azoresgov-healthcare-reimbursements:build:development"
+              "browserTarget": "azoresgov-healthcare-reimbursements:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
@@ -107,5 +108,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "a938d101-22ff-4448-a66e-844648328f54"
   }
 }

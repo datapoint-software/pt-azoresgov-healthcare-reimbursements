@@ -1,0 +1,49 @@
+<div class="d-flex align-items-center bg-auth position-absolute h-100 w-100" dashkit-layout="blank">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-12 col-md-6 offset-xl-2 offset-md-1 order-md-2 mb-5 mb-md-0">
+
+        <!-- Image -->
+        <div class="text-center">
+          <img src="assets/dashkit/img/illustrations/lost.svg" alt="..." class="img-fluid">
+        </div>
+
+      </div>
+      <div class="col-12 col-md-5 col-xl-4 order-md-1 my-5">
+
+        <div class="text-left">
+
+          <!-- Preheading -->
+
+          <!-- Heading -->
+          <h1 class="display-4 mb-4">
+            Wow, um erro! 😵
+          </h1>
+
+          <h4 class="text-muted text-uppercase mb-4" *ngIf="status">
+            {{ status }} {{ statusMessage }}
+          </h4>
+
+          <!-- Subheading -->
+          <p class="p-3 mb-4 bg-danger text-white" *ngIf="message">
+            {{ message }}
+          </p>
+
+          <div>
+            <p>A equipa de suporte técnico da <a href="https://datapoint.software/?from=azoresgov-hrms-local">datapoint.software</a> foi alertada e irá analisar esta situação.</p>
+            <p>Entretanto, pode
+              <a class="text-decoration-underline" href="javascript:history.back()">tentar novamente</a> ou
+              <a class="text-decoration-underline" href="/">voltar ao início</a>.</p>
+          </div>
+
+          <div class="text-muted fs-sm mt-4" *ngIf="id">
+            <p class="fw-bold m-0">Identificador único</p>
+            <p class="fw-light m-0">{{ id }}</p>
+          </div>
+
+        </div>
+
+      </div>
+    </div> <!-- / .row -->
+  </div>
+</div> <!-- / .container -->

@@ -46,6 +46,20 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
 
         public async Task<SignInResult> HandleCommandAsync(SignInCommand command, CancellationToken ct)
         {
+            await AssertAuthenticationEnabledAsync(ct);
+
+            var timeBasedBruteforcePreventionDelayTask = Task.Delay(7500);
+            var handleSignInCommandTask = HandleSignInCommandAsync(command, ct);
+
+            await Task.WhenAll(
+                timeBasedBruteforcePreventionDelayTask,
+                handleSignInCommandTask);
+
+            return handleSignInCommandTask.Result;
+        }
+
+        private async Task<SignInResult> HandleSignInCommandAsync(SignInCommand command, CancellationToken ct)
+        {
             var userEmailAddress = await GetUserEmailAddressAsync(command, ct);
 
             var user = await GetUserAsync(
@@ -80,6 +94,18 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
                 userSession.PublicId,
                 userSession.RowVersionId,
                 userSession.Secret);
+        }
+
+        private async Task AssertAuthenticationEnabledAsync(CancellationToken ct)
+        {
+            var authenticationOptions = await _configuration.GetAuthenticationOptionsAsync(ct);
+
+            if (!authenticationOptions.Enabled)
+            {
+                throw new BusinessException("Authentication is not enabled for this environment.")
+                    .WithCode("GYORHL")
+                    .WithUserMessage("Este método de início de sessão não está disponível.");
+            }
         }
 
         private UserSessionEntity CreateUserSession(SignInCommand command, UserEntity user, UserAgentEntity userAgent)
