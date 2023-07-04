@@ -12,29 +12,29 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		NuGet.config = NuGet.config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzoresGov.Healthcare.Reimbursements", "AzoresGov.Healthcare.Reimbursements\AzoresGov.Healthcare.Reimbursements.csproj", "{868F048C-D737-4E29-9110-8BE8D1F09275}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzoresGov.Healthcare.Reimbursements", "AzoresGov.Healthcare.Reimbursements\AzoresGov.Healthcare.Reimbursements.csproj", "{868F048C-D737-4E29-9110-8BE8D1F09275}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzoresGov.Healthcare.Reimbursements.Abstractions", "AzoresGov.Healthcare.Reimbursements.Abstractions\AzoresGov.Healthcare.Reimbursements.Abstractions.csproj", "{ABE3DAA2-1BDC-4590-9DE1-C170154FE3F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzoresGov.Healthcare.Reimbursements.Abstractions", "AzoresGov.Healthcare.Reimbursements.Abstractions\AzoresGov.Healthcare.Reimbursements.Abstractions.csproj", "{ABE3DAA2-1BDC-4590-9DE1-C170154FE3F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzoresGov.Healthcare.Reimbursements.Api", "AzoresGov.Healthcare.Reimbursements.Api\AzoresGov.Healthcare.Reimbursements.Api.csproj", "{D082737F-73B8-40D6-AFEF-66709E122BC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzoresGov.Healthcare.Reimbursements.Api", "AzoresGov.Healthcare.Reimbursements.Api\AzoresGov.Healthcare.Reimbursements.Api.csproj", "{D082737F-73B8-40D6-AFEF-66709E122BC2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzoresGov.Healthcare.Reimbursements.Api.Abstractions", "AzoresGov.Healthcare.Reimbursements.Api.Abstractions\AzoresGov.Healthcare.Reimbursements.Api.Abstractions.csproj", "{84EA1A6D-91A9-4E6C-A372-B4A292682621}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzoresGov.Healthcare.Reimbursements.Api.Abstractions", "AzoresGov.Healthcare.Reimbursements.Api.Abstractions\AzoresGov.Healthcare.Reimbursements.Api.Abstractions.csproj", "{84EA1A6D-91A9-4E6C-A372-B4A292682621}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzoresGov.Healthcare.Reimbursements.UnitOfWork", "AzoresGov.Healthcare.Reimbursements.UnitOfWork\AzoresGov.Healthcare.Reimbursements.UnitOfWork.csproj", "{5E0AF997-1015-4786-8C37-3B51B897B749}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzoresGov.Healthcare.Reimbursements.UnitOfWork", "AzoresGov.Healthcare.Reimbursements.UnitOfWork\AzoresGov.Healthcare.Reimbursements.UnitOfWork.csproj", "{5E0AF997-1015-4786-8C37-3B51B897B749}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzoresGov.Healthcare.Reimbursements.UnitOfWork.Abstractions", "AzoresGov.Healthcare.Reimbursements.UnitOfWork.Abstractions\AzoresGov.Healthcare.Reimbursements.UnitOfWork.Abstractions.csproj", "{FAF4DF25-02A7-4F3C-AD10-CFE85C78931A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzoresGov.Healthcare.Reimbursements.UnitOfWork.Abstractions", "AzoresGov.Healthcare.Reimbursements.UnitOfWork.Abstractions\AzoresGov.Healthcare.Reimbursements.UnitOfWork.Abstractions.csproj", "{FAF4DF25-02A7-4F3C-AD10-CFE85C78931A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzoresGov.Healthcare.Reimbursements.Middleware", "AzoresGov.Healthcare.Reimbursements.Middleware\AzoresGov.Healthcare.Reimbursements.Middleware.csproj", "{B2AC1D9E-18E0-433A-BCCC-BE2107FF25F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzoresGov.Healthcare.Reimbursements.Middleware", "AzoresGov.Healthcare.Reimbursements.Middleware\AzoresGov.Healthcare.Reimbursements.Middleware.csproj", "{B2AC1D9E-18E0-433A-BCCC-BE2107FF25F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzoresGov.Healthcare.Reimbursements.Middleware.Abstractions", "AzoresGov.Healthcare.Reimbursements.Middleware.Abstractions\AzoresGov.Healthcare.Reimbursements.Middleware.Abstractions.csproj", "{E586952E-A810-48CD-A1EE-0E90C3464F81}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzoresGov.Healthcare.Reimbursements.Middleware.Abstractions", "AzoresGov.Healthcare.Reimbursements.Middleware.Abstractions\AzoresGov.Healthcare.Reimbursements.Middleware.Abstractions.csproj", "{E586952E-A810-48CD-A1EE-0E90C3464F81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzoresGov.Healthcare.Reimbursements.Authentication", "AzoresGov.Healthcare.Reimbursements.Authentication\AzoresGov.Healthcare.Reimbursements.Authentication.csproj", "{30A6010A-B38D-41A4-A23F-087EE16BE543}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzoresGov.Healthcare.Reimbursements.Configuration", "AzoresGov.Healthcare.Reimbursements.Configuration\AzoresGov.Healthcare.Reimbursements.Configuration.csproj", "{662203CA-D69B-4117-9E8D-5B17165BE752}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzoresGov.Healthcare.Reimbursements.Authentication.Abstractions", "AzoresGov.Healthcare.Reimbursements.Authentication.Abstractions\AzoresGov.Healthcare.Reimbursements.Authentication.Abstractions.csproj", "{17075A4B-4430-4240-97CB-1444517DE295}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzoresGov.Healthcare.Reimbursements.Configuration.Abstractions", "AzoresGov.Healthcare.Reimbursements.Configuration.Abstractions\AzoresGov.Healthcare.Reimbursements.Configuration.Abstractions.csproj", "{F838906F-BCA1-4E33-B3DD-4F6419CBD0A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzoresGov.Healthcare.Reimbursements.Configuration", "AzoresGov.Healthcare.Reimbursements.Configuration\AzoresGov.Healthcare.Reimbursements.Configuration.csproj", "{662203CA-D69B-4117-9E8D-5B17165BE752}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzoresGov.Healthcare.Reimbursements.Authentication.Abstractions", "AzoresGov.Healthcare.Reimbursements.Authentication.Abstractions\AzoresGov.Healthcare.Reimbursements.Authentication.Abstractions.csproj", "{3E719BF6-FD52-4E57-8FDD-B693FFCFCA54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzoresGov.Healthcare.Reimbursements.Configuration.Abstractions", "AzoresGov.Healthcare.Reimbursements.Configuration.Abstractions\AzoresGov.Healthcare.Reimbursements.Configuration.Abstractions.csproj", "{F838906F-BCA1-4E33-B3DD-4F6419CBD0A9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzoresGov.Healthcare.Reimbursements.Authentication", "AzoresGov.Healthcare.Reimbursements.Authentication\AzoresGov.Healthcare.Reimbursements.Authentication.csproj", "{47C123E0-ACAA-4759-BE50-B4A58C53FF69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -74,14 +74,6 @@ Global
 		{E586952E-A810-48CD-A1EE-0E90C3464F81}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E586952E-A810-48CD-A1EE-0E90C3464F81}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E586952E-A810-48CD-A1EE-0E90C3464F81}.Release|Any CPU.Build.0 = Release|Any CPU
-		{30A6010A-B38D-41A4-A23F-087EE16BE543}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{30A6010A-B38D-41A4-A23F-087EE16BE543}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{30A6010A-B38D-41A4-A23F-087EE16BE543}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{30A6010A-B38D-41A4-A23F-087EE16BE543}.Release|Any CPU.Build.0 = Release|Any CPU
-		{17075A4B-4430-4240-97CB-1444517DE295}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{17075A4B-4430-4240-97CB-1444517DE295}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{17075A4B-4430-4240-97CB-1444517DE295}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{17075A4B-4430-4240-97CB-1444517DE295}.Release|Any CPU.Build.0 = Release|Any CPU
 		{662203CA-D69B-4117-9E8D-5B17165BE752}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{662203CA-D69B-4117-9E8D-5B17165BE752}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{662203CA-D69B-4117-9E8D-5B17165BE752}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -90,6 +82,14 @@ Global
 		{F838906F-BCA1-4E33-B3DD-4F6419CBD0A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F838906F-BCA1-4E33-B3DD-4F6419CBD0A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F838906F-BCA1-4E33-B3DD-4F6419CBD0A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E719BF6-FD52-4E57-8FDD-B693FFCFCA54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E719BF6-FD52-4E57-8FDD-B693FFCFCA54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E719BF6-FD52-4E57-8FDD-B693FFCFCA54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E719BF6-FD52-4E57-8FDD-B693FFCFCA54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47C123E0-ACAA-4759-BE50-B4A58C53FF69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47C123E0-ACAA-4759-BE50-B4A58C53FF69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47C123E0-ACAA-4759-BE50-B4A58C53FF69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47C123E0-ACAA-4759-BE50-B4A58C53FF69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

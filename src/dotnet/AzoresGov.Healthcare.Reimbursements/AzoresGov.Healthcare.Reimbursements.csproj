@@ -14,6 +14,7 @@
 		<PackageReference Include="Datapoint.Mediator.Extensions.DependencyInjection" Version="7.0.0-a.27" />
 		<PackageReference Include="Datapoint.Mediator.FluentValidation.Extensions.DependencyInjection" Version="7.0.0-a.27" />
 		<PackageReference Include="Datapoint.UnitOfWork.EntityFrameworkCore.Extensions.DependencyInjection" Version="7.0.0-a.27" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.8" />
 	</ItemGroup>
 
 	<ItemGroup>

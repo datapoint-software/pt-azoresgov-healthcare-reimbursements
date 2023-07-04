@@ -7,11 +7,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
 		<PackageReference Include="Datapoint.Mediator.FluentValidation.Abstractions" Version="7.0.0-a.27" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Authentication.Abstractions\AzoresGov.Healthcare.Reimbursements.Authentication.Abstractions.csproj" />
 		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Configuration.Abstractions\AzoresGov.Healthcare.Reimbursements.Configuration.Abstractions.csproj" />
 		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Middleware.Abstractions\AzoresGov.Healthcare.Reimbursements.Middleware.Abstractions.csproj" />
 		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.UnitOfWork.Abstractions\AzoresGov.Healthcare.Reimbursements.UnitOfWork.Abstractions.csproj" />

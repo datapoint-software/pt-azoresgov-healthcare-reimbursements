@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<Import Project="../AzoresGov.Healthcare.Reimbursements.config" />
 
@@ -7,9 +7,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.8" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Abstractions\AzoresGov.Healthcare.Reimbursements.Abstractions.csproj" />
 		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Authentication.Abstractions\AzoresGov.Healthcare.Reimbursements.Authentication.Abstractions.csproj" />
-		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Configuration.Abstractions\AzoresGov.Healthcare.Reimbursements.Configuration.Abstractions.csproj" />
-		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.UnitOfWork.Abstractions\AzoresGov.Healthcare.Reimbursements.UnitOfWork.Abstractions.csproj" />
 	</ItemGroup>
 
 </Project>

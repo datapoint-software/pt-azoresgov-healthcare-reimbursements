@@ -12,6 +12,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Api.Abstractions\AzoresGov.Healthcare.Reimbursements.Api.Abstractions.csproj" />
+		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Authentication.Abstractions\AzoresGov.Healthcare.Reimbursements.Authentication.Abstractions.csproj" />
 		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Middleware.Abstractions\AzoresGov.Healthcare.Reimbursements.Middleware.Abstractions.csproj" />
 	</ItemGroup>
 

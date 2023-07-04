@@ -65,7 +65,8 @@ CREATE LOGIN [azoresgov-healthcare-reimbursements-app]
 
 GO
 
-USE [HealthcareReimbursements]
+USE [HealthcareReimbursements];
+
 GO
 
 CREATE USER [azoresgov-healthcare-reimbursements-app] 
@@ -73,7 +74,12 @@ CREATE USER [azoresgov-healthcare-reimbursements-app]
 
 GO
 
-ALTER ROLE [db_owner] 
+ALTER ROLE [db_datareader] 
+  ADD MEMBER [azoresgov-healthcare-reimbursements-app];
+
+GO
+
+ALTER ROLE [db_datawriter] 
   ADD MEMBER [azoresgov-healthcare-reimbursements-app];
 
 GO
@@ -90,7 +96,8 @@ CREATE LOGIN [azoresgov-healthcare-reimbursements-migrator-app]
 
 GO
 
-USE [HealthcareReimbursements]
+USE [HealthcareReimbursements];
+
 GO
 
 CREATE USER [azoresgov-healthcare-reimbursements-migrator-app] 
