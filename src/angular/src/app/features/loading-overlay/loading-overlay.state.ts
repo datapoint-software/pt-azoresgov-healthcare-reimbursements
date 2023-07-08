@@ -4,6 +4,7 @@ export interface LoadingOverlayTaskState {
 }
 
 export interface LoadingOverlayState {
-  tasks: { [id: string]: LoadingOverlayTaskState },
-  visible: boolean;
+  tasks: {
+    [id: string]: LoadingOverlayTaskState
+  }
 }

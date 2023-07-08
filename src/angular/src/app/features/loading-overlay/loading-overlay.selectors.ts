@@ -16,5 +16,5 @@ export const tasksAsArray = createSelector(
 
 export const visible = createSelector(
   state,
-  state => state.visible
+  state => Object.values(state.tasks).length > 0
 );

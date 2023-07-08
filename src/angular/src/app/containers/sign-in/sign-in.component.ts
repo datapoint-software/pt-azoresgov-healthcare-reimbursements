@@ -1,7 +1,6 @@
 import { CommonModule } from "@angular/common";
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { ErrorModel } from "../../app.models";
 import { SignInFeature } from "../../features/sign-in/sign-in.feature";
 import { takeUntil } from "rxjs";
 import { RouterModule } from "@angular/router";
@@ -19,15 +18,17 @@ import { SignInFormSubmitEvent } from "../../components/sign-in-form/sign-in-for
   standalone: true,
   templateUrl: './sign-in.component.html'
 })
-export class SignInComponent implements OnInit {
+export class SignInComponent {
 
   constructor(
-    private readonly signInFeature: SignInFeature
+    private readonly signIn: SignInFeature
   ) {}
 
-  public persistentEnabled: boolean = false;
+  public readonly authenticationPersistentEnabled$ = this.signIn.authenticationPersistentEnabled$
+    .pipe(takeUntil(this.signIn.disposing$));
 
-  public error?: ErrorModel;
+  public readonly error$ = this.signIn.error$
+    .pipe(takeUntil(this.signIn.disposing$));
 
   public readonly form = new FormGroup({
     emailAddress: new FormControl('', [ Validators.required, Validators.maxLength(256), Validators.email ]),
@@ -40,24 +41,10 @@ export class SignInComponent implements OnInit {
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    this.signInFeature.signIn({
+    this.signIn.submit({
       emailAddress: e.payload.emailAddress,
       password: e.payload.password,
       persistent: e.payload.persistent
     });
   }
-
-  ngOnInit() {
-
-    const disposing$ = this.signInFeature.disposing$;
-
-    this.signInFeature.authenticationPersistentEnabled$
-      .pipe(takeUntil(disposing$))
-      .subscribe((persistentEnabled) => this.persistentEnabled = persistentEnabled);
-
-    this.signInFeature.error$
-      .pipe(takeUntil(disposing$))
-      .subscribe((error) => this.error = error);
-  }
-
 }

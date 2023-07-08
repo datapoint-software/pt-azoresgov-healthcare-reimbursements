@@ -6,8 +6,9 @@ import { provideSignInFeature } from './features/sign-in/sign-in.provider';
 import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { routes } from './app.routes';
-import { provideLoadingOverlayFeature } from './features/loading-overlay/loading-overlay.providers';
+import { provideLoadingOverlayFeature } from './features/loading-overlay/loading-overlay.provider';
 import { provideErrorHandler } from './app.providers';
+import { provideErrorFeature } from './features/error/error.provider';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -27,6 +28,7 @@ export const appConfig: ApplicationConfig = {
     }),
 
     // App features
+    provideErrorFeature(),
     provideLoadingOverlayFeature(),
     provideSignInFeature()
   ]

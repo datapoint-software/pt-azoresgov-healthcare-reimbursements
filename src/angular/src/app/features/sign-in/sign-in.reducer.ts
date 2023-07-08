@@ -1,22 +1,22 @@
 import { createReducer, on } from "@ngrx/store";
+import { dispose, init, submit } from "./sign-in.actions";
 import { SignInState } from "./sign-in.state";
-
-import * as actions from './sign-in.actions';
 
 const initialState = (undefined as unknown as SignInState)!;
 
 export const reducer = createReducer(
 
   initialState,
+  on(dispose, () => initialState),
 
-  on(actions.configure, (_, action) => ({
+  on(init.configure, (_, action) => ({
     ...action.payload
   })),
 
-  on(actions.dispose, () => initialState),
-
-  on(actions.error, (state, action) => ({
+  on(submit.error, (state, action) => ({
     ...state,
-    error: action.payload
+    error: {
+      ...action.payload
+    }
   }))
 );
