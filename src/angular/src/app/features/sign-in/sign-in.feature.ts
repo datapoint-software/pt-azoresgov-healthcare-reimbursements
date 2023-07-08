@@ -1,33 +1,31 @@
-import { DisposableFeature } from "../feature.abstractions";
+import { authentication, authenticationEnabled, authenticationPersistentEnabled, error, state } from "./sign-in.selectors";
+import { DynamicFeature } from "../feature.abstractions";
+import { dispose, init, submit } from "./sign-in.actions";
 import { Injectable } from "@angular/core";
-import { SignInPayload } from "./sign-in.payloads";
 import { SignInState } from "./sign-in.state";
 import { Store } from "@ngrx/store";
 
-import * as actions from './sign-in.actions';
-import * as selectors from './sign-in.selectors';
-
 @Injectable()
-export class SignInFeature extends DisposableFeature<SignInState> {
+export class SignInFeature extends DynamicFeature<SignInState, {
+  redirectUrl?: string
+}> {
 
-  constructor(protected readonly store: Store) {
-    super();
+  constructor(store: Store) {
+    super(store, state, init.begin, dispose);
   }
 
-  public readonly configure$$ = actions.configure;
-  public readonly dispose$$ = actions.dispose;
-  public readonly init$$ = actions.init;
-  public readonly error$$ = actions.error;
-  public readonly redirect$$ = actions.redirect;
-  public readonly signIn$$ = actions.signIn;
+  public readonly authentication$ = this.store.select(authentication);
+  public readonly authenticationEnabled$ = this.store.select(authenticationEnabled);
+  public readonly authenticationPersistentEnabled$ = this.store.select(authenticationPersistentEnabled);
+  public readonly error$ = this.store.select(error);
 
-  public readonly authentication$ = this.store.select(selectors.authentication);
-  public readonly authenticationEnabled$ = this.store.select(selectors.authenticationEnabled);
-  public readonly authenticationPersistentEnabled$ = this.store.select(selectors.authenticationPersistentEnabled);
-  public readonly error$ = this.store.select(selectors.error);
-  public readonly state$ = this.store.select(selectors.state);
-
-  signIn(payload: SignInPayload) {
-    this.store.dispatch(this.signIn$$({ payload }));
+  submit(payload: {
+    emailAddress: string,
+    password: string,
+    persistent: boolean
+  }) {
+    this.store.dispatch(
+      submit.begin({ payload })
+    );
   }
 }

@@ -8,4 +8,5 @@ export interface SignInAuthenticationState {
 export interface SignInState {
   authentication: SignInAuthenticationState;
   error?: ErrorModel;
+  redirectUrl?: string;
 }

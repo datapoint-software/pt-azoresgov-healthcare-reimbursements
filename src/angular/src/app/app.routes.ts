@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { ErrorComponent } from './containers/error/error.component';
 import { SignInComponent } from './containers/sign-in/sign-in.component';
 import { canActivateSignIn, canDeactivateSignIn } from './containers/sign-in/sign-in.guards';
+import { canActivateError, canDeactivateError } from './containers/error/error.guard';
 
 export const routes: Routes = [
   {
@@ -12,7 +13,9 @@ export const routes: Routes = [
   },
   {
     path: 'error',
-    component: ErrorComponent
+    component: ErrorComponent,
+    canActivate: [ canActivateError ],
+    canDeactivate: [ canDeactivateError ]
   },
   {
     path: '**',

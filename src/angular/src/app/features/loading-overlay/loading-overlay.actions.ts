@@ -1,30 +1,25 @@
 import { createAction, props } from "@ngrx/store";
-import { featureName } from "./loading-overlay.constants";
-import { LoadingOverlayDequeuePayload, LoadingOverlayEnqueuePayload, LoadingOverlayTaskPayload } from "./loading-overlay.payloads";
+
+const prefix = '@app/loading-overlay';
 
 export const dequeue = createAction(
-  `${featureName}.dequeue`,
-  props<{ payload: LoadingOverlayDequeuePayload }>()
+  `${prefix}/dequeue`,
+  props<{
+    payload: {
+      id: string
+    }
+  }>()
 );
 
 export const enqueue = createAction(
-  `${featureName}.enqueue`,
-  props<{ payload: LoadingOverlayEnqueuePayload }>()
-);
-
-export const hide = createAction(
-  `${featureName}.hide`
+  `${prefix}/enqueue`,
+  props<{
+    payload: {
+      id: string
+    }
+  }>()
 );
 
 export const reset = createAction(
-  `${featureName}.reset`
-);
-
-export const show = createAction(
-  `${featureName}.show`
-);
-
-export const task = createAction(
-  `${featureName}.task`,
-  props<{ payload: LoadingOverlayTaskPayload }>()
+  `${prefix}/reset`
 );

@@ -20,12 +20,12 @@
             Wow, um erro! 😵
           </h1>
 
-          <h4 class="text-muted text-uppercase mb-4" *ngIf="status">
-            {{ status }} {{ statusMessage }}
+          <h4 class="text-muted text-uppercase mb-4" *ngIf="(status$ | async) as status">
+            {{ status.code }} {{ status.message }}
           </h4>
 
           <!-- Subheading -->
-          <p class="p-3 mb-4 bg-danger text-white" *ngIf="message">
+          <p class="p-3 mb-4 bg-danger text-white" *ngIf="(message$ | async) as message">
             {{ message }}
           </p>
 
@@ -36,7 +36,7 @@
               <a class="text-decoration-underline" href="/">voltar ao início</a>.</p>
           </div>
 
-          <div class="text-muted fs-sm mt-4" *ngIf="id">
+          <div class="text-muted fs-sm mt-4" *ngIf="(id$ | async) as id">
             <p class="fw-bold m-0">Identificador único</p>
             <p class="fw-light m-0">{{ id }}</p>
           </div>

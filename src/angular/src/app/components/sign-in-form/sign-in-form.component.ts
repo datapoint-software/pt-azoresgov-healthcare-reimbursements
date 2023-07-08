@@ -15,11 +15,11 @@ import { ErrorModel } from "../../app.models";
 })
 export class SignInFormComponent {
 
-  @Input()
-  public error?: ErrorModel;
+  @Input({ required: true })
+  public error?: ErrorModel = null!;
 
-  @Input()
-  public persistentEnabled: boolean = false;
+  @Input({ required: true })
+  public persistentEnabled?: boolean = false!;
 
   @Output()
   public readonly submit = new EventEmitter<SignInFormSubmitEvent>();

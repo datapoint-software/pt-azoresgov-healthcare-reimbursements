@@ -1,59 +1,83 @@
+import { Actions, concatLatestFrom, createEffect, ofType } from "@ngrx/effects";
+import { catchErrorResponseWithStatusCode } from "../../app.operators";
+import { dequeue, enqueue } from "../loading-overlay/loading-overlay.actions";
+import { featureName } from "./sign-in.constants";
+import { init, redirect, submit } from "./sign-in.actions";
 import { Injectable } from "@angular/core";
-import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { map, mergeMap, of, tap, withLatestFrom } from "rxjs";
+import { map, mergeMap, of, tap } from "rxjs";
 import { SignInClient } from "./sign-in.client";
-import { SignInFeature } from "./sign-in.feature";
-import { mergeLoadingOverlay } from "../loading-overlay/loading-overlay.operators";
-import { ActivatedRoute, Router } from "@angular/router";
-import { catchErrorResponseWithConflictStatusCode } from "../../app.operators";
+import { Store } from "@ngrx/store";
+import { redirectUrl } from "./sign-in.selectors";
+import { Router } from "@angular/router";
 
 @Injectable()
 export class SignInEffects {
 
   constructor(
     private readonly actions$: Actions,
-    private readonly activatedRoute: ActivatedRoute,
-    private readonly client: SignInClient,
-    private readonly feature: SignInFeature,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly signInClient: SignInClient,
+    private readonly store: Store
   ) {}
 
-  public readonly init$ = createEffect(() => this.actions$.pipe(
-    ofType(this.feature.init$$),
-    mergeMap(() => this.client.getOptions()),
-    map((response) => this.feature.configure$$({
-      payload: {
-        authentication: {
-          enabled: response.authentication.enabled,
-          persistentEnabled: response.authentication.persistentEnabled
-        }
-      }
-    }))
+  public readonly initBegin$ = createEffect(() => this.actions$.pipe(
+    ofType(init.begin),
+    mergeMap((action) => [
+      enqueue({ payload: { id: featureName } }),
+      init.getOptions({ payload: { redirectUrl: action.payload.redirectUrl } })
+    ])
   ));
 
-  public readonly redirect$ = createEffect(() => this.actions$.pipe(
-    ofType(this.feature.redirect$$),
-    mergeMap((action) => of(action).pipe(
-      withLatestFrom(this.activatedRoute.queryParams)
-    )),
-    tap(([ _, queryParams]) => {
-      this.router.navigateByUrl(queryParams['forward'] || '/')
-    })
-  ),
-  { dispatch: false });
-
-  public readonly signIn$ = createEffect(() => this.actions$.pipe(
-    ofType(this.feature.signIn$$),
-    mergeLoadingOverlay((action) => of(action).pipe(
-      mergeMap(() => this.client.signIn({
-        emailAddress: action.payload.emailAddress,
-        password: action.payload.password
-      })),
-      map((_) => this.feature.redirect$$()),
-      catchErrorResponseWithConflictStatusCode((response) => of(
-        this.feature.error$$({ payload: response.error })
-      ))
+  public readonly initGetOptions$ = createEffect(() => this.actions$.pipe(
+    ofType(init.getOptions),
+    mergeMap((action) => this.signInClient.getOptions().pipe(
+      mergeMap((response) => [
+        init.configure({
+          payload: {
+            ...response,
+            redirectUrl: action.payload.redirectUrl
+          }
+        }),
+        dequeue({ payload: { id: featureName } }),
+      ])
     ))
   ));
 
+  public readonly redirect$ = createEffect(() => this.actions$.pipe(
+    ofType(redirect),
+    concatLatestFrom(() => this.store.select(redirectUrl)),
+    tap(([ _, redirectUrl ]) => this.router.navigateByUrl(
+      redirectUrl || '/'
+    ))
+  ),
+  { dispatch: false })
+
+  public readonly submitBegin$ = createEffect(() => this.actions$.pipe(
+    ofType(submit.begin),
+    mergeMap((action) => [
+      enqueue({ payload: { id: featureName } }),
+      submit.post({ payload: { ...action.payload } })
+    ])
+  ));
+
+  public readonly submitPost$ = createEffect(() => this.actions$.pipe(
+    ofType(submit.post),
+    map((action) => ({
+      action,
+      model: {
+        emailAddress: action.payload.emailAddress,
+        password: action.payload.password
+      }
+    })),
+    mergeMap(({ model }) => this.signInClient.signIn(model)),
+    mergeMap(() => [
+      dequeue({ payload: { id: featureName } }),
+      redirect()
+    ]),
+    catchErrorResponseWithStatusCode([ 400, 401, 403, 409 ], (response) => of(
+      submit.error({
+        payload: response.error
+      })
+    ))
+  ));
 }

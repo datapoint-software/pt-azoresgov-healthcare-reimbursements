@@ -23,3 +23,8 @@ export const error = createSelector(
   state,
   state => state.error
 );
+
+export const redirectUrl = createSelector(
+  state,
+  state => state.redirectUrl
+);

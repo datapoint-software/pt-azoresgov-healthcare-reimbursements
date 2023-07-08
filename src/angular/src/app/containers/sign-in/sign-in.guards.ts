@@ -3,8 +3,12 @@ import { CanActivateFn, CanDeactivateFn } from "@angular/router";
 import { SignInFeature } from "../../features/sign-in/sign-in.feature";
 import { SignInComponent } from "./sign-in.component";
 
-export const canActivateSignIn: CanActivateFn = async () => {
-  await inject(SignInFeature).init();
+export const canActivateSignIn: CanActivateFn = async (route) => {
+
+  await inject(SignInFeature).init({
+    redirectUrl: route.queryParams['continue'] || undefined
+  });
+
   return true;
 }
 
