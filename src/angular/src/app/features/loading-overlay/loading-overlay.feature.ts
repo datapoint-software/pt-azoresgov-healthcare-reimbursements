@@ -18,7 +18,6 @@ export class LoadingOverlayService extends Feature<LoadingOverlayState> {
   public readonly hide$$ = actions.hide;
   public readonly reset$$ = actions.reset;
   public readonly show$$ = actions.show;
-  public readonly task$$ = actions.task;
 
   public readonly state$ = this.store.select(selectors.state);
   public readonly tasks$ = this.store.select(selectors.tasksAsArray);
