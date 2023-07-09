@@ -2,8 +2,19 @@ import { createAction, props } from "@ngrx/store";
 
 const prefix = '@app/error';
 
-export const configure = createAction(
-  `${prefix}/configure`,
+export const init = createAction(
+  `${prefix}/init`,
+  props<{
+    payload: {
+      id?: string;
+      message?: string;
+      statusCode?: number;
+    }
+  }>()
+);
+
+export const initConfigure = createAction(
+  `${prefix}/init?configure`,
   props<{
     payload: {
       id?: string;
@@ -12,17 +23,6 @@ export const configure = createAction(
         code: number;
         message: string;
       }
-    }
-  }>()
-);
-
-export const init = createAction(
-  `${prefix}/init`,
-  props<{
-    payload: {
-      id?: string;
-      message?: string;
-      statusCode?: number;
     }
   }>()
 );

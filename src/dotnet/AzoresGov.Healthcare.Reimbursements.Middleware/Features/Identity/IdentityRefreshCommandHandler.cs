@@ -62,7 +62,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.Identity
 
                 if (userSession.LastSeen < lastSeenMinimum)
                 {
-                    throw new AuthenticationException("User session moment of last seen is bellow minimum.")
+                    throw new BusinessException("User session moment of last seen is bellow minimum.")
                         .WithCode("AAKWPU")
                         .WithUserMessage(GenericUserMessage);
                 }
@@ -81,7 +81,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.Identity
             if (command.UserSessionSecret == userSession.Secret)
                 return;
 
-            throw new AuthenticationException("User session secret mismatch.")
+            throw new BusinessException("User session secret mismatch.")
                 .WithCode("QVGJUJ")
                 .WithUserMessage(GenericUserMessage);
         }
@@ -91,7 +91,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.Identity
             if (command.UserSessionRowVersionId == userSession.RowVersionId)
                 return;
 
-            throw new AuthenticationException("User session row version mismatch.")
+            throw new BusinessException("User session row version mismatch.")
                 .WithCode("GQOPAQ")
                 .WithUserMessage(GenericUserMessage);
         }
@@ -104,7 +104,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.Identity
 
             if (userSession == null)
             {
-                throw new AuthenticationException("A user session was not found matching the given identifier.")
+                throw new BusinessException("A user session was not found matching the given identifier.")
                     .WithCode("UDTXAL")
                     .WithUserMessage(GenericUserMessage);
             }

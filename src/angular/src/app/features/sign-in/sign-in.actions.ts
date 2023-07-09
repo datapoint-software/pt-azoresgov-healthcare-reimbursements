@@ -6,74 +6,66 @@ export const dispose = createAction(
   `${prefix}/dispose`
 );
 
+export const init = createAction(
+  `${prefix}/init`,
+  props<{
+    payload: {
+      redirectUrl?: string
+    }
+  }>()
+);
+
+export const initGetOptions = createAction(
+  `${prefix}/init?get-options`,
+  props<{
+    payload: {
+      redirectUrl?: string
+    }
+  }>()
+);
+
+export const initConfigure = createAction(
+  `${prefix}/init?configure`,
+  props<{
+    payload: {
+      authentication: {
+        enabled: boolean,
+        persistentEnabled: boolean,
+      },
+      redirectUrl?: string
+    }
+  }>()
+);
+
 export const redirect = createAction(
   `${prefix}/redirect`
 );
 
-export namespace init {
+export const signIn = createAction(
+  `${prefix}/sign-in`,
+  props<{
+    payload: {
+      emailAddress: string,
+      password: string,
+      persistent: boolean
+    }
+  }>()
+);
 
-  const nsprefix = `${prefix}/init`;
+export const signInSignIn = createAction(
+  `${prefix}/sign-in?sign-in`,
+  props<{
+    payload: {
+      emailAddress: string,
+      password: string,
+      persistent: boolean
+    }
+  }>()
+);
 
-  export const begin = createAction(
-    nsprefix,
-    props<{
-      payload: {
-        redirectUrl?: string;
-      }
-    }>()
-  );
-
-  export const configure = createAction(
-    `${nsprefix}/configure`,
-    props<{
-      payload: {
-        authentication: {
-          enabled: boolean;
-          persistentEnabled: boolean;
-        },
-        redirectUrl?: string;
-      }
-    }>()
-  );
-
-  export const getOptions = createAction(
-    `${nsprefix}/get-options`,
-    props<{ payload: {
-      redirectUrl?: string;
-    }}>()
-  );
-};
-
-export namespace submit {
-
-  const nsprefix = `${prefix}/submit`;
-
-  export const begin = createAction(
-    nsprefix,
-    props<{
-      payload: {
-        emailAddress: string;
-        password: string;
-        persistent: boolean;
-      }
-    }>()
-  );
-
-  export const post = createAction(
-    `${nsprefix}/post`,
-    props<{
-      payload: {
-        emailAddress: string;
-        password: string;
-        persistent: boolean;
-      }
-    }>()
-  );
-
-  export const error = createAction(
-    `${nsprefix}/error`,
-    props<{
-      payload: ErrorModel
-    }>()
-  );
-}
+export const signInError = createAction(
+  `${prefix}/sign-in?error`,
+  props<{
+    payload: ErrorModel
+  }>()
+);

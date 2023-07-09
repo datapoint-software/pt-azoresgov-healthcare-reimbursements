@@ -1,14 +1,15 @@
 import { Actions, concatLatestFrom, createEffect, ofType } from "@ngrx/effects";
-import { catchErrorResponseWithStatusCode } from "../../app.operators";
+import { authenticate } from "../identity/identity.actions";
+import { catchErrorResponseWithConflictStatusCode } from "../../app.operators";
 import { dequeue, enqueue } from "../loading-overlay/loading-overlay.actions";
 import { featureName } from "./sign-in.constants";
-import { init, redirect, submit } from "./sign-in.actions";
+import { init, initConfigure, initGetOptions, redirect, signIn, signInError, signInSignIn } from "./sign-in.actions";
 import { Injectable } from "@angular/core";
 import { map, mergeMap, of, tap } from "rxjs";
-import { SignInClient } from "./sign-in.client";
-import { Store } from "@ngrx/store";
 import { redirectUrl } from "./sign-in.selectors";
 import { Router } from "@angular/router";
+import { SignInClient } from "./sign-in.client";
+import { Store } from "@ngrx/store";
 
 @Injectable()
 export class SignInEffects {
@@ -20,62 +21,64 @@ export class SignInEffects {
     private readonly store: Store
   ) {}
 
-  public readonly initBegin$ = createEffect(() => this.actions$.pipe(
-    ofType(init.begin),
-    mergeMap((action) => [
-      enqueue({ payload: { id: featureName } }),
-      init.getOptions({ payload: { redirectUrl: action.payload.redirectUrl } })
-    ])
+  public readonly init$ = createEffect(() => this.actions$.pipe(
+    ofType(init),
+    map(({ payload }) => initGetOptions({ payload }))
   ));
 
   public readonly initGetOptions$ = createEffect(() => this.actions$.pipe(
-    ofType(init.getOptions),
-    mergeMap((action) => this.signInClient.getOptions().pipe(
-      mergeMap((response) => [
-        init.configure({
-          payload: {
-            ...response,
-            redirectUrl: action.payload.redirectUrl
-          }
-        }),
-        dequeue({ payload: { id: featureName } }),
-      ])
+    ofType(initGetOptions),
+    mergeMap(({ payload }) => this.signInClient.getOptions().pipe(
+      map((response) => initConfigure({
+        payload: {
+          ...response,
+          ...payload
+        }
+      }))
     ))
   ));
 
   public readonly redirect$ = createEffect(() => this.actions$.pipe(
     ofType(redirect),
     concatLatestFrom(() => this.store.select(redirectUrl)),
-    tap(([ _, redirectUrl ]) => this.router.navigateByUrl(
-      redirectUrl || '/'
-    ))
+    tap(([ _, redirectUrl ]) => {
+      this.router.navigateByUrl(redirectUrl || '/');
+    })
   ),
-  { dispatch: false })
+  { dispatch: false });
 
-  public readonly submitBegin$ = createEffect(() => this.actions$.pipe(
-    ofType(submit.begin),
-    mergeMap((action) => [
-      enqueue({ payload: { id: featureName } }),
-      submit.post({ payload: { ...action.payload } })
+  public readonly signIn$ = createEffect(() => this.actions$.pipe(
+    ofType(signIn),
+    mergeMap(({ payload }) => [
+      enqueue({
+        payload: {
+          id: featureName
+        }
+      }),
+      signInSignIn({ payload })
     ])
   ));
 
-  public readonly submitPost$ = createEffect(() => this.actions$.pipe(
-    ofType(submit.post),
-    map((action) => ({
-      action,
-      model: {
-        emailAddress: action.payload.emailAddress,
-        password: action.payload.password
-      }
-    })),
-    mergeMap(({ model }) => this.signInClient.signIn(model)),
-    mergeMap(() => [
-      dequeue({ payload: { id: featureName } }),
-      redirect()
-    ]),
-    catchErrorResponseWithStatusCode([ 400, 401, 403, 409 ], (response) => of(
-      submit.error({
+  public readonly signInSignIn$ = createEffect(() => this.actions$.pipe(
+    ofType(signInSignIn),
+    mergeMap(({ payload }) => this.signInClient.signIn({ ...payload }).pipe(
+      mergeMap((response) => [
+        authenticate({
+          payload: {
+            ...response,
+            persistent: payload.persistent
+          }
+        }),
+        redirect(),
+        dequeue({
+          payload: {
+            id: featureName
+          }
+        })
+      ])
+    )),
+    catchErrorResponseWithConflictStatusCode((response) => of(
+      signInError({
         payload: response.error
       })
     ))

@@ -41,7 +41,7 @@ export class SignInComponent {
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    this.signIn.submit({
+    this.signIn.signIn({
       emailAddress: e.payload.emailAddress,
       password: e.payload.password,
       persistent: e.payload.persistent

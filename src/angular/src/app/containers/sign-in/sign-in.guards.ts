@@ -6,7 +6,7 @@ import { SignInComponent } from "./sign-in.component";
 export const canActivateSignIn: CanActivateFn = async (route) => {
 
   await inject(SignInFeature).init({
-    redirectUrl: route.queryParams['continue'] || undefined
+    redirectUrl: route.queryParams['forward'] || undefined
   });
 
   return true;
