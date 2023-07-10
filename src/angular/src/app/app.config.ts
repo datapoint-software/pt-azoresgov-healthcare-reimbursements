@@ -9,6 +9,7 @@ import { routes } from './app.routes';
 import { provideLoadingOverlayFeature } from './features/loading-overlay/loading-overlay.provider';
 import { provideErrorHandler } from './app.providers';
 import { provideErrorFeature } from './features/error/error.provider';
+import { provideIdentityFeature } from './features/identity/identity.provider';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -29,6 +30,7 @@ export const appConfig: ApplicationConfig = {
 
     // App features
     provideErrorFeature(),
+    provideIdentityFeature(),
     provideLoadingOverlayFeature(),
     provideSignInFeature()
   ]

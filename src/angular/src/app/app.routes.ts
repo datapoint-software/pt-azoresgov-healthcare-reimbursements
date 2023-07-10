@@ -3,13 +3,21 @@ import { ErrorComponent } from './containers/error/error.component';
 import { SignInComponent } from './containers/sign-in/sign-in.component';
 import { canActivateSignIn, canDeactivateSignIn } from './containers/sign-in/sign-in.guards';
 import { canActivateError, canDeactivateError } from './containers/error/error.guard';
+import { canActivateApp } from './app.guards';
 
 export const routes: Routes = [
   {
-    path: 'sign-in',
-    component: SignInComponent,
-    canActivate: [ canActivateSignIn ],
-    canDeactivate: [ canDeactivateSignIn ]
+    path: '',
+    pathMatch: 'prefix',
+    canActivate: [ canActivateApp ],
+    children: [
+      {
+        path: 'sign-in',
+        component: SignInComponent,
+        canActivate: [ canActivateSignIn ],
+        canDeactivate: [ canDeactivateSignIn ]
+      }
+    ]
   },
   {
     path: 'error',

@@ -1,6 +1,6 @@
 import { authentication, authenticationEnabled, authenticationPersistentEnabled, error, state } from "./sign-in.selectors";
 import { DynamicFeature } from "../feature.abstractions";
-import { dispose, init, submit } from "./sign-in.actions";
+import { dispose, init, signIn } from "./sign-in.actions";
 import { Injectable } from "@angular/core";
 import { SignInState } from "./sign-in.state";
 import { Store } from "@ngrx/store";
@@ -11,7 +11,7 @@ export class SignInFeature extends DynamicFeature<SignInState, {
 }> {
 
   constructor(store: Store) {
-    super(store, state, init.begin, dispose);
+    super(store, state, init, dispose);
   }
 
   public readonly authentication$ = this.store.select(authentication);
@@ -19,13 +19,13 @@ export class SignInFeature extends DynamicFeature<SignInState, {
   public readonly authenticationPersistentEnabled$ = this.store.select(authenticationPersistentEnabled);
   public readonly error$ = this.store.select(error);
 
-  submit(payload: {
+  signIn(payload: {
     emailAddress: string,
     password: string,
     persistent: boolean
   }) {
     this.store.dispatch(
-      submit.begin({ payload })
+      signIn({ payload })
     );
   }
 }

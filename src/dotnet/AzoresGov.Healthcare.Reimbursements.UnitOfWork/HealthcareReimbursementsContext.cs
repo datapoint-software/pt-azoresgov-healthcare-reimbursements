@@ -35,7 +35,8 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork
                             if (entity.PublicId == default)
                                 entity.PublicId = Guid.NewGuid();
 
-                            entity.RowVersionId = Guid.NewGuid();
+                            else if (entity.RowVersionId == default || entity.RowVersionId == entry.OriginalValues.GetValue<Guid>("RowVersionId"))
+                                entity.RowVersionId = Guid.NewGuid();
                         }
                     }
                 }

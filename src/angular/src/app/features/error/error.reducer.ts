@@ -1,6 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { ErrorState } from "./error.state";
-import { configure, dispose, init } from "./error.actions";
+import { initConfigure, dispose, init } from "./error.actions";
 
 const initialState = (undefined as unknown as ErrorState);
 
@@ -9,7 +9,7 @@ export const reducer = createReducer(
   initialState,
   on(dispose, () => initialState),
 
-  on(configure, (_, action) => ({
+  on(initConfigure, (_, action) => ({
     ...action.payload
   })),
 

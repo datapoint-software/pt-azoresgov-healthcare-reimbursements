@@ -75,16 +75,5 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.SignIn
                 accessTokenExpiration,
                 result.UserSessionSecret);
         }
-
-        [AllowAnonymous]
-        [HttpGet]
-        public object Test()
-        {
-            return new
-            {
-                IsAuthenticated = HttpContext.User.Identity?.IsAuthenticated ?? false,
-                Claims = HttpContext.User.Claims.Select(e => new { e.Type, e.Value }).ToArray()
-            };
-        }
     }
 }

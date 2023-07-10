@@ -1,5 +1,5 @@
 import { Actions, concatLatestFrom, createEffect, ofType } from "@ngrx/effects";
-import { configure, init } from "./error.actions";
+import { initConfigure, init } from "./error.actions";
 import { filter, map } from "rxjs";
 import { Injectable } from "@angular/core";
 import { reset } from "../loading-overlay/loading-overlay.actions";
@@ -17,7 +17,7 @@ export class ErrorEffects {
 
   public readonly init$ = createEffect(() => this.actions$.pipe(
     ofType(init),
-    map((action) => configure({
+    map((action) => initConfigure({
       payload: {
         id: action.payload.id,
         message: action.payload.message ? decodeURIComponent(atob(action.payload.message).replace(/\+/g, '%20')) : undefined,
