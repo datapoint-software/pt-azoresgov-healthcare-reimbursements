@@ -24,7 +24,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
             return new SignInOptionsResult(
                 new SignInAuthenticationOptionsResult(
                     enabled: authenticationOptions.Enabled,
-                    persistentEnabled: userSessionOptions is null));
+                    persistentEnabled: userSessionOptions.Expiration.HasValue));
         }
     }
 }

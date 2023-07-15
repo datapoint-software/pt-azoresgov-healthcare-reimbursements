@@ -1,18 +1,27 @@
-﻿namespace AzoresGov.Healthcare.Reimbursements.Api.Features.Identity
+﻿using System.Collections.Generic;
+
+namespace AzoresGov.Healthcare.Reimbursements.Api.Features.Identity
 {
     public sealed class IdentityRefreshResultModel
     {
-        public IdentityRefreshResultModel(string accessToken, int accessTokenExpiration, string refreshToken)
+        public IdentityRefreshResultModel(
+            IReadOnlyCollection<IdentityRefreshEntityResultModel> entities, 
+            IReadOnlyCollection<IdentityRefreshPermissionResultModel> permissions, 
+            IdentityRefreshUserResultModel user, 
+            IdentityRefreshUserSessionResultModel userSession)
         {
-            AccessToken = accessToken;
-            AccessTokenExpiration = accessTokenExpiration;
-            RefreshToken = refreshToken;
+            Entities = entities;
+            Permissions = permissions;
+            User = user;
+            UserSession = userSession;
         }
 
-        public string AccessToken { get; }
+        public IReadOnlyCollection<IdentityRefreshEntityResultModel> Entities { get; }
 
-        public int AccessTokenExpiration { get; }
+        public IReadOnlyCollection<IdentityRefreshPermissionResultModel> Permissions { get; }
 
-        public string RefreshToken { get; }
+        public IdentityRefreshUserResultModel User { get; }
+
+        public IdentityRefreshUserSessionResultModel UserSession { get; }
     }
 }

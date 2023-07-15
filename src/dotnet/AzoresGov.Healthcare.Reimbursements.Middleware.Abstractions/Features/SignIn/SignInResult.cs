@@ -1,26 +1,23 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
 {
     public sealed class SignInResult
     {
-        public SignInResult(Guid userId, Guid userRowVersionId, Guid userSessionId, Guid userSessionRowVersionId, string userSessionSecret)
+        public SignInResult(IReadOnlyCollection<SignInEntityResult> entities, IReadOnlyCollection<SignInPermissionResult> permissions, SignInUserResult user, SignInUserSessionResult userSession)
         {
-            UserId = userId;
-            UserRowVersionId = userRowVersionId;
-            UserSessionId = userSessionId;
-            UserSessionRowVersionId = userSessionRowVersionId;
-            UserSessionSecret = userSessionSecret;
+            Entities = entities;
+            Permissions = permissions;
+            User = user;
+            UserSession = userSession;
         }
 
-        public Guid UserId { get; }
+        public IReadOnlyCollection<SignInEntityResult> Entities { get; }
 
-        public Guid UserRowVersionId { get; }
+        public IReadOnlyCollection<SignInPermissionResult> Permissions { get; }
 
-        public Guid UserSessionId { get; }
+        public SignInUserResult User { get; }
 
-        public Guid UserSessionRowVersionId { get; }
-
-        public string UserSessionSecret { get; }
+        public SignInUserSessionResult UserSession { get; }
     }
 }

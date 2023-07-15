@@ -6,6 +6,13 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
     {
         public SignInCommandValidator()
         {
+            RuleFor(x => x.UserAgent)
+                .NotEmpty()
+                .MaximumLength(4096);
+
+            RuleFor(x => x.NetworkAddress)
+                .NotEmpty();
+
             RuleFor(x => x.EmailAddress)
                 .NotEmpty()
                 .EmailAddress()
@@ -15,12 +22,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
                 .NotEmpty()
                 .MaximumLength(1024);
 
-            RuleFor(x => x.UserAgent)
-                .NotEmpty()
-                .MaximumLength(4096);
-
-            RuleFor(x => x.NetworkAddress)
-                .NotEmpty();
+            RuleFor(x => x.Persistent);
         }
     }
 }

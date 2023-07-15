@@ -11,9 +11,6 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.Identity
 
             RuleFor(e => e.UserSessionRowVersionId)
                 .NotEmpty();
-
-            RuleFor(e => e.UserSessionSecret)
-                .NotEmpty();
         }
     }
 }

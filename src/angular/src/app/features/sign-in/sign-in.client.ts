@@ -11,13 +11,13 @@ export class SignInClient {
     private readonly httpClient: HttpClient
   ) {}
 
-  getOptions() {
+  public getOptions() {
     return this.httpClient.get<SignInOptionsResultModel>(
       `${baseAddress}/options`
     );
   }
 
-  signIn(model: SignInModel) {
+  public signIn(model: SignInModel) {
     return this.httpClient.post<SignInResultModel>(
       baseAddress,
       model

@@ -19,10 +19,11 @@
         /// <summary>
         /// An Int32 (nullable) for the user session expiration in seconds.
         /// 
-        /// When `null`, user sessions can become persistent if the user checks
-        /// the `Remember Me` checkbox on sign in.
+        /// When set, persistent sessions become enabled and the user may choose
+        /// to enable this by ticking the "Remember me" checkbox in the sign in
+        /// screen.
         /// 
-        /// This is only applicable when authentication is enabled.
+        /// This only applies when `AuthenticationEnabled` is set to `true`.
         /// </summary>
         internal const string UserSessionExpiration = nameof(UserSessionExpiration);
     }

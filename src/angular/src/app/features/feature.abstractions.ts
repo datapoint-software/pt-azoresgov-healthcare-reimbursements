@@ -1,6 +1,6 @@
 import { ActionCreator, DefaultProjectorFn, MemoizedSelector, Store } from "@ngrx/store";
 import { TypedAction } from "@ngrx/store/src/models";
-import { Observable, Subject, filter, firstValueFrom, skipWhile } from "rxjs";
+import { Observable, Subject, filter, firstValueFrom, skipWhile, takeUntil } from "rxjs";
 
 export abstract class Feature<TFeatureState extends object> {
 
@@ -62,6 +62,10 @@ export abstract class DynamicFeature<TFeatureState extends object, TInitPayload>
       (this.disposed$ as Subject<boolean>).next(true);
     }
   }
+
+  protected createObservableOf<TState>(mapFn: (value: object) => TState) {
+    return this.store.select(mapFn).pipe(takeUntil(this.disposing$));
+  }
 }
 
 export abstract class StaticFeature<TFeatureState extends object> extends Feature<TFeatureState> {
@@ -111,5 +115,9 @@ export abstract class StaticFeature<TFeatureState extends object> extends Featur
 
       (this.disposed$ as Subject<boolean>).next(true);
     }
+  }
+
+  protected createObservableOf<TState>(mapFn: (value: object) => TState) {
+    return this.store.select(mapFn).pipe(takeUntil(this.disposing$));
   }
 }

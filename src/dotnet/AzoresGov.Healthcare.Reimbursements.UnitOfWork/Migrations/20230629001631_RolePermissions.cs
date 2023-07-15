@@ -20,7 +20,8 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                     PublicId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RowVersionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RoleId = table.Column<long>(type: "bigint", nullable: false),
-                    PermissionId = table.Column<long>(type: "bigint", nullable: false)
+                    PermissionId = table.Column<long>(type: "bigint", nullable: false),
+                    Granted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

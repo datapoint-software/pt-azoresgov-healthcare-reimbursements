@@ -14,11 +14,9 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
         {
         }
 
-        public async Task<IReadOnlyCollection<long>> GetAllRoleIdByUserIdAsync(long userId, CancellationToken ct) => await Entities
+        public async Task<IEnumerable<UserRoleEntity>> GetAllByUserIdAsync(long userId, CancellationToken ct) => await Entities
 
             .Where(e => e.UserId == userId)
-            .Select(e => e.RoleId)
-            .Distinct()
             .ToListAsync(ct);
     }
 }

@@ -32,6 +32,9 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.EntityTypeConfiguration
                 e.RoleId,
                 e.PermissionId
             });
+
+            builder.Property(e => e.Granted)
+                .IsRequired();
         }
     }
 }

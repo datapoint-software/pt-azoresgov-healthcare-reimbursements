@@ -14,8 +14,6 @@ export const provideSignInFeature = (): Array<EnvironmentProviders> => [
     SignInFeature
   ]),
 
-  provideEffects([
-    SignInEffects
-  ]),
+  provideEffects(SignInEffects),
   provideState(featureName, reducer)
 ];

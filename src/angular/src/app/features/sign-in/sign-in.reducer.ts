@@ -1,8 +1,8 @@
 import { createReducer, on } from "@ngrx/store";
-import { dispose, initConfigure, signInError } from "./sign-in.actions";
 import { SignInState } from "./sign-in.state";
+import { dispose, initConfigure, signInPostError } from "./sign-in.actions";
 
-const initialState = (undefined as unknown as SignInState)!;
+const initialState = undefined as unknown as SignInState;
 
 export const reducer = createReducer(
 
@@ -13,10 +13,11 @@ export const reducer = createReducer(
     ...action.payload
   })),
 
-  on(signInError, (state, action) => ({
+  on(signInPostError, (state, action) => ({
     ...state,
-    error: {
-      ...action.payload
+    authentication: {
+      ...state.authentication,
+      error: action.payload
     }
   }))
 );

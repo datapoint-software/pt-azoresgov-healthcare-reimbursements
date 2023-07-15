@@ -184,6 +184,9 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("Granted")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.HasAlternateKey("PublicId");

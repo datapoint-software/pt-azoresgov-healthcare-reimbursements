@@ -11,5 +11,7 @@
         public const string UserSession = "uni";
 
         public const string UserSessionRowVersion = "unv";
+
+        public const string UserSessionExpiration = "unx";
     }
 }

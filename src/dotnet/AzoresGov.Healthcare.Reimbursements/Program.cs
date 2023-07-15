@@ -12,9 +12,11 @@ using Datapoint.Configuration;
 using Datapoint.Mediator;
 using Datapoint.Mediator.FluentValidation;
 using Datapoint.UnitOfWork.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -88,7 +90,18 @@ namespace AzoresGov.Healthcare.Reimbursements
 
             services.AddSingleton<IAccessTokenManager>(accessTokenManager);
 
-            services.AddAuthentication()    
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+
+                .AddCookie((cookie) =>
+                {
+                    cookie.Cookie.Name = "auth";
+                    cookie.Cookie.HttpOnly = true;
+                    cookie.Cookie.IsEssential = true;
+                    cookie.Cookie.Path = "/api/features";
+                    cookie.Cookie.SecurePolicy = environment.IsDevelopment() 
+                        ? CookieSecurePolicy.SameAsRequest 
+                        : CookieSecurePolicy.Always;
+                })
 
                 .AddJwtBearer((jwt) =>
                 {
@@ -117,11 +130,12 @@ namespace AzoresGov.Healthcare.Reimbursements
             services.AddAuthorization((authorization) =>
             {
                 authorization.DefaultPolicy = new AuthorizationPolicyBuilder()
+                    .AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme)
                     .RequireAssertion((_) => false)
                     .Build();
 
                 authorization.FallbackPolicy = new AuthorizationPolicyBuilder()
-                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                    .AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme)
                     .RequireAuthenticatedUser()
                     .RequireClaim(ClaimTypes.User)
                     .RequireClaim(ClaimTypes.UserSession)
