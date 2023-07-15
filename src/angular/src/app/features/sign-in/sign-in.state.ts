@@ -1,12 +1,10 @@
 import { ErrorModel } from "../../app.models";
 
-export interface SignInAuthenticationState {
-  enabled: boolean;
-  persistentEnabled: boolean;
-}
-
 export interface SignInState {
-  authentication: SignInAuthenticationState;
-  error?: ErrorModel;
+  authentication: {
+    enabled: boolean;
+    persistentEnabled: boolean;
+    error?: ErrorModel;
+  },
   redirectUrl?: string;
 }

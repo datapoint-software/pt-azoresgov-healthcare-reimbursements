@@ -1,15 +1,20 @@
 import { Actions, concatLatestFrom, createEffect, ofType } from "@ngrx/effects";
-import { authenticate } from "../identity/identity.actions";
-import { catchErrorResponseWithConflictStatusCode } from "../../app.operators";
 import { dequeue, enqueue } from "../loading-overlay/loading-overlay.actions";
-import { featureName } from "./sign-in.constants";
-import { init, initConfigure, initGetOptions, redirect, signIn, signInError, signInSignIn } from "./sign-in.actions";
+import { init, initConfigure, initGetOptions, signIn, signInPost, signInPostError, signInRedirect } from "./sign-in.actions";
 import { Injectable } from "@angular/core";
 import { map, mergeMap, of, tap } from "rxjs";
-import { redirectUrl } from "./sign-in.selectors";
-import { Router } from "@angular/router";
 import { SignInClient } from "./sign-in.client";
+import { authenticate } from "../identity/identity.actions";
+import { catchErrorResponseWithConflictStatusCode } from "../../app.operators";
 import { Store } from "@ngrx/store";
+import { Router } from "@angular/router";
+import { redirectUrl } from "./sign-in.selectors";
+
+const loadingScreen = (id: string) => ({
+  payload: {
+    id
+  }
+});
 
 @Injectable()
 export class SignInEffects {
@@ -19,68 +24,60 @@ export class SignInEffects {
     private readonly router: Router,
     private readonly signInClient: SignInClient,
     private readonly store: Store
-  ) {}
+  ){}
 
   public readonly init$ = createEffect(() => this.actions$.pipe(
     ofType(init),
-    map(({ payload }) => initGetOptions({ payload }))
+    mergeMap(({ payload }) => of(
+      enqueue(loadingScreen(init.type)),
+      initGetOptions({ payload })
+    ))
   ));
 
   public readonly initGetOptions$ = createEffect(() => this.actions$.pipe(
     ofType(initGetOptions),
-    mergeMap(({ payload }) => this.signInClient.getOptions().pipe(
+    mergeMap((action) => this.signInClient.getOptions().pipe(
       map((response) => initConfigure({
         payload: {
           ...response,
-          ...payload
+          ...action.payload
         }
       }))
     ))
   ));
 
-  public readonly redirect$ = createEffect(() => this.actions$.pipe(
-    ofType(redirect),
-    concatLatestFrom(() => this.store.select(redirectUrl)),
-    tap(([ _, redirectUrl ]) => {
-      this.router.navigateByUrl(redirectUrl || '/');
-    })
-  ),
-  { dispatch: false });
+  public readonly initConfigure$ = createEffect(() => this.actions$.pipe(
+    ofType(initConfigure),
+    map(() => dequeue(loadingScreen(init.type)))
+  ));
 
   public readonly signIn$ = createEffect(() => this.actions$.pipe(
     ofType(signIn),
-    mergeMap(({ payload }) => [
-      enqueue({
-        payload: {
-          id: featureName
-        }
-      }),
-      signInSignIn({ payload })
-    ])
-  ));
-
-  public readonly signInSignIn$ = createEffect(() => this.actions$.pipe(
-    ofType(signInSignIn),
-    mergeMap(({ payload }) => this.signInClient.signIn({ ...payload }).pipe(
-      mergeMap((response) => [
-        authenticate({
-          payload: {
-            ...response,
-            persistent: payload.persistent
-          }
-        }),
-        redirect(),
-        dequeue({
-          payload: {
-            id: featureName
-          }
-        })
-      ])
-    )),
-    catchErrorResponseWithConflictStatusCode((response) => of(
-      signInError({
-        payload: response.error
-      })
+    mergeMap(({ payload }) => of(
+      enqueue(loadingScreen(signIn.type)),
+      signInPost({ payload })
     ))
   ));
+
+  public readonly signInPost$ = createEffect(() => this.actions$.pipe(
+    ofType(signInPost),
+    mergeMap(({ payload }) => this.signInClient.signIn(payload).pipe(
+      mergeMap((payload) => of(
+        authenticate({ payload }),
+        dequeue(loadingScreen(signIn.type)),
+        signInRedirect()
+      ))
+    )),
+    catchErrorResponseWithConflictStatusCode((response) => of(
+      signInPostError({ payload: response.error }),
+      dequeue(loadingScreen(signIn.type))
+    ))
+  ));
+
+  public readonly signInRedirect$ = createEffect(() => this.actions$.pipe(
+    ofType(signInRedirect),
+    concatLatestFrom(() => this.store.select(redirectUrl)),
+    tap(([ _, redirectUrl ]) => this.router.navigateByUrl(redirectUrl || '/'))
+  ),
+  { dispatch: false })
 }

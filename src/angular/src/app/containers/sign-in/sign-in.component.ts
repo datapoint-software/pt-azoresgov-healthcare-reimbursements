@@ -2,7 +2,6 @@ import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { SignInFeature } from "../../features/sign-in/sign-in.feature";
-import { takeUntil } from "rxjs";
 import { RouterModule } from "@angular/router";
 import { SignInFormComponent } from "../../components/sign-in-form/sign-in-form.component";
 import { SignInFormSubmitEvent } from "../../components/sign-in-form/sign-in-form.events";
@@ -24,11 +23,8 @@ export class SignInComponent {
     private readonly signIn: SignInFeature
   ) {}
 
-  public readonly authenticationPersistentEnabled$ = this.signIn.authenticationPersistentEnabled$
-    .pipe(takeUntil(this.signIn.disposing$));
-
-  public readonly error$ = this.signIn.error$
-    .pipe(takeUntil(this.signIn.disposing$));
+  public readonly authenticationPersistentEnabled$ = this.signIn.authenticationPersistentEnabled$;
+  public readonly authenticationError$ = this.signIn.authenticationError$;
 
   public readonly form = new FormGroup({
     emailAddress: new FormControl('', [ Validators.required, Validators.maxLength(256), Validators.email ]),

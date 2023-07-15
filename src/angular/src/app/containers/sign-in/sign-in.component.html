@@ -9,7 +9,7 @@
       </div>
       <div class="col-12 col-md-5 col-xl-4 order-md-1 my-5">
         <app-sign-in-form
-          [error]="(error$ | async)!"
+          [error]="(authenticationError$ | async)!"
           [persistentEnabled]="(authenticationPersistentEnabled$ | async)!"
           (submit)="onSubmit($event)" />
       </div>
