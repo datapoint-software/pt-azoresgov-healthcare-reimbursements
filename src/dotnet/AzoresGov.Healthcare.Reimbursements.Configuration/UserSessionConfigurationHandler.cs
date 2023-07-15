@@ -17,10 +17,12 @@ namespace AzoresGov.Healthcare.Reimbursements.Configuration
 
         public async Task<UserSessionOptions> GetOptionsAsync(CancellationToken ct)
         {
-            var parameter = await _parameters.GetByNameAsync(ParameterNames.UserSessionExpiration, ct);
+            var parameter = await _parameters.GetByNameAsync(
+                ParameterNames.UserSessionExpiration,
+                ct);
 
             if (!parameter.TryGetValue<int?>(out var expiration))
-                expiration = 900;
+                expiration = 43200;
 
             return new UserSessionOptions(expiration);
         }

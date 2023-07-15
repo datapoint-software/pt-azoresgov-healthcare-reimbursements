@@ -22,7 +22,6 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                     UserId = table.Column<long>(type: "bigint", nullable: false),
                     UserAgentId = table.Column<long>(type: "bigint", nullable: false),
                     NetworkAddress = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
-                    Secret = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
                     Start = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     LastSeen = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
                 },

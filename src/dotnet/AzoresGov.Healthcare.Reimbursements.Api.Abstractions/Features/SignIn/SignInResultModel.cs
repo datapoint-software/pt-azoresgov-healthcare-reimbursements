@@ -1,20 +1,27 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 namespace AzoresGov.Healthcare.Reimbursements.Api.Features.SignIn
 {
     public sealed class SignInResultModel
     {
-        public SignInResultModel(string accessToken, int accessTokenExpiration, string refreshToken)
+        public SignInResultModel(
+            IReadOnlyCollection<SignInEntityResultModel> entities, 
+            IReadOnlyCollection<SignInPermissionResultModel> permissions, 
+            SignInUserResultModel user, 
+            SignInUserSessionResultModel userSession)
         {
-            AccessToken = accessToken;
-            AccessTokenExpiration = accessTokenExpiration;
-            RefreshToken = refreshToken;
+            Entities = entities;
+            Permissions = permissions;
+            User = user;
+            UserSession = userSession;
         }
 
-        public string AccessToken { get; }
+        public IReadOnlyCollection<SignInEntityResultModel> Entities { get; }
 
-        public int AccessTokenExpiration { get; }
+        public IReadOnlyCollection<SignInPermissionResultModel> Permissions { get; }
 
-        public string RefreshToken { get; }
+        public SignInUserResultModel User { get; }
+
+        public SignInUserSessionResultModel UserSession { get; }
     }
 }

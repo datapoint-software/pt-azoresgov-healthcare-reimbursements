@@ -2,6 +2,8 @@
 using AzoresGov.Healthcare.Reimbursements.Authentication;
 using AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn;
 using Datapoint.Mediator;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -16,16 +18,10 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.SignIn
     [Route("/api/features/sign-in")]
     public sealed class SignInFeatureController : Controller
     {
-        private readonly IAccessTokenManager _accessTokenManager;
-
-        private readonly IConfiguration _configuration;
-
         private readonly IMediator _mediator;
 
-        public SignInFeatureController(IAccessTokenManager accessTokenManager, IConfiguration configuration, IMediator mediator)
+        public SignInFeatureController(IMediator mediator)
         {
-            _accessTokenManager = accessTokenManager;
-            _configuration = configuration;
             _mediator = mediator;
         }
 
@@ -47,33 +43,51 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.SignIn
         [HttpPost]
         public async Task<SignInResultModel> SignInAsync([FromBody] SignInModel model, CancellationToken ct)
         {
-            var command = new SignInCommand(
-                HttpContext.Request.GetUserAgent(),
-                HttpContext.Request.GetRemoteAddress(),
-                model.EmailAddress,
-                model.Password);
-
             var result = await _mediator.HandleCommandAsync<SignInCommand, SignInResult>(
-                command,
+                new SignInCommand(
+                    HttpContext.Request.GetUserAgent(),
+                    HttpContext.Request.GetRemoteAddress(),
+                    model.EmailAddress,
+                    model.Password,
+                    model.Persistent),
                 ct);
 
             var principal = ClaimsPrincipalHelper.CreateClaimsPrincipal(
-                result.UserId,
-                result.UserRowVersionId,
-                result.UserSessionId,
-                result.UserSessionRowVersionId);
+                result.User.Id,
+                result.User.RowVersionId,
+                result.UserSession.Id,
+                result.UserSession.RowVersionId,
+                result.UserSession.Expiration);
 
-            var accessTokenExpiration = _configuration.GetAccessTokenExpiration();
-
-            var accessToken = _accessTokenManager.CreateAccessToken(
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
                 principal,
-                command.Creation,
-                accessTokenExpiration);
+                new AuthenticationProperties()
+                {
+                    IsPersistent = result.UserSession.Expiration.HasValue,
+                    ExpiresUtc = result.UserSession.Expiration
+                });
 
             return new SignInResultModel(
-                accessToken,
-                accessTokenExpiration,
-                result.UserSessionSecret);
+                result.Entities
+                    .Select(e => new SignInEntityResultModel(
+                        e.Id,
+                        e.Permissions
+                            .Select(ep => new SignInPermissionResultModel(
+                                ep.Id,
+                                ep.Name))
+                            .ToArray()))
+                    .ToArray(),
+                result.Permissions
+                    .Select(p => new SignInPermissionResultModel(
+                        p.Id,
+                        p.Name))
+                    .ToArray(),
+                new SignInUserResultModel(
+                    result.User.Id,
+                    result.User.Name),
+                new SignInUserSessionResultModel(
+                    result.UserSession.Id));
         }
     }
 }

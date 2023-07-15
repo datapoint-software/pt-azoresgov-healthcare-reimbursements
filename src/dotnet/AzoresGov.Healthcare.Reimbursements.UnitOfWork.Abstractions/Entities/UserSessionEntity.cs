@@ -21,8 +21,6 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities
 
         public string NetworkAddress { get; set; } = default!;
 
-        public string Secret { get; set; } = default!;
-
         public DateTimeOffset Start { get; set; } = default!;
 
         public DateTimeOffset LastSeen { get; set; } = default!;

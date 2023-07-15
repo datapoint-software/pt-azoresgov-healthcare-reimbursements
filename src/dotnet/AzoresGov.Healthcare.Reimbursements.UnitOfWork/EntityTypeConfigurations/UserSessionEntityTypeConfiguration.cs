@@ -31,10 +31,6 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.EntityTypeConfiguration
                 .HasMaxLength(64)
                 .IsRequired();
 
-            builder.Property(e => e.Secret)
-                .HasMaxLength(64)
-                .IsRequired();
-
             builder.Property(e => e.Start)
                 .IsRequired();
 

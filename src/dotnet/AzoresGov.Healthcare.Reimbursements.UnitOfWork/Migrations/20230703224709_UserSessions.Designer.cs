@@ -184,6 +184,9 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("Granted")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.HasAlternateKey("PublicId");
@@ -536,11 +539,6 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                     b.Property<Guid>("RowVersionId")
                         .IsConcurrencyToken()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Secret")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
 
                     b.Property<DateTimeOffset>("Start")
                         .HasColumnType("datetimeoffset");

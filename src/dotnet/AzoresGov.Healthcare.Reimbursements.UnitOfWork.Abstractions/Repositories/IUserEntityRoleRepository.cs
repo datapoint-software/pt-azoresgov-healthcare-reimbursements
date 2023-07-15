@@ -8,6 +8,6 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
 {
     public interface IUserEntityRoleRepository : IRepository<UserEntityRoleEntity>
     {
-        Task<IReadOnlyCollection<long>> GetAllRoleIdByUserIdAndEntityIdAsync(long userId, IReadOnlyCollection<long> entityId, CancellationToken ct);
+        Task<IEnumerable<UserEntityRoleEntity>> GetAllByUserIdAndEntityIdAsync(long userId, IEnumerable<long> entityId, CancellationToken ct);
     }
 }

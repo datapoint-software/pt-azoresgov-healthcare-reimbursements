@@ -1,10 +1,13 @@
-﻿using AzoresGov.Healthcare.Reimbursements.Api.Features.SignIn;
-using AzoresGov.Healthcare.Reimbursements.Api.Helpers;
+﻿using AzoresGov.Healthcare.Reimbursements.Api.Helpers;
 using AzoresGov.Healthcare.Reimbursements.Authentication;
 using AzoresGov.Healthcare.Reimbursements.Middleware.Features.Identity;
 using Datapoint.Mediator;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,48 +16,61 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.Identity
     [Route("/api/features/identity")]
     public sealed class IdentityFeatureController : Controller
     {
-        private readonly IAccessTokenManager _accessTokenManager;
-
-        private readonly IConfiguration _configuration;
-
         private readonly IMediator _mediator;
 
-        public IdentityFeatureController(IAccessTokenManager accessTokenManager, IConfiguration configuration, IMediator mediator)
+        public IdentityFeatureController(IMediator mediator)
         {
-            _accessTokenManager = accessTokenManager;
-            _configuration = configuration;
             _mediator = mediator;
         }
 
         [HttpPost("refresh")]
-        public async Task<IdentityRefreshResultModel> RefreshAsync([FromBody] IdentityRefreshModel model, CancellationToken ct)
+        public async Task<IdentityRefreshResultModel> RefreshAsync(CancellationToken ct)
         {
             var command = new IdentityRefreshCommand(
                 User.GetSessionId(),
                 User.GetSessionRowVersionId(),
-                model.RefreshToken);
+                User.GetSessionPersistent());
 
             var result = await _mediator.HandleCommandAsync<IdentityRefreshCommand, IdentityRefreshResult>(
                 command,
                 ct);
 
             var principal = ClaimsPrincipalHelper.CreateClaimsPrincipal(
-                User.GetId(),
-                User.GetRowVersionId(),
-                User.GetSessionId(),
-                result.UserSessionRowVersionId);
+                result.User.Id,
+                result.User.RowVersionId,
+                result.UserSession.Id,
+                result.UserSession.RowVersionId,
+                result.UserSession.Expiration);
 
-            var accessTokenExpiration = _configuration.GetAccessTokenExpiration();
-
-            var accessToken = _accessTokenManager.CreateAccessToken(
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
                 principal,
-                command.Creation,
-                accessTokenExpiration);
+                new AuthenticationProperties()
+                {
+                    IsPersistent = result.UserSession.Expiration.HasValue,
+                    ExpiresUtc = result.UserSession.Expiration
+                });
 
             return new IdentityRefreshResultModel(
-                accessToken,
-                accessTokenExpiration,
-                result.UserSessionSecret);
+                result.Entities
+                    .Select(e => new IdentityRefreshEntityResultModel(
+                        e.Id,
+                        e.Permissions
+                            .Select(ep => new IdentityRefreshPermissionResultModel(
+                                ep.Id,
+                                ep.Name))
+                            .ToArray()))
+                    .ToArray(),
+                result.Permissions
+                    .Select(p => new IdentityRefreshPermissionResultModel(
+                        p.Id,
+                        p.Name))
+                    .ToArray(),
+                new IdentityRefreshUserResultModel(
+                    result.User.Id,
+                    result.User.Name),
+                new IdentityRefreshUserSessionResultModel(
+                    result.UserSession.Id));
         }
     }
 }

@@ -5,17 +5,17 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.Identity
 {
     public sealed class IdentityRefreshCommand : Command<IdentityRefreshResult>
     {
-        public IdentityRefreshCommand(Guid userSessionId, Guid userSessionRowVersionId, string userSessionSecret)
+        public IdentityRefreshCommand(Guid userSessionId, Guid userSessionRowVersionId, bool persistent)
         {
             UserSessionId = userSessionId;
             UserSessionRowVersionId = userSessionRowVersionId;
-            UserSessionSecret = userSessionSecret;
+            Persistent = persistent;
         }
 
         public Guid UserSessionId { get; }
 
         public Guid UserSessionRowVersionId { get; }
 
-        public string UserSessionSecret { get; }
+        public bool Persistent { get; }
     }
 }
