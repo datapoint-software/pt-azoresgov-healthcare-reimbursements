@@ -7,7 +7,6 @@ using Datapoint.Configuration;
 using Datapoint.Mediator;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -186,20 +185,29 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
                 entities
                     .Select(e => new SignInEntityResult(
                         e.Value.PublicId,
-                        (userEntityPermissions[e.Key] ?? Array.Empty<UserEntityPermissionEntity>())
+                        (userEntityPermissions.GetValueOrDefault(e.Key) ?? Array.Empty<UserEntityPermissionEntity>())
                             .Where(uep => !userPermissions.ContainsKey(uep.PermissionId))
-                            .Where(uep => !userRoles.Any(ur => (rolePermissions[ur.RoleId]?.Any(rp => rp.PermissionId == uep.PermissionId) ?? false)))
+                            .Where(uep => !userRoles.Any(ur => (rolePermissions.GetValueOrDefault(ur.RoleId)?.Any(rp => rp.PermissionId == uep.PermissionId) ?? false)))
                             .Where(uep => uep.Granted)
                             .Select(uep => new SignInPermissionResult(
                                 permissions[uep.PermissionId].PublicId,
                                 permissions[uep.PermissionId].Name))
+                            .Union(
+                                (userEntityRoles.GetValueOrDefault(e.Key) ?? Array.Empty<UserEntityRoleEntity>())
+                                    .SelectMany(rp => rolePermissions.GetValueOrDefault(rp.RoleId) ?? Array.Empty<RolePermissionEntity>())
+                                    .Where(rp => !userPermissions.ContainsKey(rp.PermissionId))
+                                    .Where(rp => !userRoles.Any(ur => (rolePermissions.GetValueOrDefault(ur.RoleId)?.Any(rp => rp.PermissionId == rp.PermissionId) ?? false)))
+                                    .Where(rp => rp.Granted)
+                                    .Select(rp => new SignInPermissionResult(
+                                        permissions[rp.PermissionId].PublicId,
+                                        permissions[rp.PermissionId].Name)))
                             .ToArray()))
                     .ToArray(),
                 userPermissions.Values
                     .Where(up => up.Granted)
                     .Select(up => up.PermissionId)
                     .Union(userRoles
-                        .SelectMany(ur => rolePermissions[ur.RoleId] ?? Array.Empty<RolePermissionEntity>())
+                        .SelectMany(ur => rolePermissions.GetValueOrDefault(ur.RoleId) ?? Array.Empty<RolePermissionEntity>())
                         .Where(rp => !userPermissions.ContainsKey(rp.PermissionId))
                         .Where(rp => rp.Granted)
                         .Select(rp => rp.PermissionId))
