@@ -1,0 +1,57 @@
+<!-- NAVIGATION -->
+<nav class="navbar navbar-vertical fixed-start navbar-expand-md navbar-light" id="sidebar">
+  <div class="container-fluid">
+
+    <!-- Toggler -->
+    <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" aria-controls="sidebarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Brand -->
+    <a class="navbar-brand" href="./index.html">
+      <img src="assets/dashkit/img/logo.svg" class="navbar-brand-img mx-auto" alt="...">
+    </a>
+
+    <!-- Collapse -->
+    <div class="collapse navbar-collapse" id="sidebarCollapse">
+
+      <!-- Form -->
+      <form class="mt-4 mb-3 d-md-none">
+        <div class="input-group input-group-rounded input-group-merge input-group-reverse">
+          <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+          <div class="input-group-text">
+            <span class="fe fe-search"></span>
+          </div>
+        </div>
+      </form>
+
+      <!-- Navigation -->
+      <ul class="navbar-nav">
+        <li class="nav-item mb-3">
+          <a [routerLink]="[ '/' ]" class="nav-link">
+            <i class="fe fe-home"></i> Início
+          </a>
+        </li>
+        <li class="nav-item" *ngIf="processEnabled$ | async">
+          <a class="nav-link collapsed" href="#reimbursements-nav" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="reimbursements-nav">
+            <i class="fe fe-database"></i> Processos
+          </a>
+          <div class="collapse" id="reimbursements-nav">
+            <ul class="nav nav-sm flex-column">
+              <li class="nav-item">
+                <a [routerLink]="[ '/processes/_' ]" class="nav-link" *ngIf="(processCreationEnabled$ | async)">
+                  Novo
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div> <!-- / .navbar-collapse -->
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+  <router-outlet></router-outlet>
+</div>

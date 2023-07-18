@@ -1,9 +1,9 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { ErrorHandler, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 
 @Injectable()
-export class AppErrorHandler {
+export class AppErrorHandler implements ErrorHandler{
 
   constructor(
     private readonly router: Router
