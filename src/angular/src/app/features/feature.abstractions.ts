@@ -1,3 +1,4 @@
+import { isDevMode } from "@angular/core";
 import { ActionCreator, DefaultProjectorFn, MemoizedSelector, Store } from "@ngrx/store";
 import { TypedAction } from "@ngrx/store/src/models";
 import { Observable, Subject, filter, firstValueFrom, skipWhile, takeUntil } from "rxjs";
@@ -33,10 +34,8 @@ export abstract class DynamicFeature<TFeatureState extends object, TInitPayload>
 
     const state = await firstValueFrom(this.state$);
 
-    if (state) {
-      console.warn(`Action '${this.init$$.type}' will not dispatch because the feature state is already set.`);
-      return;
-    }
+    if (state)
+      throw new Error(`Action '${this.init$$.type}' can not be dispatched because the feature state is already set.`);
 
     this.store.dispatch(this.init$$({ payload }));
 
@@ -88,7 +87,10 @@ export abstract class StaticFeature<TFeatureState extends object> extends Featur
     const state = await firstValueFrom(this.state$);
 
     if (state) {
-      console.warn(`Action '${this.init$$.type}' will not dispatch because the feature state is already set.`);
+
+      if (isDevMode())
+        console.warn(`Action '${this.init$$.type}' will not dispatch because the feature state is already set.`);
+
       return;
     }
 
