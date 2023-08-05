@@ -18,5 +18,11 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
             
             .Where(e => e.UserId == userId)
             .ToListAsync(ct);
+
+        public Task<UserPermissionEntity?> GetByUserIdAndPermissionIdAsync(long userId, long permissionId, CancellationToken ct) => Entities
+
+            .FirstOrDefaultAsync(
+                e => e.UserId == userId && e.PermissionId == permissionId, 
+                ct);
     }
 }

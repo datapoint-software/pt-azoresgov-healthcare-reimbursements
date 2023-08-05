@@ -7,6 +7,8 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork
     {
         IEntityRepository Entities { get; }
 
+        IEntityParentRepository EntityParents { get; }
+
         IParameterRepository Parameters { get; }
 
         IPermissionRepository Permissions { get; }
