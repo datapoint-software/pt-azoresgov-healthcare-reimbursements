@@ -1,5 +1,6 @@
 ﻿using AzoresGov.Healthcare.Reimbursements.Configuration;
 using AzoresGov.Healthcare.Reimbursements.Middleware.Helpers;
+using AzoresGov.Healthcare.Reimbursements.Middleware.Managers;
 using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities;
 using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories;
 using Datapoint;
@@ -17,58 +18,34 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.Identity
     {
         private const string GenericUserMessage = "A sua sessão expirou.";
 
+        private readonly AuthorizationManager _authorization;
+
         private readonly IConfiguration _configuration;
 
         private readonly IEntityRepository _entities;
 
         private readonly IPermissionRepository _permissions;
 
-        private readonly IRolePermissionRepository _rolePermissions;
-
-        private readonly IUserAgentRepository _userAgents;
-
         private readonly IUserEntityRepository _userEntities;
-
-        private readonly IUserEntityPermissionRepository _userEntityPermissions;
-
-        private readonly IUserEntityRoleRepository _userEntityRoles;
-
-        private readonly IUserPasswordRepository _userPasswords;
-
-        private readonly IUserPermissionRepository _userPermissions;
-
-        private readonly IUserRoleRepository _userRoles;
 
         private readonly IUserRepository _users;
 
         private readonly IUserSessionRepository _userSessions;
 
         public IdentityRefreshCommandHandler(
+            AuthorizationManager authorization,
             IConfiguration configuration, 
             IEntityRepository entities, 
-            IPermissionRepository permissions, 
-            IRolePermissionRepository rolePermissions, 
-            IUserAgentRepository userAgents, 
+            IPermissionRepository permissions,
             IUserEntityRepository userEntities, 
-            IUserEntityPermissionRepository userEntityPermissions, 
-            IUserEntityRoleRepository userEntityRoles, 
-            IUserPasswordRepository userPasswords, 
-            IUserPermissionRepository userPermissions, 
-            IUserRoleRepository userRoles, 
             IUserRepository users, 
             IUserSessionRepository userSessions)
         {
+            _authorization = authorization;
             _configuration = configuration;
             _entities = entities;
             _permissions = permissions;
-            _rolePermissions = rolePermissions;
-            _userAgents = userAgents;
             _userEntities = userEntities;
-            _userEntityPermissions = userEntityPermissions;
-            _userEntityRoles = userEntityRoles;
-            _userPasswords = userPasswords;
-            _userPermissions = userPermissions;
-            _userRoles = userRoles;
             _users = users;
             _userSessions = userSessions;
         }
@@ -97,82 +74,71 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.Identity
                 command,
                 userSession);
 
+            var user = await GetUserAsync(userSession, ct);
+
             var userSessionExpiration = GetUserSessionExpiration(
                 command,
                 userSessionOptions);
 
-            var user = await GetUserAsync(
+            return await BuildResultAsync(
+                user,
                 userSession,
+                userSessionExpiration,
+                ct);
+        }
+
+        private async Task<IdentityRefreshResult> BuildResultAsync(UserEntity user, UserSessionEntity userSession, DateTimeOffset? userSessionExpiration, CancellationToken ct)
+        {
+
+            var userEntities = await _userEntities.GetAllByUserIdAsync(
+                user.Id,
                 ct);
 
-            var userRoles = await GetAllUserRolesAsync(
-                user,
+            var entities = await _entities.GetAllByIdAsync(
+                userEntities.Select(ue => ue.EntityId),
                 ct);
 
-            var userPermissions = await GetAllUserPermissionsAsync(
-                user,
-                ct);
+            var permissions = await _permissions.GetAllAsync(ct);
 
-            var entities = await GetAllEntitiesAsync(
-                user,
-                ct);
+            var entityResults = new List<IdentityRefreshEntityResult>();
 
-            var userEntityPermissions = await GetAllUserEntityPermissionsAsync(
-                user,
-                entities.Values,
-                ct);
+            foreach (var entity in entities)
+            {
+                var entityPermissionResults = new List<IdentityRefreshPermissionResult>();
 
-            var userEntityRoles = await GetAllUserEntityRolesAsync(
-                user,
-                entities.Values,
-                ct);
+                foreach (var permission in permissions)
+                {
+                    if (await _authorization.AuthorizeAsync(permission, user, entity, ct))
+                    {
+                        entityPermissionResults.Add(
+                            new IdentityRefreshPermissionResult(
+                                permission.PublicId,
+                                permission.Name));
+                    }
+                }
 
-            var rolePermissions = await GetAllRolePermissionsAsync(
-                userRoles,
-                userEntityRoles.SelectMany(e => e.Value),
-                ct);
+                entityResults.Add(
+                    new IdentityRefreshEntityResult(
+                        entity.PublicId,
+                        entityPermissionResults));
+            }
 
-            var permissions = await GetAllPermissionsAsync(
-                userPermissions.Values,
-                userEntityPermissions,
-                rolePermissions,
-                ct);
+            var permissionResults = new List<IdentityRefreshPermissionResult>();
+
+            foreach (var permission in permissions)
+            {
+                if (await _authorization.AuthorizeAsync(permission, user, ct))
+                {
+                    permissionResults.Add(
+                        new IdentityRefreshPermissionResult(
+                            permission.PublicId,
+                            permission.Name));
+                }
+            }
 
             return new IdentityRefreshResult(
-                entities
-                    .Select(e => new IdentityRefreshEntityResult(
-                        e.Value.PublicId,
-                        (userEntityPermissions.GetValueOrDefault(e.Key) ?? Array.Empty<UserEntityPermissionEntity>())
-                            .Where(uep => !userPermissions.ContainsKey(uep.PermissionId))
-                            .Where(uep => !userRoles.Any(ur => (rolePermissions.GetValueOrDefault(ur.RoleId)?.Any(rp => rp.PermissionId == uep.PermissionId) ?? false)))
-                            .Where(uep => uep.Granted)
-                            .Select(uep => new IdentityRefreshPermissionResult(
-                                permissions[uep.PermissionId].PublicId,
-                                permissions[uep.PermissionId].Name))
-                            .Union(
-                                (userEntityRoles.GetValueOrDefault(e.Key) ?? Array.Empty<UserEntityRoleEntity>())
-                                    .SelectMany(rp => rolePermissions.GetValueOrDefault(rp.RoleId) ?? Array.Empty<RolePermissionEntity>())
-                                    .Where(rp => !userPermissions.ContainsKey(rp.PermissionId))
-                                    .Where(rp => !userRoles.Any(ur => (rolePermissions.GetValueOrDefault(ur.RoleId)?.Any(rp => rp.PermissionId == rp.PermissionId) ?? false)))
-                                    .Where(rp => rp.Granted)
-                                    .Select(rp => new IdentityRefreshPermissionResult(
-                                        permissions[rp.PermissionId].PublicId,
-                                        permissions[rp.PermissionId].Name)))
-                            .ToArray()))
-                    .ToArray(),
-                userPermissions.Values
-                    .Where(up => up.Granted)
-                    .Select(up => up.PermissionId)
-                    .Union(userRoles
-                        .SelectMany(ur => rolePermissions.GetValueOrDefault(ur.RoleId) ?? Array.Empty<RolePermissionEntity>())
-                        .Where(rp => !userPermissions.ContainsKey(rp.PermissionId))
-                        .Where(rp => rp.Granted)
-                        .Select(rp => rp.PermissionId))
-                    .Distinct()
-                    .Select(pid => new IdentityRefreshPermissionResult(
-                        permissions[pid].PublicId,
-                        permissions[pid].Name))
-                    .ToArray(),
+                entityResults,
+                permissionResults,
                 new IdentityRefreshUserResult(
                     user.PublicId,
                     user.RowVersionId,
@@ -215,87 +181,6 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.Identity
             }
 
             return user;
-        }
-
-        private async Task<IReadOnlyDictionary<long, PermissionEntity>> GetAllPermissionsAsync(IEnumerable<UserPermissionEntity> userPermissions, IReadOnlyDictionary<long, IEnumerable<UserEntityPermissionEntity>> userEntityPermissions, IReadOnlyDictionary<long, IEnumerable<RolePermissionEntity>> rolePermissions, CancellationToken ct)
-        {
-            var permissions = await _permissions.GetAllByIdAsync(
-                userPermissions
-                    .Select(e => e.PermissionId)
-                    .Union(rolePermissions
-                        .SelectMany(e => e.Value.Select(e => e.PermissionId)))
-                    .Distinct(),
-                ct);
-
-            return permissions.ToDictionary(e => e.Id);
-        }
-
-        private async Task<IReadOnlyDictionary<long, UserPermissionEntity>> GetAllUserPermissionsAsync(UserEntity user, CancellationToken ct)
-        {
-            var userPermissions = await _userPermissions.GetAllByUserIdAsync(
-                user.Id,
-                ct);
-
-            return userPermissions.ToDictionary(
-                up => up.PermissionId);
-        }
-
-        private async Task<IReadOnlyDictionary<long, IEnumerable<RolePermissionEntity>>> GetAllRolePermissionsAsync(IEnumerable<UserRoleEntity> userRoles, IEnumerable<UserEntityRoleEntity> userEntityRoles, CancellationToken ct)
-        {
-            var rolePermissions = await _rolePermissions.GetAllByRoleIdAsync(
-                userRoles.Select(e => e.RoleId)
-                    .Union(userEntityRoles.Select(e => e.RoleId))
-                    .Distinct(),
-                ct);
-
-            return rolePermissions
-                .GroupBy(e => e.RoleId)
-                .ToDictionary(e => e.Key, e => e.AsEnumerable());
-        }
-
-        private Task<IEnumerable<UserRoleEntity>> GetAllUserRolesAsync(UserEntity user, CancellationToken ct) =>
-
-            _userRoles.GetAllByUserIdAsync(
-                user.Id,
-                ct);
-
-        private async Task<IReadOnlyDictionary<long, IEnumerable<UserEntityRoleEntity>>> GetAllUserEntityRolesAsync(UserEntity user, IEnumerable<EntityEntity> values, CancellationToken ct)
-        {
-            var userEntityRoles = await _userEntityRoles.GetAllByUserIdAndEntityIdAsync(
-                user.Id,
-                values.Select(e => e.Id),
-                ct);
-
-            return userEntityRoles
-                .GroupBy(e => e.EntityId)
-                .ToDictionary(e => e.Key, e => e.AsEnumerable());
-        }
-
-        private async Task<IReadOnlyDictionary<long, IEnumerable<UserEntityPermissionEntity>>> GetAllUserEntityPermissionsAsync(UserEntity user, IEnumerable<EntityEntity> entities, CancellationToken ct)
-        {
-            var userEntityPermissions = await _userEntityPermissions.GetAllByUserIdAndEntityIdAsync(
-                user.Id,
-                entities.Select(e => e.Id),
-                ct);
-
-            return userEntityPermissions
-                .GroupBy(e => e.EntityId)
-                .ToDictionary(
-                    e => e.Key,
-                    e => e.AsEnumerable());
-        }
-
-        private async Task<IReadOnlyDictionary<long, EntityEntity>> GetAllEntitiesAsync(UserEntity user, CancellationToken ct)
-        {
-            var userEntities = await _userEntities.GetAllByUserIdAsync(
-                user.Id,
-                ct);
-
-            var entities = await _entities.GetAllByIdAsync(
-                userEntities.Select(ue => ue.EntityId).ToArray(),
-                ct);
-
-            return entities.ToDictionary(e => e.Id);
         }
 
         private void AssertUserSessionExpiration(UserSessionEntity userSession, UserSessionOptions userSessionOptions)

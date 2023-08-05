@@ -1,5 +1,4 @@
 ﻿using AzoresGov.Healthcare.Reimbursements.Api.Helpers;
-using AzoresGov.Healthcare.Reimbursements.Authentication;
 using AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn;
 using Datapoint.Mediator;
 using Microsoft.AspNetCore.Authentication;

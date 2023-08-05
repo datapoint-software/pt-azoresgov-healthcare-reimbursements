@@ -7,6 +7,8 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork
     {
         private EntityRepository? _entities;
 
+        private EntityParentRepository? _entityParents;
+
         private ParameterRepository? _parameters;
 
         private PermissionRepository? _permissions;
@@ -40,6 +42,8 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork
         }
 
         public IEntityRepository Entities => _entities ??= new EntityRepository(this);
+
+        public IEntityParentRepository EntityParents => _entityParents ??= new EntityParentRepository(this);
 
         public IParameterRepository Parameters => _parameters ??= new ParameterRepository(this);
 

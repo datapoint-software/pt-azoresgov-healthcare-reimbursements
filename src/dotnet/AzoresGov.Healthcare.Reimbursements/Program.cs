@@ -1,9 +1,9 @@
-using AzoresGov.Healthcare.Reimbursements.Authentication;
 using AzoresGov.Healthcare.Reimbursements.Configuration;
 using AzoresGov.Healthcare.Reimbursements.Handlers;
 using AzoresGov.Healthcare.Reimbursements.Helpers;
 using AzoresGov.Healthcare.Reimbursements.Middleware;
 using AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn;
+using AzoresGov.Healthcare.Reimbursements.Middleware.Managers;
 using AzoresGov.Healthcare.Reimbursements.UnitOfWork;
 using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories;
 using Datapoint.AspNetCore;
@@ -13,7 +13,6 @@ using Datapoint.Mediator;
 using Datapoint.Mediator.FluentValidation;
 using Datapoint.UnitOfWork.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -21,7 +20,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Text.Json.Serialization;
 
 namespace AzoresGov.Healthcare.Reimbursements
 {
@@ -36,10 +34,6 @@ namespace AzoresGov.Healthcare.Reimbursements
                 builder.Configuration,
                 builder.Environment);
 
-            var accessTokenManager = AccessTokenHelper.CreateManager(
-                builder.Configuration,
-                logger);
-
             using var context = ContextHelper.CreateContext(
                 builder.Configuration,
                 builder.Environment);
@@ -53,8 +47,7 @@ namespace AzoresGov.Healthcare.Reimbursements
             ConfigureServices(
                 builder.Configuration,
                 builder.Environment,
-                builder.Services,
-                accessTokenManager);
+                builder.Services);
 
             var app = builder.Build();
 
@@ -84,11 +77,9 @@ namespace AzoresGov.Healthcare.Reimbursements
             app.MapFallbackToFile("index.html");
         }
 
-        private static void ConfigureServices(ConfigurationManager configuration, Microsoft.AspNetCore.Hosting.IWebHostEnvironment environment, IServiceCollection services, AccessTokenManager accessTokenManager)
+        private static void ConfigureServices(ConfigurationManager configuration, Microsoft.AspNetCore.Hosting.IWebHostEnvironment environment, IServiceCollection services)
         {
             #region Authentication
-
-            services.AddSingleton<IAccessTokenManager>(accessTokenManager);
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 
@@ -98,27 +89,9 @@ namespace AzoresGov.Healthcare.Reimbursements
                     cookie.Cookie.HttpOnly = true;
                     cookie.Cookie.IsEssential = true;
                     cookie.Cookie.Path = "/api/features";
-                    cookie.Cookie.SecurePolicy = environment.IsDevelopment() 
-                        ? CookieSecurePolicy.SameAsRequest 
+                    cookie.Cookie.SecurePolicy = environment.IsDevelopment()
+                        ? CookieSecurePolicy.SameAsRequest
                         : CookieSecurePolicy.Always;
-                })
-
-                .AddJwtBearer((jwt) =>
-                {
-                    jwt.IncludeErrorDetails = environment.IsDevelopment();
-                    jwt.SaveToken = false;
-
-                    jwt.TokenValidationParameters = new()
-                    {
-                        ValidAudience = accessTokenManager.Name,
-                        ValidIssuer = accessTokenManager.Name,
-
-                        IssuerSigningKey = accessTokenManager.SignaturePublicKey,
-
-                        ValidateAudience = true,
-                        ValidateIssuer = true,
-                        ValidateLifetime = true
-                    };
                 });
 
             #endregion
@@ -141,6 +114,14 @@ namespace AzoresGov.Healthcare.Reimbursements
                     .RequireClaim(ClaimTypes.UserSession)
                     .Build();
             });
+
+            #endregion
+
+            #region Caching
+
+            services.AddDistributedMemoryCache();
+
+            services.AddMemoryCache();
 
             #endregion
 
@@ -200,6 +181,9 @@ namespace AzoresGov.Healthcare.Reimbursements
                     fluentValidation.AddValidatorsFromAssemblyOf<SignInCommandValidator>();
                 });
             });
+
+            // Managers
+            services.AddScoped<AuthorizationManager>();
 
             #endregion
 
