@@ -26,7 +26,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Helpers
                     "user",
                     ClaimTypes.User,
                     ClaimTypes.Role));
-        }            
+        }
 
         internal static Guid GetId(this ClaimsPrincipal principal) => principal
 

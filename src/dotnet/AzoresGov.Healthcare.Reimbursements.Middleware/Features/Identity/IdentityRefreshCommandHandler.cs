@@ -34,11 +34,11 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.Identity
 
         public IdentityRefreshCommandHandler(
             AuthorizationManager authorization,
-            IConfiguration configuration, 
-            IEntityRepository entities, 
+            IConfiguration configuration,
+            IEntityRepository entities,
             IPermissionRepository permissions,
-            IUserEntityRepository userEntities, 
-            IUserRepository users, 
+            IUserEntityRepository userEntities,
+            IUserRepository users,
             IUserSessionRepository userSessions)
         {
             _authorization = authorization;
@@ -55,7 +55,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.Identity
             var userSessionOptions = await _configuration.GetUserSessionOptionsAsync(ct);
 
             AssertUserSessionOptions(
-                command, 
+                command,
                 userSessionOptions);
 
             var userSession = await GetUserSessionAsync(

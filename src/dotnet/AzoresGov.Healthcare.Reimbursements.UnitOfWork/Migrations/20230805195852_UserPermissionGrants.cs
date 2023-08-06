@@ -10,7 +10,7 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-			migrationBuilder.Sql(@"
+            migrationBuilder.Sql(@"
 CREATE VIEW UserPermissionGrants AS (
 	SELECT 
 		u.Id AS UserId,

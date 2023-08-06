@@ -15,12 +15,12 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
         }
 
         public async Task<IReadOnlyCollection<ParameterEntity>> GetAllByNameAsync(IReadOnlyCollection<string> name, CancellationToken ct) => await Entities
-            
+
             .Where(e => name.Contains(e.Name))
             .ToListAsync(ct);
 
         public Task<ParameterEntity?> GetByNameAsync(string name, CancellationToken ct) => Entities
-            
+
             .FirstOrDefaultAsync(e => e.Name == name, ct);
     }
 }

@@ -1,10 +1,6 @@
 ﻿using AzoresGov.Healthcare.Reimbursements.Middleware.Managers;
 using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities;
 using Datapoint;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,7 +17,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Helpers
 
             if (result == false)
             {
-                throw new AuthorizationException("User has insufficient permissions to complete this operation.")
+                throw new BusinessException("User has insufficient permissions to complete this operation.")
                     .WithUserMessage("O perfil do utilizador não tem permissões suficientes para executar esta operação.")
                     .WithCode("KJAXNM");
             }

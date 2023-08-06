@@ -3,7 +3,6 @@ using AzoresGov.Healthcare.Reimbursements.Middleware.Helpers;
 using AzoresGov.Healthcare.Reimbursements.Middleware.Managers;
 using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities;
 using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories;
-using Datapoint;
 using Datapoint.Mediator;
 using System.Threading;
 using System.Threading.Tasks;

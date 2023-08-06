@@ -191,7 +191,7 @@ namespace AzoresGov.Healthcare.Reimbursements
 
             services.AddUnitOfWork<IHealthcareReimbursementsUnitOfWork, HealthcareReimbursementsUnitOfWork, HealthcareReimbursementsContext>((uow) =>
             {
-                uow.UseContextConfiguration((context) => ((DbContextOptionsBuilder<HealthcareReimbursementsContext>)context)
+                uow.UseContextConfiguration((context) => ((DbContextOptionsBuilder<HealthcareReimbursementsContext>) context)
                     .WithEnvironmentDefaults(configuration, environment));
 
                 uow.AddLogicalAreasFromAssemblyOf<AuthorizationLogicalArea>();
