@@ -74,7 +74,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
                 command, 
                 userSessionOptions);
 
-            var timeBasedBruteforcePreventionDelayTask = Task.Delay(7500);
+            var timeBasedBruteforcePreventionDelayTask = Task.Delay(7500, ct);
 
             var handleSignInCommandTask = HandleSignInCommandAsync(
                 command, 
@@ -120,7 +120,6 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
 
             var userSessionExpiration = GetUserSessionExpiration(
                 command,
-                userSession,
                 userSessionOptions);
 
             await _authorization.PopulateAsync(user, ct);
@@ -204,7 +203,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
             }
         }
 
-        private static DateTimeOffset? GetUserSessionExpiration(SignInCommand command, UserSessionEntity userSession, UserSessionOptions userSessionOptions)
+        private static DateTimeOffset? GetUserSessionExpiration(SignInCommand command, UserSessionOptions userSessionOptions)
         {
             if (command.Persistent && userSessionOptions.Expiration.HasValue)
                 return command.Creation.AddSeconds(userSessionOptions.Expiration.Value);

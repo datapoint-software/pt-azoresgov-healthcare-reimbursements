@@ -183,7 +183,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.Identity
             return user;
         }
 
-        private void AssertUserSessionExpiration(UserSessionEntity userSession, UserSessionOptions userSessionOptions)
+        private static void AssertUserSessionExpiration(UserSessionEntity userSession, UserSessionOptions userSessionOptions)
         {
             if (userSessionOptions.Expiration.HasValue)
             {
@@ -205,7 +205,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.Identity
             userSession.LastSeen = command.Creation;
         }
 
-        private void AssertUserSessionRowVersion(IdentityRefreshCommand command, UserSessionEntity userSession)
+        private static void AssertUserSessionRowVersion(IdentityRefreshCommand command, UserSessionEntity userSession)
         {
             if (command.UserSessionRowVersionId == userSession.RowVersionId)
                 return;

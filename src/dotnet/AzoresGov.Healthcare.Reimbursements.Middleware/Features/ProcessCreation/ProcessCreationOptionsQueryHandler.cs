@@ -1,4 +1,5 @@
 ﻿using AzoresGov.Healthcare.Reimbursements.Middleware.Constants;
+using AzoresGov.Healthcare.Reimbursements.Middleware.Helpers;
 using AzoresGov.Healthcare.Reimbursements.Middleware.Managers;
 using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities;
 using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories;
@@ -15,7 +16,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
 
         private readonly IUserRepository _users;
 
-        public ProcessCreationOptionsQueryHandler(AuthorizationManager authorization, IPermissionRepository permissions, IUserRepository users)
+        public ProcessCreationOptionsQueryHandler(AuthorizationManager authorization, IUserRepository users)
         {
             _authorization = authorization;
             _users = users;
@@ -23,12 +24,13 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
 
         public async Task<ProcessCreationOptionsResult> HandleQueryAsync(ProcessCreationOptionsQuery query, CancellationToken ct)
         {
-            var user = await GetUserAsync(
-                query,
+            var user = await _users.GetByPublicIdOrThrowBusinessExceptionAsync(
+                query.UserId,
                 ct);
 
-            await AuthorizeAsync(
-                user, 
+            await _authorization.AuthorizeOrThrowBusinessExceptionAsync(
+                PermissionName.ProcessCreation,
+                user,
                 ct);
 
             var entitySelectionEnabled = await HasZeroOrMultiplePermissionGrantsAsync(
@@ -40,21 +42,6 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
                     entitySelectionEnabled));
         }
 
-        private async Task AuthorizeAsync(UserEntity user, CancellationToken ct)
-        {
-            var result = await _authorization.AuthorizeAsync(
-                PermissionName.ProcessCreation,
-                user,
-                ct);
-
-            if (result == false)
-            {
-                throw new AuthorizationException("User has insufficient permissions.")
-                    .WithUserMessage("O seu perfil não tem permissões suficientes para registar um processo de reembolso.")
-                    .WithCode("TEHBXC");
-            }
-        }
-
         private async Task<bool> HasZeroOrMultiplePermissionGrantsAsync(UserEntity user, CancellationToken ct)
         {
             var grantCount = await _authorization.CountUserEntityPermissionGrantsAsync(
@@ -62,23 +49,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
                 user,
                 ct);
 
-            return grantCount == 0 || grantCount > 1;
-        }
-
-        private async Task<UserEntity> GetUserAsync(ProcessCreationOptionsQuery query, CancellationToken ct)
-        {
-            var user = await _users.GetByPublicIdAsync(
-                query.UserId,
-                ct);
-
-            if (user == null)
-            {
-                throw new BusinessException("A user was not found matching the given identifier.")
-                    .WithUserMessage("O perfil do utilizador não foi encontrado.")
-                    .WithCode("A09NHF");
-            }
-
-            return user;
+            return grantCount is 0 or > 1;
         }
     }
 }
