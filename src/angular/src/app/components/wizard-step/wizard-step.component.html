@@ -1,0 +1,46 @@
+<!-- Title -->
+<h1 class="mb-3">
+  {{title}}
+</h1>
+
+<!-- Step -->
+<h6 class="text-uppercase text-muted">Passo {{number}} de {{stepCount}}</h6>
+
+<!-- Subtitle -->
+<p class="mb-5 text-muted" *ngIf="description">
+  {{description}}
+</p>
+
+<ng-content></ng-content>
+
+<div class="nav row align-items-center mt-5" role="tablist">
+  <div class="col-auto" *ngIf="navigationButtonsVisible && previousButtonVisible">
+
+    <!-- Button -->
+    <button
+      (click)="onPreviousClick($event)"
+      [disabled]="!(navigationButtonsEnabled && previousButtonEnabled)"
+      class="btn btn-lg btn-white show">
+      Anterior
+    </button>
+
+  </div>
+  <div class="col text-center">
+
+    <!-- Step -->
+    <h6 class="text-uppercase text-muted mb-0 mt-0">Passo {{number}} de {{stepCount}}</h6>
+
+  </div>
+  <div class="col-auto" *ngIf="navigationButtonsVisible && nextButtonVisible">
+
+    <!-- Button -->
+    <button
+      (click)="onNextClick($event)"
+      [disabled]="!(navigationButtonsEnabled && nextButtonEnabled)"
+      class="btn btn-lg btn-primary"
+      type="button">
+      Seguinte
+    </button>
+
+  </div>
+</div>

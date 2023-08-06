@@ -8,6 +8,7 @@
     transform: rotate(360deg);
   }
 }
+
 @keyframes loading-overlay-spinner-animation {
   0% {
     -webkit-transform: rotate(0deg);
@@ -19,7 +20,7 @@
   }
 }
 
-:host {
+app-loading-overlay {
   background: RGBA(255, 255, 255, .75);
   display: flex;
   position: absolute;

@@ -5,6 +5,7 @@ using AzoresGov.Healthcare.Reimbursements.Middleware;
 using AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn;
 using AzoresGov.Healthcare.Reimbursements.Middleware.Managers;
 using AzoresGov.Healthcare.Reimbursements.UnitOfWork;
+using AzoresGov.Healthcare.Reimbursements.UnitOfWork.LogicalAreas;
 using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories;
 using Datapoint.AspNetCore;
 using Datapoint.AspNetCore.ErrorResponses;
@@ -194,6 +195,7 @@ namespace AzoresGov.Healthcare.Reimbursements
                 uow.UseContextConfiguration((context) => ((DbContextOptionsBuilder<HealthcareReimbursementsContext>)context)
                     .WithEnvironmentDefaults(configuration, environment));
 
+                uow.AddLogicalAreasFromAssemblyOf<AuthorizationLogicalArea>();
                 uow.AddRepositoriesFromAssemblyOf<UserRepository>();
             });
 

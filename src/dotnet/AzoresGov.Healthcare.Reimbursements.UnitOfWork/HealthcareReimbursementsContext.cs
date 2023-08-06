@@ -1,4 +1,5 @@
 ﻿using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities;
+using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Logical;
 using Datapoint.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -80,5 +81,11 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork
         public DbSet<UserEntity> Users { get; set; } = default!;
 
         public DbSet<UserSessionEntity> UserSessions { get; set; } = default!;
+
+        // Logical entities
+
+        public DbSet<UserEntityPermissionGrantLogicalEntity> UserEntityPermissionGrants { get; set; } = default!;
+
+        public DbSet<UserPermissionGrantLogicalEntity> UserPermissionGrants { get; set; } = default!;
     }
 }

@@ -24,15 +24,15 @@ export class AppErrorHandler implements ErrorHandler{
 
     if (error instanceof HttpErrorResponse) {
 
-      errorDocumentLocation += `?status=${encodeURIComponent(error.status)}&message=`;
+      errorDocumentLocation += `?status=${encodeURIComponent(error.status)}`;
 
       if ('object' === typeof error.error
         && error.error.source === 'app'
         && error.error.message)
           errorDocumentLocation += em(error.error.message);
 
-      else if ([ 503, 504 ].indexOf(error.status) > -1)
-        errorDocumentLocation += em('Não foi possível estabelecer comunicação com os serviços aplicacionais.');
+      else if ([ 503, 504 ].find(sc => sc === error.status))
+        errorDocumentLocation += `&message=${em('Não foi possível estabelecer ligação com os serviços aplicacionais.')}`;
     }
 
     else {

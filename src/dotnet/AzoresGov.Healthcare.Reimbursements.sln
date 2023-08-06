@@ -32,9 +32,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzoresGov.Healthcare.Reimbu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzoresGov.Healthcare.Reimbursements.Configuration.Abstractions", "AzoresGov.Healthcare.Reimbursements.Configuration.Abstractions\AzoresGov.Healthcare.Reimbursements.Configuration.Abstractions.csproj", "{F838906F-BCA1-4E33-B3DD-4F6419CBD0A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzoresGov.Healthcare.Reimbursements.Authentication.Abstractions", "AzoresGov.Healthcare.Reimbursements.Authentication.Abstractions\AzoresGov.Healthcare.Reimbursements.Authentication.Abstractions.csproj", "{3E719BF6-FD52-4E57-8FDD-B693FFCFCA54}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzoresGov.Healthcare.Reimbursements.Authentication", "AzoresGov.Healthcare.Reimbursements.Authentication\AzoresGov.Healthcare.Reimbursements.Authentication.csproj", "{47C123E0-ACAA-4759-BE50-B4A58C53FF69}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzoresGov.Healthcare.Reimbursements.Enumerations", "AzoresGov.Healthcare.Reimbursements.Enumerations\AzoresGov.Healthcare.Reimbursements.Enumerations.csproj", "{2EF805DD-C430-4D06-A5EB-D83DDCBA63CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -82,14 +80,10 @@ Global
 		{F838906F-BCA1-4E33-B3DD-4F6419CBD0A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F838906F-BCA1-4E33-B3DD-4F6419CBD0A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F838906F-BCA1-4E33-B3DD-4F6419CBD0A9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3E719BF6-FD52-4E57-8FDD-B693FFCFCA54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3E719BF6-FD52-4E57-8FDD-B693FFCFCA54}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3E719BF6-FD52-4E57-8FDD-B693FFCFCA54}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3E719BF6-FD52-4E57-8FDD-B693FFCFCA54}.Release|Any CPU.Build.0 = Release|Any CPU
-		{47C123E0-ACAA-4759-BE50-B4A58C53FF69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{47C123E0-ACAA-4759-BE50-B4A58C53FF69}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{47C123E0-ACAA-4759-BE50-B4A58C53FF69}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{47C123E0-ACAA-4759-BE50-B4A58C53FF69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EF805DD-C430-4D06-A5EB-D83DDCBA63CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EF805DD-C430-4D06-A5EB-D83DDCBA63CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EF805DD-C430-4D06-A5EB-D83DDCBA63CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EF805DD-C430-4D06-A5EB-D83DDCBA63CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,322 +1,520 @@
 ﻿using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities;
-using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories;
-using Datapoint.UnitOfWork;
+using AzoresGov.Healthcare.Reimbursements.UnitOfWork.LogicalAreas;
+using Datapoint;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace AzoresGov.Healthcare.Reimbursements.Middleware.Managers
 {
+    /// <summary>
+    /// Safely manages authorization checks for all users taking
+    /// into account his entities, roles and permissions at all levels.
+    /// </summary>
     public sealed class AuthorizationManager
     {
-        private static string CreateUserCacheKey(UserEntity user) =>
-            $"authorization:u={user.Id}";
-
-        private static string CreateUserPermissionCacheKey(PermissionEntity permission, UserEntity user) =>
-            $"authorization:u={user.Id};pn={permission.Name}";
-
-        private static string CreateUserEntityPermissionCacheKey(PermissionEntity permission, UserEntity user, EntityEntity entity) =>
-            $"authorization:u={user.Id};e={entity.Id};pn={permission.Name}";
-
-        private static string CreateUserEntityTransversalCacheKey(PermissionEntity permission, UserEntity user) =>
-            $"authorization:u={user.Id};e=transversal;pn={permission.Name}";
-
-        private static DistributedCacheEntryOptions DistributedCacheEntryOptions = new DistributedCacheEntryOptions()
-        {
-            SlidingExpiration = TimeSpan.FromHours(1)
-        };
+        private readonly IAuthorizationLogicalArea _authorization;
 
         private readonly IDistributedCache _distributedCache;
 
         private readonly ILogger<AuthorizationManager> _logger;
 
-        private readonly IEntityRepository _entities;
-
-        private readonly IPermissionRepository _permissions;
-
-        private readonly IRolePermissionRepository _rolePermissions;
-
-        private readonly IRoleRepository _roles;
-
-        private readonly IUserEntityRepository _userEntities;
-
-        private readonly IUserEntityPermissionRepository _userEntityPermissions;
-
-        private readonly IUserEntityRoleRepository _userEntityRoles;
-
-        private readonly IUserPermissionRepository _userPermissions;
-
-        private readonly IUserRoleRepository _userRoles;
-
-        public AuthorizationManager(
-            IDistributedCache distributedCache, 
-            ILogger<AuthorizationManager> logger, 
-            IEntityRepository entities, 
-            IPermissionRepository permissions, 
-            IRolePermissionRepository rolePermissions, 
-            IRoleRepository roles, 
-            IUserEntityRepository userEntities, 
-            IUserEntityPermissionRepository userEntityPermissions, 
-            IUserEntityRoleRepository userEntityRoles, 
-            IUserPermissionRepository userPermissions, 
-            IUserRoleRepository userRoles)
+        /// <summary>
+        /// Creates a new authorization manager.
+        /// </summary>
+        /// <param name="authorization">The authorization logical area.</param>
+        /// <param name="distributedCache">The distributed cache.</param>
+        /// <param name="logger">The logger.</param>
+        public AuthorizationManager(IAuthorizationLogicalArea authorization, IDistributedCache distributedCache, ILogger<AuthorizationManager> logger)
         {
+            _authorization = authorization;
             _distributedCache = distributedCache;
             _logger = logger;
-            _entities = entities;
-            _permissions = permissions;
-            _rolePermissions = rolePermissions;
-            _roles = roles;
-            _userEntities = userEntities;
-            _userEntityPermissions = userEntityPermissions;
-            _userEntityRoles = userEntityRoles;
-            _userPermissions = userPermissions;
-            _userRoles = userRoles;
         }
 
-        public async Task<bool> AuthorizeAsync(PermissionEntity permission, UserEntity user, CancellationToken ct)
+        /// <summary>
+        /// Checks if a permission has been granted to a user.
+        /// 
+        /// A permission is granted if it is assigned to the user
+        /// directly or through a system-wide role.
+        /// </summary>
+        /// <param name="permission">The permission.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="ct">The asynchronous task cancellation token.</param>
+        /// <returns>The asynchronous task for the permission grant status.</returns>
+        public Task<bool> AuthorizeAsync(PermissionEntity permission, UserEntity user, CancellationToken ct)
         {
-            await EnsureUserPopulationAsync(user, ct);
-
-            return await ReadBooleanAsync(
-                CreateUserPermissionCacheKey(
-                    permission,
-                    user),
+            return AuthorizeAsync(
+                permission.Id,
+                user.Id,
+                true,
                 ct);
         }
 
-        public async Task<bool> AuthorizeAsync(PermissionEntity permission, UserEntity user, EntityEntity entity, CancellationToken ct)
+        /// <summary>
+        /// Checks if a permission has been granted for a user
+        /// based on a specific entity.
+        /// 
+        /// A permission is granted if it is assigned to the user directly,
+        /// through a system-wide role, through an entity or one of his
+        /// roles within the scope of that entity.
+        /// </summary>
+        /// <param name="permission">The permission.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="entity">The entity.</param>
+        /// <param name="ct">The asynchronous task cancellation token.</param>
+        /// <returns>The asynchronous task for the permission grant status.</returns>
+        public Task<bool> AuthorizeAsync(PermissionEntity permission, UserEntity user, EntityEntity entity, CancellationToken ct)
         {
-            await EnsureUserPopulationAsync(user, ct);
-
-            return await ReadBooleanAsync(
-                CreateUserEntityPermissionCacheKey(
-                    permission,
-                    user,
-                    entity),
+            return AuthorizeAsync(
+                permission.Id,
+                user.Id,
+                entity.Id,
+                true,
                 ct);
         }
 
-        public async Task<bool> AuthorizeWithAnyEntityAsync(PermissionEntity permission, UserEntity user, CancellationToken ct)
+        /// <summary>
+        /// Checks if a permission has been granted to a user.
+        /// 
+        /// A permission is granted if it is assigned to the user
+        /// directly or through a system-wide role.
+        /// </summary>
+        /// <param name="permissionName">The permission name.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="ct">The asynchronous task cancellation token.</param>
+        /// <returns>The asynchronous task for the permission grant status.</returns>
+        public async Task<bool> AuthorizeAsync(string permissionName, UserEntity user, CancellationToken ct)
         {
-            await EnsureUserPopulationAsync(user, ct);
+            var permissionId = await GetPermissionIdAsync(
+                permissionName,
+                ct);
 
-            return await ReadBooleanAsync(
-                CreateUserEntityTransversalCacheKey(
-                    permission,
-                    user),
+            return await AuthorizeAsync(
+                permissionId,
+                user.Id,
+                true,
                 ct);
         }
 
-        public Task RefreshAsync(UserEntity user, CancellationToken ct)
+        /// <summary>
+        /// Checks if a permission has been granted to a user either
+        /// at a user level or to any of the available entities.
+        /// </summary>
+        /// <param name="permission">The permission.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="ct">The asynchronous task cancellation token.</param>
+        /// <returns>The asynchronous task for the permission grant status.</returns>
+        public Task<bool> AuthorizeWithAnyEntityAsync(PermissionEntity permission, UserEntity user, CancellationToken ct)
         {
-            _logger.LogInformation(
-                "User '{UserId}' authorization is being refreshed.",
-                user.PublicId.ToString());
-
-            return _distributedCache.RemoveAsync(
-                CreateUserCacheKey(user),
+            return AuthorizeWithAnyEntityAsync(
+                permission.Id,
+                user.Id,
+                true,
                 ct);
         }
 
-        private async Task EnsureUserPopulationAsync(UserEntity user, CancellationToken ct)
+        /// <summary>
+        /// Checks if a permission has been granted to a user either
+        /// at a user level or to any of the available entities.
+        /// </summary>
+        /// <param name="permissionName">The permission name.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="ct">The asynchronous task cancellation token.</param>
+        /// <returns>The asynchronous task for the permission grant status.</returns>
+        public async Task<bool> AuthorizeWithAnyEntityAsync(string permissionName, UserEntity user, CancellationToken ct)
         {
-            var userCacheKey = CreateUserCacheKey(user);
+            var permissionId = await GetPermissionIdAsync(permissionName, ct);
 
-            if (await ReadBooleanAsync(userCacheKey, ct))
-                return;
+            return await AuthorizeWithAnyEntityAsync(
+                permissionId,
+                user.Id,
+                true,
+                ct);
+        }
 
-            var entities = (await _entities.GetAllAsync(ct))
-                .ToDictionary(e => e.Id);
+        /// <summary>
+        /// Checks if a permission has been granted for a user
+        /// based on a specific entity.
+        /// 
+        /// A permission is granted if it is assigned to the user directly,
+        /// through a system-wide role, through an entity or one of his
+        /// roles within the scope of that entity.
+        /// </summary>
+        /// <param name="permissionName">The permission name.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="entity">The entity.</param>
+        /// <param name="ct">The asynchronous task cancellation token.</param>
+        /// <returns>The asynchronous task for the permission grant status.</returns>
+        public async Task<bool> AuthorizeAsync(string permissionName, UserEntity user, EntityEntity entity, CancellationToken ct)
+        {
+            var permissionId = await GetPermissionIdAsync(
+                permissionName,
+                ct);
 
-            var permissions = (await _permissions.GetAllAsync(ct))
-                .ToDictionary(p => p.Id);
+            return await AuthorizeAsync(
+                permissionId,
+                user.Id,
+                entity.Id,
+                true,
+                ct);
+        }
 
-            var roles = (await _roles.GetAllAsync(ct))
-                .ToDictionary(r => r.Id);
+        /// <summary>
+        /// Gets the number of entities a user was granted a specific
+        /// permission.
+        /// </summary>
+        /// <param name="permission">The permission.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="ct">The asynchronous task cancellation token.</param>
+        /// <returns>The asynchronous task for the permission grant count.</returns>
+        public Task<int> CountUserEntityPermissionGrantsAsync(PermissionEntity permission, UserEntity user, CancellationToken ct)
+        {
+            return CountUserEntityPermissionGrantsAsync(
+                permission.Id,
+                user.Id,
+                ct);
+        }
 
-            var rolePermissions = (await _rolePermissions.GetAllAsync(ct))
-                .GroupBy(rp => rp.RoleId)
-                .ToDictionary(g => g.Key, g => g.ToArray());
+        /// <summary>
+        /// Gets the number of entities a user was granted a specific
+        /// permission.
+        /// </summary>
+        /// <param name="permissionName">The permission name.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="ct">The asynchronous task cancellation token.</param>
+        /// <returns>The asynchronous task for the permission grant count.</returns>
+        public async Task<int> CountUserEntityPermissionGrantsAsync(string permissionName, UserEntity user, CancellationToken ct)
+        {
+            var permissionId = await GetPermissionIdAsync(
+                permissionName,
+                ct);
 
-            var userEntities = await _userEntities.GetAllAsync(ct);
+            return await CountUserEntityPermissionGrantsAsync(
+                permissionId,
+                user.Id,
+                ct);
+        }
 
-            var userEntityPermissions = (await _userEntityPermissions.GetAllByUserIdAsync(user.Id, ct));
+        /// <summary>
+        /// Populates the distributed user authorization cache.
+        /// 
+        /// This method should be called at sign in or during identity
+        /// refresh, ensuring cache is ready before any authorization checks
+        /// take place.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <param name="ct">The asynchronous task cancellation token.</param>
+        /// <returns>The asynchronous task.</returns>
+        public Task PopulateAsync(UserEntity user, CancellationToken ct)
+        {
+            return PopulateAsync(
+                user.Id,
+                ct);
+        }
 
-            var userEntityRoles = await _userEntityRoles.GetAllByUserIdAsync(user.Id, ct);
+        private async Task<bool> AuthorizeAsync(long permissionId, long userId, bool populate, CancellationToken ct)
+        {
+            // Check if the user permission grant has been
+            // set at the user level.
+            var userPermissionGrantCacheKey = CreateUserPermissionGrantCacheKey(
+                permissionId,
+                userId);
 
-            var userEntityRolePermissions = userEntityRoles
-                .GroupBy(uer => uer.EntityId)
-                .ToDictionary(g => g.Key, g => g
-                    .SelectMany(uer => rolePermissions.GetValueOrDefault(uer.RoleId) ?? Array.Empty<RolePermissionEntity>())
-                    .GroupBy(rp => rp.PermissionId)
-                    .ToDictionary(g => g.Key, g => g.Min(rp => rp.Granted)));
+            var result = await ReadBooleanOrDefaultAsync(
+                userPermissionGrantCacheKey,
+                ct);
 
-            var userPermissions = await _userPermissions.GetAllByUserIdAsync(user.Id, ct);
+            if (result.HasValue)
+                return result.Value;
 
-            var userRoles = await _userRoles.GetAllByUserIdAsync(user.Id, ct);
-
-            var userRolePermissions = userRoles
-                .SelectMany(rp => rolePermissions.GetValueOrDefault(rp.RoleId) ?? Array.Empty<RolePermissionEntity>())
-                .GroupBy(rp => rp.PermissionId)
-                .ToDictionary(g => g.Key, g => g.Min(rp => rp.Granted));
-
-            var skip = new HashSet<long>(permissions.Count);
-
-            // Permissions can be granted directly to the user and will
-            // apply regardless of those set at role and entity level.
-            foreach (var userPermission in userPermissions)
+            if (populate)
             {
-                if (!permissions.TryGetValue(userPermission.PermissionId, out var permission))
-                    throw new IndexOutOfRangeException("User permission is referencing a permission that does not exist.");
+                // It seems the authorization cache has been missed
+                // and we should populate it before trying this again.
+                _logger.LogWarning("An authorization distributed cache hit has been missed.");
 
-                skip.Add(userPermission.PermissionId);
+                await PopulateAsync(userId, ct);
 
-                if (userPermission.Granted)
-                {
-                    await GrantAsync(
-                        permission,
-                        user,
-                        ct);
-                }
-            }
-
-            // Permissions can be granted through system wide user roles
-            // and will apply regardless of those set at an entity level.
-            foreach (var userRolePermissionKeyValue in userRolePermissions)
-            {
-                if (skip.Contains(userRolePermissionKeyValue.Key))
-                    continue;
-
-                skip.Add(userRolePermissionKeyValue.Key);
-
-                if (!permissions.TryGetValue(userRolePermissionKeyValue.Key, out var permission))
-                    throw new IndexOutOfRangeException("User entity permission is referencing a permission that does not exist.");
-
-                if (userRolePermissionKeyValue.Value)
-                {
-                    await GrantAsync(
-                        permission,
-                        user,
-                        ct);
-                }
-            }
-
-            // System wide permissions will also automatically
-            // propagate to any sub sets.
-            foreach (var permissionId in skip)
-            {
-                foreach (var entity in entities.Values)
-                {
-                    await GrantAsync(
-                        permissions[permissionId]!,
-                        user,
-                        entity,
-                        ct);
-                }
-            }
-
-            // Permissions can be granted through entities and will
-            // apply regardless of any roles assigned to the user.
-            foreach (var userEntityPermission in userEntityPermissions)
-            {
-                if (skip.Contains(userEntityPermission.PermissionId))
-                    continue;
-
-                skip.Add(userEntityPermission.Id);
-
-                if (!permissions.TryGetValue(userEntityPermission.PermissionId, out var permission))
-                    throw new IndexOutOfRangeException("User entity permission is referencing a permission that does not exist.");
-
-                if (!entities.TryGetValue(userEntityPermission.EntityId, out var entity))
-                    throw new IndexOutOfRangeException("User entity permission is referencing an entity that does not exist.");
-
-                await GrantAsync(
-                    permission,
-                    user,
-                    entity,
+                return await AuthorizeAsync(
+                    permissionId,
+                    userId,
+                    false,
                     ct);
             }
 
-            // Permissions can be granted through user entity roles,
-            // which is the final layer of authorization.
-            foreach (var userEntityRolePermissionKeyValue in userEntityRolePermissions)
+            // It seems the authorization cache has been missed after
+            // being populated, which means something went very wrong.
+            throw new InvalidOperationException("A permission is missing from the authorization distributed cache source.")
+                .WithCode("DCAUTH");
+        }
+
+        private async Task<bool> AuthorizeAsync(long permissionId, long userId, long entityId, bool populate, CancellationToken ct)
+        {
+            // Check if the user permission grant has been
+            // set at the entity level.
+            var userEntityPermissionGrantCacheKey = CreateUserEntityPermissionGrantCacheKey(
+                permissionId,
+                userId,
+                entityId);
+
+            var result = await ReadBooleanOrDefaultAsync(
+                userEntityPermissionGrantCacheKey,
+                ct);
+
+            if (result.HasValue)
+                return result.Value;
+
+            // Check if the permission grant has been set
+            // at the user level.
+            result = await ReadBooleanOrDefaultAsync(
+                CreateUserPermissionGrantCacheKey(
+                    permissionId,
+                    userId),
+                ct);
+
+            if (result.HasValue)
             {
-                if (!entities.TryGetValue(userEntityRolePermissionKeyValue.Key, out var entity))
-                    throw new IndexOutOfRangeException("User entity role permission is referencing an entity that does not exist.");
+                // We can write this to cache to avoid having to
+                // do two round-trips in the future.
+                await WriteBooleanAsync(
+                    userEntityPermissionGrantCacheKey,
+                    result.Value,
+                    ct);
 
-                foreach (var userEntityRolePermissionResolutionKeyValue in userEntityRolePermissionKeyValue.Value)
-                {
-                    if (skip.Contains(userEntityRolePermissionResolutionKeyValue.Key))
-                        continue;
-
-                    if (!permissions.TryGetValue(userEntityRolePermissionResolutionKeyValue.Key, out var permission))
-                        throw new IndexOutOfRangeException("User entity role permission is referencing a permission that does not exist.");
-
-                    if (userEntityRolePermissionResolutionKeyValue.Value)
-                    {
-                        await GrantAsync(
-                            permission,
-                            user,
-                            entity,
-                            ct);
-                    }
-                }
+                return result.Value;
             }
 
-            await WriteBooleanAsync(
-                userCacheKey, 
-                true, 
-                ct);
+            if (populate)
+            {
+                // It seems the authorization cache has been missed
+                // and we should populate it before trying this again.
+                _logger.LogWarning("An authorization distributed cache hit has been missed.");
+
+                await PopulateAsync(userId, ct);
+
+                return await AuthorizeAsync(
+                    permissionId,
+                    userId,
+                    entityId,
+                    false,
+                    ct);
+            }
+
+            // It seems the authorization cache has been missed after
+            // being populated, which means something went very wrong.
+            throw new InvalidOperationException("A permission is missing from the authorization distributed cache source.")
+                .WithCode("DCAUTH");
         }
 
-        private Task GrantAsync(PermissionEntity permission, UserEntity user, CancellationToken ct)
+        private async Task<bool> AuthorizeWithAnyEntityAsync(long permissionId, long userId, bool populate, CancellationToken ct)
         {
-            return WriteBooleanAsync(
-                CreateUserPermissionCacheKey(
-                    permission,
-                    user),
-                true,
+            var result = await ReadBooleanOrDefaultAsync(
+                CreateUserEntityPermissionGrantCacheKey(permissionId, userId),
                 ct);
+
+            if (result.HasValue)
+                return result.Value;
+
+            if (populate)
+            {
+                // It seems the authorization cache has been missed
+                // and we should populate it before trying this again.
+                _logger.LogWarning("An authorization distributed cache hit has been missed.");
+
+                await PopulateAsync(userId, ct);
+
+                return await AuthorizeWithAnyEntityAsync(
+                    permissionId,
+                    userId,
+                    false,
+                    ct);
+            }
+
+            // It seems the authorization cache has been missed after
+            // being populated, which means something went very wrong.
+            throw new InvalidOperationException("A permission is missing from the authorization distributed cache source.")
+                .WithCode("DCAUTH");
         }
 
-        private async Task GrantAsync(PermissionEntity permission, UserEntity user, EntityEntity entity, CancellationToken ct)
+        private Task<int> CountUserEntityPermissionGrantsAsync(long permissionId, long userId, CancellationToken ct)
         {
-            await WriteBooleanAsync(
-                CreateUserEntityPermissionCacheKey(
-                    permission,
-                    user,
-                    entity),
-                true,
-                ct);
-
-            await WriteBooleanAsync(
-                CreateUserEntityTransversalCacheKey(
-                    permission,
-                    user),
-                true,
+            return _authorization.CountUserEntityPermissionGrantsAsync(
+                permissionId,
+                userId,
                 ct);
         }
 
-        private async Task<bool> ReadBooleanAsync(string key, CancellationToken ct)
+        private async Task PopulateAsync(long userId, CancellationToken ct)
+        {
+            // Go through the user level grants and set
+            // them accordingly.
+            var userPermissionGrants = await _authorization.GetAllUserPermissionGrantsByUserIdAsync(
+                userId,
+                ct);
+
+            foreach (var userPermissionGrant in userPermissionGrants)
+            {
+                await WriteBooleanAsync(
+                    CreateUserPermissionGrantCacheKey(
+                        userPermissionGrant.PermissionId,
+                        userPermissionGrant.UserId),
+                    userPermissionGrant.Granted,
+                    ct);
+
+                await WriteBooleanAsync(
+                    CreateUserEntityPermissionGrantCacheKey(
+                        userPermissionGrant.PermissionId,
+                        userPermissionGrant.UserId),
+                    userPermissionGrant.Granted,
+                    ct);
+            }
+
+            // Go through the entity level grants, skipping any
+            // permissions already set at user level.
+            var userEntityPermissionGrants = await _authorization.GetAllUserEntityPermissionGrantsByUserIdExceptWhenPermissionIdAsync(
+                userId,
+                userPermissionGrants.Select(upg => upg.PermissionId),
+                ct);
+
+            foreach (var userEntityPermissionGrant in userEntityPermissionGrants)
+            {
+                await WriteBooleanAsync(
+                    CreateUserEntityPermissionGrantCacheKey(
+                        userEntityPermissionGrant.PermissionId,
+                        userEntityPermissionGrant.UserId,
+                        userEntityPermissionGrant.EntityId),
+                    userEntityPermissionGrant.Granted,
+                    ct);
+            }
+
+            // We will also cache any entity level grants so we can
+            // later authorize accross any of the user entities.
+            var userEntityPermissionTransversalGrants = userEntityPermissionGrants
+                .Where(uepg => uepg.Granted)
+                .Select(uepg => uepg.PermissionId)
+                .Distinct();
+
+            foreach (var permissionId in userEntityPermissionTransversalGrants)
+            {
+                await WriteBooleanAsync(
+                    CreateUserEntityPermissionGrantCacheKey(
+                        permissionId,
+                        userId),
+                    true,
+                    ct);
+            }
+
+            var userEntityPermissionTransversalRevokes = userEntityPermissionGrants
+                .Select(uepg => uepg.PermissionId)
+                .Distinct()
+                .Where(pid => userEntityPermissionTransversalGrants.Contains(pid) == false);
+
+            foreach (var permissionId in userEntityPermissionTransversalRevokes)
+            {
+                await WriteBooleanAsync(
+                    CreateUserEntityPermissionGrantCacheKey(
+                        permissionId,
+                        userId),
+                    false,
+                    ct);
+            }
+
+        }
+
+        private async Task<long> GetPermissionIdAsync(string permissionName, CancellationToken ct)
+        {
+            // Attempt to get the permission identifier from
+            // the distributed cache in order to prevent having
+            // to hit the database.
+            var permissionCacheKey = CreatePermissionCacheKey(permissionName);
+
+            var result = await ReadInt64OrDefaultAsync(
+                permissionCacheKey,
+                ct);
+
+            if (result.HasValue)
+                return result.Value;
+
+            // Save the permission identifier to cache to avoid
+            // hitting the database in the future.
+            result = await _authorization.GetPermissionIdAsync(
+                permissionName,
+                ct);
+
+            await WriteInt64Async(
+                permissionCacheKey,
+                result.Value,
+                ct);
+
+            return result.Value;
+        }
+
+        #region Distributed cache
+
+        private async Task<bool?> ReadBooleanOrDefaultAsync(string key, CancellationToken ct)
         {
             var buffer = await _distributedCache.GetAsync(key, ct);
 
-            return buffer?.Length == 1 && buffer[0] == 1;
+            if (buffer == null)
+                return null;
+
+            return BitConverter.ToBoolean(buffer);
+        }
+
+        private async Task<long?> ReadInt64OrDefaultAsync(string key, CancellationToken ct)
+        {
+            var buffer = await _distributedCache.GetAsync(key, ct);
+
+            if (buffer == null)
+                return null;
+
+            return BitConverter.ToInt64(buffer);
         }
 
         private async Task WriteBooleanAsync(string key, bool value, CancellationToken ct)
         {
             await _distributedCache.SetAsync(
                 key,
-                new byte[] { (byte)(value ? 1 : 0) },
-                DistributedCacheEntryOptions,
+                BitConverter.GetBytes(value),
+                DefaultDistributedCacheEntryOptions,
                 ct);
         }
 
+        private async Task WriteInt64Async(string key, long value, CancellationToken ct)
+        {
+            await _distributedCache.SetAsync(
+                key,
+                BitConverter.GetBytes(value),
+                ct);
+        }
+
+        #endregion
+
+        #region Statics
+
+        private static DistributedCacheEntryOptions DefaultDistributedCacheEntryOptions = new DistributedCacheEntryOptions()
+        {
+            SlidingExpiration = TimeSpan.FromHours(1)
+        };
+
+        private static string CreatePermissionCacheKey(string permissionName) =>
+            $"authorization:p:{permissionName}";
+
+        private static string CreateUserEntityPermissionGrantCacheKey(long permissionId, long userId, long entityId) =>
+
+            $"authorization:uep:{permissionId}:{userId}:{entityId}";
+
+        private static string CreateUserEntityPermissionGrantCacheKey(long permissionId, long userId) =>
+
+            $"authorization:uep:{permissionId}:{userId}:any";
+
+        private static string CreateUserPermissionGrantCacheKey(long permissionId, long userId) =>
+
+            $"authorization:ue:{permissionId}:{userId}";
+        #endregion
     }
 }
