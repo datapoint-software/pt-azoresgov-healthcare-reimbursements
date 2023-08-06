@@ -45,14 +45,13 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Managers
         /// <param name="user">The user.</param>
         /// <param name="ct">The asynchronous task cancellation token.</param>
         /// <returns>The asynchronous task for the permission grant status.</returns>
-        public Task<bool> AuthorizeAsync(PermissionEntity permission, UserEntity user, CancellationToken ct)
-        {
-            return AuthorizeAsync(
+        public Task<bool> AuthorizeAsync(PermissionEntity permission, UserEntity user, CancellationToken ct) => 
+            
+            AuthorizeAsync(
                 permission.Id,
                 user.Id,
                 true,
                 ct);
-        }
 
         /// <summary>
         /// Checks if a permission has been granted for a user
@@ -67,15 +66,14 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Managers
         /// <param name="entity">The entity.</param>
         /// <param name="ct">The asynchronous task cancellation token.</param>
         /// <returns>The asynchronous task for the permission grant status.</returns>
-        public Task<bool> AuthorizeAsync(PermissionEntity permission, UserEntity user, EntityEntity entity, CancellationToken ct)
-        {
-            return AuthorizeAsync(
+        public Task<bool> AuthorizeAsync(PermissionEntity permission, UserEntity user, EntityEntity entity, CancellationToken ct) => 
+            
+            AuthorizeAsync(
                 permission.Id,
                 user.Id,
                 entity.Id,
                 true,
                 ct);
-        }
 
         /// <summary>
         /// Checks if a permission has been granted to a user.
@@ -108,14 +106,13 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Managers
         /// <param name="user">The user.</param>
         /// <param name="ct">The asynchronous task cancellation token.</param>
         /// <returns>The asynchronous task for the permission grant status.</returns>
-        public Task<bool> AuthorizeWithAnyEntityAsync(PermissionEntity permission, UserEntity user, CancellationToken ct)
-        {
-            return AuthorizeWithAnyEntityAsync(
+        public Task<bool> AuthorizeWithAnyEntityAsync(PermissionEntity permission, UserEntity user, CancellationToken ct) => 
+            
+            AuthorizeWithAnyEntityAsync(
                 permission.Id,
                 user.Id,
                 true,
                 ct);
-        }
 
         /// <summary>
         /// Checks if a permission has been granted to a user either
@@ -171,13 +168,12 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Managers
         /// <param name="user">The user.</param>
         /// <param name="ct">The asynchronous task cancellation token.</param>
         /// <returns>The asynchronous task for the permission grant count.</returns>
-        public Task<int> CountUserEntityPermissionGrantsAsync(PermissionEntity permission, UserEntity user, CancellationToken ct)
-        {
-            return CountUserEntityPermissionGrantsAsync(
+        public Task<int> CountUserEntityPermissionGrantsAsync(PermissionEntity permission, UserEntity user, CancellationToken ct) =>
+            
+            CountUserEntityPermissionGrantsAsync(
                 permission.Id,
                 user.Id,
                 ct);
-        }
 
         /// <summary>
         /// Gets the number of entities a user was granted a specific
@@ -209,12 +205,11 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Managers
         /// <param name="user">The user.</param>
         /// <param name="ct">The asynchronous task cancellation token.</param>
         /// <returns>The asynchronous task.</returns>
-        public Task PopulateAsync(UserEntity user, CancellationToken ct)
-        {
-            return PopulateAsync(
+        public Task PopulateAsync(UserEntity user, CancellationToken ct) =>
+            
+            PopulateAsync(
                 user.Id,
                 ct);
-        }
 
         private async Task<bool> AuthorizeAsync(long permissionId, long userId, bool populate, CancellationToken ct)
         {
@@ -340,13 +335,12 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Managers
                 .WithCode("DCAUTH");
         }
 
-        private Task<int> CountUserEntityPermissionGrantsAsync(long permissionId, long userId, CancellationToken ct)
-        {
-            return _authorization.CountUserEntityPermissionGrantsAsync(
+        private Task<int> CountUserEntityPermissionGrantsAsync(long permissionId, long userId, CancellationToken ct) => 
+            
+            _authorization.CountUserEntityPermissionGrantsAsync(
                 permissionId,
                 userId,
                 ct);
-        }
 
         private async Task PopulateAsync(long userId, CancellationToken ct)
         {
@@ -422,7 +416,6 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Managers
                     false,
                     ct);
             }
-
         }
 
         private async Task<long> GetPermissionIdAsync(string permissionName, CancellationToken ct)
@@ -475,28 +468,26 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Managers
             return BitConverter.ToInt64(buffer);
         }
 
-        private async Task WriteBooleanAsync(string key, bool value, CancellationToken ct)
-        {
-            await _distributedCache.SetAsync(
+        private Task WriteBooleanAsync(string key, bool value, CancellationToken ct) => 
+            
+            _distributedCache.SetAsync(
                 key,
                 BitConverter.GetBytes(value),
                 DefaultDistributedCacheEntryOptions,
                 ct);
-        }
 
-        private async Task WriteInt64Async(string key, long value, CancellationToken ct)
-        {
-            await _distributedCache.SetAsync(
+        private Task WriteInt64Async(string key, long value, CancellationToken ct) => 
+            
+            _distributedCache.SetAsync(
                 key,
                 BitConverter.GetBytes(value),
                 ct);
-        }
 
         #endregion
 
         #region Statics
 
-        private static DistributedCacheEntryOptions DefaultDistributedCacheEntryOptions = new DistributedCacheEntryOptions()
+        private static readonly DistributedCacheEntryOptions DefaultDistributedCacheEntryOptions = new ()
         {
             SlidingExpiration = TimeSpan.FromHours(1)
         };

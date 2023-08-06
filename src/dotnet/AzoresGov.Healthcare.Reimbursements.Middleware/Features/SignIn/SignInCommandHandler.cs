@@ -299,13 +299,10 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
                 userEmailAddress.Id,
                 ct);
 
-            if (user == null)
-            {
+            return user ??
+
                 throw new InvalidOperationException("A user was not found matching the given user email address identifier.")
                     .WithCode("IWQIWJ");
-            }
-
-            return user;
         }
 
         private async Task<UserEmailAddressEntity> GetUserEmailAddressAsync(SignInCommand command, CancellationToken ct)
@@ -314,14 +311,11 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
                 command.EmailAddress,
                 ct);
 
-            if (userEmailAddress == null)
-            {
+            return userEmailAddress ??
+
                 throw new BusinessException("A user was not found matching the given email address.")
                     .WithCode("INLLAJ")
                     .WithUserMessage(GenericUserMessage);
-            }
-
-            return userEmailAddress;
         }
     }
 }

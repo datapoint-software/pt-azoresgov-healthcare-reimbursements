@@ -2,6 +2,8 @@
 
 #nullable disable
 
+#pragma warning disable IDE0022
+
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
 {
     /// <inheritdoc />

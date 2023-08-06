@@ -6,13 +6,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Helpers
 {
     internal static class HashHelper
     {
-        internal static string ComputeHash(string input)
-        {
-            using MD5 algorithm = MD5.Create();
-
-            return Convert.ToHexString(
-                algorithm.ComputeHash(
-                    Encoding.ASCII.GetBytes(input)));
-        }
+        internal static string ComputeHash(string input) =>
+            Convert.ToHexString(MD5.HashData(Encoding.ASCII.GetBytes(input)));
     }
 }
