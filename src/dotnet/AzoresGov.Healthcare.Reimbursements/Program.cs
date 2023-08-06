@@ -40,7 +40,6 @@ namespace AzoresGov.Healthcare.Reimbursements
                 builder.Environment);
 
             ContextHelper.Migrate(
-                builder.Configuration,
                 builder.Environment,
                 logger,
                 context);
