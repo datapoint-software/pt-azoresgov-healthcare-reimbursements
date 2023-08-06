@@ -1,4 +1,4 @@
-﻿namespace AzoresGov.Healthcare.Reimbursements.Middleware.Constants
+﻿namespace AzoresGov.Healthcare.Reimbursements.Middleware.Enumerations
 {
     internal static class PermissionName
     {

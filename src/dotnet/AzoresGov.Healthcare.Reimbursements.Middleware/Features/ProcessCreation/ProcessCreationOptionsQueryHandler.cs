@@ -1,4 +1,4 @@
-﻿using AzoresGov.Healthcare.Reimbursements.Middleware.Constants;
+﻿using AzoresGov.Healthcare.Reimbursements.Middleware.Enumerations;
 using AzoresGov.Healthcare.Reimbursements.Middleware.Helpers;
 using AzoresGov.Healthcare.Reimbursements.Middleware.Managers;
 using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities;
