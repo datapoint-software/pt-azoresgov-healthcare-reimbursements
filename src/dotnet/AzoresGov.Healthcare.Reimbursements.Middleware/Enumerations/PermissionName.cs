@@ -1,7 +1,7 @@
-﻿namespace AzoresGov.Healthcare.Reimbursements.Middleware.Constants
+﻿namespace AzoresGov.Healthcare.Reimbursements.Middleware.Enumerations
 {
-    public static class PermissionName
+    internal static class PermissionName
     {
-        public static string ProcessCreation = "process-creation";
+        internal const string ProcessCreation = "process-creation";
     }
 }

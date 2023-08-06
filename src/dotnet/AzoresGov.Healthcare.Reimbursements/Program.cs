@@ -40,7 +40,6 @@ namespace AzoresGov.Healthcare.Reimbursements
                 builder.Environment);
 
             ContextHelper.Migrate(
-                builder.Configuration,
                 builder.Environment,
                 logger,
                 context);
@@ -192,7 +191,7 @@ namespace AzoresGov.Healthcare.Reimbursements
 
             services.AddUnitOfWork<IHealthcareReimbursementsUnitOfWork, HealthcareReimbursementsUnitOfWork, HealthcareReimbursementsContext>((uow) =>
             {
-                uow.UseContextConfiguration((context) => ((DbContextOptionsBuilder<HealthcareReimbursementsContext>)context)
+                uow.UseContextConfiguration((context) => ((DbContextOptionsBuilder<HealthcareReimbursementsContext>) context)
                     .WithEnvironmentDefaults(configuration, environment));
 
                 uow.AddLogicalAreasFromAssemblyOf<AuthorizationLogicalArea>();

@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
 
 namespace AzoresGov.Healthcare.Reimbursements.Api.Features.SignIn
 {

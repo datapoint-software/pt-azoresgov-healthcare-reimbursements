@@ -12,8 +12,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using ClaimTypes = AzoresGov.Healthcare.Reimbursements.ClaimTypes;
-
 namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
 {
     public sealed class SignInCommandHandler : ICommandHandler<SignInCommand, SignInResult>
@@ -42,14 +40,14 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
 
         public SignInCommandHandler(
             AuthorizationManager authorization,
-            IConfiguration configuration, 
-            IEntityRepository entities, 
-            IPermissionRepository permissions, 
-            IUserAgentRepository userAgents, 
-            IUserEmailAddressRepository userEmailAddresses, 
-            IUserEntityRepository userEntities, 
-            IUserPasswordRepository userPasswords, 
-            IUserRepository users, 
+            IConfiguration configuration,
+            IEntityRepository entities,
+            IPermissionRepository permissions,
+            IUserAgentRepository userAgents,
+            IUserEmailAddressRepository userEmailAddresses,
+            IUserEntityRepository userEntities,
+            IUserPasswordRepository userPasswords,
+            IUserRepository users,
             IUserSessionRepository userSessions)
         {
             _authorization = authorization;
@@ -71,13 +69,13 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
             await AssertAuthenticationEnabledAsync(ct);
 
             AssertUserSessionOptions(
-                command, 
+                command,
                 userSessionOptions);
 
-            var timeBasedBruteforcePreventionDelayTask = Task.Delay(7500);
+            var timeBasedBruteforcePreventionDelayTask = Task.Delay(7500, ct);
 
             var handleSignInCommandTask = HandleSignInCommandAsync(
-                command, 
+                command,
                 userSessionOptions,
                 ct);
 
@@ -120,15 +118,14 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
 
             var userSessionExpiration = GetUserSessionExpiration(
                 command,
-                userSession,
                 userSessionOptions);
 
             await _authorization.PopulateAsync(user, ct);
 
             return await BuildResultAsync(
-                user, 
-                userSession, 
-                userSessionExpiration, 
+                user,
+                userSession,
+                userSessionExpiration,
                 ct);
         }
 
@@ -136,7 +133,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
         {
 
             var userEntities = await _userEntities.GetAllByUserIdAsync(
-                user.Id, 
+                user.Id,
                 ct);
 
             var entities = await _entities.GetAllByIdAsync(
@@ -204,7 +201,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
             }
         }
 
-        private static DateTimeOffset? GetUserSessionExpiration(SignInCommand command, UserSessionEntity userSession, UserSessionOptions userSessionOptions)
+        private static DateTimeOffset? GetUserSessionExpiration(SignInCommand command, UserSessionOptions userSessionOptions)
         {
             if (command.Persistent && userSessionOptions.Expiration.HasValue)
                 return command.Creation.AddSeconds(userSessionOptions.Expiration.Value);
@@ -283,7 +280,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
         private async Task<UserPasswordEntity> GetLastUserPasswordAsync(UserEntity user, CancellationToken ct)
         {
             var userPassword = await _userPasswords.GetLastByUserIdAsync(
-                user.Id, 
+                user.Id,
                 ct);
 
             if (userPassword == null)
@@ -299,7 +296,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
         private async Task<UserEntity> GetUserAsync(UserEmailAddressEntity userEmailAddress, CancellationToken ct)
         {
             var user = await _users.GetByUserEmailAddressIdAsync(
-                userEmailAddress.Id, 
+                userEmailAddress.Id,
                 ct);
 
             if (user == null)

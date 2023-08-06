@@ -5,9 +5,9 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.Identity
     public sealed class IdentityRefreshResultModel
     {
         public IdentityRefreshResultModel(
-            IReadOnlyCollection<IdentityRefreshEntityResultModel> entities, 
-            IReadOnlyCollection<IdentityRefreshPermissionResultModel> permissions, 
-            IdentityRefreshUserResultModel user, 
+            IReadOnlyCollection<IdentityRefreshEntityResultModel> entities,
+            IReadOnlyCollection<IdentityRefreshPermissionResultModel> permissions,
+            IdentityRefreshUserResultModel user,
             IdentityRefreshUserSessionResultModel userSession)
         {
             Entities = entities;

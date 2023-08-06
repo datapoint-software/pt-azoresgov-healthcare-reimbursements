@@ -20,7 +20,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Helpers
                 .WithEnvironmentDefaults(configuration, environment)
                 .Options);
 
-        internal static void Migrate(IConfiguration configuration, IWebHostEnvironment environment, ILogger logger, HealthcareReimbursementsContext context)
+        internal static void Migrate(IWebHostEnvironment environment, ILogger logger, HealthcareReimbursementsContext context)
         {
             if (!environment.IsDevelopment())
                 return;
@@ -51,8 +51,10 @@ namespace AzoresGov.Healthcare.Reimbursements.Helpers
             if (string.IsNullOrEmpty(connectionString))
             {
                 if (!environment.IsDevelopment())
+                {
                     throw new InvalidOperationException("Connection string 'HealthcareReimbursements' is required and can not be empty.")
                         .WithCode("CSUJMH");
+                }
 
                 connectionString = ConnectionString;
             }

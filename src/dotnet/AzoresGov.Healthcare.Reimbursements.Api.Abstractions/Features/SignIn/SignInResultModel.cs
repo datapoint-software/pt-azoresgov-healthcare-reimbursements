@@ -5,9 +5,9 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.SignIn
     public sealed class SignInResultModel
     {
         public SignInResultModel(
-            IReadOnlyCollection<SignInEntityResultModel> entities, 
-            IReadOnlyCollection<SignInPermissionResultModel> permissions, 
-            SignInUserResultModel user, 
+            IReadOnlyCollection<SignInEntityResultModel> entities,
+            IReadOnlyCollection<SignInPermissionResultModel> permissions,
+            SignInUserResultModel user,
             SignInUserSessionResultModel userSession)
         {
             Entities = entities;

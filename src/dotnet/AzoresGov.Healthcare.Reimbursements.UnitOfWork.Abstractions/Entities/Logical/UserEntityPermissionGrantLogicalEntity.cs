@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Logical
+﻿namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Logical
 {
     public sealed class UserEntityPermissionGrantLogicalEntity
     {

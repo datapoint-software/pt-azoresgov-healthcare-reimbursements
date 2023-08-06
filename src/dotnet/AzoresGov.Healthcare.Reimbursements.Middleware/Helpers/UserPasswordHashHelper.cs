@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AzoresGov.Healthcare.Reimbursements.Middleware.Helpers
+﻿namespace AzoresGov.Healthcare.Reimbursements.Middleware.Helpers
 {
     internal static class UserPasswordHashHelper
     {

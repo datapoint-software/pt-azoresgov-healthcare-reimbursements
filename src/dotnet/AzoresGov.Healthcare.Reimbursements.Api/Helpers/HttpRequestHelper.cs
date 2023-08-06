@@ -27,9 +27,11 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Helpers
             var userAgent = request.Headers.UserAgent.ToString();
 
             if (string.IsNullOrEmpty(userAgent))
+            {
                 throw new ValidationException("The user agent header was not set for the incomming request.")
                     .WithCode("UAHXKZ")
                     .WithUserMessage(GenericUserMessage);
+            }
 
             return userAgent;
         }

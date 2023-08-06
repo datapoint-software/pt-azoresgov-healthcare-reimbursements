@@ -14,45 +14,39 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.LogicalAreas
         {
         }
 
-        public async Task<int> CountUserEntityPermissionGrantsAsync(long permissionId, long userId, CancellationToken ct)
-        {
-            return await Context.UserEntityPermissionGrants
+        public Task<int> CountUserEntityPermissionGrantsAsync(long permissionId, long userId, CancellationToken ct) =>
+
+            Context.UserEntityPermissionGrants
                 .Where(uepg => uepg.PermissionId == permissionId)
                 .Where(uepg => uepg.UserId == userId)
                 .Where(uepg => uepg.Granted)
                 .CountAsync(ct);
-        }
 
-        public async Task<IReadOnlyCollection<UserEntityPermissionGrantLogicalEntity>> GetAllUserEntityPermissionGrantsByUserIdAsync(long userId, CancellationToken ct)
-        {
-            return await Context.UserEntityPermissionGrants
+        public async Task<IReadOnlyCollection<UserEntityPermissionGrantLogicalEntity>> GetAllUserEntityPermissionGrantsByUserIdAsync(long userId, CancellationToken ct) =>
+
+            await Context.UserEntityPermissionGrants
                 .Where(uepg => uepg.UserId == userId)
                 .ToListAsync(ct);
-        }
 
-        public async Task<IReadOnlyCollection<UserEntityPermissionGrantLogicalEntity>> GetAllUserEntityPermissionGrantsByUserIdExceptWhenPermissionIdAsync(long userId, IEnumerable<long> permissionId, CancellationToken ct)
-        {
-            return await Context.UserEntityPermissionGrants
+        public async Task<IReadOnlyCollection<UserEntityPermissionGrantLogicalEntity>> GetAllUserEntityPermissionGrantsByUserIdExceptWhenPermissionIdAsync(long userId, IEnumerable<long> permissionId, CancellationToken ct) =>
+
+            await Context.UserEntityPermissionGrants
                 .Where(uepg => uepg.UserId == userId)
                 .Where(uepg => permissionId.Contains(uepg.PermissionId) == false)
                 .ToListAsync(ct);
-        }
 
-        public async Task<IReadOnlyCollection<UserPermissionGrantLogicalEntity>> GetAllUserPermissionGrantsByUserIdAsync(long userId, CancellationToken ct)
-        {
-            return await Context.UserPermissionGrants
+        public async Task<IReadOnlyCollection<UserPermissionGrantLogicalEntity>> GetAllUserPermissionGrantsByUserIdAsync(long userId, CancellationToken ct) =>
+
+            await Context.UserPermissionGrants
                 .Where(upg => upg.UserId == userId)
                 .ToListAsync(ct);
-        }
 
-        public async Task<long> GetPermissionIdAsync(string permissionName, CancellationToken ct)
-        {
-            var permission = await Context.Permissions
+        public async Task<long> GetPermissionIdAsync(string permissionName, CancellationToken ct) =>
+
+            await Context.Permissions
                 .Where(p => p.Name == permissionName)
                 .AsNoTracking()
+                .Select(p => p.Id)
                 .SingleAsync(ct);
-
-            return permission.Id;
-        }
     }
 }
