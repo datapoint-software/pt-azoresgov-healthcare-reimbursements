@@ -173,14 +173,11 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.Identity
                 userSession.UserId,
                 ct);
 
-            if (user == null)
-            {
+            return user ??
+
                 throw new BusinessException("A user was not found matching this session.")
                     .WithCode("K9HUXM")
                     .WithUserMessage(GenericUserMessage);
-            }
-
-            return user;
         }
 
         private static void AssertUserSessionExpiration(UserSessionEntity userSession, UserSessionOptions userSessionOptions)
@@ -221,14 +218,11 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.Identity
                 command.UserSessionId,
                 ct);
 
-            if (userSession == null)
-            {
+            return userSession ??
+
                 throw new BusinessException("A user session was not found matching the given identifier.")
                     .WithCode("UDTXAL")
                     .WithUserMessage(GenericUserMessage);
-            }
-
-            return userSession;
         }
     }
 }

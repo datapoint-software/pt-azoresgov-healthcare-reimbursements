@@ -8,19 +8,13 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Helpers
     {
         private const string GenericUserMessage = "Este navegador não é compatível com este serviço aplicacional.";
 
-        internal static IPAddress GetRemoteAddress(this HttpRequest request)
-        {
-            var remoteAddress = request.HttpContext.Connection.RemoteIpAddress;
+        internal static IPAddress GetRemoteAddress(this HttpRequest request) =>
 
-            if (remoteAddress is null)
-            {
+            request.HttpContext.Connection.RemoteIpAddress ??
+
                 throw new ValidationException("The user agent header was not set for the incomming request.")
                     .WithCode("UAHXKZ")
                     .WithUserMessage(GenericUserMessage);
-            }
-
-            return remoteAddress;
-        }
 
         internal static string GetUserAgent(this HttpRequest request)
         {

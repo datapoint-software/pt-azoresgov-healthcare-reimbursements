@@ -14,15 +14,16 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
         {
         }
 
-        public async Task<IEnumerable<UserEntityRoleEntity>> GetAllByUserIdAsync(long userId, CancellationToken ct) => await Entities
+        public async Task<IEnumerable<UserEntityRoleEntity>> GetAllByUserIdAsync(long userId, CancellationToken ct) => 
+            
+            await Entities
+                .Where(e => e.UserId == userId)
+                .ToListAsync(ct);
 
-            .Where(e => e.UserId == userId)
-            .ToListAsync(ct);
-
-
-        public async Task<IEnumerable<UserEntityRoleEntity>> GetAllByUserIdAndEntityIdAsync(long userId, IEnumerable<long> entityId, CancellationToken ct) => await Entities
-
-            .Where(e => e.UserId == userId && entityId.Contains(e.EntityId))
-            .ToListAsync(ct);
+        public async Task<IEnumerable<UserEntityRoleEntity>> GetAllByUserIdAndEntityIdAsync(long userId, IEnumerable<long> entityId, CancellationToken ct) => 
+            
+            await Entities
+                .Where(e => e.UserId == userId && entityId.Contains(e.EntityId))
+                .ToListAsync(ct);
     }
 }

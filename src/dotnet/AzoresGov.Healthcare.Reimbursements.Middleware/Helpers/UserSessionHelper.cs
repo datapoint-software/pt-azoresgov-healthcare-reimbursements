@@ -4,7 +4,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Helpers
 {
     internal static class UserSessionHelper
     {
-        private static readonly Random Random = new Random();
+        private static readonly Random Random = new ();
 
         internal static string CreateSecret()
         {

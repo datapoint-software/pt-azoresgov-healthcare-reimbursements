@@ -7,18 +7,18 @@ namespace AzoresGov.Healthcare.Reimbursements.Helpers
 {
     internal static class LoggerHelper
     {
-        internal static ILogger CreateLogger(IConfiguration configuration, IWebHostEnvironment environment)
-        {
-            return LoggerFactory.Create(logger => logger.WithEnvironmentDefaults(configuration, environment))
+        internal static ILogger CreateLogger(IWebHostEnvironment environment) =>
+            
+            LoggerFactory.Create(logger => logger.WithEnvironmentDefaults(environment))
                 .CreateLogger(nameof(Program));
-        }
 
-        internal static ILoggingBuilder WithEnvironmentDefaults(this ILoggingBuilder logger, IConfiguration configuration, IWebHostEnvironment environment) => logger
-
-            .AddConsole()
-            .SetMinimumLevel(
-                environment.IsProduction()
-                    ? LogLevel.Warning
-                    : LogLevel.Trace);
+        internal static ILoggingBuilder WithEnvironmentDefaults(this ILoggingBuilder logger, IWebHostEnvironment environment) =>
+            
+            logger
+                .AddConsole()
+                .SetMinimumLevel(
+                    environment.IsProduction()
+                        ? LogLevel.Warning
+                        : LogLevel.Trace);
     }
 }

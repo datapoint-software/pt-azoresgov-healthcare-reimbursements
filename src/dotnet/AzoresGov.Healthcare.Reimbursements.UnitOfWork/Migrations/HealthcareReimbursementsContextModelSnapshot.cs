@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
+#pragma warning disable IDE0022
+
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
 {
     [DbContext(typeof(HealthcareReimbursementsContext))]

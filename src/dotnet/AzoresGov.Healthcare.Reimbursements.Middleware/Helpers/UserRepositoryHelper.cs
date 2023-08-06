@@ -13,14 +13,11 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Helpers
         {
             var user = await users.GetByPublicIdAsync(publicId, ct);
 
-            if (user == null)
-            {
+            return user ??
+
                 throw new BusinessException("A user was not found matching the given public identifier.")
                     .WithUserMessage("O perfil do utilizador não foi encontrado.")
                     .WithCode("61HDOI");
-            }
-
-            return user;
         }
     }
 }

@@ -13,13 +13,10 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Helpers
         {
             var permission = await permissions.GetByNameAsync(permissionName, ct);
 
-            if (permission == null)
-            {
+            return permission ??
+
                 throw new InvalidOperationException("A permission was not found matching the given name.")
                     .WithCode("GOIQXN");
-            }
-
-            return permission;
         }
     }
 }
