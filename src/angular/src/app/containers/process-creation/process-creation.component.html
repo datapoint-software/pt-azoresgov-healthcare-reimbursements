@@ -1,4 +1,105 @@
-<app-header
-  hint="Processos"
-  title="Novo">
-</app-header>
+<div class="container-fluid">
+  <app-header hint="Processos" title="Novo">
+  </app-header>
+  <div class="row pb-8">
+    <div class="col col-lg-8">
+      <app-wizard>
+        <app-wizard-step
+          *ngIf="(entitySelectionEnabled$ | async) || false"
+          [id]="'entity-selection'"
+          [title]="'Entidade'"
+          [description]="'Pesquise e seleccione uma entidade para continuar com o registo do processo de reembolso.'"
+          [navigationButtonsEnabled]="false"
+          [navigationButtonsVisible]="false">
+
+          <div class="form-group">
+            <!-- Files -->
+            <div class="card">
+              <div class="card-header">
+
+                <!-- Title -->
+                <h4 class="card-header-title">
+                  Entidades
+                </h4>
+
+              </div>
+              <div class="card-header">
+
+                <!-- Form -->
+                <form>
+                  <div class="input-group input-group-flush input-group-merge input-group-reverse">
+
+                    <!-- Input -->
+                    <input class="form-control list-search" type="search" placeholder="Pesquise pelo nome da entidade...">
+
+                    <!-- Prepend -->
+                    <div class="input-group-text">
+                      <span class="fe fe-search"></span>
+                    </div>
+
+                  </div>
+                </form>
+
+              </div>
+              <div class="card-body">
+
+                <!-- List -->
+                <ul class="list-group list-group-lg list-group-flush list my-n4">
+                  <li class="list-group-item" *ngFor="let i of [ 1, 2, 3, 4, 5 ]">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+
+                        <!-- Avatar -->
+                        <a href="#!" class="avatar avatar-lg d-flex align-items-center justify-content-center">
+                          <span class="fe fe-activity fs-1"></span>
+                        </a>
+
+                      </div>
+                      <div class="col ms-n2">
+
+                        <!-- Title -->
+                        <h4 class="mb-1 name">
+                          <a href="#!">Centro de Saúde da Praia da Vitória</a>
+                        </h4>
+
+                        <!-- Text -->
+                        <p class="card-text small text-muted mb-1">
+                          Unidade de Saúde da Ilha Terceira
+                        </p>
+
+                      </div>
+                      <div class="col-auto">
+
+                        <!-- Button -->
+                        <button
+                          (click)="onEntitySelectionButtonClick($event)"
+                          href="#!"
+                          class="btn btn-lg btn-primary d-none d-md-inline-block">
+                          Continuar
+                        </button>
+
+                      </div>
+                    </div> <!-- / .row -->
+                  </li>
+                </ul>
+
+              </div>
+            </div>
+
+          </div>
+        </app-wizard-step>
+        <app-wizard-step [title]="'Utente'"
+          [description]="'Pesquise e seleccione um utente para continuar com o registo do processo de reembolso.'">
+          Pesquise pelo utente...
+        </app-wizard-step>
+        <app-wizard-step [title]="'Confirmação'"
+          [description]="'Confirme a informação apresentada e, caso esteja correta, continue com o registo do processo de reembolso.'">
+          Confirme os dados do utente...
+        </app-wizard-step>
+      </app-wizard>
+    </div>
+    <div class="col-md-4 d-none d-lg-block">
+
+    </div>
+  </div>
+</div>

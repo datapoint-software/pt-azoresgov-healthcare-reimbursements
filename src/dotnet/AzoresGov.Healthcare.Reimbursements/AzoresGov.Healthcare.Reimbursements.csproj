@@ -19,7 +19,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Abstractions\AzoresGov.Healthcare.Reimbursements.Abstractions.csproj" />
 		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Api\AzoresGov.Healthcare.Reimbursements.Api.csproj" />
-		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Authentication\AzoresGov.Healthcare.Reimbursements.Authentication.csproj" />
 		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Configuration\AzoresGov.Healthcare.Reimbursements.Configuration.csproj" />
 		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Middleware\AzoresGov.Healthcare.Reimbursements.Middleware.csproj" />
 		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.UnitOfWork\AzoresGov.Healthcare.Reimbursements.UnitOfWork.csproj" />

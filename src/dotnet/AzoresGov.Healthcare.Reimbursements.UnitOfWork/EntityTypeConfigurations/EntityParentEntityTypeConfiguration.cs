@@ -19,12 +19,12 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.EntityTypeConfiguration
             builder.HasOne(e => e.Entity)
                 .WithMany()
                 .HasForeignKey(e => e.EntityId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(e => e.ParentEntity)
                 .WithMany()
                 .HasForeignKey(e => e.ParentEntityId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Property(e => e.Level)
                 .IsRequired();

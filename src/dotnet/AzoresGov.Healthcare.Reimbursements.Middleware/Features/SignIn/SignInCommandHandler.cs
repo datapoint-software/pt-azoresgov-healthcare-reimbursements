@@ -123,7 +123,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
                 userSession,
                 userSessionOptions);
 
-            await _authorization.RefreshAsync(user, ct);
+            await _authorization.PopulateAsync(user, ct);
 
             return await BuildResultAsync(
                 user, 

@@ -13,9 +13,11 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Helpers
             var remoteAddress = request.HttpContext.Connection.RemoteIpAddress;
 
             if (remoteAddress is null)
+            {
                 throw new ValidationException("The user agent header was not set for the incomming request.")
                     .WithCode("UAHXKZ")
                     .WithUserMessage(GenericUserMessage);
+            }
 
             return remoteAddress;
         }

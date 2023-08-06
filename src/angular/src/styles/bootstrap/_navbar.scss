@@ -1,0 +1,16 @@
+.navbar-nav {
+
+  .divider {
+    box-sizing: border-box;
+
+    &::before {
+      content: "";
+      display: block;
+      border-bottom: 1px solid #e3ebf6;
+    }
+  }
+
+  .nav-item .divider {
+    padding: 0 3.25rem;
+  }
+}

@@ -1,4 +1,4 @@
-﻿namespace AzoresGov.Healthcare.Reimbursements.Configuration
+﻿namespace AzoresGov.Healthcare.Reimbursements.Configuration.Constants
 {
     internal static class ParameterNames
     {
@@ -10,6 +10,14 @@
         /// a third-party authentication procedure.
         /// </summary>
         internal const string AuthenticationEnabled = nameof(AuthenticationEnabled);
+
+        /// <summary>
+        /// An array of <see cref="EntityKind"/> for the kind of entities which
+        /// processes are allowed to be created on.
+        /// 
+        /// By default, processes can only be created on <see cref="EntityKind.HealthCenter"/>.
+        /// </summary>
+        internal const string ProcessCreationEntityKinds = nameof(ProcessCreationEntityKinds);
 
         /// <summary>
         /// An Int32 for the user password hash work factor.

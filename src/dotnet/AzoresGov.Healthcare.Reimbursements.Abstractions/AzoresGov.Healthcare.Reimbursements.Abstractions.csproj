@@ -10,4 +10,8 @@
 		<PackageReference Include="Datapoint" Version="7.0.0-a.27" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Enumerations\AzoresGov.Healthcare.Reimbursements.Enumerations.csproj" />
+	</ItemGroup>
+
 </Project>

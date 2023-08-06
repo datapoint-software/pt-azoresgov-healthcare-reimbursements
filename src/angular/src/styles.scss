@@ -1,18 +1,4 @@
-/* You can add global styles to this file, and also import other style files */
+@import './styles/bootstrap/navbar';
 
-.navbar-nav {
-
-  .divider {
-    box-sizing: border-box;
-
-    &::before {
-      content: "";
-      display: block;
-      border-bottom: 1px solid #e3ebf6;
-    }
-  }
-
-  .nav-item .divider {
-    padding: 0 3.25rem;
-  }
-}
+@import './styles/loading-overlay';
+@import './styles/wizard-step';
