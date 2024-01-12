@@ -12,6 +12,7 @@ import { provideIdentityFeature } from "./features/identity/identity.provider";
 import { provideLoadingOverlayFeature } from "./features/loading-overlay/loading-overlay.provider";
 import { provideSignInFeature } from "./features/sign-in/sign-in.provider";
 import { provideProcessCreationFeature } from "./features/process-creation/process-creation.providers";
+import { provideEnvironmentFeature } from "./features/environment/environment.provider";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -32,6 +33,7 @@ export const appConfig: ApplicationConfig = {
     }),
 
     // App features
+    provideEnvironmentFeature(),
     provideErrorFeature(),
     provideIdentityFeature(),
     provideLoadingOverlayFeature(),

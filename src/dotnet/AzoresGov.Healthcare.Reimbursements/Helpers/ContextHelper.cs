@@ -63,7 +63,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Helpers
             {
                 builder.UseLoggerFactory(
                     LoggerFactory.Create(logger => logger
-                        .WithEnvironmentDefaults(configuration, environment)));
+                        .WithEnvironmentDefaults(environment)));
             }
 
             return builder.UseSqlServer(connectionString, (provider) =>

@@ -31,10 +31,10 @@ export class IdentityEffects {
   public readonly initRefresh$ = createEffect(() => this.actions$.pipe(
     ofType(initRefresh),
     mergeMap(() => this.identityClient.refresh().pipe(
-      map((claims) => initConfigure({ payload: { claims } }))
-    )),
-    catchErrorResponseWithStatusCode([ 401, 403, 409 ], () => of(
-      initConfigure({ payload: {} })
+      map((claims) => initConfigure({ payload: { claims } })),
+      catchErrorResponseWithStatusCode([ 401, 403, 409 ], () => of(
+        initConfigure({ payload: {} })
+      ))
     )),
     mergeMap((action) => [
       action,

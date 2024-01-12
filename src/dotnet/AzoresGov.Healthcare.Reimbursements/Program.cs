@@ -32,7 +32,6 @@ namespace AzoresGov.Healthcare.Reimbursements
                 args);
 
             var logger = LoggerHelper.CreateLogger(
-                builder.Configuration,
                 builder.Environment);
 
             using var context = ContextHelper.CreateContext(
@@ -163,7 +162,7 @@ namespace AzoresGov.Healthcare.Reimbursements
 
             services.AddLogging((logging) =>
             {
-                logging.WithEnvironmentDefaults(configuration, environment);
+                logging.WithEnvironmentDefaults(environment);
             });
 
             #endregion
