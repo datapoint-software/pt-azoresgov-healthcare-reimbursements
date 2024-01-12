@@ -66,11 +66,11 @@ export class SignInEffects {
         authenticate({ payload }),
         dequeue(loadingScreen(signIn.type)),
         signInRedirect()
+      )),
+      catchErrorResponseWithConflictStatusCode((response) => of(
+        signInPostError({ payload: response.error }),
+        dequeue(loadingScreen(signIn.type))
       ))
-    )),
-    catchErrorResponseWithConflictStatusCode((response) => of(
-      signInPostError({ payload: response.error }),
-      dequeue(loadingScreen(signIn.type))
     ))
   ));
 

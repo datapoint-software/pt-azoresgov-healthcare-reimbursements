@@ -12,6 +12,12 @@
           [error]="(authenticationError$ | async)!"
           [persistentEnabled]="(authenticationPersistentEnabled$ | async)!"
           (submit)="onSubmit($event)" />
+
+        <div class="mt-4 text-center text-muted fs-6 fw-bold">
+          <div>Release {{productVersion$ | async}}</div>
+          <div class="text-warning" *ngIf="(development$ | async)">(development environment)</div>
+          <div class="text-danger" *ngIf="(debugSymbols$ | async)">(debug symbols)</div>
+        </div>
       </div>
     </div> <!-- / .row -->
   </div>
