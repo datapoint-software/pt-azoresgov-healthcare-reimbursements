@@ -1,6 +1,10 @@
-export const featureName = 'error';
+export const FEATURE_ACTION_PREFIX = '@app/features/error';
 
-export const statusCodeMessages: { [statusCode: string]: string } = {
+export const FEATURE_NAME = 'error';
+
+export const STATUS_CODE_DEFAULT_MESSAGE = 'Unknown Response';
+
+export const STATUS_CODE_MESSAGES: { [sc: number]: string } = {
   100: "Continue",
   101: "Switching Protocols",
   200: "OK",

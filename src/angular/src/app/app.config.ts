@@ -1,43 +1,41 @@
-import { provideHttpClient } from "@angular/common/http";
-import { ApplicationConfig, importProvidersFrom, isDevMode } from "@angular/core";
-import { provideAnimations } from "@angular/platform-browser/animations";
-import { provideRouter } from "@angular/router";
-import { provideEffects } from "@ngrx/effects";
-import { provideStore } from "@ngrx/store";
-import { provideStoreDevtools } from "@ngrx/store-devtools";
-import { provideErrorHandler } from "./app.providers";
-import { routes } from "./app.routes";
-import { provideErrorFeature } from "./features/error/error.provider";
-import { provideIdentityFeature } from "./features/identity/identity.provider";
-import { provideLoadingOverlayFeature } from "./features/loading-overlay/loading-overlay.provider";
-import { provideSignInFeature } from "./features/sign-in/sign-in.provider";
-import { provideProcessCreationFeature } from "./features/process-creation/process-creation.providers";
-import { provideEnvironmentFeature } from "./features/environment/environment.provider";
+import { ApplicationConfig, isDevMode } from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { routes } from './app.routes';
+import { provideStore } from '@ngrx/store';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { provideEffects } from '@ngrx/effects';
+import { provideEnvironmentFeature } from './features/environment/environment.feature';
+import { provideEnvironmentClient } from './clients/environment/environment.client';
+import { provideHttpClient } from '@angular/common/http';
+import { provideErrorFeature } from './features/error/error.feature';
+import { provideSignInFeature } from './features/sign-in/sign-in.feature';
+import { provideSignInClient } from './clients/sign-in/sign-in.client';
+import { provideErrorHandler } from './handlers/error.handler';
+import { provideLoadingOverlayFeature } from './features/loading-overlay/loading-overlay.feature';
+import { provideIdentityFeature } from './features/identity/identity.feature';
+import { provideIdentityClient } from './clients/identity/identity.client';
 
 export const appConfig: ApplicationConfig = {
   providers: [
 
     // Core
-    provideAnimations(),
     provideErrorHandler(),
     provideHttpClient(),
     provideRouter(routes),
-
-    // App
-    provideEffects(),
     provideStore(),
-    provideStoreDevtools({
-      maxAge: 25,
-      logOnly: !isDevMode(),
-      name: 'AzoresGov.Healthcare.Reimbursements'
-    }),
+    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
+    provideEffects(),
 
-    // App features
+    // Clients
+    provideEnvironmentClient(),
+    provideIdentityClient(),
+    provideSignInClient(),
+
+    // Features
     provideEnvironmentFeature(),
     provideErrorFeature(),
     provideIdentityFeature(),
     provideLoadingOverlayFeature(),
-    provideProcessCreationFeature(),
     provideSignInFeature()
   ]
 };

@@ -1,20 +1,16 @@
-﻿namespace AzoresGov.Healthcare.Reimbursements.Api.Features.Environment
+﻿using AzoresGov.Healthcare.Reimbursements.Enumerations;
+
+namespace AzoresGov.Healthcare.Reimbursements.Api.Features.Environment
 {
     public sealed class EnvironmentResultModel
     {
-        public EnvironmentResultModel(bool production, bool debugSymbols, string fileVersion, string productVersion)
+        public EnvironmentResultModel(EnvironmentNature nature, string productVersion)
         {
-            Production = production;
-            DebugSymbols = debugSymbols;
-            FileVersion = fileVersion;
+            Nature = nature;
             ProductVersion = productVersion;
         }
 
-        public bool Production { get; }
-
-        public bool DebugSymbols { get; }
-
-        public string FileVersion { get; }
+        public EnvironmentNature Nature { get; }
 
         public string ProductVersion { get; }
     }

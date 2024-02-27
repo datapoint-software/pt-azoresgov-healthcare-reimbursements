@@ -11,28 +11,23 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.EntityTypeConfiguration
         {
             builder.Entity();
 
-            builder.HasIndex(e => e.UserId);
-
-            builder.HasIndex(e => e.UserAgentId);
-
             builder.HasOne(e => e.User)
                 .WithMany()
-                .HasForeignKey(e => e.UserId)
-                .OnDelete(DeleteBehavior.Cascade)
+                .HasForeignKey("UserId")
                 .IsRequired();
 
-            builder.HasOne(e => e.UserAgent)
-                .WithMany()
-                .HasForeignKey(e => e.UserAgentId)
-                .OnDelete(DeleteBehavior.Restrict)
+            builder.Property(e => e.Agent)
+                .HasMaxLength(4096)
                 .IsRequired();
 
             builder.Property(e => e.NetworkAddress)
                 .HasMaxLength(64)
                 .IsRequired();
 
-            builder.Property(e => e.Start)
+            builder.Property(e => e.Creation)
                 .IsRequired();
+
+            builder.Property(e => e.Expiration);
 
             builder.Property(e => e.LastSeen)
                 .IsRequired();

@@ -1,125 +1,71 @@
-import { isDevMode } from "@angular/core";
-import { ActionCreator, DefaultProjectorFn, MemoizedSelector, Store } from "@ngrx/store";
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
+import { DefaultProjectorFn, MemoizedSelector, Store } from "@ngrx/store";
+import { Observable, Subject, firstValueFrom, map, skipWhile, takeUntil } from "rxjs";
 import { TypedAction } from "@ngrx/store/src/models";
-import { Observable, Subject, filter, firstValueFrom, skipWhile, takeUntil } from "rxjs";
 
-export abstract class Feature<TFeatureState extends object> {
+export abstract class Feature<TState> {
+
+  protected abstract dispose$$$(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): TypedAction<string>;
+
+  protected abstract init$$$(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): TypedAction<string>;
+
+  protected readonly state$ = this.store.select(this.state$$);
+
+  private dispose$?: Observable<boolean>;
 
   constructor(
     protected readonly store: Store,
-    private readonly state: MemoizedSelector<object, TFeatureState, DefaultProjectorFn<TFeatureState>>
-  ) {
+    private readonly state$$: MemoizedSelector<object, TState, DefaultProjectorFn<TState>>
+  ) { }
 
+  protected createObservableFactory<TParentState, TValue>(selector: MemoizedSelector<object, TValue, (s1: TParentState) => TValue>) {
+
+    return () => {
+
+      if (!this.dispose$)
+        throw 'Feature state is not ready for observing.';
+
+      return this.store
+        .select(selector)
+        .pipe(takeUntil(this.dispose$));
+    };
   }
 
-  protected readonly state$: Observable<TFeatureState> = this.store.select(this.state);
-}
-
-export abstract class DynamicFeature<TFeatureState extends object, TInitPayload> extends Feature<TFeatureState> {
-
-  public readonly disposed$: Observable<boolean> = new Subject<boolean>();
-
-  public readonly disposing$: Observable<boolean> = new Subject<boolean>();
-
-  constructor(
-    store: Store,
-    state: MemoizedSelector<object, TFeatureState, DefaultProjectorFn<TFeatureState>>,
-    private readonly init$$: ActionCreator<string, (props: { payload: TInitPayload }) => TypedAction<string> & { payload: TInitPayload }>,
-    private readonly dispose$$: ActionCreator<string, () => TypedAction<string>>
-  ) {
-    super(store, state);
+  protected dispatch(action: TypedAction<string>) {
+    this.store.dispatch(action);
   }
 
-  public async init(payload: TInitPayload): Promise<void> {
+  public async init(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): Promise<void> {
 
-    const state = await firstValueFrom(this.state$);
+    this.dispose$ = new Subject<boolean>();
 
-    if (state)
-      throw new Error(`Action '${this.init$$.type}' can not be dispatched because the feature state is already set.`);
+    this.store.dispatch(
+      this.init$$$(activatedRoute, router)
+    );
 
-    this.store.dispatch(this.init$$({ payload }));
-
-    await firstValueFrom(this.state$.pipe(
-      skipWhile((state) => state === undefined)
-    ));
+    await firstValueFrom(
+      this.state$
+        .pipe(map(state => !state))
+        .pipe(skipWhile(preparing => preparing))
+    );
   }
 
-  public async dispose(): Promise<void> {
+  public async dispose(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): Promise<void> {
 
-    const state = await firstValueFrom(this.state$);
-
-    if (state) {
-
-      (this.disposing$ as Subject<boolean>).next(true);
-
-      this.store.dispatch(this.dispose$$());
-
-      await firstValueFrom(this.state$.pipe(
-        filter((state) => state === undefined)
-      ));
-
-      (this.disposed$ as Subject<boolean>).next(true);
-    }
-  }
-
-  protected createObservableOf<TState>(mapFn: (value: object) => TState) {
-    return this.store.select(mapFn).pipe(takeUntil(this.disposing$));
-  }
-}
-
-export abstract class StaticFeature<TFeatureState extends object> extends Feature<TFeatureState> {
-
-  public readonly disposed$: Observable<boolean> = new Subject<boolean>();
-
-  public readonly disposing$: Observable<boolean> = new Subject<boolean>();
-
-  constructor(
-    store: Store,
-    state: MemoizedSelector<object, TFeatureState, DefaultProjectorFn<TFeatureState>>,
-    private readonly init$$: ActionCreator<string, () => TypedAction<string>>,
-    private readonly dispose$$: ActionCreator<string, () => TypedAction<string>>
-  ) {
-    super(store, state);
-  }
-
-  public async init(): Promise<void> {
-
-    const state = await firstValueFrom(this.state$);
-
-    if (state) {
-
-      if (isDevMode())
-        console.warn(`Action '${this.init$$.type}' will not dispatch because the feature state is already set.`);
-
-      return;
+    if (this.dispose$) {
+      (this.dispose$ as Subject<boolean>).next(true);
+      (this.dispose$ as Subject<boolean>).complete();
+      delete this.dispose$;
     }
 
-    this.store.dispatch(this.init$$());
+    this.store.dispatch(
+      this.dispose$$$(activatedRoute, router)
+    );
 
-    await firstValueFrom(this.state$.pipe(
-      skipWhile((state) => state === undefined)
-    ));
-  }
-
-  public async dispose(): Promise<void> {
-
-    const state = await firstValueFrom(this.state$);
-
-    if (state) {
-
-      (this.disposing$ as Subject<boolean>).next(true);
-
-      this.store.dispatch(this.dispose$$());
-
-      await firstValueFrom(this.state$.pipe(
-        filter((state) => state === undefined)
-      ));
-
-      (this.disposed$ as Subject<boolean>).next(true);
-    }
-  }
-
-  protected createObservableOf<TState>(mapFn: (value: object) => TState) {
-    return this.store.select(mapFn).pipe(takeUntil(this.disposing$));
+    await firstValueFrom(
+      this.state$
+        .pipe(map(state => !!state))
+        .pipe(skipWhile(disposing => disposing))
+    );
   }
 }

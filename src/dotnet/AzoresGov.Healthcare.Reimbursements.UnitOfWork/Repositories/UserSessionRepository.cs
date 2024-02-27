@@ -3,9 +3,9 @@ using Datapoint.UnitOfWork.EntityFrameworkCore;
 
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
 {
-    public sealed class UserSessionRepository : EntityFrameworkCoreRepository<HealthcareReimbursementsUnitOfWork, HealthcareReimbursementsContext, UserSessionEntity>, IUserSessionRepository
+    public sealed class UserSessionRepository : EntityFrameworkCoreRepository<HealthcareReimbursementsContext, UserSessionEntity>, IUserSessionRepository
     {
-        public UserSessionRepository(HealthcareReimbursementsUnitOfWork unitOfWork) : base(unitOfWork)
+        public UserSessionRepository(HealthcareReimbursementsContext context) : base(context)
         {
         }
     }

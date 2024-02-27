@@ -1,25 +1,59 @@
-import { DynamicFeature } from "../feature.abstractions";
-import { dispose, init } from "./error.actions";
-import { ErrorState } from "./error.state";
-import { id, message, state, status, statusCode, statusMessage } from "./error.selectors";
-import { Injectable } from "@angular/core";
-import { Store } from "@ngrx/store";
+import { EnvironmentProviders, Injectable, makeEnvironmentProviders } from "@angular/core";
+import { Feature } from "../feature.abstractions";
+import { ErrorState } from "./rx/error.state";
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
+import { TypedAction } from "@ngrx/store/src/models";
+import { dispose, init } from "./rx/error.actions";
+import { correlationId, id, message, stackTrace, state, status } from "./rx/error.selectors";
+import { Store, provideState } from "@ngrx/store";
+import { provideEffects } from "@ngrx/effects";
+import { ErrorEffects } from "./rx/error.effects";
+import { FEATURE_NAME } from "./error.constants";
+import { reducer } from "./rx/error.reducer";
 
 @Injectable()
-export class ErrorFeature extends DynamicFeature<ErrorState, {
-  id?: string;
-  message?: string;
-  statusCode?: number;
-}>{
+export class ErrorFeature extends Feature<ErrorState> {
+
+  readonly id$ = this.createObservableFactory(id);
+
+  readonly correlationId$ = this.createObservableFactory(correlationId);
+
+  readonly message$ = this.createObservableFactory(message);
+
+  readonly stackTrace$ = this.createObservableFactory(stackTrace);
+
+  readonly status$ = this.createObservableFactory(status);
 
   constructor(store: Store) {
-    super(store, state, init, dispose);
+    super(store, state);
   }
 
-  public readonly id$ = this.store.select(id);
-  public readonly message$ = this.store.select(message);
-  public readonly status$ = this.store.select(status);
-  public readonly statusCode$ = this.store.select(statusCode);
-  public readonly statusMessage$ = this.store.select(statusMessage);
+  protected override dispose$$$(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): TypedAction<string> {
+    return dispose();
+  }
 
+  protected override init$$$(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): TypedAction<string> {
+
+    const statusCode = activatedRoute.queryParamMap.get('statusCode');
+
+    return init({
+      payload: {
+        id: activatedRoute.queryParamMap.get('id') || undefined,
+        correlationId: activatedRoute.queryParamMap.get('correlationId') || undefined,
+        message: activatedRoute.queryParamMap.get('message') || undefined,
+        stackTrace: activatedRoute.queryParamMap.get('stackTrace') || undefined,
+        statusCode: (statusCode && parseInt(statusCode)) || undefined
+      }
+    });
+  }
 }
+
+export const provideErrorFeature = (): Array<EnvironmentProviders> => [
+
+  makeEnvironmentProviders([
+    ErrorFeature
+  ]),
+
+  provideEffects(ErrorEffects),
+  provideState(FEATURE_NAME, reducer)
+];

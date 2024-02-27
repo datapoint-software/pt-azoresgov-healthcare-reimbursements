@@ -7,7 +7,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Helpers
 {
     internal static class FluentValidationHelper
     {
-        internal static string ResolveValidatorErrorCode(IPropertyValidator validator) =>
+        internal static string ResolveErrorCode(IPropertyValidator validator) =>
 
             // E.g.: NotEmptyValidator => notempty
             // See https://docs.fluentvalidation.net/en/latest/error-codes.html#errorcode-and-error-messages

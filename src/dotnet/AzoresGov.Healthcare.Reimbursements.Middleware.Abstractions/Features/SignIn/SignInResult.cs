@@ -1,23 +1,15 @@
-﻿using System.Collections.Generic;
-
-namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
+﻿namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
 {
     public sealed class SignInResult
     {
-        public SignInResult(IReadOnlyCollection<SignInEntityResult> entities, IReadOnlyCollection<SignInPermissionResult> permissions, SignInUserResult user, SignInUserSessionResult userSession)
+        public SignInResult(SignInSessionResult session, SignInUserResult user)
         {
-            Entities = entities;
-            Permissions = permissions;
+            Session = session;
             User = user;
-            UserSession = userSession;
         }
 
-        public IReadOnlyCollection<SignInEntityResult> Entities { get; }
-
-        public IReadOnlyCollection<SignInPermissionResult> Permissions { get; }
+        public SignInSessionResult Session { get; }
 
         public SignInUserResult User { get; }
-
-        public SignInUserSessionResult UserSession { get; }
     }
 }

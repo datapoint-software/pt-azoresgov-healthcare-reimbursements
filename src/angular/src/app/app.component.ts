@@ -1,26 +1,48 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterOutlet } from '@angular/router';
 import { LoadingOverlayComponent } from './components/loading-overlay/loading-overlay.component';
-import { RouterOutlet } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 import { LoadingOverlayFeature } from './features/loading-overlay/loading-overlay.feature';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
   imports: [
-    CommonModule,
     LoadingOverlayComponent,
     RouterOutlet
   ],
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  selector: 'app-root',
+  standalone: true,
+  styleUrl: './app.component.scss',
+  templateUrl: './app.component.html'
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
+
+  private readonly destroy$ = new Subject<boolean>();
 
   constructor(
-    private readonly loadingOverlayFeature: LoadingOverlayFeature
+    private readonly loadingOverlay: LoadingOverlayFeature,
+    private readonly router: Router
   ) {}
 
-  public readonly loadingOverlayVisible$ = this.loadingOverlayFeature.visible$;
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.complete();
+  }
+
+  ngOnInit(): void {
+
+    const navigation = 'navigation';
+
+    this.router.events
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((e) => {
+
+        if (e instanceof NavigationStart)
+          this.loadingOverlay.enqueue(navigation);
+
+        else if (e instanceof NavigationEnd || e instanceof NavigationError || e instanceof NavigationCancel)
+          this.loadingOverlay.dequeue(navigation);
+      });
+  }
+
 
 }

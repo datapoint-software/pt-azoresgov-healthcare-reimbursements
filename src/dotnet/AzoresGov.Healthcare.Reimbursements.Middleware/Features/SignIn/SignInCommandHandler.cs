@@ -1,14 +1,10 @@
-﻿using AzoresGov.Healthcare.Reimbursements.Configuration;
+﻿using AzoresGov.Healthcare.Reimbursements.Management;
 using AzoresGov.Healthcare.Reimbursements.Middleware.Helpers;
-using AzoresGov.Healthcare.Reimbursements.Middleware.Managers;
 using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities;
 using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories;
 using Datapoint;
-using Datapoint.Configuration;
 using Datapoint.Mediator;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,21 +12,11 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
 {
     public sealed class SignInCommandHandler : ICommandHandler<SignInCommand, SignInResult>
     {
-        private const string GenericUserMessage = "Este endereço de correio eletrónico e palavra-passe não correspondem a um utilizador existente.";
+        private const string GenericCredentialsErrorCode = "ATHCRD";
 
-        private readonly AuthorizationManager _authorization;
+        private const string GenericCredentialsErrorMessage = "O endereço de correio electrónico e/ou a palavra-passe não correspondem a um perfil existente.";
 
-        private readonly IConfiguration _configuration;
-
-        private readonly IEntityRepository _entities;
-
-        private readonly IPermissionRepository _permissions;
-
-        private readonly IUserAgentRepository _userAgents;
-
-        private readonly IUserEmailAddressRepository _userEmailAddresses;
-
-        private readonly IUserEntityRepository _userEntities;
+        private readonly IParameterManager _parameters;
 
         private readonly IUserPasswordRepository _userPasswords;
 
@@ -38,25 +24,9 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
 
         private readonly IUserSessionRepository _userSessions;
 
-        public SignInCommandHandler(
-            AuthorizationManager authorization,
-            IConfiguration configuration,
-            IEntityRepository entities,
-            IPermissionRepository permissions,
-            IUserAgentRepository userAgents,
-            IUserEmailAddressRepository userEmailAddresses,
-            IUserEntityRepository userEntities,
-            IUserPasswordRepository userPasswords,
-            IUserRepository users,
-            IUserSessionRepository userSessions)
+        public SignInCommandHandler(IParameterManager parameters, IUserPasswordRepository userPasswords, IUserRepository users, IUserSessionRepository userSessions)
         {
-            _authorization = authorization;
-            _configuration = configuration;
-            _entities = entities;
-            _permissions = permissions;
-            _userAgents = userAgents;
-            _userEmailAddresses = userEmailAddresses;
-            _userEntities = userEntities;
+            _parameters = parameters;
             _userPasswords = userPasswords;
             _users = users;
             _userSessions = userSessions;
@@ -64,258 +34,124 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
 
         public async Task<SignInResult> HandleCommandAsync(SignInCommand command, CancellationToken ct)
         {
-            var userSessionOptions = await _configuration.GetUserSessionOptionsAsync(ct);
+            await EnsureBasicAuthenticationEnabledAsync(ct);
 
-            await AssertAuthenticationEnabledAsync(ct);
+            // WARNING 
+            //
+            // In order to prevent time based brute force exploit attempts, we'll make
+            // sure this command always takes the exact same amount of time regardless
+            // of wether or not a matching user was found.
+            //
+            // The delay, in milliseconds, must be adjusted according to the hosts
+            // processing capacity and the defined password hash work factor: to keep it
+            // simple, it should always be greater than the amount of time it takes
+            // to match, compare and rehash the user password.
+            //
+            // TODO <joao.pl.lopes>
+            // 
+            // We need to measure the time it takes both tasks to complete and,
+            // if `delay` takes less time than `handler`, we must log a warning
+            // message to make the system administrator aware of this.
+            var delay = Task.Delay(await _parameters.GetBasicAuthenticationDelayAsync(ct), ct);
+            var handler = HandleCommandWithoutDelayAsync(command, ct);
 
-            AssertUserSessionOptions(
-                command,
-                userSessionOptions);
+            await Task.WhenAll(delay, handler);
 
-            var timeBasedBruteforcePreventionDelayTask = Task.Delay(7500, ct);
-
-            var handleSignInCommandTask = HandleSignInCommandAsync(
-                command,
-                userSessionOptions,
-                ct);
-
-            await Task.WhenAll(
-                timeBasedBruteforcePreventionDelayTask,
-                handleSignInCommandTask);
-
-            return handleSignInCommandTask.Result;
+            return handler.Result;
         }
 
-        private async Task<SignInResult> HandleSignInCommandAsync(SignInCommand command, UserSessionOptions userSessionOptions, CancellationToken ct)
+        private async Task<SignInResult> HandleCommandWithoutDelayAsync(SignInCommand command, CancellationToken ct)
         {
-            var userEmailAddress = await GetUserEmailAddressAsync(command, ct);
-
-            var user = await GetUserAsync(
-                userEmailAddress,
-                ct);
-
-            var userPassword = await GetLastUserPasswordAsync(
-                user,
-                ct);
-
-            EnsureUserPasswordHashMatch(
-                command,
-                userPassword);
-
-            await EnsureUserPasswordHashWorkFactorAsync(
-                command,
-                userPassword,
-                ct);
-
-            var userAgent = await GetOrCreateUserAgentAsync(
-                command,
-                ct);
-
-            var userSession = CreateUserSession(
-                command,
-                user,
-                userAgent);
-
-            var userSessionExpiration = GetUserSessionExpiration(
-                command,
-                userSessionOptions);
-
-            await _authorization.PopulateAsync(user, ct);
-
-            return await BuildResultAsync(
-                user,
-                userSession,
-                userSessionExpiration,
-                ct);
-        }
-
-        private async Task<SignInResult> BuildResultAsync(UserEntity user, UserSessionEntity userSession, DateTimeOffset? userSessionExpiration, CancellationToken ct)
-        {
-
-            var userEntities = await _userEntities.GetAllByUserIdAsync(
-                user.Id,
-                ct);
-
-            var entities = await _entities.GetAllByIdAsync(
-                userEntities.Select(ue => ue.EntityId),
-                ct);
-
-            var permissions = await _permissions.GetAllAsync(ct);
-
-            var entityResults = new List<SignInEntityResult>();
-
-            foreach (var entity in entities)
-            {
-                var entityPermissionResults = new List<SignInPermissionResult>();
-
-                foreach (var permission in permissions)
-                {
-                    if (await _authorization.AuthorizeAsync(permission, user, entity, ct))
-                    {
-                        entityPermissionResults.Add(
-                            new SignInPermissionResult(
-                                permission.PublicId,
-                                permission.Name));
-                    }
-                }
-
-                entityResults.Add(
-                    new SignInEntityResult(
-                        entity.PublicId,
-                        entityPermissionResults));
-            }
-
-            var permissionResults = new List<SignInPermissionResult>();
-
-            foreach (var permission in permissions)
-            {
-                if (await _authorization.AuthorizeAsync(permission, user, ct))
-                {
-                    permissionResults.Add(
-                        new SignInPermissionResult(
-                            permission.PublicId,
-                            permission.Name));
-                }
-            }
-
-            return new SignInResult(
-                entityResults,
-                permissionResults,
-                new SignInUserResult(
-                    user.PublicId,
-                    user.RowVersionId,
-                    user.Name),
-                new SignInUserSessionResult(
-                    userSession.PublicId,
-                    userSession.RowVersionId,
-                    userSessionExpiration));
-        }
-
-        private static void AssertUserSessionOptions(SignInCommand command, UserSessionOptions userSessionOptions)
-        {
-            if (command.Persistent && !userSessionOptions.Expiration.HasValue)
-            {
-                throw new BusinessException("Persistent user sessions feature is not enabled.")
-                    .WithCode("K7HYTM")
-                    .WithUserMessage("As sessões persistentes não foram ativadas pelo administrador do sistema.");
-            }
-        }
-
-        private static DateTimeOffset? GetUserSessionExpiration(SignInCommand command, UserSessionOptions userSessionOptions)
-        {
-            if (command.Persistent && userSessionOptions.Expiration.HasValue)
-                return command.Creation.AddSeconds(userSessionOptions.Expiration.Value);
-
-            return null;
-        }
-
-        private async Task AssertAuthenticationEnabledAsync(CancellationToken ct)
-        {
-            var authenticationOptions = await _configuration.GetAuthenticationOptionsAsync(ct);
-
-            if (!authenticationOptions.Enabled)
-            {
-                throw new BusinessException("Authentication is not enabled for this environment.")
-                    .WithCode("GYORHL")
-                    .WithUserMessage("Este método de início de sessão não está disponível.");
-            }
-        }
-
-        private UserSessionEntity CreateUserSession(SignInCommand command, UserEntity user, UserAgentEntity userAgent)
-        {
-            var userSession = new UserSessionEntity()
-            {
-                PublicId = Guid.NewGuid(),
-                RowVersionId = Guid.NewGuid(),
-                User = user,
-                UserAgent = userAgent,
-                NetworkAddress = command.NetworkAddress.ToString(),
-                Start = command.Creation,
-                LastSeen = command.Creation
-            };
-
-            _userSessions.Add(userSession);
-
-            return userSession;
-        }
-
-        private async Task<UserAgentEntity> GetOrCreateUserAgentAsync(SignInCommand command, CancellationToken ct)
-        {
-            var userAgentHash = HashHelper.ComputeHash(command.UserAgent);
-
-            var userAgent = await _userAgents.GetByHashAsync(userAgentHash, ct);
-
-            if (userAgent is null)
-            {
-                userAgent = new UserAgentEntity()
-                {
-                    Hash = userAgentHash,
-                    Signature = command.UserAgent
-                };
-
-                _userAgents.Add(userAgent);
-            }
-
-            return userAgent;
-        }
-
-        private async Task EnsureUserPasswordHashWorkFactorAsync(SignInCommand command, UserPasswordEntity userPassword, CancellationToken ct)
-        {
-            var userPasswordHashOptions = await _configuration.GetUserPasswordHashOptionsAsync(ct);
-
-            if (!UserPasswordHashHelper.ValidatePasswordHash(userPassword.Hash, userPasswordHashOptions.WorkFactor))
-                userPassword.Hash = UserPasswordHashHelper.ComputePasswordHash(command.Password, userPasswordHashOptions.WorkFactor);
-        }
-
-        private static void EnsureUserPasswordHashMatch(SignInCommand command, UserPasswordEntity userPassword)
-        {
-            if (!UserPasswordHashHelper.ValidatePassword(command.Password, userPassword.Hash))
-            {
-                throw new BusinessException("The given password does not match the existing user password hash.")
-                    .WithCode("MGSGXT")
-                    .WithUserMessage(GenericUserMessage);
-            }
-        }
-
-        private async Task<UserPasswordEntity> GetLastUserPasswordAsync(UserEntity user, CancellationToken ct)
-        {
-            var userPassword = await _userPasswords.GetLastByUserIdAsync(
-                user.Id,
-                ct);
-
-            if (userPassword == null)
-            {
-                throw new BusinessException("A user password is not set for the matching user.")
-                    .WithCode("QJZGXO")
-                    .WithUserMessage(GenericUserMessage);
-            }
-
-            return userPassword;
-        }
-
-        private async Task<UserEntity> GetUserAsync(UserEmailAddressEntity userEmailAddress, CancellationToken ct)
-        {
-            var user = await _users.GetByUserEmailAddressIdAsync(
-                userEmailAddress.Id,
-                ct);
-
-            return user ??
-
-                throw new InvalidOperationException("A user was not found matching the given user email address identifier.")
-                    .WithCode("IWQIWJ");
-        }
-
-        private async Task<UserEmailAddressEntity> GetUserEmailAddressAsync(SignInCommand command, CancellationToken ct)
-        {
-            var userEmailAddress = await _userEmailAddresses.GetWithUserByEmailAddressAsync(
+            // Get the user.
+            var user = await _users.GetByEmailAddressAsync(
                 command.EmailAddress,
                 ct);
 
-            return userEmailAddress ??
+            if (user == null)
+            {
+                throw new BusinessException("A user was not found matching this email address.")
+                    .WithErrorCode(GenericCredentialsErrorCode)
+                    .WithErrorMessage(GenericCredentialsErrorMessage);
+            }
 
-                throw new BusinessException("A user was not found matching the given email address.")
-                    .WithCode("INLLAJ")
-                    .WithUserMessage(GenericUserMessage);
+            // Get and verify the user password.
+            var userPassword = await _userPasswords.GetByUserIdAsync(
+                user.Id,
+                ct);
+
+            if (userPassword is null)
+            {
+                throw new BusinessException("A password has not been set for the matching user.")
+                    .WithErrorCode(GenericCredentialsErrorCode)
+                    .WithErrorMessage(GenericCredentialsErrorMessage);
+            }
+
+            if (!UserPasswordHelper.VerifyPassword(command.Password, userPassword.Hash))
+            {
+                throw new BusinessException("User password hash mismatch.")
+                    .WithErrorCode(GenericCredentialsErrorCode)
+                    .WithErrorMessage(GenericCredentialsErrorMessage);
+            }
+
+            // Ensure the user password hash work factor is up to date.
+            var userPasswordHashWorkFactor = await _parameters.GetUserPasswordHashWorkFactorAsync(ct);
+
+            if (!UserPasswordHelper.VerifyPasswordHash(userPassword.Hash, userPasswordHashWorkFactor))
+                userPassword.Hash = UserPasswordHelper.ComputePasswordHash(command.Password, userPasswordHashWorkFactor);
+
+            // Calculate the user session expiration.
+            var expiration = await GetUserSessionExpirationAsync(
+                command,
+                ct);
+
+            // Create the user session.
+            var userSession = _userSessions.Add(new UserSessionEntity()
+            {
+                PublicId = Guid.NewGuid(),
+                User = user,
+                Agent = command.UserAgent,
+                NetworkAddress = command.UserNetworkAddress.ToString(),
+                Creation = command.Creation,
+                LastSeen = command.Creation,
+                Expiration = expiration
+            });
+
+            return new SignInResult(
+                new SignInSessionResult(
+                    userSession.PublicId,
+                    userSession.Expiration),
+                new SignInUserResult(
+                    user.PublicId,
+                    user.Name,
+                    user.EmailAddress));
+        }
+
+        private async Task<DateTimeOffset?> GetUserSessionExpirationAsync(SignInCommand command, CancellationToken ct)
+        {
+            if (command.Persistent)
+            {
+                if (!await _parameters.GetBasicAuthenticationPersistentSessionsEnabledAsync(ct))
+                {
+                    throw new BusinessException("Basic authentication persistent sessions are not enabled.")
+                        .WithErrorCode("ATHPSD")
+                        .WithErrorMessage("A persistência de sessões foi desativada para este ambiente.");
+                }
+
+                return null;
+            }
+
+            return command.Creation.AddSeconds(
+                await _parameters.GetUserSessionExpirationAsync(ct));
+        }
+
+        private async Task EnsureBasicAuthenticationEnabledAsync(CancellationToken ct)
+        {
+            if (!await _parameters.GetBasicAuthenticationEnabledAsync(ct))
+            {
+                throw new BusinessException("Basic authentication is not enabled.")
+                    .WithErrorCode("ATHMNE")
+                    .WithErrorMessage("Este método de autenticação não está disponível.");
+            }
         }
     }
 }

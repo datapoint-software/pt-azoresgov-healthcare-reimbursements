@@ -1,24 +1,44 @@
-import { Injectable } from "@angular/core";
-import { StaticFeature } from "../feature.abstractions";
-import { EnvironmentState } from "./environment.state";
-import { Store } from "@ngrx/store";
-import { debugSymbols, fileVersion, productVersion, production, state } from "./environment.selectors";
-import { dispose, init } from "./environment.actions";
-import { map } from "rxjs";
+import { EnvironmentProviders, Injectable, makeEnvironmentProviders } from "@angular/core";
+import { Feature } from "../feature.abstractions";
+import { Store, provideState } from "@ngrx/store";
+import { nature, state, productVersion } from "./rx/environment.selectors";
+import { dispose, init } from "./rx/environment.actions";
+import { EnvironmentState } from "./rx/environment.state";
+import { reducer } from "./rx/environment.reducer";
+import { EnvironmentEffects } from "./rx/environment.effects";
+import { provideEffects } from "@ngrx/effects";
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
+import { TypedAction } from "@ngrx/store/src/models";
+
+const FEATURE_NAME = 'environment';
 
 @Injectable()
-export class EnvironmentFeature extends StaticFeature<EnvironmentState> {
+export class EnvironmentFeature extends Feature<EnvironmentState> {
+
+  public readonly nature$ = this.createObservableFactory(nature);
+
+  public readonly productVersion$ = this.createObservableFactory(productVersion);
 
   constructor(store: Store) {
-    super(store, state, init, dispose);
+    super(store, state);
   }
 
-  public readonly debugSymbols$ = this.createObservableOf(debugSymbols);
-  public readonly fileVersion$ = this.createObservableOf(fileVersion);
-  public readonly productVersion$ = this.createObservableOf(productVersion);
-  public readonly production$ = this.createObservableOf(production);
+  protected override dispose$$$(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): TypedAction<string> {
+    return dispose();
+  }
 
-  public readonly development$ = this.production$.pipe(
-    map(production => !production)
-  );
+  protected override init$$$(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): TypedAction<string> {
+    return init();
+  }
 }
+
+export const provideEnvironmentFeature = (): Array<EnvironmentProviders> => [
+
+  makeEnvironmentProviders([
+    EnvironmentFeature
+  ]),
+
+  provideEffects(EnvironmentEffects),
+  provideState(FEATURE_NAME, reducer)
+];
+

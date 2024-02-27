@@ -1,20 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<Import Project="../AzoresGov.Healthcare.Reimbursements.config" />
+	<Import Project="../AzoresGov.Healthcare.Reimbursements.xml" />
 
 	<PropertyGroup>
 		<RootNamespace>AzoresGov.Healthcare.Reimbursements.Middleware</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
-		<PackageReference Include="Datapoint.Mediator.FluentValidation.Abstractions" Version="7.0.0-a.27" />
-		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
+	  <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+	  <PackageReference Include="Datapoint.Exceptions" Version="8.0.0-a.33" />
+	  <PackageReference Include="Datapoint.Mediator" Version="8.0.0-a.33" />
+	  <PackageReference Include="Datapoint.Mediator.FluentValidation" Version="8.0.0-a.33" />
+	  <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="8.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Configuration.Abstractions\AzoresGov.Healthcare.Reimbursements.Configuration.Abstractions.csproj" />
+		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Management.Abstractions\AzoresGov.Healthcare.Reimbursements.Management.Abstractions.csproj" />
 		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Middleware.Abstractions\AzoresGov.Healthcare.Reimbursements.Middleware.Abstractions.csproj" />
 		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.UnitOfWork.Abstractions\AzoresGov.Healthcare.Reimbursements.UnitOfWork.Abstractions.csproj" />
 	</ItemGroup>

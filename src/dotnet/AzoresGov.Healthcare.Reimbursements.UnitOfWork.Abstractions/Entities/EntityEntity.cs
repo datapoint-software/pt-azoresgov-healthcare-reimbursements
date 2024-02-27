@@ -1,4 +1,5 @@
-﻿using Datapoint.UnitOfWork;
+﻿using AzoresGov.Healthcare.Reimbursements.Enumerations;
+using Datapoint.UnitOfWork;
 using System;
 
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities
@@ -15,6 +16,6 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities
 
         public string Name { get; set; } = default!;
 
-        public EntityKind Kind { get; set; } = default!;
+        public EntityNature Nature { get; set; } = default!;
     }
 }

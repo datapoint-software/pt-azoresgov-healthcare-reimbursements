@@ -1,22 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<Import Project="../AzoresGov.Healthcare.Reimbursements.config" />
+	<Import Project="../AzoresGov.Healthcare.Reimbursements.xml" />
 
 	<PropertyGroup>
 		<RootNamespace>AzoresGov.Healthcare.Reimbursements.UnitOfWork</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Datapoint.UnitOfWork.EntityFrameworkCore.Abstractions" Version="7.0.0-a.27" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.8">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.8" />
+	  <PackageReference Include="Datapoint.UnitOfWork.EntityFrameworkCore" Version="8.0.0-a.33" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Enumerations\AzoresGov.Healthcare.Reimbursements.Enumerations.csproj" />
 		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.UnitOfWork.Abstractions\AzoresGov.Healthcare.Reimbursements.UnitOfWork.Abstractions.csproj" />
 	</ItemGroup>
 

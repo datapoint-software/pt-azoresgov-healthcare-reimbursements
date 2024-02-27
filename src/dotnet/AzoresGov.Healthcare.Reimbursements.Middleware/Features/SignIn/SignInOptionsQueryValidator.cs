@@ -6,7 +6,6 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
     {
         public SignInOptionsQueryValidator()
         {
-
         }
     }
 }

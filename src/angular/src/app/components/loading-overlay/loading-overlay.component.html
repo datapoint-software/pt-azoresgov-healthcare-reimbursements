@@ -1,1 +1,3 @@
-<div class="spinner"></div>
+<div class="loading-overlay" [class.visible]="(visible$ | async)">
+  <div class="spinner"></div>
+</div>

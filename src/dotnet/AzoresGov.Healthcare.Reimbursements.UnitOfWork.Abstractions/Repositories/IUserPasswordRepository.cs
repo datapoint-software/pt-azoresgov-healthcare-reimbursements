@@ -7,6 +7,6 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
 {
     public interface IUserPasswordRepository : IRepository<UserPasswordEntity>
     {
-        Task<UserPasswordEntity?> GetLastByUserIdAsync(long userId, CancellationToken ct);
+        Task<UserPasswordEntity?> GetByUserIdAsync(long userId, CancellationToken ct);
     }
 }

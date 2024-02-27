@@ -11,18 +11,15 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.Environment
     {
         public Task<EnvironmentResult> HandleQueryAsync(EnvironmentQuery query, CancellationToken ct)
         {
-            var fileVersionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+            var executingAssembly = Assembly.GetExecutingAssembly();
 
-            if (string.IsNullOrEmpty(fileVersionInfo.FileVersion))
-                throw new InvalidOperationException("Can not get the executing assembly file version.");
+            var fileVersionInfo = FileVersionInfo.GetVersionInfo(executingAssembly.Location);
 
             if (string.IsNullOrEmpty(fileVersionInfo.ProductVersion))
-                throw new InvalidOperationException("Can not get the executing assembly product version.");
+                throw new InvalidOperationException("Can not the product version number from the executing assembly.");
 
             return Task.FromResult(
                 new EnvironmentResult(
-                    fileVersionInfo.IsDebug,
-                    fileVersionInfo.FileVersion,
                     fileVersionInfo.ProductVersion));
         }
     }

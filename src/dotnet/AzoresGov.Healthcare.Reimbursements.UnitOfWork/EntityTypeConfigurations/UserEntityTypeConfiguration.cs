@@ -1,7 +1,7 @@
 ﻿using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities;
-using Datapoint.UnitOfWork.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
+using Datapoint.UnitOfWork.EntityFrameworkCore;
 
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.EntityTypeConfigurations
 {
@@ -11,9 +11,13 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.EntityTypeConfiguration
         {
             builder.Entity();
 
-            builder.HasIndex(e => e.Name);
+            builder.HasAlternateKey(e => e.EmailAddress);
 
             builder.Property(e => e.Name)
+                .HasMaxLength(128)
+                .IsRequired();
+
+            builder.Property(e => e.EmailAddress)
                 .HasMaxLength(256)
                 .IsRequired();
         }

@@ -18,7 +18,7 @@ Download from → https://visualstudio.microsoft.com/vs/.
 
 Ensure you include the ASP.NET Core components in your installation.
 
-Ensure .NET/7 and C#/11 is supported in your development environment.
+Ensure .NET/8 and C#/12 is supported in your development environment.
 
 #### Microsoft Visual Studio Code
 

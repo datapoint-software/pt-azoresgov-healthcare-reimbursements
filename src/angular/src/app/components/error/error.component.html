@@ -1,0 +1,59 @@
+<div class="d-flex align-items-center bg-auth position-absolute h-100 w-100 overflow-hidden">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-12 col-md-6 offset-xl-2 offset-md-1 order-md-2 mb-5 mb-md-0">
+
+        <!-- Image -->
+        <div class="text-center">
+          <img src="assets/dashkit/img/illustrations/lost.svg" alt="..." class="img-fluid">
+        </div>
+
+      </div>
+      <div class="col-12 col-md-5 col-xl-4 order-md-1 my-5">
+
+        <div class="text-left">
+
+          <!-- Preheading -->
+
+          <!-- Heading -->
+          <h1 class="display-4 mb-4">
+            Wow, um erro! 😵
+          </h1>
+
+          <h4 class="text-muted text-uppercase mb-4" *ngIf="(status$ | async) as status">
+            {{ status.code }} {{ status.message | uppercase }}
+          </h4>
+
+          <!-- Subheading -->
+          <p class="p-3 mb-4 bg-danger text-white" *ngIf="(message$ | async) as message">
+            {{ message }}
+          </p>
+
+          <div>
+            <p>A equipa do suporte técnico da <a href="https://datapoint.software/?from=pt-azoresgov-healthcare-reimbursements">datapoint.software</a> já foi alertada e irá analisar esta situação assim que possível.</p>
+            <p>Entretanto, pode
+              <a class="text-decoration-underline" href="javascript:history.back()">tentar novamente</a> ou
+              <a class="text-decoration-underline" href="/">voltar ao início</a>.</p>
+          </div>
+
+          <div class="text-muted fs-sm mt-4" *ngIf="(id$ | async) as id">
+            <p class="fw-bold m-0">Erro</p>
+            <p class="fw-light m-0">{{ id }}</p>
+          </div>
+
+          <div class="text-muted fs-sm mt-4" *ngIf="(correlationId$ | async) as correlationId">
+            <p class="fw-bold m-0">Correlação</p>
+            <p class="fw-light m-0">{{ correlationId }}</p>
+          </div>
+
+          <div class="text-muted fs-sm mt-4" *ngIf="(stackTrace$ | async) as stackTrace">
+            <p class="fw-bold m-0">Stack trace</p>
+            <pre class="fw-light overflow-visible m-0">{{ stackTrace }}</pre>
+          </div>
+
+        </div>
+
+      </div>
+    </div> <!-- / .row -->
+  </div>
+</div> <!-- / .container -->

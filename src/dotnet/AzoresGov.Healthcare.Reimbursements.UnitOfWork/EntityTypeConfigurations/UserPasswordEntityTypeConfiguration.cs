@@ -12,12 +12,9 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.EntityTypeConfiguration
             builder.Entity();
 
             builder.HasOne(e => e.User)
-                .WithMany()
-                .HasForeignKey(e => e.UserId)
-                .OnDelete(DeleteBehavior.Cascade)
+                .WithOne()
+                .HasForeignKey<UserPasswordEntity>("UserId")
                 .IsRequired();
-
-            builder.HasIndex(e => e.UserId);
 
             builder.Property(e => e.Hash)
                 .HasMaxLength(64)

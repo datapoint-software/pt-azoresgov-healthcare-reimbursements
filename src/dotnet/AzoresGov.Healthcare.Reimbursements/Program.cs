@@ -1,71 +1,71 @@
-using AzoresGov.Healthcare.Reimbursements.Configuration;
-using AzoresGov.Healthcare.Reimbursements.Handlers;
 using AzoresGov.Healthcare.Reimbursements.Helpers;
 using AzoresGov.Healthcare.Reimbursements.Middleware;
-using AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn;
-using AzoresGov.Healthcare.Reimbursements.Middleware.Managers;
+using AzoresGov.Healthcare.Reimbursements.Middleware.Authorization;
 using AzoresGov.Healthcare.Reimbursements.UnitOfWork;
-using AzoresGov.Healthcare.Reimbursements.UnitOfWork.LogicalAreas;
-using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories;
-using Datapoint.AspNetCore;
 using Datapoint.AspNetCore.ErrorResponses;
-using Datapoint.Configuration;
-using Datapoint.Mediator;
-using Datapoint.Mediator.FluentValidation;
-using Datapoint.UnitOfWork.EntityFrameworkCore;
+using Datapoint;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.Security.Claims;
+using System.Text.Json;
+using AzoresGov.Healthcare.Reimbursements.Management;
 
 namespace AzoresGov.Healthcare.Reimbursements
 {
-    public static class Program
+    public class Program
     {
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(
-                args);
-
-            var logger = LoggerHelper.CreateLogger(
-                builder.Environment);
-
-            using var context = ContextHelper.CreateContext(
-                builder.Configuration,
-                builder.Environment);
-
-            ContextHelper.Migrate(
-                builder.Environment,
-                logger,
-                context);
+            var appBuilder = WebApplication.CreateBuilder(args);
 
             ConfigureServices(
-                builder.Configuration,
-                builder.Environment,
-                builder.Services);
+                appBuilder.Configuration,
+                appBuilder.Environment,
+                appBuilder.Services);
 
-            var app = builder.Build();
+            var app = appBuilder.Build();
 
-            Configure(app);
+            Configure(
+                appBuilder.Environment,
+                app);
 
             app.Run();
         }
 
-        private static void Configure(WebApplication app)
+        private static void Configure(IWebHostEnvironment environment, WebApplication app)
         {
-            app.UseErrorResponses((responses) =>
+            app.UseErrorResponses((response) =>
             {
-                responses.StackTraceEnabled = app.Environment.IsDevelopment();
-                responses.UserMessageFactory = ErrorResponsesHelper.CreateUserErrorMessage;
+                response.ErrorMessageFactory = (e) =>
+                    e is AuthenticationException ? "A sua sessão expirou ou foi invalidada pelo administrador de sistema." :
+                    e is AuthorizationException ? "Não tem permissões suficientes para aceder a esta funcionalidade." :
+                    e is BusinessException ? "Esta operação não foi executada porque foram detectadas inconsistências no sistema de informação." :
+                    e is ConcurrencyException ? "Esta operação não foi executada porque a informação já foi modificada por outro utilizador." :
+                    e is ValidationException ? "Existem erros de validação nos campos do formulário." :
+                        "Ocorreu um erro inesperado.";
+
+                response.StackTraceEnabled = !environment.IsProduction();
+
+                response.JsonSerializerOptions = new JsonSerializerOptions()
+                {
+                    AllowTrailingCommas = false,
+                    DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+                    DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
+                    IncludeFields = false,
+                    IgnoreReadOnlyFields = true,
+                    IgnoreReadOnlyProperties = false,
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    ReadCommentHandling = JsonCommentHandling.Disallow,
+                    WriteIndented = environment.IsDevelopment()
+                };
             });
-
-            app.UseHealthChecks();
-
-            app.UseStaticFiles();
 
             app.UseAuthentication();
 
@@ -76,26 +76,20 @@ namespace AzoresGov.Healthcare.Reimbursements
             app.MapFallbackToFile("index.html");
         }
 
-        private static void ConfigureServices(ConfigurationManager configuration, Microsoft.AspNetCore.Hosting.IWebHostEnvironment environment, IServiceCollection services)
+        private static void ConfigureServices(IConfiguration configuration, IWebHostEnvironment environment, IServiceCollection services)
         {
-            #region Authentication
-
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 
                 .AddCookie((cookie) =>
                 {
-                    cookie.Cookie.Name = "auth";
+                    cookie.Cookie.Name = "api-auth";
                     cookie.Cookie.HttpOnly = true;
                     cookie.Cookie.IsEssential = true;
-                    cookie.Cookie.Path = "/api/features";
-                    cookie.Cookie.SecurePolicy = environment.IsDevelopment()
-                        ? CookieSecurePolicy.SameAsRequest
-                        : CookieSecurePolicy.Always;
+                    cookie.Cookie.Path = "/api";
+                    cookie.Cookie.SecurePolicy = 
+                        environment.IsDevelopment() ? CookieSecurePolicy.SameAsRequest :
+                            CookieSecurePolicy.Always;
                 });
-
-            #endregion
-
-            #region Authorization
 
             services.AddSingleton<IAuthorizationMiddlewareResultHandler, AuthorizationMiddlewareResultHandler>();
 
@@ -109,96 +103,54 @@ namespace AzoresGov.Healthcare.Reimbursements
                 authorization.FallbackPolicy = new AuthorizationPolicyBuilder()
                     .AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme)
                     .RequireAuthenticatedUser()
-                    .RequireClaim(ClaimTypes.User)
-                    .RequireClaim(ClaimTypes.UserSession)
+                    .RequireClaim(ClaimTypes.Sid)
                     .Build();
             });
-
-            #endregion
-
-            #region Caching
-
-            services.AddDistributedMemoryCache();
-
-            services.AddMemoryCache();
-
-            #endregion
-
-            #region Configuration
-
-            services.AddConfiguration((configuration) =>
-            {
-                configuration.AddHandlersFromAssemblyOf<UserPasswordHashConfigurationHandler>();
-            });
-
-            #endregion
-
-            #region Controllers
 
             services.AddControllers()
 
                 .AddJsonOptions(json =>
                 {
-                    json.JsonSerializerOptions.AllowTrailingCommas = DatapointDefaults.JsonSerializerOptions.AllowTrailingCommas;
-                    json.JsonSerializerOptions.DefaultIgnoreCondition = DatapointDefaults.JsonSerializerOptions.DefaultIgnoreCondition;
-                    json.JsonSerializerOptions.DictionaryKeyPolicy = DatapointDefaults.JsonSerializerOptions.DictionaryKeyPolicy;
-                    json.JsonSerializerOptions.IgnoreReadOnlyFields = DatapointDefaults.JsonSerializerOptions.IgnoreReadOnlyFields;
-                    json.JsonSerializerOptions.IgnoreReadOnlyProperties = DatapointDefaults.JsonSerializerOptions.IgnoreReadOnlyProperties;
-                    json.JsonSerializerOptions.ReadCommentHandling = DatapointDefaults.JsonSerializerOptions.ReadCommentHandling;
-                    json.JsonSerializerOptions.WriteIndented = DatapointDefaults.JsonSerializerOptions.WriteIndented;
+                    json.JsonSerializerOptions.AllowTrailingCommas = false;
+                    json.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+                    json.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+                    json.JsonSerializerOptions.IncludeFields = false;
+                    json.JsonSerializerOptions.IgnoreReadOnlyFields = true;
+                    json.JsonSerializerOptions.IgnoreReadOnlyProperties = false;
+                    json.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    json.JsonSerializerOptions.ReadCommentHandling = JsonCommentHandling.Disallow;
+                    json.JsonSerializerOptions.WriteIndented = environment.IsDevelopment();
                 });
 
-            #endregion
+            services.AddDistributedMemoryCache();
 
-            #region Fluent Validation
+            services.AddManagement();
 
-            FluentValidation.ValidatorOptions.Global.ErrorCodeResolver = FluentValidationHelper.ResolveValidatorErrorCode;
+            services.AddMiddleware();
 
+            services.AddUnitOfWork(
+                GetConnectionStringOrDefault(
+                    configuration,
+                    environment));
+
+            // Fluent validation
+            FluentValidation.ValidatorOptions.Global.ErrorCodeResolver = FluentValidationHelper.ResolveErrorCode;
             FluentValidation.ValidatorOptions.Global.LanguageManager = new FluentValidationHelper.LanguageManager();
+        }
 
-            #endregion
+        private static string GetConnectionStringOrDefault(IConfiguration configuration, IWebHostEnvironment environment)
+        {
+            var connectionString = configuration.GetConnectionString("HealthcareReimbursements");
 
-            #region Logging
-
-            services.AddLogging((logging) =>
+            if (string.IsNullOrEmpty(connectionString))
             {
-                logging.WithEnvironmentDefaults(environment);
-            });
+                if (!environment.IsDevelopment())
+                    throw new InvalidOperationException("A connection string must be set for this environment.");
 
-            #endregion
+                connectionString = "Server=127.0.0.1,1433; Database=HealthcareReimbursements; User Id=azoresgov-healthcare-reimbursements-app; Password=8cd4a9c3-a6a6-4e6b-abd1-d38063cb7be4; Encrypt=False";
+            }
 
-            #region Mediator
-
-            services.AddMediator((mediator) =>
-            {
-                mediator.AddHandlersFromAssemblyOf<SignInCommandHandler>();
-
-                mediator.AddMiddleware<UnitOfWorkSaveChangesMiddleware>();
-
-                mediator.AddFluentValidation((fluentValidation) =>
-                {
-                    fluentValidation.AddValidatorsFromAssemblyOf<SignInCommandValidator>();
-                });
-            });
-
-            // Managers
-            services.AddScoped<AuthorizationManager>();
-
-            #endregion
-
-            #region Unit of Work
-
-            services.AddUnitOfWork<IHealthcareReimbursementsUnitOfWork, HealthcareReimbursementsUnitOfWork, HealthcareReimbursementsContext>((uow) =>
-            {
-                uow.UseContextConfiguration((context) => ((DbContextOptionsBuilder<HealthcareReimbursementsContext>) context)
-                    .WithEnvironmentDefaults(configuration, environment));
-
-                uow.AddLogicalAreasFromAssemblyOf<AuthorizationLogicalArea>();
-                uow.AddRepositoriesFromAssemblyOf<UserRepository>();
-            });
-
-            #endregion
-
+            return connectionString;
         }
     }
 }

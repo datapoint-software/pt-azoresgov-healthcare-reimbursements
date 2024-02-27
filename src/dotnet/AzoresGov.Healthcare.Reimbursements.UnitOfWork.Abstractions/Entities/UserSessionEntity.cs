@@ -13,15 +13,13 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities
 
         public UserEntity User { get; set; } = default!;
 
-        public long UserId { get; set; } = default!;
-
-        public UserAgentEntity UserAgent { get; set; } = default!;
-
-        public long UserAgentId { get; set; } = default!;
+        public string Agent { get; set; } = default!;
 
         public string NetworkAddress { get; set; } = default!;
 
-        public DateTimeOffset Start { get; set; } = default!;
+        public DateTimeOffset Creation { get; set; } = default!;
+
+        public DateTimeOffset? Expiration { get; set; } = default!;
 
         public DateTimeOffset LastSeen { get; set; } = default!;
     }

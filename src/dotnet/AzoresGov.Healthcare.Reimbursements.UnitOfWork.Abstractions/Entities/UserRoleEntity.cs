@@ -13,10 +13,8 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities
 
         public UserEntity User { get; set; } = default!;
 
-        public long UserId { get; set; } = default;
-
         public RoleEntity Role { get; set; } = default!;
 
-        public long RoleId { get; set; } = default;
+        public bool Granted { get; set; } = default!;
     }
 }

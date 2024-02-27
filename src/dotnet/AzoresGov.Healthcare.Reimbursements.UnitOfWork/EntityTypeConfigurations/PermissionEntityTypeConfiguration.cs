@@ -1,7 +1,9 @@
-﻿using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities;
+﻿using AzoresGov.Healthcare.Reimbursements.Enumerations;
+using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities;
 using Datapoint.UnitOfWork.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.EntityTypeConfigurations
 {
@@ -15,6 +17,9 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.EntityTypeConfiguration
 
             builder.Property(e => e.Name)
                 .HasMaxLength(64)
+                .IsRequired();
+
+            builder.Property(e => e.Granted)
                 .IsRequired();
         }
     }

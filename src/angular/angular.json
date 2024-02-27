@@ -3,18 +3,11 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "azoresgov-healthcare-reimbursements": {
+    "pt-azoresgov-healthcare-reimbursement": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss",
-          "standalone": true
-        },
-        "@schematics/angular:directive": {
-          "standalone": true
-        },
-        "@schematics/angular:pipe": {
-          "standalone": true
+          "style": "scss"
         }
       },
       "root": "",
@@ -22,11 +15,11 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/azoresgov-healthcare-reimbursements",
+            "outputPath": "dist/pt-azoresgov-healthcare-reimbursement",
             "index": "src/index.html",
-            "main": "src/main.ts",
+            "browser": "src/main.ts",
             "polyfills": [
               "zone.js"
             ],
@@ -58,12 +51,9 @@
               "outputHashing": "all"
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
-              "sourceMap": true,
-              "namedChunks": true
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "production"
@@ -72,10 +62,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "azoresgov-healthcare-reimbursements:build:production"
+              "buildTarget": "pt-azoresgov-healthcare-reimbursement:build:production"
             },
             "development": {
-              "browserTarget": "azoresgov-healthcare-reimbursements:build:development",
+              "buildTarget": "pt-azoresgov-healthcare-reimbursement:build:development",
               "proxyConfig": "proxy.conf.json"
             }
           },
@@ -84,7 +74,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "azoresgov-healthcare-reimbursements:build"
+            "buildTarget": "pt-azoresgov-healthcare-reimbursement:build"
           }
         },
         "test": {
@@ -110,6 +100,6 @@
     }
   },
   "cli": {
-    "analytics": "a938d101-22ff-4448-a66e-844648328f54"
+    "analytics": "1ba84a30-fb18-4784-ba36-30551cfcc594"
   }
 }

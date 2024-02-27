@@ -1,12 +1,14 @@
-﻿namespace AzoresGov.Healthcare.Reimbursements.Api.Features.SignIn
+﻿using AzoresGov.Healthcare.Reimbursements.Enumerations;
+
+namespace AzoresGov.Healthcare.Reimbursements.Api.Features.SignIn
 {
     public sealed class SignInOptionsResultModel
     {
-        public SignInOptionsResultModel(SignInAuthenticationOptionsResultModel authentication)
+        public SignInOptionsResultModel(SignInOptionsMethodsResultModel methods)
         {
-            Authentication = authentication;
+            Methods = methods;
         }
 
-        public SignInAuthenticationOptionsResultModel Authentication { get; }
+        public SignInOptionsMethodsResultModel Methods { get; }
     }
 }

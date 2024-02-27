@@ -5,10 +5,10 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
 {
     public sealed class SignInCommand : Command<SignInResult>
     {
-        public SignInCommand(string userAgent, IPAddress networkAddress, string emailAddress, string password, bool persistent)
+        public SignInCommand(string userAgent, IPAddress userNetworkAddress, string emailAddress, string password, bool persistent)
         {
             UserAgent = userAgent;
-            NetworkAddress = networkAddress;
+            UserNetworkAddress = userNetworkAddress;
             EmailAddress = emailAddress;
             Password = password;
             Persistent = persistent;
@@ -16,7 +16,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
 
         public string UserAgent { get; }
 
-        public IPAddress NetworkAddress { get; }
+        public IPAddress UserNetworkAddress { get; }
 
         public string EmailAddress { get; }
 
