@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
 {
-    public interface IParameterRepository : IRepository<ParameterEntity>
+    public interface IParameterRepository : IRepository<Parameter>
     {
-        Task<ParameterEntity?> GetByNameAsync(string name, CancellationToken ct);
+        Task<Parameter?> GetByNameAsync(string name, CancellationToken ct);
     }
 }

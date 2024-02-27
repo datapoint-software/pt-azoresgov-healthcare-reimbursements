@@ -4,12 +4,13 @@ using Datapoint.UnitOfWork.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using Permission = AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Permission;
 
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.EntityTypeConfigurations
 {
-    public sealed class PermissionEntityTypeConfiguration : IEntityTypeConfiguration<PermissionEntity>
+    public sealed class PermissionEntityTypeConfiguration : IEntityTypeConfiguration<Permission>
     {
-        public void Configure(EntityTypeBuilder<PermissionEntity> builder)
+        public void Configure(EntityTypeBuilder<Permission> builder)
         {
             builder.Entity();
 

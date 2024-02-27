@@ -3,7 +3,7 @@ using System;
 
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities
 {
-    public sealed class UserSessionEntity : IEntity
+    public sealed class UserSession : IEntity
     {
         public long Id { get; set; } = default!;
 
@@ -11,7 +11,7 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities
 
         public Guid RowVersionId { get; set; } = default!;
 
-        public UserEntity User { get; set; } = default!;
+        public User User { get; set; } = default!;
 
         public string Agent { get; set; } = default!;
 

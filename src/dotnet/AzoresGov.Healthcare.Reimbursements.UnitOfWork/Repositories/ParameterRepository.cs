@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
 {
-    public sealed class ParameterRepository : EntityFrameworkCoreRepository<HealthcareReimbursementsContext, ParameterEntity>, IParameterRepository
+    public sealed class ParameterRepository : EntityFrameworkCoreRepository<HealthcareReimbursementsContext, Parameter>, IParameterRepository
     {
         public ParameterRepository(HealthcareReimbursementsContext context) : base(context)
         {
         }
 
-        public Task<ParameterEntity?> GetByNameAsync(string name, CancellationToken ct) =>
+        public Task<Parameter?> GetByNameAsync(string name, CancellationToken ct) =>
 
             Entities.FirstOrDefaultAsync(e => e.Name == name, ct);
     }

@@ -105,7 +105,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
                 ct);
 
             // Create the user session.
-            var userSession = _userSessions.Add(new UserSessionEntity()
+            var userSession = _userSessions.Add(new UserSession()
             {
                 PublicId = Guid.NewGuid(),
                 User = user,
@@ -128,20 +128,20 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
 
         private async Task<DateTimeOffset?> GetUserSessionExpirationAsync(SignInCommand command, CancellationToken ct)
         {
-            if (command.Persistent)
+            if (!command.Persistent)
+                return command.Creation.AddSeconds(
+                    await _parameters.GetUserSessionExpirationAsync(
+                        ct));
+            
+            if (!await _parameters.GetBasicAuthenticationPersistentSessionsEnabledAsync(ct))
             {
-                if (!await _parameters.GetBasicAuthenticationPersistentSessionsEnabledAsync(ct))
-                {
-                    throw new BusinessException("Basic authentication persistent sessions are not enabled.")
-                        .WithErrorCode("ATHPSD")
-                        .WithErrorMessage("A persistência de sessões foi desativada para este ambiente.");
-                }
-
-                return null;
+                throw new BusinessException("Basic authentication persistent sessions are not enabled.")
+                    .WithErrorCode("ATHPSD")
+                    .WithErrorMessage("A persistência de sessões foi desativada para este ambiente.");
             }
 
-            return command.Creation.AddSeconds(
-                await _parameters.GetUserSessionExpirationAsync(ct));
+            return null;
+
         }
 
         private async Task EnsureBasicAuthenticationEnabledAsync(CancellationToken ct)

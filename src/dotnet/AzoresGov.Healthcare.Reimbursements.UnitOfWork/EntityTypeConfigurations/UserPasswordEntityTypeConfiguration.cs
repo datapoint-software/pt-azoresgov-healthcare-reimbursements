@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.EntityTypeConfigurations
 {
-    public sealed class UserPasswordEntityTypeConfiguration : IEntityTypeConfiguration<UserPasswordEntity>
+    public sealed class UserPasswordEntityTypeConfiguration : IEntityTypeConfiguration<UserPassword>
     {
-        public void Configure(EntityTypeBuilder<UserPasswordEntity> builder)
+        public void Configure(EntityTypeBuilder<UserPassword> builder)
         {
             builder.Entity();
 
             builder.HasOne(e => e.User)
                 .WithOne()
-                .HasForeignKey<UserPasswordEntity>("UserId")
+                .HasForeignKey<UserPassword>("UserId")
                 .IsRequired();
 
             builder.Property(e => e.Hash)

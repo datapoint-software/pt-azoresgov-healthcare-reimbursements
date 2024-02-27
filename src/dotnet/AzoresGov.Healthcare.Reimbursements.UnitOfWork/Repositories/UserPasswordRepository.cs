@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
 {
-    public sealed class UserPasswordRepository : EntityFrameworkCoreRepository<HealthcareReimbursementsContext, UserPasswordEntity>, IUserPasswordRepository
+    public sealed class UserPasswordRepository : EntityFrameworkCoreRepository<HealthcareReimbursementsContext, UserPassword>, IUserPasswordRepository
     {
         public UserPasswordRepository(HealthcareReimbursementsContext context) : base(context)
         {
         }
 
-        public Task<UserPasswordEntity?> GetByUserIdAsync(long userId, CancellationToken ct) =>
+        public Task<UserPassword?> GetByUserIdAsync(long userId, CancellationToken ct) =>
 
             Entities.FirstOrDefaultAsync(e => e.User.Id == userId, ct);
     }

@@ -10,15 +10,15 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork
         {
         }
 
-        public DbSet<ParameterEntity> Parameters { get; set; } = default!;
+        public DbSet<Parameter> Parameters { get; set; } = default!;
 
-        public DbSet<PermissionEntity> Permissions { get; set; } = default!;
+        public DbSet<Permission> Permissions { get; set; } = default!;
 
-        public DbSet<UserPasswordEntity> UserPasswords { get; set; } = default!;
+        public DbSet<UserPassword> UserPasswords { get; set; } = default!;
 
-        public DbSet<UserEntity> Users { get; set; } = default!;
+        public DbSet<User> Users { get; set; } = default!;
 
-        public DbSet<UserSessionEntity> UserSessions { get; set; } = default!;
+        public DbSet<UserSession> UserSessions { get; set; } = default!;
 
         /// <inheritdoc />
         protected override void OnModelCreating(ModelBuilder model) =>

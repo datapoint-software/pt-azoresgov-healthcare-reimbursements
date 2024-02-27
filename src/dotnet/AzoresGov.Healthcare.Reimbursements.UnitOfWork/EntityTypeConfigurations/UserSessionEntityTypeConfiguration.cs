@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.EntityTypeConfigurations
 {
-    public sealed class UserSessionEntityTypeConfiguration : IEntityTypeConfiguration<UserSessionEntity>
+    public sealed class UserSessionEntityTypeConfiguration : IEntityTypeConfiguration<UserSession>
     {
-        public void Configure(EntityTypeBuilder<UserSessionEntity> builder)
+        public void Configure(EntityTypeBuilder<UserSession> builder)
         {
             builder.Entity();
 

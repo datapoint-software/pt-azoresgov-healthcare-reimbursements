@@ -36,22 +36,23 @@ namespace AzoresGov.Healthcare.Reimbursements.Management
 
         public async Task<int> GetBasicAuthenticationDelayAsync(CancellationToken ct) =>
 
-            (await GetValueOrDefaultAsync<int?>(BasicAuthenticationDelay, ct)) ?? 7500;
+            await GetValueOrDefaultAsync<int?>(BasicAuthenticationDelay, ct) ?? 7500;
 
         public async Task<bool> GetBasicAuthenticationEnabledAsync(CancellationToken ct) =>
 
-            (await GetValueOrDefaultAsync<bool?>(BasicAuthenticationEnabled, ct)) ?? true;
+            await GetValueOrDefaultAsync<bool?>(BasicAuthenticationEnabled, ct) ?? true;
 
         public async Task<bool> GetBasicAuthenticationPersistentSessionsEnabledAsync(CancellationToken ct) =>
 
-            (await GetValueOrDefaultAsync<bool?>(BasicAuthenticationPersistentSessionsEnabled, ct)) ?? false;
+            await GetValueOrDefaultAsync<bool?>(BasicAuthenticationPersistentSessionsEnabled, ct) ?? false;
 
         public async Task<int> GetUserPasswordHashWorkFactorAsync(CancellationToken ct) =>
 
-            (await GetValueOrDefaultAsync<int?>(UserPasswordHashWorkFactor, ct)) ?? 14;
-        public async Task<int> GetUserSessionExpirationAsync(CancellationToken ct) =>
-
-            (await GetValueOrDefaultAsync<int?>(UserSessionExpiration, ct)) ?? 900;
+            await GetValueOrDefaultAsync<int?>(UserPasswordHashWorkFactor, ct) ?? 14;
+        
+        public async Task<int> GetUserSessionExpirationAsync(CancellationToken ct) => 
+            
+            await GetValueOrDefaultAsync<int?>(UserSessionExpiration, ct) ?? 900;
 
         private async Task<TValue?> GetValueOrDefaultAsync<TValue>(string parameterName, CancellationToken ct)
         {

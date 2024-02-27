@@ -9,7 +9,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware
 {
     internal static class UserRepositoryExtensions
     {
-        public static async Task<UserEntity> GetByUserSessionPublicIdOrThrowBusinessExceptionAsync(this IUserRepository users, Guid userSessionPublicId, CancellationToken ct)
+        public static async Task<User> GetByUserSessionPublicIdOrThrowBusinessExceptionAsync(this IUserRepository users, Guid userSessionPublicId, CancellationToken ct)
         {
             var user = await users.GetByUserSessionPublicIdAsync(userSessionPublicId, ct);
 

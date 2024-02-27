@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
 {
-    public interface IUserPasswordRepository : IRepository<UserPasswordEntity>
+    public interface IUserPasswordRepository : IRepository<UserPassword>
     {
-        Task<UserPasswordEntity?> GetByUserIdAsync(long userId, CancellationToken ct);
+        Task<UserPassword?> GetByUserIdAsync(long userId, CancellationToken ct);
     }
 }

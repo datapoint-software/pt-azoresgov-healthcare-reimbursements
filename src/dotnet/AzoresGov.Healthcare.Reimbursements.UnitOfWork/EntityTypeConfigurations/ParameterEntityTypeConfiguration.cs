@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.EntityTypeConfigurations
 {
-    public sealed class ParameterEntityTypeConfiguration : IEntityTypeConfiguration<ParameterEntity>
+    public sealed class ParameterEntityTypeConfiguration : IEntityTypeConfiguration<Parameter>
     {
-        public void Configure(EntityTypeBuilder<ParameterEntity> builder)
+        public void Configure(EntityTypeBuilder<Parameter> builder)
         {
             builder.Entity();
 

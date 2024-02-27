@@ -11,8 +11,8 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities
 
         public Guid RowVersionId { get; set; } = default!;
 
-        public string Name { get; set; } = default!;
+        public User User { get; set; } = default!;
 
-        public string EmailAddress { get; set; } = default!;
+        public Entity Entity { get; set; } = default!;
     }
 }

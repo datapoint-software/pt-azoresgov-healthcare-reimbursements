@@ -5,9 +5,9 @@ using Datapoint.UnitOfWork.EntityFrameworkCore;
 
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.EntityTypeConfigurations
 {
-    public sealed class UserEntityTypeConfiguration : IEntityTypeConfiguration<UserEntity>
+    public sealed class UserEntityTypeConfiguration : IEntityTypeConfiguration<User>
     {
-        public void Configure(EntityTypeBuilder<UserEntity> builder)
+        public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.Entity();
 

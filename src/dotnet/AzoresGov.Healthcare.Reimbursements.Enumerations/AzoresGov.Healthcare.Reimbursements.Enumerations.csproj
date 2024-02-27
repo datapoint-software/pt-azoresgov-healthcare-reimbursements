@@ -6,4 +6,8 @@
 		<RootNamespace>AzoresGov.Healthcare.Reimbursements.Enumerations</RootNamespace>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <Compile Remove="Permission.cs" />
+	</ItemGroup>
+
 </Project>

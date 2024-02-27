@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
 {
-    public interface IUserRepository : IRepository<UserEntity>
+    public interface IUserRepository : IRepository<User>
     {
-        Task<UserEntity?> GetByEmailAddressAsync(string emailAddress, CancellationToken ct);
+        Task<User?> GetByEmailAddressAsync(string emailAddress, CancellationToken ct);
 
-        Task<UserEntity?> GetByUserSessionPublicIdAsync(Guid userSessionPublicId, CancellationToken ct);
+        Task<User?> GetByUserSessionPublicIdAsync(Guid userSessionPublicId, CancellationToken ct);
     }
 }

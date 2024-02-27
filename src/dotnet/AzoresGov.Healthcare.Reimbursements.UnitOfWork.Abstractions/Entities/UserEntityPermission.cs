@@ -3,7 +3,7 @@ using System;
 
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities
 {
-    public sealed class UserPermissionEntity : IEntity
+    public sealed class UserEntityPermission : IEntity
     {
         public long Id { get; set; } = default!;
 
@@ -11,9 +11,11 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities
 
         public Guid RowVersionId { get; set; } = default!;
 
-        public UserEntity User { get; set; } = default!;
+        public User User { get; set; } = default!;
 
-        public PermissionEntity Permission { get; set; } = default!;
+        public Entity Entity { get; set; } = default!;
+
+        public Permission Permission { get; set; } = default!;
 
         public bool Granted { get; set; } = default!;
     }
