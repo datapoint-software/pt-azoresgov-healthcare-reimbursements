@@ -1,32 +1,47 @@
-﻿using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories;
+﻿using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities;
+using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories;
 using Datapoint.UnitOfWork.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork
 {
-    public sealed class HealthcareReimbursementsUnitOfWork : EntityFrameworkCoreUnitOfWork<HealthcareReimbursementsContext>, IHealthcareReimbursementsUnitOfWork
+    public sealed class HealthcareReimbursementsUnitOfWork : EntityFrameworkCoreUnitOfWork, IHealthcareReimbursementsUnitOfWork
     {
-        private ParameterRepository? _parameters;
-
-        private UserPasswordRepository? _userPasswords;
-
-        private UserRepository? _users;
-
-        private UserSessionRepository? _userSessions;
-
-        public HealthcareReimbursementsUnitOfWork(HealthcareReimbursementsContext context) : base(context)
+        public HealthcareReimbursementsUnitOfWork(DbContextOptions options) : base(options)
         {
         }
 
-        public IParameterRepository Parameters => _parameters 
-            ??= new ParameterRepository(Context);
+        public DbSet<Entity> Entities { get; set; } = default!;
 
-        public IUserPasswordRepository UserPasswords => _userPasswords
-            ??= new UserPasswordRepository(Context);
+        public DbSet<EntityParentEntity> EntityParentEntities { get; set; } = default!;
 
-        public IUserRepository Users => _users 
-            ??= new UserRepository(Context);
+        public DbSet<Parameter> Parameters { get; set; } = default!;
 
-        public IUserSessionRepository UserSessions => _userSessions
-            ??= new UserSessionRepository(Context);
+        public DbSet<Permission> Permissions { get; set; } = default!;
+
+        public DbSet<RolePermission> RolePermissions { get; set; } = default!;
+
+        public DbSet<Role> Roles { get; set; } = default!;
+
+        public DbSet<UserEntity> UserEntities { get; set; } = default!;
+
+        public DbSet<UserEntityPermission> UserEntityPermissions { get; set; } = default!;
+        
+        public DbSet<UserEntityRole> UserEntityRoles { get; set; } = default!;
+
+        public DbSet<UserPassword> UserPasswords { get; set; } = default!;
+
+        public DbSet<UserPermission> UserPermissions { get; set; } = default!;
+        
+        public DbSet<UserRole> UserRoles { get; set; } = default!;
+
+        public DbSet<User> Users { get; set; } = default!;
+
+        public DbSet<UserSession> UserSessions { get; set; } = default!;
+
+        /// <inheritdoc />
+        protected override void OnModelCreating(ModelBuilder model) =>
+
+            model.ApplyConfigurationsFromAssembly(GetType().Assembly);
     }
 }

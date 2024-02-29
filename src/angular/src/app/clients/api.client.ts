@@ -11,31 +11,47 @@ export abstract class Client {
     private readonly http: HttpClient
   ) {}
 
-  protected delete<TResponseModel>(address: string | null, options?: ClientRequestOptions): Observable<TResponseModel> {
+  protected delete<TResponseModel>(address: string, options?: ClientRequestOptions): Observable<TResponseModel> {
     return this.http.delete<TResponseModel>(
       this.path(address, options?.path),
-      { ...options }
+      this.options({ ...options })
     );
   }
 
-  protected get<TResponseModel>(address: string | null, options?: ClientRequestOptions): Observable<TResponseModel> {
+  protected get<TResponseModel>(address: string, options?: ClientRequestOptions): Observable<TResponseModel> {
     return this.http.get<TResponseModel>(
       this.path(address, options?.path),
-      { ...options }
+      this.options({ ...options })
     );
   }
 
-  protected post<TRequestModel, TResponseModel>(address: string | null, model: TRequestModel, options?: ClientRequestOptions): Observable<TResponseModel> {
+  protected post<TRequestModel, TResponseModel>(address: string, model: TRequestModel, options?: ClientRequestOptions): Observable<TResponseModel> {
     return this.http.post<TResponseModel>(
       this.path(address, options?.path),
       model,
-      { ...options }
+      this.options({ ...options })
     );
   }
 
-  private path(address: string | null, path?: { [ key: string ]: string }): string {
+  private options(options: ClientRequestOptions) {
 
-    let result = `${this.baseAddress}${address || ''}`;
+    if (options.params && !(options.params instanceof HttpParams)) {
+      for (const k in options.params) {
+        if (!options.params[k]) {
+          delete options.params[k];
+        }
+      }
+    }
+
+    return options as {
+      params?: HttpParams | { [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>; };
+      path?: { [ key: string ]: string };
+    };
+  }
+
+  private path(address: string, path?: { [ key: string ]: string }): string {
+
+    let result = `${this.baseAddress}${address}`;
 
     if (path)
       for (let k in path)
@@ -46,7 +62,7 @@ export abstract class Client {
 
 }
 
-export type ClientRequestOptions = {
-  params?: HttpParams | { [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>; };
+export interface ClientRequestOptions {
+  params?: HttpParams | { [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean> | undefined; };
   path?: { [ key: string ]: string };
 };

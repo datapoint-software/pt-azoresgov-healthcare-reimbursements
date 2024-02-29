@@ -8,7 +8,7 @@ export class EnvironmentClient extends Client {
   protected override readonly baseAddress: string = '/api/features/environment';
 
   readonly getEnvironment = () =>
-    this.get<EnvironmentResultModel>(null);
+    this.get<EnvironmentResultModel>('/');
 
 }
 

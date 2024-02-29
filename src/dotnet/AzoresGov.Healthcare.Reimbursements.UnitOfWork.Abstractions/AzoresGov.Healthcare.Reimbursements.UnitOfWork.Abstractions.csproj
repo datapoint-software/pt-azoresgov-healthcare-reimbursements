@@ -7,7 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Datapoint.UnitOfWork.Abstractions" Version="8.0.0-a.33" />
+	  <PackageReference Include="Datapoint.UnitOfWork.Abstractions" Version="8.0.0-a.41" />
 	</ItemGroup>
 
 	<ItemGroup>

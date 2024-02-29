@@ -8,7 +8,7 @@ export class IdentityClient extends Client {
   protected override baseAddress: string = '/api/features/identity';
 
   readonly getIdentity = () =>
-    this.get<IdentityResultModel>(null);
+    this.get<IdentityResultModel>('/');
 }
 
 export const provideIdentityClient = () => [

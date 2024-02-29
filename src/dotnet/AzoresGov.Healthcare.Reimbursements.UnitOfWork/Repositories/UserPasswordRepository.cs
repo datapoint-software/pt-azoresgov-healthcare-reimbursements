@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
 {
-    public sealed class UserPasswordRepository : EntityFrameworkCoreRepository<HealthcareReimbursementsContext, UserPassword>, IUserPasswordRepository
+    public sealed class UserPasswordRepository : EntityFrameworkCoreRepository<HealthcareReimbursementsUnitOfWork, UserPassword>, IUserPasswordRepository
     {
-        public UserPasswordRepository(HealthcareReimbursementsContext context) : base(context)
+        public UserPasswordRepository(HealthcareReimbursementsUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
 

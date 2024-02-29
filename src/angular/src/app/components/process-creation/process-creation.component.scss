@@ -1,0 +1,8 @@
+.entity-search-result-card {
+
+  cursor: pointer;
+
+  &:hover {
+    color: var(--bs-link-color);
+  }
+}

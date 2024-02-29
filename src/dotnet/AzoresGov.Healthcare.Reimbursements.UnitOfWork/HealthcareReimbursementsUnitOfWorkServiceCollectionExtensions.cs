@@ -8,7 +8,7 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork
     {
         public static IServiceCollection AddUnitOfWork(this IServiceCollection services, string connectionString)
         {
-            services.AddEntityFrameworkCoreUnitOfWork<IHealthcareReimbursementsUnitOfWork, HealthcareReimbursementsUnitOfWork, HealthcareReimbursementsContext>((unitOfWork) =>
+            services.AddEntityFrameworkCoreUnitOfWork<IHealthcareReimbursementsUnitOfWork, HealthcareReimbursementsUnitOfWork>((unitOfWork) =>
             {
                 unitOfWork.UseContextConfiguration((context) =>
                 {

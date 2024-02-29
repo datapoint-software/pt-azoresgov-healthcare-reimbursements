@@ -50,8 +50,8 @@ export class SignInFeature extends Feature<SignInState> {
       }
     });
   }
-
 }
+
 export const provideSignInFeature = (): Array<EnvironmentProviders> => [
 
   makeEnvironmentProviders([

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
 {
-    [DbContext(typeof(HealthcareReimbursementsContext))]
+    [DbContext(typeof(HealthcareReimbursementsUnitOfWork))]
     [Migration("20240208142913_UserPasswords")]
     partial class UserPasswords
     {

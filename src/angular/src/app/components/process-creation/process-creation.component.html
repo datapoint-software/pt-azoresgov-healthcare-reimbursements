@@ -1,0 +1,182 @@
+<ng-container *ngIf="(stepName$ | async) as stepName">
+  <div class="container-sm ms-0">
+    <form class="tab-content wizard py-6">
+      <!-- Header -->
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8 col-xl-6 text-center">
+
+          <!-- Pretitle -->
+          <h6 class="mb-4 text-uppercase text-muted">
+            Passo {{stepNumber$ | async}} de {{stepCount$ | async}}
+          </h6>
+
+          <!-- Title -->
+          <h1 class="mb-3">
+            <ng-container *ngIf="stepName === 'entity'">Entidade</ng-container>
+            <ng-container *ngIf="stepName === 'patient'">Utente</ng-container>
+            <ng-container *ngIf="stepName === 'confirmation'">Confirmação</ng-container>
+          </h1>
+
+          <!-- Subtitle -->
+          <p class="mb-2 text-muted">
+
+            <ng-container *ngIf="stepName === 'entity'">
+              Escolha o <strong class="text-nowrap">Centro de Saúde</strong> ou
+              <strong class="text-nowrap">Loja do Cidadão</strong> para associar
+              ao registo do processo de reembolso.
+            </ng-container>
+
+            <ng-container *ngIf="stepName === 'patient'">
+              Escolha o <strong class="text-nowrap">Utente</strong> do <strong class="text-nowrap">Centro de Saúde de Angra do Heroísmo</strong>
+              para associar ao registo do processo de reembolso.
+            </ng-container>
+
+            <ng-container *ngIf="stepName === 'confirmation'">
+              Confirme a informação relevante para o registo do processo de reembolso
+              com atenção antes de continuar.
+            </ng-container>
+
+          </p>
+
+        </div>
+      </div> <!-- / .row -->
+
+      <div class="mt-6 mb-6"></div>
+
+      <div [class.active]="stepName === 'entity'" class="tab-pane fade show" id="wizardStepOne" role="tabpanel" aria-labelledby="wizardTabOne">
+
+        <form [formGroup]="entitySearch" (ngSubmit)="onEntitySearch()">
+          <div class="form-group">
+            <div class="input-group input-group-lg input-group-merge input-group-reverse">
+
+              <!-- Input -->
+              <input
+                [class.is-invalid]="(entitySearch.controls.filter.touched || entitySearch.controls.filter.dirty) && entitySearch.controls.filter.invalid"
+                [formControlName]="'filter'"
+                class="form-control list-search"
+                placeholder="Entidade"
+                type="text" />
+
+              <!-- Prepend -->
+              <div class="input-group-text">
+                <span class="fe fe-search"></span>
+              </div>
+
+            </div>
+
+            <div class="form-text text-muted mt-2 mb-2">
+              Pesquise pelo <strong>nome</strong> ou <strong>código</strong> da entidade.
+            </div>
+          </div>
+        </form>
+
+        <ng-container *ngIf="entitySearchResult$ | async">
+          <div *ngIf="entitySearchResultEmpty$ | async" class="card mb-4 entity-search-result-card bg-warning">
+            <div class="card-body">
+              Não existem resultados a apresentar.
+            </div>
+          </div>
+        </ng-container>
+
+        <div class="card mb-4 entity-search-result-card" *ngFor="let x of [ 1, 2, 3 ]">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col-auto">
+
+                <!-- Avatar -->
+                <div class="fs-1">
+                  <i class="fe fe-activity"></i>
+                </div>
+
+              </div>
+              <div class="col ms-n2">
+
+                <!-- Title -->
+                <h4 class="mt-0 mb-2">
+                  Centro de Saúde da Praia da Vitória
+                </h4>
+
+                <!-- Text -->
+                <p class="small text-muted mb-0 mt-2">
+                  Unidade de Saúde da Ilha Terceira
+                </p>
+
+              </div>
+            </div> <!-- / .row -->
+          </div> <!-- / .card-body -->
+        </div>
+
+      </div>
+
+      <div [class.active]="stepName === 'patient'" class="tab-pane fade show" id="wizardStepOne" role="tabpanel" aria-labelledby="wizardTabOne">
+
+        <div class="form-group">
+          <div class="input-group input-group-lg input-group-merge input-group-reverse">
+
+            <!-- Input -->
+            <input class="form-control list-search" type="text" placeholder="Utente" (change)="onEntitySearchChange($event)"/>
+
+            <!-- Prepend -->
+            <div class="input-group-text">
+              <span class="fe fe-search"></span>
+            </div>
+
+          </div>
+
+          <div class="form-text text-muted mt-2 mb-2">
+            Pesquise por <strong>nome</strong>, <strong>número de contribuínte</strong> ou <strong>outros dados pessoais</strong> do utente.
+          </div>
+        </div>
+
+        <div class="card mb-4 entity-search-result-card bg-warning text-white">
+          <div class="card-body">
+            Não foram encontrados resultados.
+          </div>
+        </div>
+
+
+      </div>
+
+      <div [class.active]="stepName === 'confirmation'" class="tab-pane fade show" id="wizardStepOne" role="tabpanel" aria-labelledby="wizardTabOne">
+        TAB 3
+      </div>
+
+      <!-- Divider -->
+      <hr class="my-5">
+
+      <!-- Footer -->
+      <div class="nav row align-items-center" role="tablist">
+        <div class="col-auto">
+
+          <!-- Button -->
+          <button
+            [disabled]="!(previousStepEnabled$ | async)"
+            (click)="previous()"
+            class="btn btn-lg btn-white show"
+            type="button">
+            Anterior
+          </button>
+
+        </div>
+        <div class="col text-center">
+
+          <!-- Step -->
+          <h6 class="text-uppercase text-muted mb-0">Passo {{ stepNumber$ | async }} de {{stepCount$ | async}}</h6>
+
+        </div>
+        <div class="col-auto">
+
+          <!-- Button -->
+          <button
+            [disabled]="!(nextStepEnabled$ | async)"
+            (click)="next()"
+            class="btn btn-lg btn-primary"
+            type="button" >
+            Próximo
+          </button>
+
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-container>

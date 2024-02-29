@@ -8,10 +8,10 @@ export class SignInClient extends Client {
   protected override baseAddress: string = '/api/features/sign-in';
 
   readonly getOptions = () =>
-    this.get<SignInOptionsResultModel>(null);
+    this.get<SignInOptionsResultModel>('/');
 
   readonly signIn = (model: SignInModel) =>
-    this.post<SignInModel, SignInResultModel>(null, model);
+    this.post<SignInModel, SignInResultModel>('/', model);
 }
 
 export const provideSignInClient = () => [

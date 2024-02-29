@@ -8,18 +8,21 @@ using System.Threading.Tasks;
 
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
 {
-    public sealed class UserRepository : EntityFrameworkCoreRepository<HealthcareReimbursementsContext, User>, IUserRepository
+    public sealed class UserRepository : EntityFrameworkCoreRepository<HealthcareReimbursementsUnitOfWork, User>, IUserRepository
     {
-        public UserRepository(HealthcareReimbursementsContext context) : base(context)
+        public UserRepository(HealthcareReimbursementsUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
 
-        public Task<User?> GetByEmailAddressAsync(string emailAddress, CancellationToken ct) => Entities
-            .FirstOrDefaultAsync(e => e.EmailAddress == emailAddress, ct);
+        public Task<User?> GetByEmailAddressAsync(string emailAddress, CancellationToken ct) => 
+            
+            Entities.FirstOrDefaultAsync(e => e.EmailAddress == emailAddress, ct);
 
-        public Task<User?> GetByUserSessionPublicIdAsync(Guid userSessionPublicId, CancellationToken ct) => Context.UserSessions
-            .Where(us => us.PublicId == userSessionPublicId)
-            .Select(us => us.User)
-            .FirstOrDefaultAsync(ct);
+        public Task<User?> GetByUserSessionPublicIdAsync(Guid userSessionPublicId, CancellationToken ct) => 
+            
+            UnitOfWork.UserSessions
+                .Where(us => us.PublicId == userSessionPublicId)
+                .Select(us => us.User)
+                .FirstOrDefaultAsync(ct);
     }
 }

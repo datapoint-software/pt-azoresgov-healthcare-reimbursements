@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
 {
-    public sealed class ParameterRepository : EntityFrameworkCoreRepository<HealthcareReimbursementsContext, Parameter>, IParameterRepository
+    public sealed class ParameterRepository : EntityFrameworkCoreRepository<HealthcareReimbursementsUnitOfWork, Parameter>, IParameterRepository
     {
-        public ParameterRepository(HealthcareReimbursementsContext context) : base(context)
+        public ParameterRepository(HealthcareReimbursementsUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
 
