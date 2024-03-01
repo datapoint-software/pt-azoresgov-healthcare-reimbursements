@@ -13,7 +13,7 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.EntityTypeConfiguration
 
             builder.HasOne(e => e.User)
                 .WithMany()
-                .HasForeignKey("UserId")
+                .HasForeignKey(e => e.UserId)
                 .IsRequired();
 
             builder.Property(e => e.Agent)

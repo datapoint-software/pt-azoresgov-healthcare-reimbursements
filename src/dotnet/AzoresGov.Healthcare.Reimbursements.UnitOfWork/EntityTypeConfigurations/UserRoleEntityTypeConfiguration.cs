@@ -11,9 +11,6 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.EntityTypeConfiguration
         {
             builder.Entity();
 
-            builder.HasIndex([ nameof(UserRole.UserId), nameof(UserRole.RoleId) ])
-                .IsUnique();
-
             builder.HasOne(e => e.User)
                 .WithMany()
                 .HasForeignKey(e => e.UserId)
@@ -22,9 +19,6 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.EntityTypeConfiguration
             builder.HasOne(e => e.Role)
                 .WithMany()
                 .HasForeignKey(e => e.RoleId)
-                .IsRequired();
-
-            builder.Property(e => e.Granted)
                 .IsRequired();
         }
     }

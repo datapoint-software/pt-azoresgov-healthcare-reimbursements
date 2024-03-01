@@ -3,5 +3,6 @@ import { ProcessCreationEntitySearchResultModel } from "../../../clients/process
 export interface ProcessCreationState {
   step: number;
   steps: Array<string>;
+  entity?: { id: string; rowVersionId: string; };
   entitySearchResult?: ProcessCreationEntitySearchResultModel;
 }

@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -50,17 +52,21 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.SignIn
                     model.Persistent),
                 ct);
 
+            var claims = new Claim[ 4 + result.Roles.Count ];
+            claims[ 0 ] = new Claim(ClaimTypes.Sid, result.Session.Id.ToString());
+            claims[ 1 ] = new Claim(ClaimTypes.NameIdentifier, result.User.Id.ToString());
+            claims[ 2 ] = new Claim(ClaimTypes.Name, result.User.Name);
+            claims[ 3 ] = new Claim(ClaimTypes.Email, result.User.EmailAddress);
+
+            var i = 3;
+            foreach (var role in result.Roles)
+                claims[ ++i ] = new Claim(ClaimTypes.Role, role.Id.ToString());
+
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(
                     new ClaimsIdentity(
-                        new Claim[]
-                        {
-                            new (ClaimTypes.Sid, result.Session.Id.ToString()),
-                            new (ClaimTypes.NameIdentifier, result.User.Id.ToString()),
-                            new (ClaimTypes.Name, result.User.Name),
-                            new (ClaimTypes.Email, result.User.EmailAddress)
-                        },
+                        claims,
                         "Basic",
                         ClaimTypes.Name,
                         ClaimTypes.Role)),
@@ -70,6 +76,12 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.SignIn
                 });
 
             return new SignInResultModel(
+                result.Roles
+                    .Select(r => new SignInRoleResultModel(
+                        r.Id,
+                        r.RowVersionId,
+                        r.Name))
+                    .ToArray(),
                 new SignInSessionResultModel(
                     result.Session.Id),
                 new SignInUserResultModel(

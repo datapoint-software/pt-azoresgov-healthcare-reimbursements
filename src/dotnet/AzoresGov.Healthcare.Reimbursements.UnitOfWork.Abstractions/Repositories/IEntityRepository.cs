@@ -10,5 +10,19 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
     public interface IEntityRepository : IRepository<Entity>
     {
         Task<IReadOnlyCollection<Entity>> GetAllByIdAsync(IReadOnlyCollection<long> id, CancellationToken ct);
+
+        Task<IReadOnlyCollection<Entity>> GetAllByUserSearchCriteriaAsync(
+            long userId, 
+            string? filter, 
+            IReadOnlyCollection<EntityNature> nature, 
+            int skip, 
+            int take, 
+            CancellationToken ct);
+        
+        Task<int> GetCountByUserSearchCriteriaAsync(
+            long userId, 
+            string? filter, 
+            IReadOnlyCollection<EntityNature> nature, 
+            CancellationToken ct);
     }
 }

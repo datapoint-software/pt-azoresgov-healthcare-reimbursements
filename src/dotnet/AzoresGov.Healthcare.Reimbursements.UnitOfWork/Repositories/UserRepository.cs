@@ -18,8 +18,8 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
             
             Entities.FirstOrDefaultAsync(e => e.EmailAddress == emailAddress, ct);
 
-        public Task<User?> GetByUserSessionPublicIdAsync(Guid userSessionPublicId, CancellationToken ct) => 
-            
+        public Task<User?> GetByUserSessionPublicIdAsync(Guid userSessionPublicId, CancellationToken ct) =>
+
             UnitOfWork.UserSessions
                 .Where(us => us.PublicId == userSessionPublicId)
                 .Select(us => us.User)

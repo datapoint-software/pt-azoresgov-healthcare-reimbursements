@@ -44,11 +44,11 @@ namespace AzoresGov.Healthcare.Reimbursements
             app.UseErrorResponses((response) =>
             {
                 response.ErrorMessageFactory = (e) =>
-                    e is AuthenticationException ? "A sua sessão expirou ou foi invalidada pelo administrador de sistema." :
-                    e is AuthorizationException ? "Não tem permissões suficientes para aceder a esta funcionalidade." :
-                    e is BusinessException ? "Esta operação não foi executada porque foram detectadas inconsistências no sistema de informação." :
-                    e is ConcurrencyException ? "Esta operação não foi executada porque a informação já foi modificada por outro utilizador." :
-                    e is ValidationException ? "Existem erros de validação nos campos do formulário." :
+                    e is AuthenticationException ? "A sua sessï¿½o expirou ou foi invalidada pelo administrador de sistema." :
+                    e is AuthorizationException ? "Nï¿½o tem permissï¿½es suficientes para aceder a esta funcionalidade." :
+                    e is BusinessException ? "Esta operaï¿½ï¿½o nï¿½o foi executada porque foram detectadas inconsistï¿½ncias no sistema de informaï¿½ï¿½o." :
+                    e is ConcurrencyException ? "Esta operaï¿½ï¿½o nï¿½o foi executada porque a informaï¿½ï¿½o jï¿½ foi modificada por outro utilizador." :
+                    e is ValidationException ? "Existem erros de validaï¿½ï¿½o nos campos do formulï¿½rio." :
                         "Ocorreu um erro inesperado.";
 
                 response.StackTraceEnabled = !environment.IsProduction();
@@ -105,6 +105,24 @@ namespace AzoresGov.Healthcare.Reimbursements
                     .RequireAuthenticatedUser()
                     .RequireClaim(ClaimTypes.Sid)
                     .Build();
+                
+                authorization.AddPolicy("administrative", (policy) =>
+                    policy.RequireRole("ed686f97-135e-4ab1-af53-82d10817cee4", "084a3276-c1f6-4ce9-b230-21a6bc973491"));
+                
+                authorization.AddPolicy("administrator", (policy) =>
+                    policy.RequireRole("a915f05c-5321-4476-b405-d3f085070444", "084a3276-c1f6-4ce9-b230-21a6bc973491"));
+                
+                authorization.AddPolicy("banker", (policy) =>
+                    policy.RequireRole("9ebdf1b9-282c-42e7-b9c6-4c427770cf9e", "084a3276-c1f6-4ce9-b230-21a6bc973491"));
+                
+                authorization.AddPolicy("validator", (policy) =>
+                    policy.RequireRole("17db72b6-321b-45fd-979a-8340bc3fc563", "084a3276-c1f6-4ce9-b230-21a6bc973491"));
+                
+                authorization.AddPolicy("support", (policy) =>
+                    policy.RequireRole("084a3276-c1f6-4ce9-b230-21a6bc973491"));
+                
+                authorization.AddPolicy("treasurer", (policy) =>
+                    policy.RequireRole("10f9d055-9588-4a5b-aee7-aaf9cec9c245", "084a3276-c1f6-4ce9-b230-21a6bc973491"));
             });
 
             services.AddControllers()

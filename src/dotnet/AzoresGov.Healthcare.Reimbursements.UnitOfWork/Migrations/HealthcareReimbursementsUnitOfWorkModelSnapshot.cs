@@ -134,38 +134,6 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                     b.ToTable("Parameters", (string)null);
                 });
 
-            modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Permission", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<bool>("Granted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
-
-                    b.Property<Guid>("PublicId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("RowVersionId")
-                        .IsConcurrencyToken()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasAlternateKey("Name");
-
-                    b.HasAlternateKey("PublicId");
-
-                    b.ToTable("Permissions", (string)null);
-                });
-
             modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Role", b =>
                 {
                     b.Property<long>("Id")
@@ -188,45 +156,11 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasAlternateKey("Name");
+
                     b.HasAlternateKey("PublicId");
 
                     b.ToTable("Roles", (string)null);
-                });
-
-            modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.RolePermission", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<bool>("Granted")
-                        .HasColumnType("bit");
-
-                    b.Property<long>("PermissionId")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("PublicId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<long>("RoleId")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("RowVersionId")
-                        .IsConcurrencyToken()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasAlternateKey("PublicId");
-
-                    b.HasIndex("PermissionId");
-
-                    b.HasIndex("RoleId", "PermissionId")
-                        .IsUnique();
-
-                    b.ToTable("RolePermissions", (string)null);
                 });
 
             modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.User", b =>
@@ -256,9 +190,10 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("EmailAddress");
-
                     b.HasAlternateKey("PublicId");
+
+                    b.HasIndex("EmailAddress")
+                        .IsUnique();
 
                     b.ToTable("Users", (string)null);
                 });
@@ -296,85 +231,6 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                     b.ToTable("UserEntities", (string)null);
                 });
 
-            modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.UserEntityPermission", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<long>("EntityId")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool>("Granted")
-                        .HasColumnType("bit");
-
-                    b.Property<long>("PermissionId")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("PublicId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("RowVersionId")
-                        .IsConcurrencyToken()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasAlternateKey("PublicId");
-
-                    b.HasIndex("EntityId");
-
-                    b.HasIndex("PermissionId");
-
-                    b.HasIndex("UserId", "EntityId", "PermissionId")
-                        .IsUnique();
-
-                    b.ToTable("UserEntityPermissions", (string)null);
-                });
-
-            modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.UserEntityRole", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<long>("EntityId")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("PublicId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<long>("RoleId")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("RowVersionId")
-                        .IsConcurrencyToken()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasAlternateKey("PublicId");
-
-                    b.HasIndex("EntityId");
-
-                    b.HasIndex("RoleId");
-
-                    b.HasIndex("UserId", "EntityId", "RoleId")
-                        .IsUnique();
-
-                    b.ToTable("UserEntityRoles", (string)null);
-                });
-
             modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.UserPassword", b =>
                 {
                     b.Property<long>("Id")
@@ -408,42 +264,6 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                     b.ToTable("UserPasswords", (string)null);
                 });
 
-            modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.UserPermission", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<bool>("Granted")
-                        .HasColumnType("bit");
-
-                    b.Property<long>("PermissionId")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("PublicId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("RowVersionId")
-                        .IsConcurrencyToken()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasAlternateKey("PublicId");
-
-                    b.HasIndex("PermissionId");
-
-                    b.HasIndex("UserId", "PermissionId")
-                        .IsUnique();
-
-                    b.ToTable("UserPermissions", (string)null);
-                });
-
             modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.UserRole", b =>
                 {
                     b.Property<long>("Id")
@@ -451,9 +271,6 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                         .HasColumnType("bigint");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<bool>("Granted")
-                        .HasColumnType("bit");
 
                     b.Property<Guid>("PublicId")
                         .HasColumnType("uniqueidentifier");
@@ -474,8 +291,7 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.HasIndex("UserId", "RoleId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("UserRoles", (string)null);
                 });
@@ -545,25 +361,6 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                     b.Navigation("ParentEntity");
                 });
 
-            modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.RolePermission", b =>
-                {
-                    b.HasOne("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Permission", "Permission")
-                        .WithMany()
-                        .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Permission");
-
-                    b.Navigation("Role");
-                });
-
             modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.UserEntity", b =>
                 {
                     b.HasOne("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Entity", "Entity")
@@ -583,60 +380,6 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.UserEntityPermission", b =>
-                {
-                    b.HasOne("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Entity", "Entity")
-                        .WithMany()
-                        .HasForeignKey("EntityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Permission", "Permission")
-                        .WithMany()
-                        .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Entity");
-
-                    b.Navigation("Permission");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.UserEntityRole", b =>
-                {
-                    b.HasOne("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Entity", "Entity")
-                        .WithMany()
-                        .HasForeignKey("EntityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Entity");
-
-                    b.Navigation("Role");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.UserPassword", b =>
                 {
                     b.HasOne("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.User", "User")
@@ -644,25 +387,6 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                         .HasForeignKey("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.UserPassword", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.UserPermission", b =>
-                {
-                    b.HasOne("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Permission", "Permission")
-                        .WithMany()
-                        .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Permission");
 
                     b.Navigation("User");
                 });

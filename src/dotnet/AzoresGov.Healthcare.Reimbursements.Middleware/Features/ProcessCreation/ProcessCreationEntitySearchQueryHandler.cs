@@ -1,8 +1,5 @@
 ﻿using AzoresGov.Healthcare.Reimbursements.Enumerations;
-using AzoresGov.Healthcare.Reimbursements.Management;
-using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities;
 using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories;
-using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Workers.Features.ProcessCreation;
 using Datapoint.Mediator;
 using System;
 using System.Collections.Generic;
@@ -14,20 +11,17 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
 {
     public sealed class ProcessCreationEntitySearchQueryHandler : IQueryHandler<ProcessCreationEntitySearchQuery, ProcessCreationEntitySearchResult>
     {
-        private readonly IProcessCreationEntitySearchWorker _worker;
-
+        private readonly IEntityParentEntityRepository _entityParentEntities;
+        
         private readonly IEntityRepository _entities;
 
         private readonly IUserRepository _users;
 
-        private readonly IPermissionRepository _permissions;
-
-        public ProcessCreationEntitySearchQueryHandler(IProcessCreationEntitySearchWorker worker, IEntityRepository entities, IUserRepository users, IPermissionRepository permissions)
+        public ProcessCreationEntitySearchQueryHandler(IEntityParentEntityRepository entityParentEntities, IEntityRepository entities, IUserRepository users)
         {
-            _worker = worker;
+            _entityParentEntities = entityParentEntities;
             _entities = entities;
             _users = users;
-            _permissions = permissions;
         }
 
         public async Task<ProcessCreationEntitySearchResult> HandleQueryAsync(ProcessCreationEntitySearchQuery query, CancellationToken ct)
@@ -36,42 +30,54 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
                 query.UserId,
                 ct);
 
-            var permission = await _permissions.GetProcessCreationOrThrowInvalidOperationExceptionAsync(ct);
-
-            var results = await _worker.SearchUserEntitiesWithPermissionGrantAsync(
+            var entities = await _entities.GetAllByUserSearchCriteriaAsync(
                 user.Id,
-                permission.Id,
-                [ EntityNature.HealthCenter, EntityNature.Office ],
                 query.Filter,
+                [ EntityNature.HealthCenter, EntityNature.Office ],
                 query.Skip ?? 0,
                 query.Take ?? 5,
                 ct);
 
+            var entitiesCount = await _entities.GetCountByUserSearchCriteriaAsync(
+                user.Id,
+                query.Filter,
+                [ EntityNature.HealthCenter, EntityNature.Office ],
+                ct);
+
+            var entityParentEntityIds = await _entityParentEntities.GetParentEntityIdByEntityIdAsync(
+                entities.Select(e => e.Id).ToArray(),
+                0,
+                ct);
+
             var parentEntities = (await _entities.GetAllByIdAsync(
-                results.Select(r => r.ParentEntityId).ToArray(),
+                entityParentEntityIds.Values.ToArray(),
                 ct))
                 
                 .ToDictionary(pe => pe.Id);
             
             return new ProcessCreationEntitySearchResult(
-                results
-                    .Select(r => new ProcessCreationEntitySearchEntityResult(
-                        r.PublicId,
-                        r.RowVersionId,
-                        parentEntities[r.ParentEntityId].PublicId,
-                        r.Code,
-                        r.Name,
-                        r.Nature))
-                    .Union(parentEntities.Values.Select(pe => new ProcessCreationEntitySearchEntityResult(
-                        pe.PublicId,
-                        pe.RowVersionId,
+                entities
+                    .Select(e => new ProcessCreationEntitySearchEntityResult(
+                        e.PublicId,
+                        e.RowVersionId,
+                        entityParentEntityIds.TryGetValue(e.Id, out var parentEntityId) 
+                            ? parentEntities[parentEntityId].PublicId
+                            : null,
+                        e.Code,
+                        e.Name,
+                        e.Nature))
+                    .Union(parentEntities.Values.Select(e => new ProcessCreationEntitySearchEntityResult(
+                        e.PublicId,
+                        e.RowVersionId,
                         null,
-                        pe.Code,
-                        pe.Name,
-                        pe.Nature)))
+                        e.Code,
+                        e.Name,
+                        e.Nature)))
                     .ToArray(),
-                results.Select(r => r.PublicId).ToArray(),
-                0);
+                entities
+                    .Select(e => e.PublicId)
+                    .ToArray(),
+                entitiesCount);
         }
     }
 }

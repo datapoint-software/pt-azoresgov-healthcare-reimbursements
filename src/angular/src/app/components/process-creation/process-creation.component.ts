@@ -23,21 +23,16 @@ export class ProcessCreationComponent {
     filter: new FormControl('', [ Validators.minLength(3), Validators.maxLength(128) ])
   });
 
-  readonly entitySearchResult$ = this.processCreation.entitySearchResult$();
-
-  readonly entitySearchResultEmpty$ = this.processCreation.entitySearchResultEmpty$();
-
-  readonly nextStepEnabled$ = this.processCreation.nextStepEnabled$();
-
-  readonly previousStepEnabled$ = this.processCreation.previousStepEnabled$();
-
-  readonly step$ = this.processCreation.step$();
-
-  readonly stepCount$ = this.processCreation.stepCount$();
-
-  readonly stepName$ = this.processCreation.stepName$();
-
-  readonly stepNumber$ = this.processCreation.stepNumber$();
+  readonly entitySearchResult$ = this.processCreation.entitySearchResult$;
+  readonly entitySearchResultEmpty$ = this.processCreation.entitySearchResultEmpty$;
+  readonly entitySearchResultEntityById$ = this.processCreation.entitySearchResultEntityById$;
+  readonly entitySearchResultMatches$ = this.processCreation.entitySearchResultMatches$;
+  readonly nextStepEnabled$ = this.processCreation.nextStepEnabled$;
+  readonly previousStepEnabled$ = this.processCreation.previousStepEnabled$;
+  readonly step$ = this.processCreation.step$;
+  readonly stepCount$ = this.processCreation.stepCount$;
+  readonly stepName$ = this.processCreation.stepName$;
+  readonly stepNumber$ = this.processCreation.stepNumber$;
 
   onEntitySearchChange(e: Event) {
   }
@@ -51,6 +46,10 @@ export class ProcessCreationComponent {
       this.entitySearch.value.filter || undefined
     );
 
+  }
+
+  onEntitySelection(id: string, rowVersionId: string) {
+    this.processCreation.selectEntity(id, rowVersionId);
   }
 
   next() {

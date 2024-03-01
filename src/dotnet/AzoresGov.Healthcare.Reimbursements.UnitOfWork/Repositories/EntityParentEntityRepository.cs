@@ -14,11 +14,19 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
         {
         }
 
-        public async Task<IReadOnlyCollection<EntityParentEntity>> GetAllByEntityIdAndLevelAsync(IReadOnlyCollection<long> entityId, int level, CancellationToken ct) =>
+        public async Task<IReadOnlyDictionary<long, long>> GetParentEntityIdByEntityIdAsync(
+            IReadOnlyCollection<long> entityId,
+            int level,
+            CancellationToken ct) =>
 
-            await Entities
+            (await Entities
                 .Where(e => entityId.Contains(e.EntityId))
                 .Where(e => e.Level == level)
-                .ToListAsync(ct);
+                .Select(e => new { e.EntityId, e.ParentEntityId })
+                .ToListAsync(ct))
+        
+            .ToDictionary(
+                e => e.EntityId, 
+                e => e.ParentEntityId);
     }
 }

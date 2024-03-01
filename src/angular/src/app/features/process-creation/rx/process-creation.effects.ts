@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Actions, concatLatestFrom, createEffect, ofType } from "@ngrx/effects";
-import { configure, init, next, previous, searchEntities, searchEntitiesComplete, step } from "./process-creation.actions";
+import { configure, init, next, previous, searchEntities, searchEntitiesComplete, selectEntity, step } from "./process-creation.actions";
 import { map, mergeMap, of } from "rxjs";
 import { Store } from "@ngrx/store";
 
@@ -46,5 +46,10 @@ export class ProcessCreationEffects {
         map((payload) => searchEntitiesComplete({ payload }))
       ))
     ))
+  ));
+
+  readonly selectEntity$ = createEffect(() => this.actions$.pipe(
+    ofType(selectEntity),
+    map(() => next())
   ));
 }

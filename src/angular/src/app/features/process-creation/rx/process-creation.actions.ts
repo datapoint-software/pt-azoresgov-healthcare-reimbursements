@@ -48,3 +48,13 @@ export const searchEntitiesComplete = createAction(
     payload: ProcessCreationEntitySearchResultModel
   }>()
 );
+
+export const selectEntity = createAction(
+  `${FEATURE_ACTION_PREFIX}/select-entity`,
+  props<{
+    payload: {
+      id: string;
+      rowVersionId: string;
+    };
+  }>()
+);

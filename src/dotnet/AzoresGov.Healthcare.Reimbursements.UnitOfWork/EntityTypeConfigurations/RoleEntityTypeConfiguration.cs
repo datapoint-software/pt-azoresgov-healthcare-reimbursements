@@ -11,6 +11,8 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.EntityTypeConfiguration
         {
             builder.Entity();
 
+            builder.HasAlternateKey(e => e.Name);
+
             builder.Property(e => e.Name)
                 .HasMaxLength(64)
                 .IsRequired();

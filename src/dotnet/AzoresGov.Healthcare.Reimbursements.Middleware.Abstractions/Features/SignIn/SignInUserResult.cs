@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
 {

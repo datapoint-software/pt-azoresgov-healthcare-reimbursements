@@ -1,5 +1,6 @@
 ﻿using AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreation;
 using Datapoint.Mediator;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading;
@@ -17,6 +18,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCreation
             _mediator = mediator;
         }
 
+        [Authorize("administrative")]
         [HttpGet("entities")]
         public async Task<ProcessCreationEntitySearchResultModel> SearchEntitiesAsync([FromQuery] string? filter, [FromQuery] int? skip, [FromQuery] int? take, CancellationToken ct)
         {

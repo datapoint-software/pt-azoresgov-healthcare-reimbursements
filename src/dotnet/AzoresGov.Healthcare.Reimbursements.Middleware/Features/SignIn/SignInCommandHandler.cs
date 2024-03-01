@@ -5,6 +5,7 @@ using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories;
 using Datapoint;
 using Datapoint.Mediator;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,15 +19,18 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
 
         private readonly IParameterManager _parameters;
 
+        private readonly IRoleRepository _roles;
+
         private readonly IUserPasswordRepository _userPasswords;
 
         private readonly IUserRepository _users;
 
         private readonly IUserSessionRepository _userSessions;
 
-        public SignInCommandHandler(IParameterManager parameters, IUserPasswordRepository userPasswords, IUserRepository users, IUserSessionRepository userSessions)
+        public SignInCommandHandler(IParameterManager parameters, IRoleRepository roles, IUserPasswordRepository userPasswords, IUserRepository users, IUserSessionRepository userSessions)
         {
             _parameters = parameters;
+            _roles = roles;
             _userPasswords = userPasswords;
             _users = users;
             _userSessions = userSessions;
@@ -98,6 +102,11 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
 
             if (!UserPasswordHelper.VerifyPasswordHash(userPassword.Hash, userPasswordHashWorkFactor))
                 userPassword.Hash = UserPasswordHelper.ComputePasswordHash(command.Password, userPasswordHashWorkFactor);
+            
+            // Get the user roles.
+            var roles = await _roles.GetAllByUserIdAsync(
+                user.Id,
+                ct);
 
             // Calculate the user session expiration.
             var expiration = await GetUserSessionExpirationAsync(
@@ -117,6 +126,12 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
             });
 
             return new SignInResult(
+                roles
+                    .Select(r => new SignInRoleResult(
+                        r.PublicId,
+                        r.RowVersionId,
+                        r.Name))
+                    .ToArray(),
                 new SignInSessionResult(
                     userSession.PublicId,
                     userSession.Expiration),

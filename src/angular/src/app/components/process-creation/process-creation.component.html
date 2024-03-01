@@ -1,4 +1,4 @@
-<ng-container *ngIf="(stepName$ | async) as stepName">
+<ng-container *ngIf="(stepName$() | async) as stepName">
   <div class="container-sm ms-0">
     <form class="tab-content wizard py-6">
       <!-- Header -->
@@ -7,7 +7,7 @@
 
           <!-- Pretitle -->
           <h6 class="mb-4 text-uppercase text-muted">
-            Passo {{stepNumber$ | async}} de {{stepCount$ | async}}
+            Passo {{stepNumber$() | async}} de {{stepCount$() | async}}
           </h6>
 
           <!-- Title -->
@@ -70,41 +70,42 @@
           </div>
         </form>
 
-        <ng-container *ngIf="entitySearchResult$ | async">
-          <div *ngIf="entitySearchResultEmpty$ | async" class="card mb-4 entity-search-result-card bg-warning">
+        <ng-container *ngIf="entitySearchResult$() | async">
+          <div *ngIf="entitySearchResultEmpty$() | async" class="card mb-4 entity-search-result-card bg-warning">
             <div class="card-body">
               Não existem resultados a apresentar.
             </div>
           </div>
-        </ng-container>
+          <div
+            *ngFor="let match of (entitySearchResultMatches$() | async)"
+            class="card mb-4 entity-search-result-card">
+            <div class="card-body" *ngIf="(entitySearchResultEntityById$(match) | async) as entity" (click)="onEntitySelection(entity.id, entity.rowVersionId)">
+              <div class="row align-items-center">
+                <div class="col-auto">
 
-        <div class="card mb-4 entity-search-result-card" *ngFor="let x of [ 1, 2, 3 ]">
-          <div class="card-body">
-            <div class="row align-items-center">
-              <div class="col-auto">
+                  <!-- Avatar -->
+                  <div class="fs-1">
+                    <i class="fe fe-activity"></i>
+                  </div>
 
-                <!-- Avatar -->
-                <div class="fs-1">
-                  <i class="fe fe-activity"></i>
                 </div>
+                <div class="col ms-n2">
 
-              </div>
-              <div class="col ms-n2">
+                  <!-- Title -->
+                  <h4 class="mt-0 mb-2">
+                    {{entity.name}}
+                  </h4>
 
-                <!-- Title -->
-                <h4 class="mt-0 mb-2">
-                  Centro de Saúde da Praia da Vitória
-                </h4>
+                  <!-- Text -->
+                  <p class="small text-muted mb-0 mt-2" *ngIf="entity.parentEntityId && (entitySearchResultEntityById$(entity.parentEntityId) | async) as parentEntity">
+                    {{parentEntity.name}}
+                  </p>
 
-                <!-- Text -->
-                <p class="small text-muted mb-0 mt-2">
-                  Unidade de Saúde da Ilha Terceira
-                </p>
-
-              </div>
-            </div> <!-- / .row -->
-          </div> <!-- / .card-body -->
-        </div>
+                </div>
+              </div> <!-- / .row -->
+            </div> <!-- / .card-body -->
+          </div>
+        </ng-container>
 
       </div>
 
@@ -150,7 +151,7 @@
 
           <!-- Button -->
           <button
-            [disabled]="!(previousStepEnabled$ | async)"
+            [disabled]="!(previousStepEnabled$() | async)"
             (click)="previous()"
             class="btn btn-lg btn-white show"
             type="button">
@@ -161,14 +162,14 @@
         <div class="col text-center">
 
           <!-- Step -->
-          <h6 class="text-uppercase text-muted mb-0">Passo {{ stepNumber$ | async }} de {{stepCount$ | async}}</h6>
+          <h6 class="text-uppercase text-muted mb-0">Passo {{ stepNumber$() | async }} de {{stepCount$() | async}}</h6>
 
         </div>
         <div class="col-auto">
 
           <!-- Button -->
           <button
-            [disabled]="!(nextStepEnabled$ | async)"
+            [disabled]="!(nextStepEnabled$() | async)"
             (click)="next()"
             class="btn btn-lg btn-primary"
             type="button" >

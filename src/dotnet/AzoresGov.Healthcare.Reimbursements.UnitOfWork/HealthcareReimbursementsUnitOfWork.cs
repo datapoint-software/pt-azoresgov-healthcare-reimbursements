@@ -12,29 +12,19 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork
         }
 
         public DbSet<Entity> Entities { get; set; } = default!;
-
+        //
         public DbSet<EntityParentEntity> EntityParentEntities { get; set; } = default!;
-
+        //
         public DbSet<Parameter> Parameters { get; set; } = default!;
-
-        public DbSet<Permission> Permissions { get; set; } = default!;
-
-        public DbSet<RolePermission> RolePermissions { get; set; } = default!;
-
+        //
         public DbSet<Role> Roles { get; set; } = default!;
-
+        //
         public DbSet<UserEntity> UserEntities { get; set; } = default!;
-
-        public DbSet<UserEntityPermission> UserEntityPermissions { get; set; } = default!;
-        
-        public DbSet<UserEntityRole> UserEntityRoles { get; set; } = default!;
-
+        //
         public DbSet<UserPassword> UserPasswords { get; set; } = default!;
-
-        public DbSet<UserPermission> UserPermissions { get; set; } = default!;
-        
+        //
         public DbSet<UserRole> UserRoles { get; set; } = default!;
-
+        //
         public DbSet<User> Users { get; set; } = default!;
 
         public DbSet<UserSession> UserSessions { get; set; } = default!;

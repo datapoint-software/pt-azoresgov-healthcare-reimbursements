@@ -3,9 +3,7 @@
     public enum EnvironmentNature
     {
         Development,
-
         Staging,
-
         Production
     }
 }

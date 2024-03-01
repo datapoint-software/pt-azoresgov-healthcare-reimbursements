@@ -1,5 +1,5 @@
 import { createReducer, on } from "@ngrx/store";
-import { init, dispose, configure, step, searchEntitiesComplete } from "./process-creation.actions";
+import { init, dispose, configure, step, searchEntitiesComplete, selectEntity } from "./process-creation.actions";
 import { ProcessCreationState } from "./process-creation.state";
 
 export const reducer = createReducer(
@@ -18,6 +18,13 @@ export const reducer = createReducer(
   on(searchEntitiesComplete, (state, { payload }) => ({
     ...state,
     entitySearchResult: {
+      ...payload
+    }
+  })),
+
+  on(selectEntity, (state, { payload }) => ({
+    ...state,
+    entity: {
       ...payload
     }
   }))
