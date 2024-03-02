@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Actions, concatLatestFrom, createEffect, ofType } from "@ngrx/effects";
-import { configure, init, next, previous, searchEntities, searchEntitiesComplete, selectEntity, step } from "./process-creation.actions";
+import { configure, init, next, previous, searchEntities, searchEntitiesComplete, searchPatients, searchPatientsComplete, selectEntity, selectPatient, step } from "./process-creation.actions";
 import { map, mergeMap, of } from "rxjs";
 import { Store } from "@ngrx/store";
 
@@ -32,11 +32,11 @@ export class ProcessCreationEffects {
           entities: (response.entities || []).reduce(
             (pv, cv) => ({ ...pv, [cv.id]: { ...cv }}),
             {}
-          )
+          ),
+          patients: {}
         }
       }))
     ))
-
   ));
 
   readonly next$ = createEffect(() => this.actions$.pipe(
@@ -60,8 +60,23 @@ export class ProcessCreationEffects {
     ))
   ));
 
+  readonly searchPatients$ = createEffect(() => this.actions$.pipe(
+    ofType(searchPatients),
+    concatLatestFrom(() => this.store.select(selectors.entityId)),
+    mergeLoadingOverlay(([ { payload }, entityId ]) => of(payload).pipe(
+      mergeMap(({ filter }) => this.processCreationClient.searchPatients(entityId!, filter, 0, 5).pipe(
+        map((payload) => searchPatientsComplete({ payload }))
+      ))
+    ))
+  ));
+
   readonly selectEntity$ = createEffect(() => this.actions$.pipe(
     ofType(selectEntity),
+    map(() => next())
+  ));
+
+  readonly selectPatient$ = createEffect(() => this.actions$.pipe(
+    ofType(selectPatient),
     map(() => next())
   ));
 }

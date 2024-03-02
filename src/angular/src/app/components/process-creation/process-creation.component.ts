@@ -1,17 +1,20 @@
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
-import { ProcessCreationFeature } from "../../features/process-creation/process-creation.feature";
+import { EntityNature } from "../../enums/entity-nature.enum";
+import { EntityNaturePipe } from "../../pipes/entity-nature.pipe";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { ProcessCreationFeature } from "../../features/process-creation/process-creation.feature";
 
 @Component({
-  imports: [
-    CommonModule,
-    ReactiveFormsModule
-  ],
-  selector: 'app-process-create',
-  standalone: true,
-  styleUrl: './process-creation.component.scss',
-  templateUrl: './process-creation.component.html'
+    selector: 'app-process-create',
+    standalone: true,
+    styleUrl: './process-creation.component.scss',
+    templateUrl: './process-creation.component.html',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        EntityNaturePipe
+    ]
 })
 export class ProcessCreationComponent {
 
@@ -23,23 +26,34 @@ export class ProcessCreationComponent {
     filter: new FormControl('', [ Validators.minLength(3), Validators.maxLength(128) ])
   });
 
-  readonly entitySearchResult$ = this.processCreation.entitySearchResult$;
-  readonly entitySearchResultEmpty$ = this.processCreation.entitySearchResultEmpty$;
-  readonly entitySearchResultEntityById$ = this.processCreation.entityById;
-  readonly entitySearchResultMatches$ = this.processCreation.entitySearchResultMatches$;
-  readonly nextStepEnabled$ = this.processCreation.nextStepEnabled$;
-  readonly previousStepEnabled$ = this.processCreation.previousStepEnabled$;
-  readonly step$ = this.processCreation.step$;
-  readonly stepCount$ = this.processCreation.stepCount$;
-  readonly stepName$ = this.processCreation.stepName$;
-  readonly stepNumber$ = this.processCreation.stepNumber$;
+  readonly patientSearch = new FormGroup({
+    filter: new FormControl('', [ Validators.minLength(3), Validators.maxLength(128) ])
+  });
+
+  readonly entity$ = this.processCreation.entity$();
+  readonly entityId$ = this.processCreation.entityId$();
+  readonly entityById$ = this.processCreation.entityById$;
+  readonly entitySearchResult$ = this.processCreation.entitySearchResult$();
+  readonly entitySearchResultEmpty$ = this.processCreation.entitySearchResultEmpty$();
+  readonly entitySearchResultMatches$ = this.processCreation.entitySearchResultMatches$();
+  readonly nextStepEnabled$ = this.processCreation.nextStepEnabled$();
+  readonly patient$ = this.processCreation.patient$();
+  readonly patientById$ = this.processCreation.patientById$;
+  readonly patientId$ = this.processCreation.patientId$();
+  readonly patientSearchResult$ = this.processCreation.patientSearchResult$();
+  readonly patientSearchResultEmpty$ = this.processCreation.patientSearchResultEmpty$();
+  readonly patientSearchResultMatches$ = this.processCreation.patientSearchResultMatches$();
+  readonly previousStepEnabled$ = this.processCreation.previousStepEnabled$();
+  readonly stepCount$ = this.processCreation.stepCount$();
+  readonly stepName$ = this.processCreation.stepName$();
+  readonly stepNumber$ = this.processCreation.stepNumber$();
 
   onEntitySearchChange(e: Event) {
   }
 
   onEntitySearch() {
 
-    if (!this.entitySearch.valid)
+    if (this.entitySearch.invalid)
       return;
 
     return this.processCreation.searchEntities(
@@ -50,6 +64,20 @@ export class ProcessCreationComponent {
 
   onEntitySelection(id: string) {
     this.processCreation.selectEntity(id);
+  }
+
+  onPatientSearch() {
+
+    if (this.patientSearch.invalid)
+      return;
+
+    this.processCreation.searchPatients(
+      this.patientSearch.value.filter || undefined
+    );
+  }
+
+  onPatientSelection(id: string) {
+    this.processCreation.selectPatient(id);
   }
 
   next() {

@@ -1,4 +1,4 @@
-<ng-container *ngIf="(stepName$() | async) as stepName">
+<ng-container *ngIf="(stepName$ | async) as stepName">
   <div class="container-sm ms-0">
     <form class="tab-content wizard py-6">
       <!-- Header -->
@@ -7,7 +7,7 @@
 
           <!-- Pretitle -->
           <h6 class="mb-4 text-uppercase text-muted">
-            Passo {{stepNumber$() | async}} de {{stepCount$() | async}}
+            Passo {{stepNumber$ | async}} de {{stepCount$ | async}}
           </h6>
 
           <!-- Title -->
@@ -70,76 +70,212 @@
           </div>
         </form>
 
-        <ng-container *ngIf="entitySearchResult$() | async">
-          <div *ngIf="entitySearchResultEmpty$() | async" class="card mb-4 entity-search-result-card bg-warning">
+        <ng-container *ngIf="entitySearchResult$ | async">
+          <div *ngIf="entitySearchResultEmpty$ | async" class="card mb-4 bg-warning">
             <div class="card-body">
               Não existem resultados a apresentar.
             </div>
           </div>
-          <div
-            *ngFor="let match of (entitySearchResultMatches$() | async)"
-            class="card mb-4 entity-search-result-card">
-            <div class="card-body" *ngIf="(entitySearchResultEntityById$(match) | async) as entity" (click)="onEntitySelection(entity.id)">
-              <div class="row align-items-center">
-                <div class="col-auto">
+          <ng-container *ngFor="let entityId of (entitySearchResultMatches$ | async)">
+            <ng-container *ngIf="(entityById$(entityId) | async) as entity">
+              <div
+                [class.selected]="entityId === (entityId$ | async)"
+                (click)="onEntitySelection(entity.id)"
+                class="card mb-4 result-card">
+                <div class="card-body">
+                  <div class="row align-items-center">
+                    <div class="col-auto">
 
-                  <!-- Avatar -->
-                  <div class="fs-1">
-                    <i class="fe fe-activity"></i>
-                  </div>
+                      <!-- Avatar -->
+                      <div class="fs-1">
+                        <i class="fe fe-activity"></i>
+                      </div>
 
-                </div>
-                <div class="col ms-n2">
+                    </div>
+                    <div class="col ms-n2">
 
-                  <!-- Title -->
-                  <h4 class="mt-0 mb-2">
-                    {{entity.name}}
-                  </h4>
+                      <!-- Title -->
+                      <h4 class="mt-0 mb-2">
+                        {{entity.name}}
+                      </h4>
 
-                  <!-- Text -->
-                  <p class="small text-muted mb-0 mt-2" *ngIf="entity.parentEntityId && (entitySearchResultEntityById$(entity.parentEntityId) | async) as parentEntity">
-                    {{parentEntity.name}}
-                  </p>
+                      <!-- Text -->
+                      <p class="small text-muted mb-0 mt-2" *ngIf="entity.parentEntityId && (entityById$(entity.parentEntityId) | async) as parentEntity">
+                        {{parentEntity.name}}
+                      </p>
 
-                </div>
-              </div> <!-- / .row -->
-            </div> <!-- / .card-body -->
-          </div>
+                    </div>
+                  </div> <!-- / .row -->
+                </div> <!-- / .card-body -->
+              </div>
+            </ng-container>
+          </ng-container>
         </ng-container>
 
       </div>
 
       <div [class.active]="stepName === 'patient'" class="tab-pane fade show" id="wizardStepOne" role="tabpanel" aria-labelledby="wizardTabOne">
 
-        <div class="form-group">
-          <div class="input-group input-group-lg input-group-merge input-group-reverse">
+        <form [formGroup]="patientSearch" (ngSubmit)="onPatientSearch()">
+          <div class="form-group">
+            <div class="input-group input-group-lg input-group-merge input-group-reverse">
 
-            <!-- Input -->
-            <input class="form-control list-search" type="text" placeholder="Utente" (change)="onEntitySearchChange($event)"/>
+              <!-- Input -->
+              <input
+                [class.is-invalid]="(patientSearch.controls.filter.touched || patientSearch.controls.filter.dirty) && patientSearch.controls.filter.invalid"
+                [formControlName]="'filter'"
+                class="form-control list-search"
+                placeholder="Utente"
+                type="text" />
 
-            <!-- Prepend -->
-            <div class="input-group-text">
-              <span class="fe fe-search"></span>
+              <!-- Prepend -->
+              <div class="input-group-text">
+                <span class="fe fe-search"></span>
+              </div>
+
             </div>
 
+            <div class="form-text text-muted mt-2 mb-2">
+              Pesquise por <strong>nome</strong>, <strong>número de contribuínte</strong> ou <strong>outros dados pessoais</strong> do utente.
+            </div>
+          </div>
+        </form>
+
+        <ng-container *ngIf="patientSearchResult$ | async">
+          <div *ngIf="patientSearchResultEmpty$ | async" class="card mb-4 bg-warning">
+            <div class="card-body">
+              Não existem resultados a apresentar.
+            </div>
           </div>
 
-          <div class="form-text text-muted mt-2 mb-2">
-            Pesquise por <strong>nome</strong>, <strong>número de contribuínte</strong> ou <strong>outros dados pessoais</strong> do utente.
-          </div>
-        </div>
+          <ng-container *ngFor="let match of (patientSearchResultMatches$ | async)">
+            <ng-container *ngIf="(patientById$(match) | async) as patient">
+              <div
+              [class.selected]="match === (patientId$ | async)"
+              (click)="onPatientSelection(patient.id)"
+              class="card mb-4 result-card">
+                <div class="card-body">
+                  <div class="row align-items-center">
+                    <div class="col-auto">
 
-        <div class="card mb-4 entity-search-result-card bg-warning text-white">
-          <div class="card-body">
-            Não foram encontrados resultados.
-          </div>
-        </div>
+                      <!-- Avatar -->
+                      <div class="fs-1">
+                        <i class="fe fe-user"></i>
+                      </div>
+
+                    </div>
+                    <div class="col ms-n2">
+
+                      <!-- Title -->
+                      <h4 class="mt-0 mb-2">
+                        {{patient.name}}
+                      </h4>
+
+                      <!-- Text -->
+                      <div class="small mb-0 mt-2 d-flex flex-row align-items-center justify-content-start">
+                        <div class="d-flex flex-row align-items-center justify-content-center me-3">
+                          <i class="fe fe-hash me-1"></i>
+                          <span>{{patient.healthNumber}}</span>
+                        </div>
+                        <div class="d-flex flex-row align-items-center justify-content-center me-3">
+                          <i class="fe fe-dollar-sign me-1"></i>
+                          <span>{{patient.taxNumber}}</span>
+                        </div>
+                        <div class="d-flex flex-row align-items-center justify-content-center me-3" *ngIf="patient.faxNumber">
+                          <i class="fe fe-printer me-1"></i>
+                          <span>{{patient.faxNumber}}</span>
+                        </div>
+                        <div class="d-flex flex-row align-items-center justify-content-center me-3" *ngIf="patient.mobileNumber">
+                          <i class="fe fe-smartphone me-1"></i>
+                          <span>{{patient.mobileNumber}}</span>
+                        </div>
+                        <div class="d-flex flex-row align-items-center justify-content-center me-3" *ngIf="patient.phoneNumber">
+                          <i class="fe fe-phone me-1"></i>
+                          <span>{{patient.phoneNumber}}</span>
+                        </div>
+                        <div class="d-flex flex-row align-items-center justify-content-center me-3" *ngIf="patient.birth">
+                          <i class="fe fe-gift me-1"></i>
+                          <span>{{patient.birth | date : 'dd/MM/yyyy'}}</span>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div> <!-- / .row -->
+                </div> <!-- / .card-body -->
+              </div>
+            </ng-container>
+          </ng-container>
+        </ng-container>
 
 
       </div>
 
       <div [class.active]="stepName === 'confirmation'" class="tab-pane fade show" id="wizardStepOne" role="tabpanel" aria-labelledby="wizardTabOne">
-        TAB 3
+
+        <div class="card" *ngIf="(entity$ | async) as entity">
+          <div class="card-header">
+            <h4 class="card-header-title">
+              {{entity.nature | entityNature}}
+            </h4>
+          </div>
+          <div class="card-body">
+            <div class="row g-4">
+              <div class="col col-12 col-lg-3 mb-2">
+                <div class="border-bottom text-muted text-uppercase fs-6 mb-2 pb-1">Entidade</div>
+                <div class="text-nowrap">{{entity.code}}</div>
+              </div>
+              <div class="col col-12 col-lg-9">
+                <div class="border-bottom text-muted text-uppercase fs-6 mb-2 pb-1">Nome</div>
+                <div class="text-nowrap">{{entity.name}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" *ngIf="(patient$ | async) as patient">
+          <div class="card-header">
+            <h4 class="card-header-title">
+              Utente
+            </h4>
+          </div>
+          <div class="card-body">
+            <div class="row g-4">
+              <div class="col col-12 col-lg-3 mb-2">
+                <div class="border-bottom text-muted text-uppercase fs-6 mb-2 pb-1">Utente</div>
+                <div class="text-nowrap">{{patient.healthNumber}}</div>
+              </div>
+              <div class="col col-12 col-lg-3 mb-2">
+                <div class="border-bottom text-muted text-uppercase fs-6 mb-2 pb-1">Contribuínte</div>
+                <div class="text-nowrap">{{patient.taxNumber}}</div>
+              </div>
+              <div class="col col-12 col-lg-3 mb-2" *ngIf="patient.birth">
+                <div class="border-bottom text-muted text-uppercase fs-6 mb-2 pb-1">Nascimento</div>
+                <div class="text-nowrap">{{patient.birth | date : 'dd/MM/yyyy'}}</div>
+              </div>
+              <div class="col col-12 col-lg-3 mb-2" *ngIf="patient.death">
+                <div class="border-bottom text-muted text-uppercase fs-6 mb-2 pb-1">Óbito</div>
+                <div class="text-nowrap">{{patient.death | date : 'dd/MM/yyyy'}}</div>
+              </div>
+              <div class="col col-12 mb-4">
+                <div class="border-bottom text-muted text-uppercase fs-6 mb-2 pb-1">Nome</div>
+                <div class="text-nowrap">{{patient.name}}</div>
+              </div>
+              <div class="col col-12 col-lg-3 mb-2" *ngIf="patient.faxNumber">
+                <div class="border-bottom text-muted text-uppercase fs-6 mb-2 pb-1">Fax</div>
+                <div class="text-nowrap">{{patient.faxNumber | date : 'dd/MM/yyyy'}}</div>
+              </div>
+              <div class="col col-12 col-lg-3 mb-2" *ngIf="patient.mobileNumber">
+                <div class="border-bottom text-muted text-uppercase fs-6 mb-2 pb-1">Telemóvel</div>
+                <div class="text-nowrap">{{patient.mobileNumber | date : 'dd/MM/yyyy'}}</div>
+              </div>
+              <div class="col col-12 col-lg-3 mb-2" *ngIf="patient.phoneNumber">
+                <div class="border-bottom text-muted text-uppercase fs-6 mb-2 pb-1">Telefone</div>
+                <div class="text-nowrap">{{patient.phoneNumber | date : 'dd/MM/yyyy'}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <!-- Divider -->
@@ -151,7 +287,7 @@
 
           <!-- Button -->
           <button
-            [disabled]="!(previousStepEnabled$() | async)"
+            [disabled]="!(previousStepEnabled$ | async)"
             (click)="previous()"
             class="btn btn-lg btn-white show"
             type="button">
@@ -162,14 +298,14 @@
         <div class="col text-center">
 
           <!-- Step -->
-          <h6 class="text-uppercase text-muted mb-0">Passo {{ stepNumber$() | async }} de {{stepCount$() | async}}</h6>
+          <h6 class="text-uppercase text-muted mb-0">Passo {{ stepNumber$ | async }} de {{stepCount$ | async}}</h6>
 
         </div>
         <div class="col-auto">
 
           <!-- Button -->
           <button
-            [disabled]="!(nextStepEnabled$() | async)"
+            [disabled]="!(nextStepEnabled$ | async)"
             (click)="next()"
             class="btn btn-lg btn-primary"
             type="button" >

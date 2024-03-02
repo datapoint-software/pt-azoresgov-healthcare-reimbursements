@@ -1,5 +1,5 @@
 import { createReducer, on } from "@ngrx/store";
-import { init, dispose, configure, step, searchEntitiesComplete, selectEntity } from "./process-creation.actions";
+import { init, dispose, configure, step, searchEntitiesComplete, selectEntity, searchPatientsComplete, selectPatient } from "./process-creation.actions";
 import { ProcessCreationState } from "./process-creation.state";
 
 export const reducer = createReducer(
@@ -30,8 +30,30 @@ export const reducer = createReducer(
     }
   })),
 
+  on(searchPatientsComplete, (state, { payload }) => ({
+    ...state,
+    patients: {
+      ...state.patients,
+      ...payload.patients.reduce(
+        (pv, cv) => ({ ...pv, [cv.id]: { ...cv }}),
+        {}
+      )
+    },
+    patientSearchResult: {
+      patientIds: payload.patientIds,
+      totalMatchCount: payload.totalMatchCount
+    }
+  })),
+
   on(selectEntity, (state, { payload }) => ({
     ...state,
-    entityId: payload.id
+    entityId: payload.id,
+    patientId: undefined,
+    patientSearchResult: undefined
+  })),
+
+  on(selectPatient, (state, { payload }) => ({
+    ...state,
+    patientId: payload.id
   }))
 );

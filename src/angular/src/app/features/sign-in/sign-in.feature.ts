@@ -14,13 +14,13 @@ import { provideEffects } from "@ngrx/effects";
 @Injectable()
 export class SignInFeature extends Feature<SignInState> {
 
-  readonly basicMethod$ = this.createObservableFactory(basicMethod);
+  readonly basicMethod$ = this.of(basicMethod);
 
-  readonly basicMethodPersistentSessionsEnabled$ = this.createObservableFactory(basicMethodPersistentSessionsEnabled);
+  readonly basicMethodPersistentSessionsEnabled$ = this.of(basicMethodPersistentSessionsEnabled);
 
-  readonly error$ = this.createObservableFactory(error);
+  readonly error$ = this.of(error);
 
-  readonly method$ = this.createObservableFactory(method);
+  readonly method$ = this.of(method);
 
   constructor(store: Store) {
     super(store, state);

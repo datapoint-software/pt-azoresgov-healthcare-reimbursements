@@ -1,7 +1,7 @@
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
 import { concatLatestFrom, ofType, provideEffects } from "@ngrx/effects";
-import { dispose, init, next, previous, searchEntities, selectEntity } from "./rx/process-creation.actions";
-import { entities, entitySearchResult, entitySearchResultEntityIds, entitySearchResultTotalMatchCount, state, step, steps } from "./rx/process-creation.selectors";
+import { dispose, init, next, previous, searchEntities, searchPatients, selectEntity, selectPatient } from "./rx/process-creation.actions";
+import { entities, entityId, entitySearchResult, entitySearchResultEntityIds, entitySearchResultTotalMatchCount, patientId, patientSearchResult, patientSearchResultEntityIds, patientSearchResultTotalMatchCount, patients, state, step, steps } from "./rx/process-creation.selectors";
 import { EnvironmentProviders, Injectable, makeEnvironmentProviders } from "@angular/core";
 import { Feature } from "../feature.abstractions";
 import { FEATURE_NAME } from "./process-creation.constants";
@@ -15,39 +15,73 @@ import { TypedAction } from "@ngrx/store/src/models";
 @Injectable()
 export class ProcessCreationFeature extends Feature<ProcessCreationState> {
 
-  readonly entityById = (id: string) => this.createObservableFactory(entities)().pipe(
+  readonly entityById$ = (id: string) => this.of(entities)().pipe(
     map((entities) => entities[id])
   );
 
-  readonly entitySearchResult$ = this.createObservableFactory(entitySearchResult);
+  readonly entity$ = () => this.of(entityId)().pipe(
+    concatLatestFrom(() => this.store.select(entities)),
+    map(([ id, entities ]) => entities[id!])
+  );
 
-  readonly entitySearchResultEmpty$ = () => this.createObservableFactory(entitySearchResultTotalMatchCount)().pipe(
+  readonly entityId$ = () => this.of(entityId)();
+
+  readonly entitySearchResult$ = this.of(entitySearchResult);
+
+  readonly entitySearchResultEmpty$ = () => this.of(entitySearchResultTotalMatchCount)().pipe(
     map((c) => c === 0)
   );
 
-  readonly entitySearchResultMatches$ = () => this.createObservableFactory(entitySearchResultEntityIds)();
+  readonly entitySearchResultMatches$ = () => this.of(entitySearchResultEntityIds)();
 
-  readonly nextStepEnabled$ = () => this.createObservableFactory(step)().pipe(
-    concatLatestFrom(() => this.store.select(steps)),
-    map(([ step, steps ]) => (step + 1) < steps.length)
+  readonly nextStepEnabled$ = () => this.of(step)().pipe(
+    concatLatestFrom(() => [
+      this.store.select(steps),
+      this.store.select(entityId),
+      this.store.select(patientId)
+    ]),
+    map(([ step, steps, entityId, patientId ]) => ((step + 1) < steps.length) && (
+      (steps[step] === 'entity' && !!entityId) ||
+      (steps[step] === 'patient' && !!patientId) ||
+      (steps[step] === 'confirmation')
+    ))
   );
 
-  readonly previousStepEnabled$ = () => this.createObservableFactory(step)().pipe(
+  readonly patientById$ = (id: string) => this.of(patients)().pipe(
+    map((patients) => patients[id])
+  );
+
+  readonly patient$ = () => this.of(patientId)().pipe(
+    concatLatestFrom(() => this.store.select(patients)),
+    map(([ id, patients ]) => patients[id!])
+  );
+
+  readonly patientId$ = () => this.of(patientId)();
+
+  readonly patientSearchResult$ = this.of(patientSearchResult);
+
+  readonly patientSearchResultEmpty$ = () => this.of(patientSearchResultTotalMatchCount)().pipe(
+    map((c) => c === 0)
+  );
+
+  readonly patientSearchResultMatches$ = () => this.of(patientSearchResultEntityIds)();
+
+  readonly previousStepEnabled$ = () => this.of(step)().pipe(
     map((step) => step > 0)
   );
 
-  readonly step$ = this.createObservableFactory(step);
+  readonly step$ = this.of(step);
 
-  readonly stepCount$ = () => this.createObservableFactory(steps)().pipe(
+  readonly stepCount$ = () => this.of(steps)().pipe(
     map((steps) => steps.length)
   );
 
-  readonly stepName$ = () => this.createObservableFactory(step)().pipe(
+  readonly stepName$ = () => this.of(step)().pipe(
     concatLatestFrom(() => this.store.select(steps)),
     map(([ step, steps ]) => steps[step])
   );
 
-  readonly stepNumber$ = () => this.createObservableFactory(step)().pipe(
+  readonly stepNumber$ = () => this.of(step)().pipe(
     map((step) => step + 1)
   );
 
@@ -71,8 +105,24 @@ export class ProcessCreationFeature extends Feature<ProcessCreationState> {
     }));
   }
 
+  searchPatients(filter?: string) {
+    this.dispatch(searchPatients({
+      payload: {
+        filter
+      }
+    }));
+  }
+
   selectEntity(id: string) {
     this.dispatch(selectEntity({
+      payload: {
+        id
+      }
+    }));
+  }
+
+  selectPatient(id: string) {
+    this.dispatch(selectPatient({
       payload: {
         id
       }

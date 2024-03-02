@@ -18,7 +18,7 @@ export abstract class Feature<TState> {
     private readonly state$$: MemoizedSelector<object, TState, DefaultProjectorFn<TState>>
   ) { }
 
-  protected createObservableFactory<TParentState, TValue>(selector: MemoizedSelector<object, TValue, (s1: TParentState) => TValue>) {
+  protected of<TParentState, TValue>(selector: MemoizedSelector<object, TValue, (s1: TParentState) => TValue>) {
 
     return () => {
 

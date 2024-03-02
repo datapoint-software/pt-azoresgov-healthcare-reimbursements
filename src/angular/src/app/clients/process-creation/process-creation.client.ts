@@ -1,6 +1,6 @@
 import { Injectable, makeEnvironmentProviders } from "@angular/core";
 import { Client } from "../api.client";
-import { ProcessCreationEntitySearchResultModel, ProcessCreationOptionsResultModel } from "./process-creation.models";
+import { ProcessCreationEntitySearchResultModel, ProcessCreationOptionsResultModel, ProcessCreationPatientSearchResultModel } from "./process-creation.models";
 
 @Injectable()
 export class ProcessCreationClient extends Client {
@@ -15,7 +15,14 @@ export class ProcessCreationClient extends Client {
 
     this.get<ProcessCreationEntitySearchResultModel>('/entities', {
       params: { filter, skip, take }
-    })
+    });
+
+  readonly searchPatients = (entityId: string, filter?: string, skip?: number, take?: number) =>
+
+    this.get<ProcessCreationPatientSearchResultModel>('/entities/:entityId/patients', {
+      params: { filter, skip, take },
+      path: { entityId }
+    });
 
 }
 

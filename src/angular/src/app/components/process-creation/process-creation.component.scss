@@ -1,8 +1,12 @@
-.entity-search-result-card {
+.result-card {
 
   cursor: pointer;
 
   &:hover {
     color: var(--bs-link-color);
+  }
+
+  &.selected {
+    box-shadow: 0 0 16px var(--bs-primary)
   }
 }

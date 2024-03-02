@@ -1,4 +1,5 @@
 import { EntityNature } from "../../enums/entity-nature.enum";
+import { Gender } from "../../enums/gender.enum";
 
 export interface ProcessCreationEntityResultModel {
   id: string;
@@ -18,4 +19,24 @@ export interface ProcessCreationEntitySearchResultModel {
 export interface ProcessCreationOptionsResultModel {
   entities?: ProcessCreationEntityResultModel[];
   entityId?: string;
+}
+
+export interface ProcessCreationPatientResultModel {
+  id: string;
+  rowVersionId: string;
+  name: string;
+  birth?: string;
+  gender?: Gender;
+  healthNumber: string;
+  taxNumber: string;
+  faxNumber?: string;
+  mobileNumber?: string;
+  phoneNumber?: string;
+  death?: string;
+}
+
+export interface ProcessCreationPatientSearchResultModel {
+  patientIds: string[];
+  patients: ProcessCreationPatientResultModel[];
+  totalMatchCount: number;
 }

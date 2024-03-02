@@ -1,7 +1,7 @@
 import { createAction, props } from "@ngrx/store";
 import { FEATURE_ACTION_PREFIX } from "../process-creation.constants";
 import { ProcessCreationState } from "./process-creation.state";
-import { ProcessCreationEntitySearchResultModel } from "../../../clients/process-creation/process-creation.models";
+import { ProcessCreationEntitySearchResultModel, ProcessCreationPatientSearchResultModel } from "../../../clients/process-creation/process-creation.models";
 
 export const init = createAction(
   `${FEATURE_ACTION_PREFIX}/init`
@@ -49,8 +49,33 @@ export const searchEntitiesComplete = createAction(
   }>()
 );
 
+export const searchPatients = createAction(
+  `${FEATURE_ACTION_PREFIX}/search-patients`,
+  props<{
+    payload: {
+      filter?: string;
+    };
+  }>()
+);
+
+export const searchPatientsComplete = createAction(
+  `${FEATURE_ACTION_PREFIX}/search-patients-complete`,
+  props<{
+    payload: ProcessCreationPatientSearchResultModel;
+  }>()
+);
+
 export const selectEntity = createAction(
   `${FEATURE_ACTION_PREFIX}/select-entity`,
+  props<{
+    payload: {
+      id: string;
+    };
+  }>()
+);
+
+export const selectPatient = createAction(
+  `${FEATURE_ACTION_PREFIX}/select-patient`,
   props<{
     payload: {
       id: string;

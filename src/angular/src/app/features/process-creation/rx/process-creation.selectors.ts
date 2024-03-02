@@ -10,8 +10,20 @@ export const steps = createSelector(state, state => state.steps);
 
 export const entities = createSelector(state, state => state.entities);
 
-export const entitySearchResult = createSelector(state, state => state.entitySearchResult!);
+export const entityId = createSelector(state, state => state.entityId);
 
-export const entitySearchResultEntityIds = createSelector(entitySearchResult, entitySearchResult => entitySearchResult.entityIds);
+export const entitySearchResult = createSelector(state, state => state.entitySearchResult);
 
-export const entitySearchResultTotalMatchCount = createSelector(entitySearchResult, entitySearchResult => entitySearchResult.totalMatchCount);
+export const entitySearchResultEntityIds = createSelector(entitySearchResult, entitySearchResult => entitySearchResult?.entityIds);
+
+export const entitySearchResultTotalMatchCount = createSelector(entitySearchResult, entitySearchResult => entitySearchResult?.totalMatchCount);
+
+export const patientId = createSelector(state, state => state.patientId);
+
+export const patients = createSelector(state, state => state.patients);
+
+export const patientSearchResult = createSelector(state, state => state.patientSearchResult);
+
+export const patientSearchResultEntityIds = createSelector(patientSearchResult, patientSearchResult => patientSearchResult?.patientIds);
+
+export const patientSearchResultTotalMatchCount = createSelector(patientSearchResult, patientSearchResult => patientSearchResult?.totalMatchCount);

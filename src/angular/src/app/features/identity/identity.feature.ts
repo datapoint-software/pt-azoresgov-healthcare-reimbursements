@@ -15,7 +15,7 @@ import { firstValueFrom } from "rxjs";
 @Injectable()
 export class IdentityFeature extends Feature<IdentityState> {
 
-  public readonly user$ = this.createObservableFactory(user);
+  public readonly user$ = this.of(user);
 
   constructor(private readonly router: Router, store: Store) {
     super(store, state);

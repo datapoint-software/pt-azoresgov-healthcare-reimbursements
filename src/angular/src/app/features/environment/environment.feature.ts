@@ -15,9 +15,9 @@ const FEATURE_NAME = 'environment';
 @Injectable()
 export class EnvironmentFeature extends Feature<EnvironmentState> {
 
-  public readonly nature$ = this.createObservableFactory(nature);
+  public readonly nature$ = this.of(nature);
 
-  public readonly productVersion$ = this.createObservableFactory(productVersion);
+  public readonly productVersion$ = this.of(productVersion);
 
   constructor(store: Store) {
     super(store, state);

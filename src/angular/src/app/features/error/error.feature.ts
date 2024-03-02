@@ -14,15 +14,15 @@ import { reducer } from "./rx/error.reducer";
 @Injectable()
 export class ErrorFeature extends Feature<ErrorState> {
 
-  readonly id$ = this.createObservableFactory(id);
+  readonly id$ = this.of(id);
 
-  readonly correlationId$ = this.createObservableFactory(correlationId);
+  readonly correlationId$ = this.of(correlationId);
 
-  readonly message$ = this.createObservableFactory(message);
+  readonly message$ = this.of(message);
 
-  readonly stackTrace$ = this.createObservableFactory(stackTrace);
+  readonly stackTrace$ = this.of(stackTrace);
 
-  readonly status$ = this.createObservableFactory(status);
+  readonly status$ = this.of(status);
 
   constructor(store: Store) {
     super(store, state);

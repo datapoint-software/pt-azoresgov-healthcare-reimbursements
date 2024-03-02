@@ -63,7 +63,7 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
             UnitOfWork.EntityParentEntities
                 .Where(epe => epe.EntityId == entityId)
                 .Where(epe => epe.Level == level)
-                .Select(epe => epe.Entity)
+                .Select(epe => epe.ParentEntity)
                 .FirstOrDefaultAsync(ct);
 
         public async Task<Entity> GetSingleByUserIdAndNatureAsync(
