@@ -31,7 +31,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware
             {
                 throw new BusinessException("A user was not found matching the given identifier.")
                     .WithErrorCode("UNFMUP")
-                    .WithErrorMessage("O perfil do utilizador não foi encontrado..");
+                    .WithErrorMessage("O perfil do utilizador não foi encontrado.");
             }
 
             return user;

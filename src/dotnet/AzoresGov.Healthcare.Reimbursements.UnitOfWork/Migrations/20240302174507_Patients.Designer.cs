@@ -4,6 +4,7 @@ using AzoresGov.Healthcare.Reimbursements.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
 {
     [DbContext(typeof(HealthcareReimbursementsUnitOfWork))]
-    partial class HealthcareReimbursementsUnitOfWorkModelSnapshot : ModelSnapshot
+    [Migration("20240302174507_Patients")]
+    partial class Patients
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -229,39 +232,6 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                     b.HasIndex("TaxNumber");
 
                     b.ToTable("Patients");
-                });
-
-            modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.PatientEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<long>("EntityId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("PatientId")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("PublicId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("RowVersionId")
-                        .IsConcurrencyToken()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasAlternateKey("PublicId");
-
-                    b.HasIndex("EntityId");
-
-                    b.HasIndex("PatientId", "EntityId")
-                        .IsUnique();
-
-                    b.ToTable("PatientEntities");
                 });
 
             modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Role", b =>
@@ -489,25 +459,6 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                     b.Navigation("Entity");
 
                     b.Navigation("ParentEntity");
-                });
-
-            modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.PatientEntity", b =>
-                {
-                    b.HasOne("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Entity", "Entity")
-                        .WithMany()
-                        .HasForeignKey("EntityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Patient", "Patient")
-                        .WithMany()
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Entity");
-
-                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.UserEntity", b =>

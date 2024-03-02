@@ -2,6 +2,7 @@
 using Datapoint.Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -63,6 +64,40 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCreation
                         e.Nature))
                     .ToArray(),
                 result.EntityIds,
+                result.TotalMatchCount);
+        }
+
+        [Authorize("administrative")]
+        [HttpGet("entities/{entityId:guid}/patients")]
+        public async Task<ProcessCreationPatientSearchResultModel> SearchPatientsAsync(
+            [FromRoute] Guid entityId,
+            [FromQuery] string? filter,
+            [FromQuery] int? skip,
+            [FromQuery] int? take,
+            CancellationToken ct)
+        {
+            var result = await _mediator.HandleQueryAsync<ProcessCreationPatientSearchQuery, ProcessCreationPatientSearchResult>(
+                new ProcessCreationPatientSearchQuery(
+                    User.GetId(),
+                    entityId,
+                    filter,
+                    skip,
+                    take),
+                ct);
+
+            return new ProcessCreationPatientSearchResultModel(
+                result.PatientIds,
+                result.Patients
+                    .Select(e => new ProcessCreationPatientResultModel(
+                        e.Id,
+                        e.RowVersionId,
+                        e.Name,
+                        e.Birth,
+                        e.Gender,
+                        e.HealthNumber,
+                        e.TaxNumber,
+                        e.Death))
+                    .ToArray(),
                 result.TotalMatchCount);
         }
     }

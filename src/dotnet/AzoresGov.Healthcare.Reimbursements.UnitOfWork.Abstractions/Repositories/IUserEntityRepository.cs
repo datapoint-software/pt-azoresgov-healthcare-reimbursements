@@ -9,6 +9,11 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
 {
     public interface IUserEntityRepository : IRepository<UserEntity>
     {
+        Task<bool> AnyByUserIdAndEntityIdAsync(
+            long userId,
+            long entityId,
+            CancellationToken ct);
+        
         Task<int> CountByUserIdAndEntityNatureAsync(
             long userId, 
             IReadOnlyCollection<EntityNature> entityNature, 
