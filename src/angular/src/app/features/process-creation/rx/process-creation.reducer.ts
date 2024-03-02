@@ -17,15 +17,21 @@ export const reducer = createReducer(
 
   on(searchEntitiesComplete, (state, { payload }) => ({
     ...state,
+    entities: {
+      ...state.entities,
+      ...payload.entities.reduce(
+        (pv, cv) => ({ ...pv, [cv.id]: { ...cv }}),
+        {}
+      )
+    },
     entitySearchResult: {
-      ...payload
+      entityIds: payload.entityIds,
+      totalMatchCount: payload.totalMatchCount
     }
   })),
 
   on(selectEntity, (state, { payload }) => ({
     ...state,
-    entity: {
-      ...payload
-    }
+    entityId: payload.id
   }))
 );

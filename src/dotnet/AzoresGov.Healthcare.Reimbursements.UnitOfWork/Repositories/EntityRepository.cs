@@ -55,6 +55,27 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
             return await queryable.CountAsync(ct);
         }
 
+        public Task<Entity?> GetParentEntityByEntityIdAsync(
+            long entityId,
+            int level,
+            CancellationToken ct) =>
+
+            UnitOfWork.EntityParentEntities
+                .Where(epe => epe.EntityId == entityId)
+                .Where(epe => epe.Level == level)
+                .Select(epe => epe.Entity)
+                .FirstOrDefaultAsync(ct);
+
+        public async Task<Entity> GetSingleByUserIdAndNatureAsync(
+            long userId,
+            IReadOnlyCollection<EntityNature> nature,
+            CancellationToken ct) =>
+
+            await UnitOfWork.UserEntities
+                .Where(ue => ue.UserId == userId && nature.Contains(ue.Entity.Nature))
+                .Select(ue => ue.Entity)
+                .SingleAsync(ct);
+
         private IQueryable<Entity> GetQueryableByUserSearchCriteriaAsync(
             long userId,
             string? filter,

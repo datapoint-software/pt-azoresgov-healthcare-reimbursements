@@ -5,16 +5,16 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
 {
     public sealed class ProcessCreationEntitySearchResult
     {
-        public ProcessCreationEntitySearchResult(IReadOnlyCollection<ProcessCreationEntitySearchEntityResult> entities, IReadOnlyCollection<Guid> matches, int totalMatchCount)
+        public ProcessCreationEntitySearchResult(IReadOnlyCollection<ProcessCreationEntityResult> entities, IReadOnlyCollection<Guid> entityIds, int totalMatchCount)
         {
             Entities = entities;
-            Matches = matches;
+            EntityIds = entityIds;
             TotalMatchCount = totalMatchCount;
         }
 
-        public IReadOnlyCollection<ProcessCreationEntitySearchEntityResult> Entities { get; }
+        public IReadOnlyCollection<ProcessCreationEntityResult> Entities { get; }
         
-        public IReadOnlyCollection<Guid> Matches { get; }
+        public IReadOnlyCollection<Guid> EntityIds { get; }
         
         public int TotalMatchCount { get; }
     }

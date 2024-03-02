@@ -8,10 +8,10 @@ export const step = createSelector(state, state => state.step);
 
 export const steps = createSelector(state, state => state.steps);
 
+export const entities = createSelector(state, state => state.entities);
+
 export const entitySearchResult = createSelector(state, state => state.entitySearchResult!);
 
-export const entitySearchResultEntities = createSelector(entitySearchResult, entitySearchResult => entitySearchResult.entities);
-
-export const entitySearchResultMatches = createSelector(entitySearchResult, entitySearchResult => entitySearchResult.matches);
+export const entitySearchResultEntityIds = createSelector(entitySearchResult, entitySearchResult => entitySearchResult.entityIds);
 
 export const entitySearchResultTotalMatchCount = createSelector(entitySearchResult, entitySearchResult => entitySearchResult.totalMatchCount);

@@ -25,7 +25,7 @@ export class ProcessCreationComponent {
 
   readonly entitySearchResult$ = this.processCreation.entitySearchResult$;
   readonly entitySearchResultEmpty$ = this.processCreation.entitySearchResultEmpty$;
-  readonly entitySearchResultEntityById$ = this.processCreation.entitySearchResultEntityById$;
+  readonly entitySearchResultEntityById$ = this.processCreation.entityById;
   readonly entitySearchResultMatches$ = this.processCreation.entitySearchResultMatches$;
   readonly nextStepEnabled$ = this.processCreation.nextStepEnabled$;
   readonly previousStepEnabled$ = this.processCreation.previousStepEnabled$;
@@ -48,8 +48,8 @@ export class ProcessCreationComponent {
 
   }
 
-  onEntitySelection(id: string, rowVersionId: string) {
-    this.processCreation.selectEntity(id, rowVersionId);
+  onEntitySelection(id: string) {
+    this.processCreation.selectEntity(id);
   }
 
   next() {

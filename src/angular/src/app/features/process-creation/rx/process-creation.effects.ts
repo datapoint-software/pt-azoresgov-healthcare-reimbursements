@@ -19,12 +19,24 @@ export class ProcessCreationEffects {
 
   readonly init$ = createEffect(() => this.actions$.pipe(
     ofType(init),
-    map(() => configure({
-      payload: {
-        step: 0,
-        steps: [ 'entity', 'patient', 'confirmation' ]
-      }
-    }))
+    mergeMap(() => this.processCreationClient.getOptions().pipe(
+      map((response) => configure({
+        payload: {
+          step: 0,
+          steps: [
+            ...(response.entityId ? [] : [ 'entity' ]),
+            'patient',
+            'confirmation'
+          ],
+          entityId: response.entityId,
+          entities: (response.entities || []).reduce(
+            (pv, cv) => ({ ...pv, [cv.id]: { ...cv }}),
+            {}
+          )
+        }
+      }))
+    ))
+
   ));
 
   readonly next$ = createEffect(() => this.actions$.pipe(

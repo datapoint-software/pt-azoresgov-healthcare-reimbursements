@@ -1,4 +1,5 @@
-﻿using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities;
+﻿using AzoresGov.Healthcare.Reimbursements.Enumerations;
+using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities;
 using Datapoint.UnitOfWork.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -13,6 +14,15 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
         public UserEntityRepository(HealthcareReimbursementsUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
+
+        public Task<int> CountByUserIdAndEntityNatureAsync(
+            long userId,
+            IReadOnlyCollection<EntityNature> entityNature,
+            CancellationToken ct) =>
+
+            Entities.CountAsync(e => e.UserId == userId && 
+                                     entityNature.Contains(e.Entity.Nature), 
+                ct);
 
         public async Task<IReadOnlyCollection<UserEntity>> GetAllByUserIdAsync(long userId, CancellationToken ct) =>
 

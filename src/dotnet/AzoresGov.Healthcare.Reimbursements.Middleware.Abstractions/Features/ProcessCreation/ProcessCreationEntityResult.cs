@@ -1,11 +1,11 @@
 ﻿using AzoresGov.Healthcare.Reimbursements.Enumerations;
 using System;
 
-namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCreation
+namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreation
 {
-    public sealed class ProcessCreationEntitySearchEntityResultModel
+    public sealed class ProcessCreationEntityResult
     {
-        public ProcessCreationEntitySearchEntityResultModel(Guid id, Guid rowVersionId, Guid? parentEntityId, string code, string name, EntityNature nature)
+        public ProcessCreationEntityResult(Guid id, Guid rowVersionId, Guid? parentEntityId, string code, string name, EntityNature nature)
         {
             Id = id;
             RowVersionId = rowVersionId;

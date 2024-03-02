@@ -1,19 +1,23 @@
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
+import { concatLatestFrom, ofType, provideEffects } from "@ngrx/effects";
 import { dispose, init, next, previous, searchEntities, selectEntity } from "./rx/process-creation.actions";
+import { entities, entitySearchResult, entitySearchResultEntityIds, entitySearchResultTotalMatchCount, state, step, steps } from "./rx/process-creation.selectors";
 import { EnvironmentProviders, Injectable, makeEnvironmentProviders } from "@angular/core";
 import { Feature } from "../feature.abstractions";
 import { FEATURE_NAME } from "./process-creation.constants";
+import { map } from "rxjs";
 import { ProcessCreationEffects } from "./rx/process-creation.effects";
 import { ProcessCreationState } from "./rx/process-creation.state";
-import { concatLatestFrom, ofType, provideEffects } from "@ngrx/effects";
 import { reducer } from "./rx/process-creation.reducer";
-import { entitySearchResult, entitySearchResultEntities, entitySearchResultMatches, entitySearchResultTotalMatchCount, state, step, steps } from "./rx/process-creation.selectors";
 import { Store, provideState } from "@ngrx/store";
 import { TypedAction } from "@ngrx/store/src/models";
-import { map, withLatestFrom } from "rxjs";
 
 @Injectable()
 export class ProcessCreationFeature extends Feature<ProcessCreationState> {
+
+  readonly entityById = (id: string) => this.createObservableFactory(entities)().pipe(
+    map((entities) => entities[id])
+  );
 
   readonly entitySearchResult$ = this.createObservableFactory(entitySearchResult);
 
@@ -21,11 +25,7 @@ export class ProcessCreationFeature extends Feature<ProcessCreationState> {
     map((c) => c === 0)
   );
 
-  readonly entitySearchResultEntityById$ = (id: string) => this.createObservableFactory(entitySearchResultEntities)().pipe(
-    map((entities) => entities.find(e => e.id === id))
-  );
-
-  readonly entitySearchResultMatches$ = () => this.createObservableFactory(entitySearchResultMatches)();
+  readonly entitySearchResultMatches$ = () => this.createObservableFactory(entitySearchResultEntityIds)();
 
   readonly nextStepEnabled$ = () => this.createObservableFactory(step)().pipe(
     concatLatestFrom(() => this.store.select(steps)),
@@ -71,11 +71,10 @@ export class ProcessCreationFeature extends Feature<ProcessCreationState> {
     }));
   }
 
-  selectEntity(id: string, rowVersionId: string) {
+  selectEntity(id: string) {
     this.dispatch(selectEntity({
       payload: {
-        id,
-        rowVersionId
+        id
       }
     }));
   }

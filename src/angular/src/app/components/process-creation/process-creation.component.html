@@ -79,7 +79,7 @@
           <div
             *ngFor="let match of (entitySearchResultMatches$() | async)"
             class="card mb-4 entity-search-result-card">
-            <div class="card-body" *ngIf="(entitySearchResultEntityById$(match) | async) as entity" (click)="onEntitySelection(entity.id, entity.rowVersionId)">
+            <div class="card-body" *ngIf="(entitySearchResultEntityById$(match) | async) as entity" (click)="onEntitySelection(entity.id)">
               <div class="row align-items-center">
                 <div class="col-auto">
 

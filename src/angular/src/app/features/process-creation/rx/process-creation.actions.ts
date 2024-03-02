@@ -54,7 +54,6 @@ export const selectEntity = createAction(
   props<{
     payload: {
       id: string;
-      rowVersionId: string;
     };
   }>()
 );

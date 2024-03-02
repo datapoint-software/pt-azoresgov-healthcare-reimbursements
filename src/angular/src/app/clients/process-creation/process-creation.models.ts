@@ -1,16 +1,21 @@
 import { EntityNature } from "../../enums/entity-nature.enum";
 
-export interface ProcessCreationEntitySearchEntityResultModel {
+export interface ProcessCreationEntityResultModel {
   id: string;
   rowVersionId: string;
-  parentEntityId: string | null;
+  parentEntityId?: string;
   code: string;
   name: string;
   nature: EntityNature;
 }
 
 export interface ProcessCreationEntitySearchResultModel {
-  entities: ProcessCreationEntitySearchEntityResultModel[];
-  matches: string[];
+  entities: ProcessCreationEntityResultModel[];
+  entityIds: string[];
   totalMatchCount: number;
+}
+
+export interface ProcessCreationOptionsResultModel {
+  entities?: ProcessCreationEntityResultModel[];
+  entityId?: string;
 }

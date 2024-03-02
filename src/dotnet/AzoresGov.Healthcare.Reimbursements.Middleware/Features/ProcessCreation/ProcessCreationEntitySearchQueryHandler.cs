@@ -57,7 +57,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
             
             return new ProcessCreationEntitySearchResult(
                 entities
-                    .Select(e => new ProcessCreationEntitySearchEntityResult(
+                    .Select(e => new ProcessCreationEntityResult(
                         e.PublicId,
                         e.RowVersionId,
                         entityParentEntityIds.TryGetValue(e.Id, out var parentEntityId) 
@@ -66,7 +66,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
                         e.Code,
                         e.Name,
                         e.Nature))
-                    .Union(parentEntities.Values.Select(e => new ProcessCreationEntitySearchEntityResult(
+                    .Union(parentEntities.Values.Select(e => new ProcessCreationEntityResult(
                         e.PublicId,
                         e.RowVersionId,
                         null,

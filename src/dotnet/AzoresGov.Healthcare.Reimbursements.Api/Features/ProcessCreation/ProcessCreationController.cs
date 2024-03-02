@@ -19,6 +19,28 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCreation
         }
 
         [Authorize("administrative")]
+        [HttpGet]
+        public async Task<ProcessCreationOptionsResultModel> GetOptionsAsync(CancellationToken ct)
+        {
+            var result = await _mediator.HandleQueryAsync<ProcessCreationOptionsQuery, ProcessCreationOptionsResult>(
+                new ProcessCreationOptionsQuery(
+                    User.GetId()),
+                ct);
+
+            return new ProcessCreationOptionsResultModel(
+                result.Entities?
+                    .Select(e => new ProcessCreationEntityResultModel(
+                        e.Id,
+                        e.RowVersionId,
+                        e.ParentEntityId,
+                        e.Code,
+                        e.Name,
+                        e.Nature))
+                    .ToArray(),
+                result.EntityId);
+        }
+
+        [Authorize("administrative")]
         [HttpGet("entities")]
         public async Task<ProcessCreationEntitySearchResultModel> SearchEntitiesAsync([FromQuery] string? filter, [FromQuery] int? skip, [FromQuery] int? take, CancellationToken ct)
         {
@@ -32,7 +54,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCreation
 
             return new ProcessCreationEntitySearchResultModel(
                 result.Entities
-                    .Select(e => new ProcessCreationEntitySearchEntityResultModel(
+                    .Select(e => new ProcessCreationEntityResultModel(
                         e.Id,
                         e.RowVersionId,
                         e.ParentEntityId,
@@ -40,7 +62,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCreation
                         e.Name,
                         e.Nature))
                     .ToArray(),
-                result.Matches,
+                result.EntityIds,
                 result.TotalMatchCount);
         }
     }
