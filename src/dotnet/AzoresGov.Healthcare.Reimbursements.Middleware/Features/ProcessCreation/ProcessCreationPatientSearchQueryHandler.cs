@@ -71,6 +71,9 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
                         e.Gender,
                         e.HealthNumber,
                         e.TaxNumber,
+                        e.FaxNumber,
+                        e.MobileNumber,
+                        e.PhoneNumber,
                         e.Death))
                     .ToArray(),
                 patientCount);

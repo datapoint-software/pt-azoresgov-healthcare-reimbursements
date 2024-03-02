@@ -96,6 +96,9 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCreation
                         e.Gender,
                         e.HealthNumber,
                         e.TaxNumber,
+                        e.FaxNumber,
+                        e.MobileNumber,
+                        e.PhoneNumber,
                         e.Death))
                     .ToArray(),
                 result.TotalMatchCount);
