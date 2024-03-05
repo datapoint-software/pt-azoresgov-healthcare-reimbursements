@@ -6,7 +6,8 @@ export const reducer = createReducer(
 
   (undefined as unknown as SignInState),
 
-  on(init, () => (undefined as unknown as SignInState)),
   on(dispose, () => (undefined as unknown as SignInState)),
+  on(init, () => (undefined as unknown as SignInState)),
+
   on(configure, (_, { payload }) => ({ ...payload }))
 );

@@ -18,7 +18,7 @@ export class LoadingOverlayComponent {
     private readonly loadingOverlay: LoadingOverlayFeature
   ) {}
 
-  readonly visible$ = this.loadingOverlay.items$().pipe(
+  readonly visible$ = this.loadingOverlay.items$.pipe(
     map((items) => Object.keys(items).length > 0)
   );
 }

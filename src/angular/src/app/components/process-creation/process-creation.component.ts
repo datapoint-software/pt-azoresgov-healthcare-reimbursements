@@ -25,6 +25,44 @@ export class ProcessCreationComponent {
     private readonly router: Router
   ) {}
 
+  readonly complete$ = this.processCreation.complete$;
+
+  readonly entity$ = this.processCreation.entity$;
+
+  readonly entityById$ = this.processCreation.entityById$;
+
+  readonly entityId$ = this.processCreation.entityId$;
+
+  readonly entitySearchResult$ = this.processCreation.entitySearchResult$;
+
+  readonly entitySearchResultEmpty$ = this.processCreation.entitySearchResultEmpty$;
+
+  readonly entitySearchResultMatches$ = this.processCreation.entitySearchResultMatches$;
+
+  readonly nextStepEnabled$ = this.processCreation.nextStepEnabled$;
+
+  readonly patient$ = this.processCreation.patient$;
+
+  readonly patientById$ = this.processCreation.patientById$;
+
+  readonly patientId$ = this.processCreation.patientId$;
+
+  readonly patientSearchResult$ = this.processCreation.patientSearchResult$;
+
+  readonly patientSearchResultEmpty$ = this.processCreation.patientSearchResultEmpty$;
+
+  readonly patientSearchResultMatches$ = this.processCreation.patientSearchResultMatches$;
+
+  readonly previousStepEnabled$ = this.processCreation.previousStepEnabled$;
+
+  readonly process$ = this.processCreation.process$;
+
+  readonly stepCount$ = this.processCreation.stepCount$;
+
+  readonly stepName$ = this.processCreation.stepName$;
+
+  readonly stepNumber$ = this.processCreation.stepNumber$;
+
   readonly entitySearch = new FormGroup({
     filter: new FormControl('', [ Validators.minLength(3), Validators.maxLength(128) ])
   });
@@ -32,26 +70,6 @@ export class ProcessCreationComponent {
   readonly patientSearch = new FormGroup({
     filter: new FormControl('', [ Validators.minLength(3), Validators.maxLength(128) ])
   });
-
-  readonly complete$ = this.processCreation.complete$();
-  readonly entity$ = this.processCreation.entity$();
-  readonly entityId$ = this.processCreation.entityId$();
-  readonly entityById$ = this.processCreation.entityById$;
-  readonly entitySearchResult$ = this.processCreation.entitySearchResult$();
-  readonly entitySearchResultEmpty$ = this.processCreation.entitySearchResultEmpty$();
-  readonly entitySearchResultMatches$ = this.processCreation.entitySearchResultMatches$();
-  readonly nextStepEnabled$ = this.processCreation.nextStepEnabled$();
-  readonly patient$ = this.processCreation.patient$();
-  readonly patientById$ = this.processCreation.patientById$;
-  readonly patientId$ = this.processCreation.patientId$();
-  readonly patientSearchResult$ = this.processCreation.patientSearchResult$();
-  readonly patientSearchResultEmpty$ = this.processCreation.patientSearchResultEmpty$();
-  readonly patientSearchResultMatches$ = this.processCreation.patientSearchResultMatches$();
-  readonly previousStepEnabled$ = this.processCreation.previousStepEnabled$();
-  readonly process$ = this.processCreation.process$();
-  readonly stepCount$ = this.processCreation.stepCount$();
-  readonly stepName$ = this.processCreation.stepName$();
-  readonly stepNumber$ = this.processCreation.stepNumber$();
 
   onEntitySearchChange(e: Event) {
   }
@@ -85,8 +103,8 @@ export class ProcessCreationComponent {
     this.processCreation.selectPatient(id);
   }
 
-  onProcessClick(id: string) {
-    this.ngZone.run(() => this.router.navigate([ '/processes', id, 'patient-capture' ]));
+  onRedirectToProcessPatientCapture() {
+    this.processCreation.redirectToProcessPatientCapture();
   }
 
   next() {

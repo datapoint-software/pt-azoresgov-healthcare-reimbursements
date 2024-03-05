@@ -1,8 +1,8 @@
 import { authorize } from './guards/identity/identity.guards';
-import { canActivateApp, canDeactivateApp } from './guards/app/app.guards';
-import { canActivateError, canDeactivateError } from './guards/error/error.guards';
-import { canActivateProcessCreation, canDeactivateProcessCreation } from './guards/process-creation/process-creation.guards';
-import { canActivateSignIn, canDeactivateSignIn } from './guards/sign-in/sign-in.guards';
+import { canActivateApp } from './guards/app/app.guards';
+import { canActivateError } from './guards/error/error.guards';
+import { canActivateProcessCreation } from './guards/process-creation/process-creation.guards';
+import { canActivateSignIn } from './guards/sign-in/sign-in.guards';
 import { ErrorComponent } from './components/error/error.component';
 import { HomeComponent } from './components/home/home.component';
 import { ProcessCreationComponent } from './components/process-creation/process-creation.component';
@@ -11,26 +11,24 @@ import { SignInComponent } from './components/sign-in/sign-in.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { ProcessSearchComponent } from './components/process-search/process-search.component';
 import { ProcessPatientCaptureComponent } from './components/process-patient-capture/process-patient-capture.component';
-import { canActivateProcessPatientCapture, canDeactivateProcessPatientCapture } from './guards/process-patient-capture/process-patient-capture.guards';
+import { canActivateProcessPatientCapture } from './guards/process-patient-capture/process-patient-capture.guards';
 
 export const routes: Routes = [
   {
     path: 'error',
     component: ErrorComponent,
-    canActivate: [ canActivateError ],
-    canDeactivate: [ canDeactivateError ]
+    canActivate: [ canActivateError ]
   },
   {
     path: '',
     pathMatch: 'prefix',
     canActivate: [ canActivateApp ],
-    canDeactivate: [ canDeactivateApp ],
     children: [
       {
         path: 'sign-in',
         component: SignInComponent,
         canActivate: [ canActivateSignIn ],
-        canDeactivate: [ canDeactivateSignIn ],
+
       },
       {
         path: '',
@@ -55,7 +53,7 @@ export const routes: Routes = [
                 path: '_',
                 component: ProcessCreationComponent,
                 canActivate: [ canActivateProcessCreation ],
-                canDeactivate: [ canDeactivateProcessCreation ]
+
               },
               {
                 path: ':processId',
@@ -64,7 +62,7 @@ export const routes: Routes = [
                     path: 'patient-capture',
                     component: ProcessPatientCaptureComponent,
                     canActivate: [ canActivateProcessPatientCapture ],
-                    canDeactivate: [ canDeactivateProcessPatientCapture ]
+
                   }
                 ]
               }

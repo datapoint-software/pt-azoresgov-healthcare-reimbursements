@@ -1,7 +1,7 @@
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
-import { concatLatestFrom, ofType, provideEffects } from "@ngrx/effects";
-import { dispose, init, next, previous, searchEntities, searchPatients, selectEntity, selectPatient } from "./rx/process-creation.actions";
 import { complete, process, entities, entityId, entitySearchResult, entitySearchResultEntityIds, entitySearchResultTotalMatchCount, patientId, patientSearchResult, patientSearchResultEntityIds, patientSearchResultTotalMatchCount, patients, processId, state, step, steps } from "./rx/process-creation.selectors";
+import { concatLatestFrom, provideEffects } from "@ngrx/effects";
+import { dispose, init, next, previous, redirectToProcessPatientCapture, searchEntities, searchPatients, selectEntity, selectPatient } from "./rx/process-creation.actions";
 import { EnvironmentProviders, Injectable, makeEnvironmentProviders } from "@angular/core";
 import { Feature } from "../feature.abstractions";
 import { FEATURE_NAME } from "./process-creation.constants";
@@ -15,32 +15,32 @@ import { TypedAction } from "@ngrx/store/src/models";
 @Injectable()
 export class ProcessCreationFeature extends Feature<ProcessCreationState> {
 
-  readonly complete$ = () => this.of(complete)();
+  readonly complete$ = this.of(complete);
 
-  readonly entityById$ = (id: string) => this.of(entities)().pipe(
+  readonly entityById$ = (id: string) => this.of(entities).pipe(
     map((entities) => entities[id])
   );
 
-  readonly entity$ = () => this.of(entityId)().pipe(
-    concatLatestFrom(() => this.store.select(entities)),
+  readonly entity$ = this.of(entityId).pipe(
+    concatLatestFrom(() => this.of(entities)),
     map(([ id, entities ]) => entities[id!])
   );
 
-  readonly entityId$ = () => this.of(entityId)();
+  readonly entityId$ = this.of(entityId);
 
   readonly entitySearchResult$ = this.of(entitySearchResult);
 
-  readonly entitySearchResultEmpty$ = () => this.of(entitySearchResultTotalMatchCount)().pipe(
+  readonly entitySearchResultEmpty$ = this.of(entitySearchResultTotalMatchCount).pipe(
     map((c) => c === 0)
   );
 
-  readonly entitySearchResultMatches$ = () => this.of(entitySearchResultEntityIds)();
+  readonly entitySearchResultMatches$ = this.of(entitySearchResultEntityIds);
 
-  readonly nextStepEnabled$ = () => this.of(step)().pipe(
+  readonly nextStepEnabled$ = this.of(step).pipe(
     concatLatestFrom(() => [
-      this.store.select(steps),
-      this.store.select(entityId),
-      this.store.select(patientId)
+      this.of(steps),
+      this.of(entityId),
+      this.of(patientId)
     ]),
     map(([ step, steps, entityId, patientId ]) => (step < steps.length) && (
       (steps[step] === 'entity' && !!entityId) ||
@@ -49,43 +49,43 @@ export class ProcessCreationFeature extends Feature<ProcessCreationState> {
     ))
   );
 
-  readonly patientById$ = (id: string) => this.of(patients)().pipe(
+  readonly patientById$ = (id: string) => this.of(patients).pipe(
     map((patients) => patients[id])
   );
 
-  readonly patient$ = () => this.of(patientId)().pipe(
-    concatLatestFrom(() => this.store.select(patients)),
+  readonly patient$ = this.of(patientId).pipe(
+    concatLatestFrom(() => this.of(patients)),
     map(([ id, patients ]) => patients[id!])
   );
 
-  readonly patientId$ = () => this.of(patientId)();
+  readonly patientId$ = this.of(patientId);
 
   readonly patientSearchResult$ = this.of(patientSearchResult);
 
-  readonly patientSearchResultEmpty$ = () => this.of(patientSearchResultTotalMatchCount)().pipe(
+  readonly patientSearchResultEmpty$ = this.of(patientSearchResultTotalMatchCount).pipe(
     map((c) => c === 0)
   );
 
-  readonly patientSearchResultMatches$ = () => this.of(patientSearchResultEntityIds)();
+  readonly patientSearchResultMatches$ = this.of(patientSearchResultEntityIds);
 
-  readonly previousStepEnabled$ = () => this.of(step)().pipe(
+  readonly previousStepEnabled$ = this.of(step).pipe(
     map((step) => step > 0)
   );
 
-  readonly process$ = () => this.of(process)();
+  readonly process$ = this.of(process);
 
   readonly step$ = this.of(step);
 
-  readonly stepCount$ = () => this.of(steps)().pipe(
+  readonly stepCount$ = this.of(steps).pipe(
     map((steps) => steps.length)
   );
 
-  readonly stepName$ = () => this.of(step)().pipe(
+  readonly stepName$ = this.of(step).pipe(
     concatLatestFrom(() => this.store.select(steps)),
     map(([ step, steps ]) => steps[step])
   );
 
-  readonly stepNumber$ = () => this.of(step)().pipe(
+  readonly stepNumber$ = this.of(step).pipe(
     map((step) => step + 1)
   );
 
@@ -99,6 +99,10 @@ export class ProcessCreationFeature extends Feature<ProcessCreationState> {
 
   previous() {
     this.dispatch(previous());
+  }
+
+  redirectToProcessPatientCapture() {
+    this.dispatch(redirectToProcessPatientCapture());
   }
 
   searchEntities(filter?: string) {

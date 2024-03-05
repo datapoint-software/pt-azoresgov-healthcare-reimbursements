@@ -4,12 +4,12 @@ import { dispose, init, signIn } from "./rx/sign-in.actions";
 import { EnvironmentProviders, Injectable, makeEnvironmentProviders } from "@angular/core";
 import { Feature } from "../feature.abstractions";
 import { FEATURE_NAME } from "./sign-in.constants";
+import { provideEffects } from "@ngrx/effects";
 import { reducer } from "./rx/sign-in.reducer";
+import { SignInEffects } from "./rx/sign-in.effects";
 import { SignInState } from "./rx/sign-in.state";
 import { Store, provideState } from "@ngrx/store";
 import { TypedAction } from "@ngrx/store/src/models";
-import { SignInEffects } from "./rx/sign-in.effects";
-import { provideEffects } from "@ngrx/effects";
 
 @Injectable()
 export class SignInFeature extends Feature<SignInState> {

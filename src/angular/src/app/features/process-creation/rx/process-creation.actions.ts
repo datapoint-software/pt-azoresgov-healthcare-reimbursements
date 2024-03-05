@@ -97,3 +97,7 @@ export const submitComplete = createAction(
     };
   }>()
 );
+
+export const redirectToProcessPatientCapture = createAction(
+  `${FEATURE_ACTION_PREFIX}/redirect-to-process-patient-capture`
+);

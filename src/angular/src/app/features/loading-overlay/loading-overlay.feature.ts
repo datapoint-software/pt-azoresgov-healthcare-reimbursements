@@ -19,7 +19,7 @@ import { TypedAction } from "@ngrx/store/src/models";
 @Injectable()
 export class LoadingOverlayFeature extends Feature<LoadingOverlayState> {
 
-  readonly items$ = () => this.store.select(items);
+  readonly items$ = this.of(items);
 
   constructor(store: Store) {
     super(store, state);

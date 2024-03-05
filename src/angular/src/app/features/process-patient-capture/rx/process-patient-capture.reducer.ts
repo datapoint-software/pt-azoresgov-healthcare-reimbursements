@@ -8,5 +8,6 @@ export const reducer = createReducer(
 
   on(dispose, () => (undefined as unknown as ProcessPatientCaptureState)),
   on(init, () => (undefined as unknown as ProcessPatientCaptureState)),
+
   on(configure, (_, { payload }) => ({ ...payload }))
 )

@@ -1,9 +1,11 @@
 import { Component, OnInit } from "@angular/core";
 import { FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { ProcessPatientCaptureFeature } from "../../features/process-patient-capture/process-patient-capture.feature";
+import { CommonModule } from "@angular/common";
 
 @Component({
   imports: [
+    CommonModule,
     ReactiveFormsModule
   ],
   selector: 'app-process-patient-capture',
@@ -15,6 +17,8 @@ export class ProcessPatientCaptureComponent implements OnInit {
   constructor(
     private readonly processPatientCapture: ProcessPatientCaptureFeature
   ) {}
+
+  readonly processNumber$ = this.processPatientCapture.processNumber$;
 
   readonly patient = new FormGroup({
 

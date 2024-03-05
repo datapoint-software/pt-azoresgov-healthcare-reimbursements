@@ -6,8 +6,3 @@ export const canActivateError: CanActivateFn = async (ar, r) => {
   await inject(ErrorFeature).init(ar, r);
   return true;
 };
-
-export const canDeactivateError: CanDeactivateFn<unknown> = async (c, ar, r) => {
-  await inject(ErrorFeature).dispose(ar, r);
-  return true;
-};

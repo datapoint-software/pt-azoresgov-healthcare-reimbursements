@@ -21,9 +21,9 @@ export class IdentityFeature extends Feature<IdentityState> {
     super(store, state);
   }
 
-  public async authorize(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot, permissions?: Array<string>) {
+  public async authorize(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot, roles?: Array<string>) {
 
-    const user = await firstValueFrom(this.user$());
+    const user = await firstValueFrom(this.user$);
 
     if (!user) {
       return this.router.createUrlTree([ '/sign-in' ], {

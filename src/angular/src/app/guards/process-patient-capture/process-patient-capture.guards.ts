@@ -6,8 +6,3 @@ export const canActivateProcessPatientCapture: CanActivateFn = async (ar, r) => 
   await inject(ProcessPatientCaptureFeature).init(ar, r);
   return true;
 };
-
-export const canDeactivateProcessPatientCapture: CanDeactivateFn<unknown> = async (c, ar, r) => {
-  await inject(ProcessPatientCaptureFeature).dispose(ar, r);
-  return true;
-};

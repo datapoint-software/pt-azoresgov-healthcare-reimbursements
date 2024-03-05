@@ -1,6 +1,6 @@
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
 import { DefaultProjectorFn, MemoizedSelector, Store } from "@ngrx/store";
-import { Observable, Subject, firstValueFrom, map, skipWhile, takeUntil } from "rxjs";
+import { firstValueFrom, map, skipWhile } from "rxjs";
 import { TypedAction } from "@ngrx/store/src/models";
 
 export abstract class Feature<TState> {
@@ -11,24 +11,13 @@ export abstract class Feature<TState> {
 
   protected readonly state$ = this.store.select(this.state$$);
 
-  private dispose$?: Observable<boolean>;
-
   constructor(
     protected readonly store: Store,
     private readonly state$$: MemoizedSelector<object, TState, DefaultProjectorFn<TState>>
   ) { }
 
   protected of<TParentState, TValue>(selector: MemoizedSelector<object, TValue, (s1: TParentState) => TValue>) {
-
-    return () => {
-
-      if (!this.dispose$)
-        throw `Feature '${this.constructor.name}' is not ready for subscriptions.`;
-
-      return this.store
-        .select(selector)
-        .pipe(takeUntil(this.dispose$));
-    };
+    return this.store.select(selector);
   }
 
   protected dispatch(action: TypedAction<string>) {
@@ -37,9 +26,7 @@ export abstract class Feature<TState> {
 
   public async init(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): Promise<void> {
 
-    this.dispose$ = new Subject<boolean>();
-
-    this.store.dispatch(
+    this.dispatch(
       this.init$$$(activatedRoute, router)
     );
 
@@ -52,13 +39,7 @@ export abstract class Feature<TState> {
 
   public async dispose(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): Promise<void> {
 
-    if (this.dispose$) {
-      (this.dispose$ as Subject<boolean>).next(true);
-      (this.dispose$ as Subject<boolean>).complete();
-      delete this.dispose$;
-    }
-
-    this.store.dispatch(
+    this.dispatch(
       this.dispose$$$(activatedRoute, router)
     );
 

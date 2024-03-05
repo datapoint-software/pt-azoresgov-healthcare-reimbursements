@@ -8,6 +8,7 @@ export const reducer = createReducer(
 
   on(init, () => (undefined as unknown as ProcessCreationState)),
   on(dispose, () => (undefined as unknown as ProcessCreationState)),
+
   on(configure, (_, { payload }) => ({ ...payload })),
 
   on(step, (state, { payload }) => ({

@@ -7,7 +7,7 @@ import { ProcessPatientCaptureEffects } from "./rx/process-patient-capture.effec
 import { ProcessPatientCaptureState } from "./rx/process-patient-capture.state";
 import { provideEffects } from "@ngrx/effects";
 import { reducer } from "./rx/process-patient-capture.reducer";
-import { state } from "./rx/process-patient-capture.selectors";
+import { process, processNumber, state } from "./rx/process-patient-capture.selectors";
 import { Store, provideState } from "@ngrx/store";
 import { TypedAction } from "@ngrx/store/src/models";
 
@@ -17,6 +17,10 @@ export class ProcessPatientCaptureFeature extends Feature<ProcessPatientCaptureS
   constructor(store: Store) {
     super(store, state);
   }
+
+  readonly process$ = this.of(process);
+
+  readonly processNumber$ = this.of(processNumber);
 
   protected override dispose$$$(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): TypedAction<string> {
     return dispose();

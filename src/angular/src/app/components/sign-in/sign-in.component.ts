@@ -1,10 +1,10 @@
+import { AuthenticationMethod } from "../../enums/authentication-method.enum";
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
-import { FormGroup, FormControl, Validators, ReactiveFormsModule } from "@angular/forms";
 import { EnvironmentFeature } from "../../features/environment/environment.feature";
-import { SignInFeature } from "../../features/sign-in/sign-in.feature";
+import { FormGroup, FormControl, Validators, ReactiveFormsModule } from "@angular/forms";
 import { map } from "rxjs";
-import { AuthenticationMethod } from "../../enums/authentication-method.enum";
+import { SignInFeature } from "../../features/sign-in/sign-in.feature";
 
 @Component({
   imports: [
@@ -22,15 +22,14 @@ export class SignInComponent {
     private readonly signIn: SignInFeature
   ) {}
 
-  readonly environmentProductVersion$ = this.environment.productVersion$();
+  readonly environmentProductVersion$ = this.environment.productVersion$;
 
-  readonly signInBasicMethodPersistentSessionsEnabled$ = this.signIn.basicMethodPersistentSessionsEnabled$();
+  readonly signInBasicMethodPersistentSessionsEnabled$ = this.signIn.basicMethodPersistentSessionsEnabled$;
 
-  readonly signInError$ = this.signIn.error$();
+  readonly signInError$ = this.signIn.error$;
 
-  readonly signInMethodIsBasic$ = this.signIn.method$().pipe(
-    map((method) => method === AuthenticationMethod.Basic)
-  );
+  readonly signInMethodIsBasic$ = this.signIn.method$
+    .pipe(map((method) => method === AuthenticationMethod.Basic));
 
   readonly form = new FormGroup({
     emailAddress: new FormControl('', [ Validators.required, Validators.maxLength(256), Validators.email ]),

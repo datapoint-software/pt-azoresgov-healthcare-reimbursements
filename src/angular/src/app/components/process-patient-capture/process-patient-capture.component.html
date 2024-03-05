@@ -7,7 +7,7 @@
 
           <!-- Pretitle -->
           <h6 class="header-pretitle">
-            2024/USIT/CSPV/1
+            {{processNumber$ | async}}
           </h6>
 
           <!-- Title -->
@@ -22,5 +22,6 @@
 </div>
 
 <div class="container-fluid">
-  Hello World
+  <form [formGroup]="patient" (ngSubmit)="onSubmit()">
+  </form>
 </div>

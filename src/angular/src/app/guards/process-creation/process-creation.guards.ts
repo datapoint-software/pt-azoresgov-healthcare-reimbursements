@@ -7,7 +7,3 @@ export const canActivateProcessCreation: CanActivateFn = async (ar, r) => {
   return true;
 };
 
-export const canDeactivateProcessCreation: CanDeactivateFn<unknown> = async (c, ar, r) => {
-  await inject(ProcessCreationFeature).dispose(ar, r);
-  return true;
-};

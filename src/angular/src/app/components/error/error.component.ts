@@ -12,15 +12,15 @@ import { ErrorFeature } from "../../features/error/error.feature";
 })
 export class ErrorComponent {
 
-  readonly correlationId$ = this.error.correlationId$();
+  readonly correlationId$ = this.error.correlationId$;
 
-  readonly id$ = this.error.id$();
+  readonly id$ = this.error.id$;
 
-  readonly message$ = this.error.message$();
+  readonly message$ = this.error.message$;
 
-  readonly stackTrace$ = this.error.stackTrace$();
+  readonly stackTrace$ = this.error.stackTrace$;
 
-  readonly status$ = this.error.status$();
+  readonly status$ = this.error.status$;
 
   constructor(
     private readonly error: ErrorFeature

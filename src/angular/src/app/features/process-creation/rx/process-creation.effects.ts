@@ -1,12 +1,13 @@
-import { Injectable } from "@angular/core";
 import { Actions, concatLatestFrom, createEffect, ofType } from "@ngrx/effects";
-import { configure, submit, init, next, previous, searchEntities, searchEntitiesComplete, searchPatients, searchPatientsComplete, selectEntity, selectPatient, step, submitComplete } from "./process-creation.actions";
-import { map, mergeMap, of } from "rxjs";
+import { configure, submit, init, next, previous, searchEntities, searchEntitiesComplete, searchPatients, searchPatientsComplete, selectEntity, selectPatient, step, submitComplete, redirectToProcessPatientCapture, dispose } from "./process-creation.actions";
+import { Injectable } from "@angular/core";
+import { mergeLoadingOverlay } from "../../loading-overlay/rx/loading-overlay.operators";
+import { filter, map, mergeMap, of } from "rxjs";
+import { ProcessCreationClient } from "../../../clients/process-creation/process-creation.client";
+import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 
 import * as selectors from './process-creation.selectors';
-import { mergeLoadingOverlay } from "../../loading-overlay/rx/loading-overlay.operators";
-import { ProcessCreationClient } from "../../../clients/process-creation/process-creation.client";
 
 @Injectable()
 export class ProcessCreationEffects {
@@ -14,6 +15,7 @@ export class ProcessCreationEffects {
   constructor(
     private readonly actions$: Actions,
     private readonly processCreationClient: ProcessCreationClient,
+    private readonly router: Router,
     private readonly store: Store
   ) {}
 
@@ -59,6 +61,16 @@ export class ProcessCreationEffects {
     ofType(previous),
     concatLatestFrom(() => this.store.select(selectors.step)),
     map(([ _, i ]) => step({ payload: i - 1}))
+  ));
+
+  readonly redirectToProcessPatientCapture$ = createEffect(() => this.actions$.pipe(
+    ofType(redirectToProcessPatientCapture),
+    concatLatestFrom(() => [
+      this.store.select(selectors.processId)
+    ]),
+    mergeMap(([ _, processId ]) => this.router.navigate([ '/processes', processId, 'patient-capture'])),
+    filter(success => success),
+    map(() => dispose())
   ));
 
   readonly searchEntities$ = createEffect(() => this.actions$.pipe(
