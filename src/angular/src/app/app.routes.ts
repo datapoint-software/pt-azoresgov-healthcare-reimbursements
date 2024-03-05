@@ -11,6 +11,7 @@ import { SignInComponent } from './components/sign-in/sign-in.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { ProcessSearchComponent } from './components/process-search/process-search.component';
 import { ProcessPatientCaptureComponent } from './components/process-patient-capture/process-patient-capture.component';
+import { canActivateProcessPatientCapture, canDeactivateProcessPatientCapture } from './guards/process-patient-capture/process-patient-capture.guards';
 
 export const routes: Routes = [
   {
@@ -61,7 +62,9 @@ export const routes: Routes = [
                 children: [
                   {
                     path: 'patient-capture',
-                    component: ProcessPatientCaptureComponent
+                    component: ProcessPatientCaptureComponent,
+                    canActivate: [ canActivateProcessPatientCapture ],
+                    canDeactivate: [ canDeactivateProcessPatientCapture ]
                   }
                 ]
               }

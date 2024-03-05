@@ -23,7 +23,7 @@ export abstract class Feature<TState> {
     return () => {
 
       if (!this.dispose$)
-        throw 'Feature state is not ready for observing.';
+        throw `Feature '${this.constructor.name}' is not ready for subscriptions.`;
 
       return this.store
         .select(selector)

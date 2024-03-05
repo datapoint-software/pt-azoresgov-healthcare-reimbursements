@@ -44,6 +44,8 @@ export class AppErrorHandler implements ErrorHandler{
     }
 
     this.router.navigateByUrl(errorDocumentLocation);
+
+    throw error;
   }
 }
 

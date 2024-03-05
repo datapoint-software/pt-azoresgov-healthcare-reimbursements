@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
+import { Component, NgZone } from "@angular/core";
 import { EntityNature } from "../../enums/entity-nature.enum";
 import { EntityNaturePipe } from "../../pipes/entity-nature.pipe";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
@@ -20,6 +20,7 @@ import { Router } from "@angular/router";
 export class ProcessCreationComponent {
 
   constructor(
+    private readonly ngZone: NgZone,
     private readonly processCreation: ProcessCreationFeature,
     private readonly router: Router
   ) {}
@@ -85,7 +86,7 @@ export class ProcessCreationComponent {
   }
 
   onProcessClick(id: string) {
-    this.router.navigate([ '/processes', id, 'patient-capture' ]);
+    this.ngZone.run(() => this.router.navigate([ '/processes', id, 'patient-capture' ]));
   }
 
   next() {

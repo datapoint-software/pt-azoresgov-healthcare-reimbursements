@@ -8,6 +8,23 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Helpers
 {
     internal static class RepositoryHelper
     {
+        internal static async Task<TEntity> GetByIdOrThrowExceptionAsync<TEntity>(
+            this IRepository<TEntity> entities, 
+            long id, 
+            CancellationToken ct)
+            where TEntity : class, IEntity
+        {
+            var entity = await entities.GetByIdAsync(id, ct);
+
+            if (entity is null)
+            {
+                throw new BusinessException("An entity was not found matching the internal identifier.")
+                    .WithErrorMessage("Os registos associados a esta operação não foram encontrados.");
+            }
+
+            return entity;
+        }
+        
         internal static async Task<TEntity> GetByPublicIdOrThrowExceptionAsync<TEntity>(
             this IRepository<TEntity> entities, 
             Guid publicId, 
