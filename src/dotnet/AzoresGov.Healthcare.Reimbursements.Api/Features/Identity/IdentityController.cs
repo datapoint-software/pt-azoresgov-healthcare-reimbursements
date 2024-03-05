@@ -21,7 +21,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.Identity
         {
             var result = await _mediator.HandleQueryAsync<IdentityQuery, IdentityResult>(
                 new IdentityQuery(
-                    HttpContext.User.GetSessionId()),
+                    User.GetId()),
                 ct);
 
             return new IdentityResultModel(

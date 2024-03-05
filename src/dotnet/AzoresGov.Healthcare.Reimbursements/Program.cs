@@ -44,11 +44,11 @@ namespace AzoresGov.Healthcare.Reimbursements
             app.UseErrorResponses((response) =>
             {
                 response.ErrorMessageFactory = (e) =>
-                    e is AuthenticationException ? "A sua sess�o expirou ou foi invalidada pelo administrador de sistema." :
-                    e is AuthorizationException ? "N�o tem permiss�es suficientes para aceder a esta funcionalidade." :
-                    e is BusinessException ? "Esta opera��o n�o foi executada porque foram detectadas inconsist�ncias no sistema de informa��o." :
-                    e is ConcurrencyException ? "Esta opera��o n�o foi executada porque a informa��o j� foi modificada por outro utilizador." :
-                    e is ValidationException ? "Existem erros de valida��o nos campos do formul�rio." :
+                    e is AuthenticationException ? "A sua sessão expirou ou foi invalidada pelo administrador do sistema." :
+                    e is AuthorizationException ? "Não tem permissões suficientes para aceder a esta funcionalidade." :
+                    e is BusinessException ? "Esta operação foi cancelada porque foram detectadas inconsistências com as regras do negócio." :
+                    e is ConcurrencyException ? "Esta operação foi cancelada porque foram detectadas inconsistências no modelo de dados." :
+                    e is ValidationException ? "Os campos do formulário contêm erros de validação." :
                         "Ocorreu um erro inesperado.";
 
                 response.StackTraceEnabled = !environment.IsProduction();

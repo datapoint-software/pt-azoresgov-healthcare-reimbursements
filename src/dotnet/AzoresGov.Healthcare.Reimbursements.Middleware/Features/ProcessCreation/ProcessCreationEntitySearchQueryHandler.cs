@@ -1,4 +1,5 @@
 ﻿using AzoresGov.Healthcare.Reimbursements.Enumerations;
+using AzoresGov.Healthcare.Reimbursements.Middleware.Helpers;
 using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories;
 using Datapoint.Mediator;
 using System;
@@ -26,7 +27,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
 
         public async Task<ProcessCreationEntitySearchResult> HandleQueryAsync(ProcessCreationEntitySearchQuery query, CancellationToken ct)
         {
-            var user = await _users.GetByPublicIdOrThrowBusinessExceptionAsync(
+            var user = await _users.GetByPublicIdOrThrowExceptionAsync(
                 query.UserId,
                 ct);
 

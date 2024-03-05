@@ -5,11 +5,11 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.Identity
 {
     public sealed class IdentityQuery : Query<IdentityResult>
     {
-        public IdentityQuery(Guid userSessionId)
+        public IdentityQuery(Guid userId)
         {
-            UserSessionId = userSessionId;
+            UserId = userId;
         }
 
-        public Guid UserSessionId { get; }
+        public Guid UserId { get; }
     }
 }

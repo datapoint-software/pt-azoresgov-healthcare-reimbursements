@@ -6,7 +6,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.Identity
     {
         public IdentityQueryValidator()
         {
-            RuleFor(q => q.UserSessionId)
+            RuleFor(q => q.UserId)
                 .NotEmpty();
         }
     }

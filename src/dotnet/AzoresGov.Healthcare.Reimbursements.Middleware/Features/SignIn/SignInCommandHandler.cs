@@ -56,7 +56,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
             // We need to measure the time it takes both tasks to complete and,
             // if `delay` takes less time than `handler`, we must log a warning
             // message to make the system administrator aware of this.
-            var delay = Task.Delay(await _parameters.GetBasicAuthenticationDelayAsync(ct), ct);
+            var delay = Task.Delay(await _parameters.GetBasicAuthenticationDelayInMillisecondsAsync(ct), ct);
             var handler = HandleCommandWithoutDelayAsync(command, ct);
 
             await Task.WhenAll(delay, handler);
@@ -145,7 +145,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
         {
             if (!command.Persistent)
                 return command.Creation.AddSeconds(
-                    await _parameters.GetUserSessionExpirationAsync(
+                    await _parameters.GetUserSessionExpirationInSecondsAsync(
                         ct));
             
             if (!await _parameters.GetBasicAuthenticationPersistentSessionsEnabledAsync(ct))

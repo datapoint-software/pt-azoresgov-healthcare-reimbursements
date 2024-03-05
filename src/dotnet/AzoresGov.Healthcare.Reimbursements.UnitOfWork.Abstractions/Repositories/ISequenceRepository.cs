@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
 {
-    public interface IPatientEntityRepository : IRepository<PatientEntity>
+    public interface ISequenceRepository : IRepository<Sequence>
     {
-        Task<bool> AnyByPatientIdAndEntityIdAsync(long patientId, long entityId, CancellationToken ct);
+        Task<Sequence?> GetByNameAsync(string name, CancellationToken ct);
     }
 }

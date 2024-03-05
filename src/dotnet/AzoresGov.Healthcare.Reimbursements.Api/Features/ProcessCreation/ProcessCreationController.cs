@@ -20,6 +20,26 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCreation
         }
 
         [Authorize("administrative")]
+        [HttpPost]
+        public async Task<ProcessCreationResultModel> CreateProcessAsync(
+            [FromBody] ProcessCreationModel model,
+            CancellationToken ct)
+        {
+            var result = await _mediator.HandleCommandAsync<ProcessCreationCommand, ProcessCreationResult>(
+                new ProcessCreationCommand(
+                    User.GetId(),
+                    model.EntityId,
+                    model.EntityRowVersionId,
+                    model.PatientId,
+                    model.PatientRowVersionId),
+                ct);
+
+            return new ProcessCreationResultModel(
+                result.Id,
+                result.RowVersionId);
+        }
+
+        [Authorize("administrative")]
         [HttpGet]
         public async Task<ProcessCreationOptionsResultModel> GetOptionsAsync(CancellationToken ct)
         {

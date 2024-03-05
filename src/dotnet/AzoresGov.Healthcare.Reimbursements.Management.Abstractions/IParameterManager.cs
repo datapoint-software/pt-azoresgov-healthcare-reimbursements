@@ -9,9 +9,11 @@ namespace AzoresGov.Healthcare.Reimbursements.Management
 
         Task<bool> GetBasicAuthenticationPersistentSessionsEnabledAsync(CancellationToken ct);
 
-        Task<int> GetBasicAuthenticationDelayAsync(CancellationToken ct);
+        Task<int> GetBasicAuthenticationDelayInMillisecondsAsync(CancellationToken ct);
 
-        Task<int> GetUserSessionExpirationAsync(CancellationToken ct);
+        Task<int> GetProcessExpirationInDaysAsync(CancellationToken ct);
+
+        Task<int> GetUserSessionExpirationInSecondsAsync(CancellationToken ct);
 
         Task<int> GetUserPasswordHashWorkFactorAsync(CancellationToken ct);
     }

@@ -4,6 +4,7 @@ using AzoresGov.Healthcare.Reimbursements.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
 {
     [DbContext(typeof(HealthcareReimbursementsUnitOfWork))]
-    partial class HealthcareReimbursementsUnitOfWorkModelSnapshot : ModelSnapshot
+    [Migration("20240305114600_Sequences")]
+    partial class Sequences
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,7 +61,7 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
 
                     b.HasIndex("Name");
 
-                    b.ToTable("Entities", (string)null);
+                    b.ToTable("Entities");
                 });
 
             modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.EntityParentEntity", b =>
@@ -97,7 +100,7 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                     b.HasIndex("EntityId", "ParentEntityId")
                         .IsUnique();
 
-                    b.ToTable("EntityParentEntities", (string)null);
+                    b.ToTable("EntityParentEntities");
                 });
 
             modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Parameter", b =>
@@ -131,7 +134,7 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
 
                     b.HasAlternateKey("PublicId");
 
-                    b.ToTable("Parameters", (string)null);
+                    b.ToTable("Parameters");
                 });
 
             modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Patient", b =>
@@ -228,7 +231,7 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
 
                     b.HasIndex("TaxNumber");
 
-                    b.ToTable("Patients", (string)null);
+                    b.ToTable("Patients");
                 });
 
             modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.PatientEntity", b =>
@@ -261,7 +264,7 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                     b.HasIndex("PatientId", "EntityId")
                         .IsUnique();
 
-                    b.ToTable("PatientEntities", (string)null);
+                    b.ToTable("PatientEntities");
                 });
 
             modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Process", b =>
@@ -324,7 +327,7 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Processes", (string)null);
+                    b.ToTable("Processes");
                 });
 
             modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Role", b =>
@@ -353,7 +356,7 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
 
                     b.HasAlternateKey("PublicId");
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Sequence", b =>
@@ -386,7 +389,7 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Sequences", (string)null);
+                    b.ToTable("Sequences");
                 });
 
             modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.User", b =>
@@ -421,7 +424,7 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                     b.HasIndex("EmailAddress")
                         .IsUnique();
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.UserEntity", b =>
@@ -454,7 +457,7 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                     b.HasIndex("UserId", "EntityId")
                         .IsUnique();
 
-                    b.ToTable("UserEntities", (string)null);
+                    b.ToTable("UserEntities");
                 });
 
             modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.UserPassword", b =>
@@ -487,7 +490,7 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("UserPasswords", (string)null);
+                    b.ToTable("UserPasswords");
                 });
 
             modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.UserRole", b =>
@@ -519,7 +522,7 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserRoles", (string)null);
+                    b.ToTable("UserRoles");
                 });
 
             modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.UserSession", b =>
@@ -565,7 +568,7 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserSessions", (string)null);
+                    b.ToTable("UserSessions");
                 });
 
             modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.EntityParentEntity", b =>

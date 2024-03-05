@@ -20,8 +20,12 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork
         public DbSet<PatientEntity> PatientEntities { get; set; } = default!;
 
         public DbSet<Patient> Patients { get; set; } = default!;
+
+        public DbSet<Process> Processes { get; set; } = default!;
         
         public DbSet<Role> Roles { get; set; } = default!;
+
+        public DbSet<Sequence> Sequences { get; set; } = default!;
         
         public DbSet<UserEntity> UserEntities { get; set; } = default!;
         

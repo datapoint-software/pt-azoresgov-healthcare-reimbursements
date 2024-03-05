@@ -1,5 +1,9 @@
-﻿using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories;
+﻿using AzoresGov.Healthcare.Reimbursements.Middleware.Helpers;
+using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities;
+using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories;
+using Datapoint;
 using Datapoint.Mediator;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,8 +24,8 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.Identity
 
         public async Task<IdentityResult> HandleQueryAsync(IdentityQuery query, CancellationToken ct)
         {
-            var user = await _users.GetByUserSessionPublicIdOrThrowBusinessExceptionAsync(
-                query.UserSessionId,
+            var user = await _users.GetByPublicIdOrThrowExceptionAsync(
+                query.UserId,
                 ct);
 
             var roles = await _roles.GetAllByUserIdAsync(

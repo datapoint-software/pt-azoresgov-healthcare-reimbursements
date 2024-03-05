@@ -19,6 +19,8 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
             int take, 
             CancellationToken ct);
 
+        Task<IReadOnlyCollection<string>> GetAllParentEntityCodeByEntityIdAsync(long entityId, CancellationToken ct);
+
         Task<Entity?> GetParentEntityByEntityIdAsync(
             long entityId, 
             int level,
