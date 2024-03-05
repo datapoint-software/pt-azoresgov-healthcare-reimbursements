@@ -1,7 +1,7 @@
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
 import { concatLatestFrom, ofType, provideEffects } from "@ngrx/effects";
 import { dispose, init, next, previous, searchEntities, searchPatients, selectEntity, selectPatient } from "./rx/process-creation.actions";
-import { entities, entityId, entitySearchResult, entitySearchResultEntityIds, entitySearchResultTotalMatchCount, patientId, patientSearchResult, patientSearchResultEntityIds, patientSearchResultTotalMatchCount, patients, state, step, steps } from "./rx/process-creation.selectors";
+import { complete, process, entities, entityId, entitySearchResult, entitySearchResultEntityIds, entitySearchResultTotalMatchCount, patientId, patientSearchResult, patientSearchResultEntityIds, patientSearchResultTotalMatchCount, patients, processId, state, step, steps } from "./rx/process-creation.selectors";
 import { EnvironmentProviders, Injectable, makeEnvironmentProviders } from "@angular/core";
 import { Feature } from "../feature.abstractions";
 import { FEATURE_NAME } from "./process-creation.constants";
@@ -14,6 +14,8 @@ import { TypedAction } from "@ngrx/store/src/models";
 
 @Injectable()
 export class ProcessCreationFeature extends Feature<ProcessCreationState> {
+
+  readonly complete$ = () => this.of(complete)();
 
   readonly entityById$ = (id: string) => this.of(entities)().pipe(
     map((entities) => entities[id])
@@ -40,7 +42,7 @@ export class ProcessCreationFeature extends Feature<ProcessCreationState> {
       this.store.select(entityId),
       this.store.select(patientId)
     ]),
-    map(([ step, steps, entityId, patientId ]) => ((step + 1) < steps.length) && (
+    map(([ step, steps, entityId, patientId ]) => (step < steps.length) && (
       (steps[step] === 'entity' && !!entityId) ||
       (steps[step] === 'patient' && !!patientId) ||
       (steps[step] === 'confirmation')
@@ -69,6 +71,8 @@ export class ProcessCreationFeature extends Feature<ProcessCreationState> {
   readonly previousStepEnabled$ = () => this.of(step)().pipe(
     map((step) => step > 0)
   );
+
+  readonly process$ = () => this.of(process)();
 
   readonly step$ = this.of(step);
 

@@ -4,6 +4,7 @@ import { EntityNature } from "../../enums/entity-nature.enum";
 import { EntityNaturePipe } from "../../pipes/entity-nature.pipe";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ProcessCreationFeature } from "../../features/process-creation/process-creation.feature";
+import { Router } from "@angular/router";
 
 @Component({
     selector: 'app-process-create',
@@ -19,7 +20,8 @@ import { ProcessCreationFeature } from "../../features/process-creation/process-
 export class ProcessCreationComponent {
 
   constructor(
-    private readonly processCreation: ProcessCreationFeature
+    private readonly processCreation: ProcessCreationFeature,
+    private readonly router: Router
   ) {}
 
   readonly entitySearch = new FormGroup({
@@ -30,6 +32,7 @@ export class ProcessCreationComponent {
     filter: new FormControl('', [ Validators.minLength(3), Validators.maxLength(128) ])
   });
 
+  readonly complete$ = this.processCreation.complete$();
   readonly entity$ = this.processCreation.entity$();
   readonly entityId$ = this.processCreation.entityId$();
   readonly entityById$ = this.processCreation.entityById$;
@@ -44,6 +47,7 @@ export class ProcessCreationComponent {
   readonly patientSearchResultEmpty$ = this.processCreation.patientSearchResultEmpty$();
   readonly patientSearchResultMatches$ = this.processCreation.patientSearchResultMatches$();
   readonly previousStepEnabled$ = this.processCreation.previousStepEnabled$();
+  readonly process$ = this.processCreation.process$();
   readonly stepCount$ = this.processCreation.stepCount$();
   readonly stepName$ = this.processCreation.stepName$();
   readonly stepNumber$ = this.processCreation.stepNumber$();
@@ -78,6 +82,10 @@ export class ProcessCreationComponent {
 
   onPatientSelection(id: string) {
     this.processCreation.selectPatient(id);
+  }
+
+  onProcessClick(id: string) {
+    this.router.navigate([ '/processes', id, 'patient-capture' ]);
   }
 
   next() {

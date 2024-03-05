@@ -1,11 +1,15 @@
 import { Injectable, makeEnvironmentProviders } from "@angular/core";
 import { Client } from "../api.client";
-import { ProcessCreationEntitySearchResultModel, ProcessCreationOptionsResultModel, ProcessCreationPatientSearchResultModel } from "./process-creation.models";
+import { ProcessCreationEntitySearchResultModel, ProcessCreationModel, ProcessCreationOptionsResultModel, ProcessCreationPatientSearchResultModel, ProcessCreationResultModel } from "./process-creation.models";
 
 @Injectable()
 export class ProcessCreationClient extends Client {
 
   protected override baseAddress: string = '/api/features/process-creation';
+
+  readonly create = (model: ProcessCreationModel) =>
+
+    this.post<ProcessCreationModel, ProcessCreationResultModel>('/', model);
 
   readonly getOptions = () =>
 

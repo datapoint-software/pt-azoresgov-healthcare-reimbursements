@@ -2,6 +2,8 @@ import { ProcessCreationEntityResultModel, ProcessCreationPatientResultModel } f
 
 export interface ProcessCreationState {
 
+  complete: boolean;
+
   // Entity selection
   entityId?: string;
   entities: { [id: string]: ProcessCreationEntityResultModel; };
@@ -18,7 +20,15 @@ export interface ProcessCreationState {
     totalMatchCount: number;
   };
 
+  // Process
+  process?: {
+    id: string;
+    rowVersionId: string;
+    number: string;
+  };
+
   // Wizard
   step: number;
   steps: Array<string>;
+
 }

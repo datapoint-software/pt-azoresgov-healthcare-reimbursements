@@ -4,6 +4,8 @@ import { FEATURE_NAME } from "../process-creation.constants";
 
 export const state = createFeatureSelector<ProcessCreationState>(FEATURE_NAME);
 
+export const complete = createSelector(state, state => state.complete);
+
 export const step = createSelector(state, state => state.step);
 
 export const steps = createSelector(state, state => state.steps);
@@ -27,3 +29,7 @@ export const patientSearchResult = createSelector(state, state => state.patientS
 export const patientSearchResultEntityIds = createSelector(patientSearchResult, patientSearchResult => patientSearchResult?.patientIds);
 
 export const patientSearchResultTotalMatchCount = createSelector(patientSearchResult, patientSearchResult => patientSearchResult?.totalMatchCount);
+
+export const process = createSelector(state, state => state.process);
+
+export const processId = createSelector(process, process => process?.id);

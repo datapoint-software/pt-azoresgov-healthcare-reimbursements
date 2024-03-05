@@ -36,7 +36,8 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCreation
 
             return new ProcessCreationResultModel(
                 result.Id,
-                result.RowVersionId);
+                result.RowVersionId,
+                result.Number);
         }
 
         [Authorize("administrative")]

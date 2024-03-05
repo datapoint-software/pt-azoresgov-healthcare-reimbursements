@@ -5,14 +5,17 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
 {
     public sealed class ProcessCreationResult
     {
-        public ProcessCreationResult(Guid id, Guid rowVersionId)
+        public ProcessCreationResult(Guid id, Guid rowVersionId, string number)
         {
             Id = id;
             RowVersionId = rowVersionId;
+            Number = number;
         }
 
         public Guid Id { get; }
         
         public Guid RowVersionId { get; }
+        
+        public string Number { get; }
     }
 }

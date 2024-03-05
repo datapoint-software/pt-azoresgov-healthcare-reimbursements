@@ -82,3 +82,18 @@ export const selectPatient = createAction(
     };
   }>()
 );
+
+export const submit = createAction(
+  `${FEATURE_ACTION_PREFIX}/submit`
+);
+
+export const submitComplete = createAction(
+  `${FEATURE_ACTION_PREFIX}/submit-complete`,
+  props<{
+    payload: {
+      id: string;
+      rowVersionId: string;
+      number: string;
+    };
+  }>()
+);

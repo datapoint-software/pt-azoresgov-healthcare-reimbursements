@@ -10,6 +10,7 @@ import { Routes } from '@angular/router';
 import { SignInComponent } from './components/sign-in/sign-in.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { ProcessSearchComponent } from './components/process-search/process-search.component';
+import { ProcessPatientCaptureComponent } from './components/process-patient-capture/process-patient-capture.component';
 
 export const routes: Routes = [
   {
@@ -54,6 +55,15 @@ export const routes: Routes = [
                 component: ProcessCreationComponent,
                 canActivate: [ canActivateProcessCreation ],
                 canDeactivate: [ canDeactivateProcessCreation ]
+              },
+              {
+                path: ':processId',
+                children: [
+                  {
+                    path: 'patient-capture',
+                    component: ProcessPatientCaptureComponent
+                  }
+                ]
               }
             ]
           }

@@ -2,6 +2,6 @@
 {
     public enum ProcessStatus
     {
-        Draft
+        PatientCapture
     }
 }

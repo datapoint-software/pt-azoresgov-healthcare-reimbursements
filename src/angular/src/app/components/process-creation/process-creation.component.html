@@ -317,3 +317,31 @@
     </form>
   </div>
 </ng-container>
+
+<ng-container *ngIf="(complete$ | async)">
+  <ng-container *ngIf="(process$ | async) as process">
+    <div class="modal-backdrop fade show"></div>
+    <div  class="modal fade show" tabindex="-1" role="dialog" aria-modal="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Processo de Reembolso</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>O processo de reembolso <strong>{{process.number}}</strong> foi registado com sucesso.</p>
+          </div>
+          <div class="modal-footer">
+            <button
+              (click)="onProcessClick(process.id)"
+              class="btn btn-primary"
+              type="button">
+              Continuar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>
+

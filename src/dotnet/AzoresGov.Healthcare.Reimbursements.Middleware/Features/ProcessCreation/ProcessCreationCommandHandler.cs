@@ -92,7 +92,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
                 Patient = patient,
                 User = user,
                 Number = processNumber,
-                Status = ProcessStatus.Draft,
+                Status = ProcessStatus.PatientCapture,
                 Creation = command.Creation,
                 Expiration = command.Creation.AddDays(processExpirationInDays).UtcDateTime,
                 Touch = command.Creation
@@ -100,7 +100,8 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
 
             return new ProcessCreationResult(
                 process.PublicId,
-                process.RowVersionId);
+                process.RowVersionId,
+                process.Number);
         }
 
         private async Task<string> GetEntityProcessNumberAsync(ProcessCreationCommand command, Entity entity, CancellationToken ct)

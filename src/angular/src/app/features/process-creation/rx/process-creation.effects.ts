@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Actions, concatLatestFrom, createEffect, ofType } from "@ngrx/effects";
-import { configure, init, next, previous, searchEntities, searchEntitiesComplete, searchPatients, searchPatientsComplete, selectEntity, selectPatient, step } from "./process-creation.actions";
+import { configure, submit, init, next, previous, searchEntities, searchEntitiesComplete, searchPatients, searchPatientsComplete, selectEntity, selectPatient, step, submitComplete } from "./process-creation.actions";
 import { map, mergeMap, of } from "rxjs";
 import { Store } from "@ngrx/store";
 
@@ -22,6 +22,7 @@ export class ProcessCreationEffects {
     mergeMap(() => this.processCreationClient.getOptions().pipe(
       map((response) => configure({
         payload: {
+          complete: false,
           step: 0,
           steps: [
             ...(response.entityId ? [] : [ 'entity' ]),
@@ -41,8 +42,11 @@ export class ProcessCreationEffects {
 
   readonly next$ = createEffect(() => this.actions$.pipe(
     ofType(next),
-    concatLatestFrom(() => this.store.select(selectors.step)),
-    map(([ _, i ]) => step({ payload: i + 1}))
+    concatLatestFrom(() => [
+      this.store.select(selectors.steps),
+      this.store.select(selectors.step)
+    ]),
+    map(([ _, steps, i ]) => (i === steps.length - 1) ? submit() : step({ payload: i + 1}))
   ));
 
   readonly previous$ = createEffect(() => this.actions$.pipe(
@@ -78,5 +82,29 @@ export class ProcessCreationEffects {
   readonly selectPatient$ = createEffect(() => this.actions$.pipe(
     ofType(selectPatient),
     map(() => next())
+  ));
+
+  readonly submit$ = createEffect(() => this.actions$.pipe(
+    ofType(submit),
+    concatLatestFrom(() => [
+      this.store.select(selectors.entities),
+      this.store.select(selectors.patients),
+      this.store.select(selectors.entityId),
+      this.store.select(selectors.patientId)
+    ]),
+    mergeLoadingOverlay(([ _, entities, patients, entityId, patientId ]) => this.processCreationClient.create({
+      entityId: entityId!,
+      entityRowVersionId: entities[entityId!].rowVersionId,
+      patientId: patientId!,
+      patientRowVersionId: patients[patientId!].rowVersionId
+    }).pipe(
+      map((response) => submitComplete({
+        payload: {
+          id: response.id,
+          rowVersionId: response.rowVersionId,
+          number: response.number
+        }
+      }))
+    ))
   ));
 }

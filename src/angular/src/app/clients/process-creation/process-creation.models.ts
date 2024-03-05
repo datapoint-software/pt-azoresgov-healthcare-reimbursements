@@ -16,6 +16,19 @@ export interface ProcessCreationEntitySearchResultModel {
   totalMatchCount: number;
 }
 
+export interface ProcessCreationModel {
+  entityId: string;
+  entityRowVersionId: string;
+  patientId: string;
+  patientRowVersionId: string;
+}
+
+export interface ProcessCreationResultModel {
+  id: string;
+  rowVersionId: string;
+  number: string;
+}
+
 export interface ProcessCreationOptionsResultModel {
   entities?: ProcessCreationEntityResultModel[];
   entityId?: string;
