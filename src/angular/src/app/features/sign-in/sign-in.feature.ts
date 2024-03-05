@@ -36,7 +36,7 @@ export class SignInFeature extends Feature<SignInState> {
     }));
   }
 
-  protected override dispose$$$(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): TypedAction<string> {
+  protected override dispose$$$(): TypedAction<string> {
     return dispose();
   }
 

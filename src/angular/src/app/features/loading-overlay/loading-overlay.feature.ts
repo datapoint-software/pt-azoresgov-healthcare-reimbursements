@@ -41,7 +41,7 @@ export class LoadingOverlayFeature extends Feature<LoadingOverlayState> {
     }));
   }
 
-  protected override dispose$$$(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): TypedAction<string> {
+  protected override dispose$$$(): TypedAction<string> {
     throw 'Feature `LoadingOverlay` can not be disposed.';
   }
 

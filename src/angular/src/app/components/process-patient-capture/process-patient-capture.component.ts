@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy } from "@angular/core";
 import { FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { ProcessPatientCaptureFeature } from "../../features/process-patient-capture/process-patient-capture.feature";
 import { CommonModule } from "@angular/common";
@@ -12,7 +12,7 @@ import { CommonModule } from "@angular/common";
   standalone: true,
   templateUrl: './process-patient-capture.component.html'
 })
-export class ProcessPatientCaptureComponent implements OnInit {
+export class ProcessPatientCaptureComponent implements OnDestroy {
 
   constructor(
     private readonly processPatientCapture: ProcessPatientCaptureFeature
@@ -24,11 +24,11 @@ export class ProcessPatientCaptureComponent implements OnInit {
 
   });
 
-  onSubmit() {
-
+  ngOnDestroy() {
+    this.processPatientCapture.dispose();
   }
 
-  ngOnInit(): void {
+  onSubmit() {
 
   }
 }

@@ -36,7 +36,7 @@ export class IdentityFeature extends Feature<IdentityState> {
     return true;
   }
 
-  protected override dispose$$$(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): TypedAction<string> {
+  protected override dispose$$$(): TypedAction<string> {
     return dispose();
   }
 

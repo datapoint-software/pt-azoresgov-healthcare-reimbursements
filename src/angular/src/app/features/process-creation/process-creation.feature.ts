@@ -137,7 +137,7 @@ export class ProcessCreationFeature extends Feature<ProcessCreationState> {
     }));
   }
 
-  protected override dispose$$$(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): TypedAction<string> {
+  protected override dispose$$$(): TypedAction<string> {
     return dispose();
   }
 

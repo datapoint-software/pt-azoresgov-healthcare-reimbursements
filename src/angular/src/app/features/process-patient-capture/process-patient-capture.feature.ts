@@ -22,7 +22,7 @@ export class ProcessPatientCaptureFeature extends Feature<ProcessPatientCaptureS
 
   readonly processNumber$ = this.of(processNumber);
 
-  protected override dispose$$$(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): TypedAction<string> {
+  protected override dispose$$$(): TypedAction<string> {
     return dispose();
   }
 

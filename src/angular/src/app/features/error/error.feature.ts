@@ -28,7 +28,7 @@ export class ErrorFeature extends Feature<ErrorState> {
     super(store, state);
   }
 
-  protected override dispose$$$(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): TypedAction<string> {
+  protected override dispose$$$(): TypedAction<string> {
     return dispose();
   }
 

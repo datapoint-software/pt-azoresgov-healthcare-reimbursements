@@ -1,6 +1,6 @@
 import { AuthenticationMethod } from "../../enums/authentication-method.enum";
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
+import { Component, OnDestroy } from "@angular/core";
 import { EnvironmentFeature } from "../../features/environment/environment.feature";
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from "@angular/forms";
 import { map } from "rxjs";
@@ -15,7 +15,7 @@ import { SignInFeature } from "../../features/sign-in/sign-in.feature";
   standalone: true,
   templateUrl: './sign-in.component.html'
 })
-export class SignInComponent {
+export class SignInComponent implements OnDestroy {
 
   constructor(
     private readonly environment: EnvironmentFeature,
@@ -38,6 +38,10 @@ export class SignInComponent {
   });
 
   isPasswordVisible: boolean = false;
+
+  ngOnDestroy() {
+    this.signIn.dispose();
+  }
 
   onPasswordButtonClick(e: Event) {
 

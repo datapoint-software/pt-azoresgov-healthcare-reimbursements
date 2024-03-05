@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, NgZone } from "@angular/core";
+import { Component, NgZone, OnDestroy } from "@angular/core";
 import { EntityNature } from "../../enums/entity-nature.enum";
 import { EntityNaturePipe } from "../../pipes/entity-nature.pipe";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
@@ -17,12 +17,10 @@ import { Router } from "@angular/router";
         EntityNaturePipe
     ]
 })
-export class ProcessCreationComponent {
+export class ProcessCreationComponent implements OnDestroy {
 
   constructor(
-    private readonly ngZone: NgZone,
-    private readonly processCreation: ProcessCreationFeature,
-    private readonly router: Router
+    private readonly processCreation: ProcessCreationFeature
   ) {}
 
   readonly complete$ = this.processCreation.complete$;
@@ -70,6 +68,10 @@ export class ProcessCreationComponent {
   readonly patientSearch = new FormGroup({
     filter: new FormControl('', [ Validators.minLength(3), Validators.maxLength(128) ])
   });
+
+  ngOnDestroy() {
+    this.processCreation.dispose();
+  }
 
   onEntitySearchChange(e: Event) {
   }

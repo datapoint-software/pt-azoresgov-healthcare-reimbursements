@@ -23,7 +23,7 @@ export class EnvironmentFeature extends Feature<EnvironmentState> {
     super(store, state);
   }
 
-  protected override dispose$$$(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): TypedAction<string> {
+  protected override dispose$$$(): TypedAction<string> {
     return dispose();
   }
 

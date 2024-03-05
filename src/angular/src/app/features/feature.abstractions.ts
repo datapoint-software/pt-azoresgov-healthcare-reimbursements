@@ -5,7 +5,7 @@ import { TypedAction } from "@ngrx/store/src/models";
 
 export abstract class Feature<TState> {
 
-  protected abstract dispose$$$(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): TypedAction<string>;
+  protected abstract dispose$$$(): TypedAction<string>;
 
   protected abstract init$$$(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): TypedAction<string>;
 
@@ -37,11 +37,9 @@ export abstract class Feature<TState> {
     );
   }
 
-  public async dispose(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): Promise<void> {
+  public async dispose(): Promise<void> {
 
-    this.dispatch(
-      this.dispose$$$(activatedRoute, router)
-    );
+    this.dispatch(this.dispose$$$());
 
     await firstValueFrom(
       this.state$
