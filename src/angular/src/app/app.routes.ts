@@ -10,8 +10,11 @@ import { Routes } from '@angular/router';
 import { SignInComponent } from './components/sign-in/sign-in.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { ProcessSearchComponent } from './components/process-search/process-search.component';
-import { ProcessPatientCaptureComponent } from './components/process-patient-capture/process-patient-capture.component';
-import { canActivateProcessPatientCapture } from './guards/process-patient-capture/process-patient-capture.guards';
+import { ProcessCapturePatientComponent } from './components/process-capture-patient/process-capture-patient.component';
+import { ProcessCaptureComponent } from './components/process-capture/process-capture.component';
+import { canActivateProcessCapture } from './guards/process-capture/process-capture.guards';
+import { ProcessCaptureLegalRepresentativeComponent } from './components/process-capture-legal-representative/process-capture-legal-representative.component';
+import { ProcessCaptureSpecialTermsComponent } from './components/process-capture-special-terms/process-capture-special-terms.component';
 
 export const routes: Routes = [
   {
@@ -59,10 +62,23 @@ export const routes: Routes = [
                 path: ':processId',
                 children: [
                   {
-                    path: 'patient-capture',
-                    component: ProcessPatientCaptureComponent,
-                    canActivate: [ canActivateProcessPatientCapture ],
-
+                    path: 'capture',
+                    component: ProcessCaptureComponent,
+                    canActivate: [ canActivateProcessCapture ],
+                    children: [
+                      {
+                        path: 'patient',
+                        component: ProcessCapturePatientComponent
+                      },
+                      {
+                        path: 'special-terms',
+                        component: ProcessCaptureSpecialTermsComponent
+                      },
+                      {
+                        path: 'legal-representative',
+                        component: ProcessCaptureLegalRepresentativeComponent
+                      }
+                    ]
                   }
                 ]
               }

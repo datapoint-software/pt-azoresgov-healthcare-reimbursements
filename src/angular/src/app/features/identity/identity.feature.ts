@@ -3,7 +3,6 @@ import { IdentityState } from "./rx/identity.state";
 import { Feature } from "../feature.abstractions";
 import { Store, provideState } from "@ngrx/store";
 import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from "@angular/router";
-import { TypedAction } from "@ngrx/store/src/models";
 import { state, user } from "./rx/identity.selectors";
 import { dispose, init } from "./rx/identity.actions";
 import { IdentityEffects } from "./rx/identity.effects";
@@ -18,7 +17,7 @@ export class IdentityFeature extends Feature<IdentityState> {
   public readonly user$ = this.of(user);
 
   constructor(private readonly router: Router, store: Store) {
-    super(store, state);
+    super(store, state, dispose, init);
   }
 
   public async authorize(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot, roles?: Array<string>) {
@@ -34,14 +33,6 @@ export class IdentityFeature extends Feature<IdentityState> {
     }
 
     return true;
-  }
-
-  protected override dispose$$$(): TypedAction<string> {
-    return dispose();
-  }
-
-  protected override init$$$(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): TypedAction<string> {
-    return init();
   }
 }
 

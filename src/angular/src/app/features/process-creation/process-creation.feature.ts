@@ -97,7 +97,7 @@ export class ProcessCreationFeature extends Feature<ProcessCreationState> {
   );
 
   constructor(store: Store) {
-    super(store, state);
+    super(store, state, dispose, init);
   }
 
   next() {
@@ -142,14 +142,6 @@ export class ProcessCreationFeature extends Feature<ProcessCreationState> {
         id
       }
     }));
-  }
-
-  protected override dispose$$$(): TypedAction<string> {
-    return dispose();
-  }
-
-  protected override init$$$(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): TypedAction<string> {
-    return init();
   }
 }
 

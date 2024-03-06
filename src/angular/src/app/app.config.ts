@@ -17,8 +17,8 @@ import { provideIdentityFeature } from './features/identity/identity.feature';
 import { provideIdentityClient } from './clients/identity/identity.client';
 import { provideProcessCreationFeature } from './features/process-creation/process-creation.feature';
 import { provideProcessCreationClient } from './clients/process-creation/process-creation.client';
-import { provideProcessPatientCaptureFeature } from './features/process-patient-capture/process-patient-capture.feature';
-import { provideProcessPatientCaptureClient } from './clients/process-patient-capture/process-patient-capture.client';
+import { provideProcessCaptureClient } from './clients/process-capture/process-capture.client';
+import { provideProcessCaptureFeature } from './features/process-capture/process-capture.feature';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -35,16 +35,16 @@ export const appConfig: ApplicationConfig = {
     // Clients
     provideEnvironmentClient(),
     provideIdentityClient(),
-    provideProcessPatientCaptureClient(),
+    provideProcessCaptureClient(),
     provideProcessCreationClient(),
     provideSignInClient(),
 
     // Features
+    provideProcessCaptureFeature(),
     provideEnvironmentFeature(),
     provideErrorFeature(),
     provideIdentityFeature(),
     provideLoadingOverlayFeature(),
-    provideProcessPatientCaptureFeature(),
     provideProcessCreationFeature(),
     provideSignInFeature()
   ]

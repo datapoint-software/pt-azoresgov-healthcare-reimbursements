@@ -1,8 +1,6 @@
 import { EnvironmentProviders, Injectable, makeEnvironmentProviders } from "@angular/core";
 import { Feature } from "../feature.abstractions";
 import { ErrorState } from "./rx/error.state";
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
-import { TypedAction } from "@ngrx/store/src/models";
 import { dispose, init } from "./rx/error.actions";
 import { correlationId, id, message, stackTrace, state, status } from "./rx/error.selectors";
 import { Store, provideState } from "@ngrx/store";
@@ -25,25 +23,19 @@ export class ErrorFeature extends Feature<ErrorState> {
   readonly status$ = this.of(status);
 
   constructor(store: Store) {
-    super(store, state);
-  }
+    super(store, state, dispose, (r) => {
 
-  protected override dispose$$$(): TypedAction<string> {
-    return dispose();
-  }
+      const statusCode = r.queryParamMap.get('statusCode');
 
-  protected override init$$$(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): TypedAction<string> {
-
-    const statusCode = activatedRoute.queryParamMap.get('statusCode');
-
-    return init({
-      payload: {
-        id: activatedRoute.queryParamMap.get('id') || undefined,
-        correlationId: activatedRoute.queryParamMap.get('correlationId') || undefined,
-        message: activatedRoute.queryParamMap.get('message') || undefined,
-        stackTrace: activatedRoute.queryParamMap.get('stackTrace') || undefined,
-        statusCode: (statusCode && parseInt(statusCode)) || undefined
-      }
+      return init({
+        payload: {
+          id: r.queryParamMap.get('id') || undefined,
+          correlationId: r.queryParamMap.get('correlationId') || undefined,
+          message: r.queryParamMap.get('message') || undefined,
+          stackTrace: r.queryParamMap.get('stackTrace') || undefined,
+          statusCode: (statusCode && parseInt(statusCode)) || undefined
+        }
+      });
     });
   }
 }

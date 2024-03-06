@@ -5,30 +5,33 @@ import { TypedAction } from "@ngrx/store/src/models";
 
 export abstract class Feature<TState> {
 
-  protected abstract dispose$$$(): TypedAction<string>;
-
-  protected abstract init$$$(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): TypedAction<string>;
-
   protected readonly state$ = this.store.select(this.state$$);
 
   constructor(
     protected readonly store: Store,
-    private readonly state$$: MemoizedSelector<object, TState, DefaultProjectorFn<TState>>
+    protected readonly state$$: MemoizedSelector<object, TState, DefaultProjectorFn<TState>>,
+    protected readonly dispose$$$?: (() => TypedAction<string>) | TypedAction<string>,
+    protected readonly init$$$?: ((activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot) => TypedAction<string>) | TypedAction<string>
   ) { }
-
-  protected of<TParentState, TValue>(selector: MemoizedSelector<object, TValue, (s1: TParentState) => TValue>) {
-    return this.store.select(selector);
-  }
 
   protected dispatch(action: TypedAction<string>) {
     this.store.dispatch(action);
   }
 
+  protected of<TParentState, TValue>(selector: MemoizedSelector<object, TValue, (s1: TParentState) => TValue>) {
+    return this.store.select(selector);
+  }
+
   public async init(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): Promise<void> {
 
-    this.dispatch(
-      this.init$$$(activatedRoute, router)
-    );
+    if (!this.init$$$)
+      return;
+
+    const init$$$ = this.init$$$ instanceof Function
+      ? this.init$$$(activatedRoute, router)
+      : this.init$$$;
+
+    this.dispatch(init$$$);
 
     await firstValueFrom(
       this.state$
@@ -39,7 +42,14 @@ export abstract class Feature<TState> {
 
   public async dispose(): Promise<void> {
 
-    this.dispatch(this.dispose$$$());
+    if (!this.dispose$$$)
+      return;
+
+    const dispose$$$ = this.dispose$$$ instanceof Function
+      ? this.dispose$$$()
+      : this.dispose$$$;
+
+    this.dispatch(dispose$$$);
 
     await firstValueFrom(
       this.state$

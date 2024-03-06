@@ -9,7 +9,6 @@ import { reducer } from "./rx/sign-in.reducer";
 import { SignInEffects } from "./rx/sign-in.effects";
 import { SignInState } from "./rx/sign-in.state";
 import { Store, provideState } from "@ngrx/store";
-import { TypedAction } from "@ngrx/store/src/models";
 
 @Injectable()
 export class SignInFeature extends Feature<SignInState> {
@@ -23,7 +22,11 @@ export class SignInFeature extends Feature<SignInState> {
   readonly method$ = this.of(method);
 
   constructor(store: Store) {
-    super(store, state);
+    super(store, state, dispose, (r) => init({
+      payload: {
+        redirectUrl: r.queryParamMap.get('redirect') || undefined
+      }
+    }));
   }
 
   signIn(emailAddress: string, password: string, persistent: boolean) {
@@ -34,21 +37,6 @@ export class SignInFeature extends Feature<SignInState> {
         persistent
       }
     }));
-  }
-
-  protected override dispose$$$(): TypedAction<string> {
-    return dispose();
-  }
-
-  protected override init$$$(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): TypedAction<string> {
-
-    const redirectUrl = activatedRoute.queryParamMap.get("redirect") || undefined;
-
-    return init({
-      payload: {
-        redirectUrl
-      }
-    });
   }
 }
 

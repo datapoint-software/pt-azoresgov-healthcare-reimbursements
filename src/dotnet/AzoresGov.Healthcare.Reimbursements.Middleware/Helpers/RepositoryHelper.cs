@@ -25,6 +25,24 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Helpers
             return entity;
         }
         
+        internal static async Task<TEntity> GetByIdOrThrowExceptionAsync<TEntity>(
+            this IRepository<TEntity> entities, 
+            long id,
+            Guid rowVersionId, 
+            CancellationToken ct)
+            where TEntity : class, IEntity
+        {
+            var entity = await GetByIdOrThrowExceptionAsync(entities, id, ct);
+            
+            if (!entity.RowVersionId.Equals(rowVersionId))
+            {
+                throw new ConcurrencyException("Row version identifier mismatch.")
+                    .WithErrorMessage("Os registos associados a esta operação foram modificados entretanto.");
+            }
+
+            return entity;
+        }
+        
         internal static async Task<TEntity> GetByPublicIdOrThrowExceptionAsync<TEntity>(
             this IRepository<TEntity> entities, 
             Guid publicId, 

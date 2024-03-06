@@ -20,15 +20,7 @@ export class EnvironmentFeature extends Feature<EnvironmentState> {
   public readonly productVersion$ = this.of(productVersion);
 
   constructor(store: Store) {
-    super(store, state);
-  }
-
-  protected override dispose$$$(): TypedAction<string> {
-    return dispose();
-  }
-
-  protected override init$$$(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): TypedAction<string> {
-    return init();
+    super(store, state, dispose, init);
   }
 }
 

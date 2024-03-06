@@ -68,7 +68,7 @@ export class ProcessCreationEffects {
     concatLatestFrom(() => [
       this.store.select(selectors.processId)
     ]),
-    tap(([ _, processId ]) => this.router.navigate([ '/processes', processId, 'patient-capture']))
+    tap(([ _, processId ]) => this.router.navigate([ '/processes', processId, 'capture', 'patient']))
   ),
 
   { dispatch: false });
