@@ -2,7 +2,7 @@ import { Actions, concatLatestFrom, createEffect, ofType } from "@ngrx/effects";
 import { configure, submit, init, next, previous, searchEntities, searchEntitiesComplete, searchPatients, searchPatientsComplete, selectEntity, selectPatient, step, submitComplete, redirectToProcessPatientCapture, dispose } from "./process-creation.actions";
 import { Injectable } from "@angular/core";
 import { mergeLoadingOverlay } from "../../loading-overlay/rx/loading-overlay.operators";
-import { filter, map, mergeMap, of } from "rxjs";
+import { map, mergeMap, of, tap } from "rxjs";
 import { ProcessCreationClient } from "../../../clients/process-creation/process-creation.client";
 import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
@@ -68,10 +68,10 @@ export class ProcessCreationEffects {
     concatLatestFrom(() => [
       this.store.select(selectors.processId)
     ]),
-    mergeMap(([ _, processId ]) => this.router.navigate([ '/processes', processId, 'patient-capture'])),
-    filter(success => success),
-    map(() => dispose())
-  ));
+    tap(([ _, processId ]) => this.router.navigate([ '/processes', processId, 'patient-capture']))
+  ),
+
+  { dispatch: false });
 
   readonly searchEntities$ = createEffect(() => this.actions$.pipe(
     ofType(searchEntities),
