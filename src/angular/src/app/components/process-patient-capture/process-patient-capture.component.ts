@@ -4,10 +4,12 @@ import { ProcessPatientCaptureFeature } from "../../features/process-patient-cap
 import { CommonModule } from "@angular/common";
 import { take } from "rxjs";
 import { ProcessStatusMenuComponent } from "../process-status-menu/process-status-menu.component";
+import { IntegerPipe } from "../../pipes/integer.pipe";
 
 @Component({
   imports: [
     CommonModule,
+    IntegerPipe,
     ProcessStatusMenuComponent,
     ReactiveFormsModule
   ],

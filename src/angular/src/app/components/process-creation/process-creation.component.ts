@@ -5,6 +5,7 @@ import { EntityNaturePipe } from "../../pipes/entity-nature.pipe";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ProcessCreationFeature } from "../../features/process-creation/process-creation.feature";
 import { Router } from "@angular/router";
+import { IntegerPipe } from "../../pipes/integer.pipe";
 
 @Component({
     selector: 'app-process-create',
@@ -13,8 +14,9 @@ import { Router } from "@angular/router";
     templateUrl: './process-creation.component.html',
     imports: [
         CommonModule,
-        ReactiveFormsModule,
-        EntityNaturePipe
+        EntityNaturePipe,
+        IntegerPipe,
+        ReactiveFormsModule
     ]
 })
 export class ProcessCreationComponent implements OnDestroy {
