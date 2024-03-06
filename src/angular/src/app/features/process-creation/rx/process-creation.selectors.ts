@@ -14,6 +14,12 @@ export const entities = createSelector(state, state => state.entities);
 
 export const entityId = createSelector(state, state => state.entityId);
 
+export const entityName = createSelector(
+  entities,
+  entityId,
+  (entities, entityId) => entities[entityId!].name
+);
+
 export const entitySearchResult = createSelector(state, state => state.entitySearchResult);
 
 export const entitySearchResultEntityIds = createSelector(entitySearchResult, entitySearchResult => entitySearchResult?.entityIds);

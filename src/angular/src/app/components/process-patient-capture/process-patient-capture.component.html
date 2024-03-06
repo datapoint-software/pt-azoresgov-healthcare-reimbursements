@@ -21,7 +21,315 @@
   </div>
 </div>
 
-<div class="container-fluid">
-  <form [formGroup]="patient" (ngSubmit)="onSubmit()">
-  </form>
+<div class="container-fluid ms-0 pb-4">
+  <div class="row">
+    <div class="col col-12 col-lg-9">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            Identificação
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="row g-4">
+            <div class="col col-12 col-lg-3 mb-2">
+              <div class="text-muted text-uppercase fs-6 mb-2">Utente</div>
+              <div class="text-nowrap">{{patientHealthNumber$ | async}}</div>
+            </div>
+            <div class="col col-12 col-lg-3 mb-2">
+              <div class="text-muted text-uppercase fs-6 mb-2">Contribuínte</div>
+              <div class="text-nowrap">{{patientTaxNumber$ | async }}</div>
+            </div>
+            <div class="col col-12 col-lg-6 mb-2">
+              <div class="text-muted text-uppercase fs-6 mb-2">Nome</div>
+              <div class="text-nowrap">{{patientName$ | async }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="alert alert-warning" *ngIf="patient.dirty">
+        A alteração dos dados do utente no <strong class="text-nowrap">Sistema de Gestão de Reembolsos</strong> não é propagada
+        para outros sistemas de informação de forma automática.
+      </div>
+      <form [formGroup]="patient" (ngSubmit)="onSubmit()">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-header-title">
+              Morada
+            </h4>
+          </div>
+          <div class="card-body">
+            <div class="row g-4">
+              <div class="col col-12 col-lg-6 mb-2">
+                <div class="form-group">
+                  <!-- Label -->
+                  <label
+                    [class.is-invalid]="(patient.controls.addressLine1.dirty || patient.controls.addressLine1.touched) && patient.controls.addressLine1.invalid"
+                    class="form-label"
+                    for="addressLine1">
+                    Rua / Porta / Fracção
+                  </label>
+                  <!-- Input -->
+                  <input
+                    [class.is-invalid]="(patient.controls.addressLine1.dirty || patient.controls.addressLine1.touched) && patient.controls.addressLine1.invalid"
+                    [formControlName]="'addressLine1'"
+                    class="form-control"
+                    id="addressLine1"
+                    placeholder="Rua/porta/fracção"
+                    required
+                    tabindex="1"
+                    type="text" />
+                  <div class="invalid-feedback mt-1" *ngIf="patient.controls.addressLine1.errors?.['required']">
+                    Este campo é de preenchimento obrigatório.
+                  </div>
+                  <div class="invalid-feedback mt-1" *ngIf="patient.controls.addressLine1.errors?.['maxlength']">
+                    Este campo excede o limite máximo de caractéres permitido.
+                  </div>
+                </div>
+                <div class="form-group">
+                  <!-- Label -->
+                  <label
+                    [class.is-invalid]="(patient.controls.addressLine2.dirty || patient.controls.addressLine2.touched) && patient.controls.addressLine2.invalid"
+                    class="form-label"
+                    for="addressLine2">
+                    Localidade
+                  </label>
+                  <!-- Input -->
+                  <input
+                    [class.is-invalid]="(patient.controls.addressLine2.dirty || patient.controls.addressLine2.touched) && patient.controls.addressLine2.invalid"
+                    [formControlName]="'addressLine2'"
+                    class="form-control"
+                    id="addressLine2"
+                    placeholder="Localidade"
+                    tabindex="2"
+                    type="text" />
+                  <div class="invalid-feedback mt-1" *ngIf="patient.controls.addressLine2.errors?.['required']">
+                    Este campo é de preenchimento obrigatório.
+                  </div>
+                  <div class="invalid-feedback mt-1" *ngIf="patient.controls.addressLine2.errors?.['maxlength']">
+                    Este campo excede o limite máximo de caractéres permitido.
+                  </div>
+                </div>
+                <div class="form-group">
+                  <!-- Label -->
+                  <label
+                    [class.is-invalid]="(patient.controls.addressLine3.dirty || patient.controls.addressLine3.touched) && patient.controls.addressLine3.invalid"
+                    class="form-label"
+                    for="addressLine3">
+                    Distrito
+                  </label>
+                  <!-- Input -->
+                  <input
+                    [class.is-invalid]="(patient.controls.addressLine3.dirty || patient.controls.addressLine3.touched) && patient.controls.addressLine3.invalid"
+                    [formControlName]="'addressLine3'"
+                    class="form-control"
+                    id="addressLine3"
+                    placeholder="Distrito"
+                    tabindex="3"
+                    type="text" />
+                  <div class="invalid-feedback mt-1" *ngIf="patient.controls.addressLine3.errors?.['required']">
+                    Este campo é de preenchimento obrigatório.
+                  </div>
+                  <div class="invalid-feedback mt-1" *ngIf="patient.controls.addressLine3.errors?.['maxlength']">
+                    Este campo excede o limite máximo de caractéres permitido.
+                  </div>
+                </div>
+              </div>
+              <div class="col col-12 col-lg-6 mb-2">
+                <div class="form-group">
+                  <!-- Label -->
+                  <label
+                    [class.is-invalid]="(patient.controls.postalCode.dirty || patient.controls.postalCode.touched) && patient.controls.postalCode.invalid"
+                    class="form-label"
+                    for="postalCode">
+                    Código postal
+                  </label>
+                  <!-- Input -->
+                  <input
+                    [class.is-invalid]="(patient.controls.postalCode.dirty || patient.controls.postalCode.touched) && patient.controls.postalCode.invalid"
+                    [formControlName]="'postalCode'"
+                    class="form-control"
+                    id="postalCode"
+                    placeholder="0000-000"
+                    tabindex="4"
+                    type="text" />
+                  <div class="invalid-feedback mt-1" *ngIf="patient.controls.postalCode.errors?.['required']">
+                    Este campo é de preenchimento obrigatório.
+                  </div>
+                  <div class="invalid-feedback mt-1" *ngIf="patient.controls.postalCode.errors?.['maxlength']">
+                    Este campo excede o limite máximo de caractéres permitido.
+                  </div>
+                  <div class="invalid-feedback mt-1" *ngIf="patient.controls.postalCode.errors?.['pattern']">
+                    Este campo requere um código postal.
+                  </div>
+                </div>
+                <div class="form-group">
+                  <!-- Label -->
+                  <label
+                    [class.is-invalid]="(patient.controls.postalCodeArea.dirty || patient.controls.postalCodeArea.touched) && patient.controls.postalCodeArea.invalid"
+                    class="form-label"
+                    for="postalCodeArea">
+                    Designação postal
+                  </label>
+                  <!-- Input -->
+                  <input
+                    [class.is-invalid]="(patient.controls.postalCodeArea.dirty || patient.controls.postalCodeArea.touched) && patient.controls.postalCodeArea.invalid"
+                    [formControlName]="'postalCodeArea'"
+                    class="form-control"
+                    id="postalCodeArea"
+                    placeholder="Designação Postal"
+                    tabindex="5"
+                    type="text" />
+                  <div class="invalid-feedback mt-1" *ngIf="patient.controls.postalCodeArea.errors?.['required']">
+                    Este campo é de preenchimento obrigatório.
+                  </div>
+                  <div class="invalid-feedback mt-1" *ngIf="patient.controls.postalCodeArea.errors?.['maxlength']">
+                    Este campo excede o limite máximo de caractéres permitido.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-header-title">
+              Contactos
+            </h4>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col col-12 mb-2">
+                <div class="form-group">
+                  <!-- Label -->
+                  <label
+                    [class.is-invalid]="(patient.controls.emailAddress.dirty || patient.controls.emailAddress.touched) && patient.controls.emailAddress.invalid"
+                    class="form-label"
+                    for="emailAddress">
+                    Correio eletrónico
+                  </label>
+                  <!-- Input -->
+                  <input
+                    [class.is-invalid]="(patient.controls.emailAddress.dirty || patient.controls.emailAddress.touched) && patient.controls.emailAddress.invalid"
+                    [formControlName]="'emailAddress'"
+                    class="form-control"
+                    id="emailAddress"
+                    placeholder="Correio eletrónico"
+                    tabindex="6"
+                    type="email" />
+                  <div class="invalid-feedback mt-1" *ngIf="patient.controls.emailAddress.errors?.['required']">
+                    Este campo é de preenchimento obrigatório.
+                  </div>
+                  <div class="invalid-feedback mt-1" *ngIf="patient.controls.emailAddress.errors?.['maxlength']">
+                    Este campo excede o limite máximo de caractéres permitido.
+                  </div>
+                  <div class="invalid-feedback mt-1" *ngIf="patient.controls.emailAddress.errors?.['pattern']">
+                    Este campo requere um código postal.
+                  </div>
+                </div>
+              </div>
+              <div class="col col-12 col-lg-4 mb-2">
+                <div class="form-group">
+                  <!-- Label -->
+                  <label
+                    [class.is-invalid]="(patient.controls.faxNumber.dirty || patient.controls.faxNumber.touched) && patient.controls.faxNumber.invalid"
+                    class="form-label"
+                    for="faxNumber">
+                    Fax
+                  </label>
+                  <!-- Input -->
+                  <input
+                    [class.is-invalid]="(patient.controls.faxNumber.dirty || patient.controls.faxNumber.touched) && patient.controls.faxNumber.invalid"
+                    [formControlName]="'faxNumber'"
+                    class="form-control"
+                    id="faxNumber"
+                    placeholder="Fax"
+                    tabindex="7"
+                    type="email" />
+                  <div class="invalid-feedback mt-1" *ngIf="patient.controls.faxNumber.errors?.['required']">
+                    Este campo é de preenchimento obrigatório.
+                  </div>
+                  <div class="invalid-feedback mt-1" *ngIf="patient.controls.faxNumber.errors?.['maxlength']">
+                    Este campo excede o limite máximo de caractéres permitido.
+                  </div>
+                  <div class="invalid-feedback mt-1" *ngIf="patient.controls.faxNumber.errors?.['pattern']">
+                    Este campo requere um código postal.
+                  </div>
+                </div>
+              </div>
+              <div class="col col-12 col-lg-4 mb-2">
+                <div class="form-group">
+                  <!-- Label -->
+                  <label
+                    [class.is-invalid]="(patient.controls.mobileNumber.dirty || patient.controls.mobileNumber.touched) && patient.controls.mobileNumber.invalid"
+                    class="form-label"
+                    for="mobileNumber">
+                    Telemóvel
+                  </label>
+                  <!-- Input -->
+                  <input
+                    [class.is-invalid]="(patient.controls.mobileNumber.dirty || patient.controls.mobileNumber.touched) && patient.controls.mobileNumber.invalid"
+                    [formControlName]="'mobileNumber'"
+                    class="form-control"
+                    id="mobileNumber"
+                    placeholder="Telemóvel"
+                    tabindex="8"
+                    type="text" />
+                  <div class="invalid-feedback mt-1" *ngIf="patient.controls.mobileNumber.errors?.['required']">
+                    Este campo é de preenchimento obrigatório.
+                  </div>
+                  <div class="invalid-feedback mt-1" *ngIf="patient.controls.mobileNumber.errors?.['maxlength']">
+                    Este campo excede o limite máximo de caractéres permitido.
+                  </div>
+                  <div class="invalid-feedback mt-1" *ngIf="patient.controls.mobileNumber.errors?.['pattern']">
+                    Este campo requere um código postal.
+                  </div>
+                </div>
+              </div>
+              <div class="col col-12 col-lg-4 mb-2">
+                <div class="form-group">
+                  <!-- Label -->
+                  <label
+                    [class.is-invalid]="(patient.controls.phoneNumber.dirty || patient.controls.phoneNumber.touched) && patient.controls.phoneNumber.invalid"
+                    class="form-label"
+                    for="phoneNumber">
+                    Telefone
+                  </label>
+                  <!-- Input -->
+                  <input
+                    [class.is-invalid]="(patient.controls.phoneNumber.dirty || patient.controls.phoneNumber.touched) && patient.controls.phoneNumber.invalid"
+                    [formControlName]="'phoneNumber'"
+                    class="form-control"
+                    id="phoneNumber"
+                    placeholder="Telefone"
+                    tabindex="9"
+                    type="text" />
+                  <div class="invalid-feedback mt-1" *ngIf="patient.controls.phoneNumber.errors?.['required']">
+                    Este campo é de preenchimento obrigatório.
+                  </div>
+                  <div class="invalid-feedback mt-1" *ngIf="patient.controls.phoneNumber.errors?.['maxlength']">
+                    Este campo excede o limite máximo de caractéres permitido.
+                  </div>
+                  <div class="invalid-feedback mt-1" *ngIf="patient.controls.phoneNumber.errors?.['pattern']">
+                    Este campo requere um código postal.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="text-end">
+        <button class="btn btn-primary">
+          Continue
+        </button>
+      </div>
+    </div>
+    <div class="d-none d-lg-block col col-lg-3" *ngIf="(process$ | async) as process">
+      <app-process-status-menu
+        [id]="process.id"
+        [number]="process.number"
+        [status]="process.status" />
+    </div>
+  </div>
 </div>

@@ -1,11 +1,11 @@
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
-import { complete, process, entities, entityId, entitySearchResult, entitySearchResultEntityIds, entitySearchResultTotalMatchCount, patientId, patientSearchResult, patientSearchResultEntityIds, patientSearchResultTotalMatchCount, patients, processId, state, step, steps } from "./rx/process-creation.selectors";
+import { complete, process, entities, entityId, entitySearchResult, entitySearchResultEntityIds, entitySearchResultTotalMatchCount, patientId, patientSearchResult, patientSearchResultEntityIds, patientSearchResultTotalMatchCount, patients, processId, state, step, steps, entityName } from "./rx/process-creation.selectors";
 import { concatLatestFrom, provideEffects } from "@ngrx/effects";
 import { dispose, init, next, previous, redirectToProcessPatientCapture, searchEntities, searchPatients, selectEntity, selectPatient } from "./rx/process-creation.actions";
 import { EnvironmentProviders, Injectable, makeEnvironmentProviders } from "@angular/core";
 import { Feature } from "../feature.abstractions";
 import { FEATURE_NAME } from "./process-creation.constants";
-import { map } from "rxjs";
+import { map, mergeMap } from "rxjs";
 import { ProcessCreationEffects } from "./rx/process-creation.effects";
 import { ProcessCreationState } from "./rx/process-creation.state";
 import { reducer } from "./rx/process-creation.reducer";
@@ -27,6 +27,13 @@ export class ProcessCreationFeature extends Feature<ProcessCreationState> {
   );
 
   readonly entityId$ = this.of(entityId);
+
+  readonly entityName$ = this.of(entityId).pipe(
+    concatLatestFrom(() => [
+      this.of(entities)
+    ]),
+    map(([ entityId, entities ]) => entities[entityId!].name)
+  );
 
   readonly entitySearchResult$ = this.of(entitySearchResult);
 

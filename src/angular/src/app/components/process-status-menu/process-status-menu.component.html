@@ -1,0 +1,41 @@
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      Formulários
+    </h4>
+  </div>
+  <div class="list-group list-group-flush">
+    <a class="list-group-item pe-4 ps-4 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', id, 'patient-capture']">
+      Utente
+      <span
+        [class.fe-check]="status < ProcessStatus.PatientCapture"
+        [class.fe-edit]="status === ProcessStatus.PatientCapture"
+        [class.fe-lock]="status > ProcessStatus.PatientCapture"
+        class="fe ms-auto" ></span>
+    </a>
+    <a class="list-group-item pe-4 ps-4 text-muted d-flex align-items-center justify-content-center">
+      Representante legal
+      <span class="fe fe-lock ms-auto"></span>
+    </a>
+    <a class="list-group-item pe-4 ps-4 text-muted d-flex align-items-center justify-content-center">
+      Situação de desemprego
+      <span class="fe fe-lock ms-auto"></span>
+    </a>
+    <a class="list-group-item pe-4 ps-4 text-muted d-flex align-items-center justify-content-center">
+      Declaração de rendimentos
+      <span class="fe fe-lock ms-auto"></span>
+    </a>
+    <a class="list-group-item pe-4 ps-4 text-muted d-flex align-items-center justify-content-center">
+      Pagamento
+      <span class="fe fe-lock ms-auto"></span>
+    </a>
+    <a class="list-group-item pe-4 ps-4 text-muted d-flex align-items-center justify-content-center">
+      Documentos
+      <span class="fe fe-lock ms-auto"></span>
+    </a>
+    <a class="list-group-item pe-4 ps-4 text-muted d-flex align-items-center justify-content-center">
+      Simulação
+      <span class="fe fe-lock ms-auto"></span>
+    </a>
+  </div>
+</div>

@@ -7,7 +7,7 @@ import { ProcessPatientCaptureEffects } from "./rx/process-patient-capture.effec
 import { ProcessPatientCaptureState } from "./rx/process-patient-capture.state";
 import { provideEffects } from "@ngrx/effects";
 import { reducer } from "./rx/process-patient-capture.reducer";
-import { process, processNumber, state } from "./rx/process-patient-capture.selectors";
+import { patient, patientHealthNumber, patientName, patientTaxNumber, process, processNumber, state } from "./rx/process-patient-capture.selectors";
 import { Store, provideState } from "@ngrx/store";
 import { TypedAction } from "@ngrx/store/src/models";
 
@@ -17,6 +17,14 @@ export class ProcessPatientCaptureFeature extends Feature<ProcessPatientCaptureS
   constructor(store: Store) {
     super(store, state);
   }
+
+  readonly patient$ = this.of(patient);
+
+  readonly patientHealthNumber$ = this.of(patientHealthNumber);
+
+  readonly patientName$ = this.of(patientName);
+
+  readonly patientTaxNumber$ = this.of(patientTaxNumber);
 
   readonly process$ = this.of(process);
 

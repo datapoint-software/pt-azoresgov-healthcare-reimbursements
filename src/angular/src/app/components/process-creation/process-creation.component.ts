@@ -27,6 +27,8 @@ export class ProcessCreationComponent implements OnDestroy {
 
   readonly entity$ = this.processCreation.entity$;
 
+  readonly entityName$ = this.processCreation.entityName$;
+
   readonly entityById$ = this.processCreation.entityById$;
 
   readonly entityId$ = this.processCreation.entityId$;
