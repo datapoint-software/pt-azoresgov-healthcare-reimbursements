@@ -1,4 +1,4 @@
-import { Actions, ofType, provideEffects } from "@ngrx/effects";
+import { Actions, concatLatestFrom, ofType, provideEffects } from "@ngrx/effects";
 import { configure, debounceWritting, dispose, init, writePatient } from "./rx/process-capture.actions";
 import { EnvironmentProviders, Injectable, makeEnvironmentProviders } from "@angular/core";
 import { Feature } from "../feature.abstractions";
@@ -10,7 +10,7 @@ import { ProcessCaptureState } from "./rx/process-capture.state";
 import { reducer } from "./rx/process-capture.reducer";
 import { Store, provideState } from "@ngrx/store";
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
-import { Subject, debounce, debounceTime, distinct, filter, takeUntil, tap } from "rxjs";
+import { Subject, debounceTime, distinct, filter, takeUntil, tap } from "rxjs";
 import { APP_AUTOSAVE_DELAY_MS } from "../../app.constants";
 
 @Injectable()
@@ -30,9 +30,13 @@ export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
     phoneNumber: new FormControl('', [ Validators.maxLength(16) ])
   });
 
+  readonly specialTerms = new FormGroup({
+    machadoJoseph: new FormControl(false, [])
+  });
+
   readonly legalRepresentative = new FormGroup({
 
-  })
+  });
 
   readonly patient$ = this.of(patient);
 
@@ -101,6 +105,7 @@ export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
       .pipe(distinct())
       .pipe(tap(() => this.dispatch(debounceWritting())))
       .pipe(debounceTime(APP_AUTOSAVE_DELAY_MS))
+      .pipe(takeUntil(this.dispose$))
       .subscribe(() => {
         this.writePatient({
           addressLine1: this.patient.value.addressLine1!,

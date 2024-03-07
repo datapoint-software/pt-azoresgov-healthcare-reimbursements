@@ -24,6 +24,8 @@ export class ProcessCaptureNavigationComponent {
 
   readonly patient = this.processCapture.patient;
 
+  readonly specialTerms = this.processCapture.specialTerms;
+
   readonly process$ = this.processCapture.process$;
 
   icon(valid: boolean) {

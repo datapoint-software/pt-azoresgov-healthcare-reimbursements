@@ -2,3 +2,14 @@
 .modal {
   &.show { display: block; }
 }
+
+.result-card {
+
+  cursor: pointer;
+  transition: box-shadow 150ms ease-in;
+
+  &:hover,
+  &.selected {
+    box-shadow: 0 0 16px var(--bs-primary)
+  }
+}

@@ -1,1 +1,148 @@
-(( process search ))
+<div class="header">
+  <div class="container-fluid">
+    <!-- Body -->
+    <div class="header-body">
+      <div class="row align-items-end">
+        <div class="col">
+
+          <!-- Pretitle -->
+          <h6 class="header-pretitle">
+            Pesquisa
+          </h6>
+
+          <!-- Title -->
+          <h1 class="header-title">
+            Processos
+          </h1>
+
+        </div>
+      </div> <!-- / .row -->
+    </div> <!-- / .header-body -->
+  </div>
+</div>
+
+<div class="container-fluid ms-0 pb-4">
+  <div class="row">
+    <div class="col col-12 col-lg-8">
+      <ng-container *ngIf="(searchResult$ | async) as searchResult">
+        <div *ngIf="searchResult.totalMatchCount === 0" class="card mb-4 bg-warning">
+          <div class="card-body">
+            Não existem resultados a apresentar.
+          </div>
+        </div>
+        <div class="card mb-4 result-card" *ngFor="let process of searchResult.processes" (click)="redirect(process.id, process.status)">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col-auto">
+
+                <!-- Avatar -->
+                <div class="fs-1">
+                  <i class="fe fe-file"></i>
+                </div>
+
+              </div>
+              <div class="col ms-n2">
+
+                <!-- Title -->
+                <h4 class="mt-0 mb-2">
+                  {{searchResult.patients[process.patientId].name}}
+                </h4>
+
+                <!-- Text -->
+                <div class="small mb-0 mt-2 d-flex flex-row flex-wrap align-items-center justify-content-start">
+                  <div class="d-flex flex-row align-items-center justify-content-center me-3">
+                    <i class="fe fe-hash me-1"></i>
+                    <span class="text-nowrap">{{process.number}}</span>
+                  </div>
+                  <div class="d-flex flex-row align-items-center justify-content-center me-3">
+                    <i class="fe fe-calendar me-1"></i>
+                    <span class="text-nowrap">{{process.creation | date:'dd/MM/yyyy HH:mm:ss'}}</span>
+                  </div>
+                  <div class="d-flex flex-row align-items-center justify-content-center me-3">
+                    <i class="fe fe-activity me-1"></i>
+                    <span class="text-nowrap">{{searchResult.patients[process.patientId].healthNumber | integer}}</span>
+                  </div>
+                  <div class="d-flex flex-row align-items-center justify-content-center me-3">
+                    <i class="fe fe-dollar-sign me-1"></i>
+                    <span class="text-nowrap">{{searchResult.patients[process.patientId].taxNumber | integer}}</span>
+                  </div>
+                </div>
+
+              </div>
+            </div> <!-- / .row -->
+          </div> <!-- / .card-body -->
+          <div class="card-footer">
+            <span class="badge bg-danger text-white ms-2 p-2" *ngIf="late(process.expiration)">
+              Em atraso
+            </span>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <div class="col col-12 col-lg-4">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-header-title">
+            Pesquisa
+          </h4>
+        </div>
+        <form
+          [formGroup]="searchFormGroup"
+          (ngSubmit)="onFiltersSubmit()"
+          class="card-body">
+          <div class="form-group">
+
+            <label
+              [class.is-invalid]="(searchFormGroup.controls.filter.touched || searchFormGroup.controls.filter.dirty) && searchFormGroup.controls.filter.invalid"
+              class="form-label"
+              for="filter">
+              Pesquisa
+            </label>
+
+            <div class="input-group input-group-lg input-group-merge input-group-reverse">
+
+              <!-- Input -->
+              <input
+                [class.is-invalid]="(searchFormGroup.controls.filter.touched || searchFormGroup.controls.filter.dirty) && searchFormGroup.controls.filter.invalid"
+                [formControlName]="'filter'"
+                class="form-control list-search"
+                id="filter"
+                placeholder="Pesquisa"
+                tabindex="1"
+                type="text" />
+
+              <!-- Prepend -->
+              <div class="input-group-text">
+                <span class="fe fe-search"></span>
+              </div>
+
+            </div>
+          </div>
+          <ng-container *ngIf="(entities$ | async) as entities">
+            <ng-container *ngIf="entities.length > 1">
+              <div class="form-group">
+                <label
+                  class="form-label"
+                  for="entity">
+                  Entidade
+                </label>
+                <!-- Input -->
+                <select
+                  (change)="onFiltersSubmit()"
+                  [class.is-invalid]="(searchFormGroup.controls.entityId.touched || searchFormGroup.controls.entityId.dirty) && searchFormGroup.controls.entityId.invalid"
+                  [formControlName]="'entityId'"
+                  aria-label="Entidade"
+                  class="form-select"
+                  tabindex="2"
+                  id="entity">
+                  <option selected></option>
+                  <option *ngFor="let entity of entities" [value]="entity.id">{{entity.name}}</option>
+                </select>
+              </div>
+            </ng-container>
+          </ng-container>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

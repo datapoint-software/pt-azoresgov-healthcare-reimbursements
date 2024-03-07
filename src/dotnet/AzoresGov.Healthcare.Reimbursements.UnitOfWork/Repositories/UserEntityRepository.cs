@@ -36,5 +36,16 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
             await Entities
                 .Where(e => e.UserId == userId)
                 .ToListAsync(ct);
+
+        public async Task<IReadOnlyCollection<long>> GetAllEntityIdByUserIdAndEntityNatureAsync(
+            long userId,
+            IReadOnlyCollection<EntityNature> nature,
+            CancellationToken ct) =>
+
+            await Entities
+                .Where(e => e.UserId == userId)
+                .Where(e => nature.Contains(e.Entity.Nature))
+                .Select(e => e.EntityId)
+                .ToListAsync(ct);
     }
 }

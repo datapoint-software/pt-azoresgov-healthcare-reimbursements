@@ -20,5 +20,10 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
             CancellationToken ct);
         
         Task<IReadOnlyCollection<UserEntity>> GetAllByUserIdAsync(long userId, CancellationToken ct);
+
+        Task<IReadOnlyCollection<long>> GetAllEntityIdByUserIdAndEntityNatureAsync(
+            long userId,
+            IReadOnlyCollection<EntityNature> nature,
+            CancellationToken ct);
     }
 }

@@ -12,9 +12,10 @@ import { LayoutComponent } from './components/layout/layout.component';
 import { ProcessSearchComponent } from './components/process-search/process-search.component';
 import { ProcessCapturePatientComponent } from './components/process-capture-patient/process-capture-patient.component';
 import { ProcessCaptureComponent } from './components/process-capture/process-capture.component';
-import { canActivateProcessCapture } from './guards/process-capture/process-capture.guards';
+import { canActivateProcessCapture, canDeactivateProcessCapture } from './guards/process-capture/process-capture.guards';
 import { ProcessCaptureLegalRepresentativeComponent } from './components/process-capture-legal-representative/process-capture-legal-representative.component';
 import { ProcessCaptureSpecialTermsComponent } from './components/process-capture-special-terms/process-capture-special-terms.component';
+import { canActivateProcessSearch } from './guards/process-search/process-search.guards';
 
 export const routes: Routes = [
   {
@@ -50,7 +51,8 @@ export const routes: Routes = [
               {
                 path: '',
                 pathMatch: 'full',
-                component: ProcessSearchComponent
+                component: ProcessSearchComponent,
+                canActivate: [ canActivateProcessSearch ]
               },
               {
                 path: '_',
@@ -65,6 +67,7 @@ export const routes: Routes = [
                     path: 'capture',
                     component: ProcessCaptureComponent,
                     canActivate: [ canActivateProcessCapture ],
+                    canDeactivate: [ canDeactivateProcessCapture ],
                     children: [
                       {
                         path: 'patient',

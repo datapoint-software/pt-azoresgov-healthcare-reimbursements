@@ -14,8 +14,11 @@
         </span>
       </a>
       <a class="list-group-item pe-4 ps-4 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', process.id, 'capture', 'special-terms']">
-        Condições especiais
-        <span class="fe fe-edit ms-auto"></span>
+        Autorizações especiais
+        <span
+          [class]="icon(specialTerms.valid)"
+          class="fe ms-auto">
+        </span>
       </a>
       <a class="list-group-item pe-4 ps-4 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', process.id, 'capture', 'legal-representative']">
         Representante legal

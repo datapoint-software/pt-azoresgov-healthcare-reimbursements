@@ -44,6 +44,14 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
                 .ToListAsync(ct);
         }
 
+        public async Task<IReadOnlyCollection<Patient>> GetAllByIdAsync(
+            IReadOnlyCollection<long> id,
+            CancellationToken ct) =>
+
+            await Entities
+                .Where(e => id.Contains(e.Id))
+                .ToListAsync(ct);
+
         private IQueryable<Patient> GetQueryableByUserEntitySearchCriteria(
             long entityId,
             string? filter)
