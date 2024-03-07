@@ -6,7 +6,6 @@ import { ProcessCaptureClient } from "../../../clients/process-capture/process-c
 import { Store } from "@ngrx/store";
 
 import * as $$ from "./process-capture.selectors";
-import { mergeLoadingOverlay } from "../../loading-overlay/rx/loading-overlay.operators";
 
 @Injectable()
 export class ProcessCaptureEffects {
@@ -36,7 +35,7 @@ export class ProcessCaptureEffects {
       this.store.select($$.processId),
       this.store.select($$.processRowVersionId)
     ]),
-    mergeLoadingOverlay(([ { payload }, patientRowVersionId, processId, processRowVersionId ]) => this.processCaptureClient.writePatient(processId, {
+    mergeMap(([ { payload }, patientRowVersionId, processId, processRowVersionId ]) => this.processCaptureClient.writePatient(processId, {
       patientRowVersionId,
       processRowVersionId,
       ...payload

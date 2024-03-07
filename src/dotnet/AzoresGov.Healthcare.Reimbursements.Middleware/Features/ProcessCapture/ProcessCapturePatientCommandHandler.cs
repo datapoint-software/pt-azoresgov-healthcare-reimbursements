@@ -1,4 +1,5 @@
-﻿using AzoresGov.Healthcare.Reimbursements.Middleware.Helpers;
+﻿using AzoresGov.Healthcare.Reimbursements.Enumerations;
+using AzoresGov.Healthcare.Reimbursements.Middleware.Helpers;
 using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories;
 using Datapoint;
 using Datapoint.Mediator;
@@ -39,6 +40,12 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
                 command.ProcessId, 
                 command.ProcessRowVersionId,
                 ct);
+
+            if (process.Status is not ProcessStatus.Capture)
+            {
+                throw new BusinessException("Process status mismatch.")
+                    .WithErrorMessage("O processo não está numa fase compatível com esta operação.");
+            }
 
             if (!await _userEntities.AnyByUserIdAndEntityIdAsync(user.Id, process.EntityId, ct))
             {

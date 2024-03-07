@@ -92,7 +92,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
                 Patient = patient,
                 User = user,
                 Number = processNumber,
-                Status = ProcessStatus.PatientCapture,
+                Status = ProcessStatus.Capture,
                 Creation = command.Creation,
                 Expiration = command.Creation.AddDays(processExpirationInDays).UtcDateTime,
                 Touch = command.Creation

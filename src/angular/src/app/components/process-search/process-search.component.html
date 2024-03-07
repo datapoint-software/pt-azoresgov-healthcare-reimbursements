@@ -25,23 +25,21 @@
   <div class="row">
     <div class="col col-12 col-lg-8">
       <ng-container *ngIf="(searchResult$ | async) as searchResult">
-        <div *ngIf="searchResult.totalMatchCount === 0" class="card mb-4 bg-warning">
-          <div class="card-body">
+        <ng-container *ngIf="searchResult.totalMatchCount === 0; else searchResultDisclaimer">
+          <div class="alert alert-light">
             Não existem resultados a apresentar.
           </div>
-        </div>
+        </ng-container>
+        <ng-template #searchResultDisclaimer>
+          <div class="alert alert-info">
+            Os resultados foram ordenados por prioridade de acordo com a <strong class="text-nowrap">data de registo</strong> e
+            <strong class="text-nowrap">data estimada para a conclusão</strong> de cada processo de reembolso.
+          </div>
+        </ng-template>
         <div class="card mb-4 result-card" *ngFor="let process of searchResult.processes" (click)="redirect(process.id, process.status)">
           <div class="card-body">
             <div class="row align-items-center">
-              <div class="col-auto">
-
-                <!-- Avatar -->
-                <div class="fs-1">
-                  <i class="fe fe-file"></i>
-                </div>
-
-              </div>
-              <div class="col ms-n2">
+              <div class="col">
 
                 <!-- Title -->
                 <h4 class="mt-0 mb-2">
@@ -72,10 +70,10 @@
             </div> <!-- / .row -->
           </div> <!-- / .card-body -->
           <div class="card-footer">
-            <span class="badge bg-secondary text-white ms-2 p-2">
+            <span class="badge bg-secondary text-white me-2 p-2">
               {{process.status | processStatus}}
             </span>
-            <span class="badge bg-danger text-white ms-2 p-2" *ngIf="late(process.expiration)">
+            <span class="badge bg-danger text-white me-2 p-2" *ngIf="late(process.expiration)">
               Em atraso
             </span>
           </div>
@@ -140,6 +138,31 @@
                   id="entity">
                   <option selected></option>
                   <option *ngFor="let entity of entities" [value]="entity.id">{{entity.name}}</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label
+                  class="form-label"
+                  for="status">
+                  Estado
+                </label>
+                <!-- Input -->
+                <select
+                  (change)="onFiltersSubmit()"
+                  [class.is-invalid]="(searchFormGroup.controls.status.touched || searchFormGroup.controls.status.dirty) && searchFormGroup.controls.status.invalid"
+                  [formControlName]="'status'"
+                  aria-label="Estado"
+                  class="form-select"
+                  tabindex="3"
+                  id="status">
+                  <option selected></option>
+                  <option [value]="ProcessStatus.Capture">{{ProcessStatus.Capture | processStatus}}</option>
+                  <option [value]="ProcessStatus.DocumentUpload">{{ProcessStatus.DocumentUpload | processStatus}}</option>
+                  <option [value]="ProcessStatus.Codification">{{ProcessStatus.Codification | processStatus}}</option>
+                  <option [value]="ProcessStatus.Validation">{{ProcessStatus.Validation | processStatus}}</option>
+                  <option [value]="ProcessStatus.Payment">{{ProcessStatus.Payment | processStatus}}</option>
+                  <option [value]="ProcessStatus.Complete">{{ProcessStatus.Complete | processStatus}}</option>
+                  <option [value]="ProcessStatus.Cancelled">{{ProcessStatus.Cancelled | processStatus}}</option>
                 </select>
               </div>
             </ng-container>

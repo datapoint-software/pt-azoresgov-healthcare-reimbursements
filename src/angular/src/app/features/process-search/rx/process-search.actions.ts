@@ -2,6 +2,7 @@ import { createAction, props } from "@ngrx/store";
 import { FEATURE_ACTION_PREFIX } from "../process-search.constants";
 import { ProcessSearchState } from "./process-search.state";
 import { ProcessSearchResultModel } from "../../../clients/process-search/process-search.models";
+import { ProcessStatus } from "../../../enums/process-status.enum";
 
 export const configure = createAction(
   `${FEATURE_ACTION_PREFIX}/configure`,
@@ -24,8 +25,7 @@ export const search = createAction(
     payload: {
       entityId?: string;
       filter?: string;
-      skip?: number;
-      take?: number;
+      status?: ProcessStatus;
     }
   }>()
 );

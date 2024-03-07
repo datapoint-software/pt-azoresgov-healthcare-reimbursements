@@ -20,6 +20,8 @@ import { ProcessStatusPipe } from "../../pipes/process-status.pipe";
 })
 export class ProcessSearchComponent implements OnDestroy {
 
+  readonly ProcessStatus = ProcessStatus;
+
   constructor(
     private readonly processSearch: ProcessSearchFeature,
     private readonly router: Router

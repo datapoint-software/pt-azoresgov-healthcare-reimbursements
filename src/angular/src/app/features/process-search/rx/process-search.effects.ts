@@ -3,7 +3,6 @@ import { ProcessSearchClient } from "../../../clients/process-search/process-sea
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { configure, init, search, searchComplete } from "./process-search.actions";
 import { map, mergeMap } from "rxjs";
-import { mergeLoadingOverlay } from "../../loading-overlay/rx/loading-overlay.operators";
 
 @Injectable()
 export class ProcessSearchEffects {
@@ -29,11 +28,10 @@ export class ProcessSearchEffects {
 
   readonly search$ = createEffect(() => this.actions$.pipe(
     ofType(search),
-    mergeLoadingOverlay(({ payload }) => this.processSearchClient.search(
+    mergeMap(({ payload }) => this.processSearchClient.search(
       payload.entityId,
       payload.filter,
-      payload.skip,
-      payload.take
+      payload.status
     ).pipe(
       map((response) => searchComplete({
         payload: response

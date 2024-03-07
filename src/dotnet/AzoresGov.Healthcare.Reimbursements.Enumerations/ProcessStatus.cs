@@ -2,6 +2,12 @@
 {
     public enum ProcessStatus
     {
-        PatientCapture
+        Capture = 'C',
+        DocumentUpload = 'D',
+        Codification = 'O',
+        Validation = 'V',
+        Payment = 'P',
+        Complete = 'M',
+        Cancelled = 'A'
     }
 }
