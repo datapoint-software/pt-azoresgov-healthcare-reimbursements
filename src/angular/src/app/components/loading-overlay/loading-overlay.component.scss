@@ -37,18 +37,24 @@
   }
 
   .spinner {
-    margin: 60px auto;
-    font-size: 10px;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: inline-block;
     position: relative;
-    border-top: 1.1em solid #2C7BE5;
-    border-right: 1.1em solid #2C7BE5;;
-    border-bottom: 1.1em solid #2C7BE5;;
-    border-left: 1.1em solid #ffffff;
-    -webkit-transform: translateZ(0);
-    -ms-transform: translateZ(0);
-    transform: translateZ(0);
-    -webkit-animation: loading-overlay-spinner-animation 1.1s infinite linear;
-    animation: loading-overlay-spinner-animation 1.1s infinite linear;
+    border: 10px solid;
+    border-color: rgba(var(--bs-primary-rgb), 0.20) rgba(var(--bs-primary-rgb), 0.35) rgba(var(--bs-primary-rgb), 0.50) rgba(var(--bs-primary-rgb), 0.7);
+    box-sizing: border-box;
+    animation: app-process-capture-save-icon 1s linear infinite;
+  }
+
+  @keyframes app-process-capture-save-icon {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 }
 
