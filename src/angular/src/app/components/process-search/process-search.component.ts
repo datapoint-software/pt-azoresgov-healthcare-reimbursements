@@ -5,11 +5,13 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { ProcessStatus } from "../../enums/process-status.enum";
 import { IntegerPipe } from "../../pipes/integer.pipe";
 import { Router } from "@angular/router";
+import { ProcessStatusPipe } from "../../pipes/process-status.pipe";
 
 @Component({
   imports: [
     CommonModule,
     IntegerPipe,
+    ProcessStatusPipe,
     ReactiveFormsModule
   ],
   selector: 'app-process-search',
