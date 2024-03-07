@@ -1,26 +1,12 @@
-.loader {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: inline-block;
-  position: relative;
-  border: 10px solid;
-  border-color: rgba(var(--bs-primary-rgb), 0.15) rgba(var(--bs-primary-rgb), 0.25) rgba(var(--bs-primary-rgb), 0.35) rgba(var(--bs-primary-rgb), 0.5);
-  box-sizing: border-box;
-  animation: app-process-capture-save-icon 1s linear infinite;
+app-loading-spinner {
+
+  height: 48px;
+  width: 48px;
+
   opacity: 0;
   transition: opacity 250ms ease-in;
 
   &.show {
     opacity: 1;
-  }
-}
-
-@keyframes app-process-capture-save-icon {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
   }
 }

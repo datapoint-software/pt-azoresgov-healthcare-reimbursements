@@ -1,11 +1,13 @@
+import { CommonModule } from "@angular/common";
 import { Component, Injectable } from "@angular/core";
 import { LoadingOverlayFeature } from "../../features/loading-overlay/loading-overlay.feature";
+import { LoadingSpinnerComponent } from "../loading-spinner/loading-spinner.component";
 import { map, tap } from "rxjs";
-import { CommonModule } from "@angular/common";
 
 @Component({
   imports: [
-    CommonModule
+    CommonModule,
+    LoadingSpinnerComponent
   ],
   selector: 'app-loading-overlay',
   standalone: true,

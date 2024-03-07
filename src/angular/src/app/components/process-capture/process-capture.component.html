@@ -17,7 +17,7 @@
 
         </div>
         <div class="col-auto">
-          <div class="loader" [class.show]="writting$ | async"></div>
+          <app-loading-spinner [class.show]="writting$ | async" />
         </div>
       </div> <!-- / .row -->
     </div> <!-- / .header-body -->

@@ -1,0 +1,27 @@
+:host,
+:host:after {
+  border-radius: 50%;
+  width: 10em;
+  height: 10em;
+}
+
+:host {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: block;
+  position: relative;
+  border: 10px solid;
+  border-color: rgba(var(--bs-primary-rgb), 0.20) rgba(var(--bs-primary-rgb), 0.35) rgba(var(--bs-primary-rgb), 0.50) rgba(var(--bs-primary-rgb), 0.7);
+  box-sizing: border-box;
+  animation: app-loading-spinner 1s linear infinite;
+}
+
+@keyframes app-loading-spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -1,13 +1,14 @@
 import { CommonModule } from "@angular/common";
 import { Component, OnDestroy } from "@angular/core";
-import { RouterModule } from "@angular/router";
-import { ProcessCaptureNavigationComponent } from "../process-capture-navigation/process-capture-navigation.component";
+import { LoadingSpinnerComponent } from "../loading-spinner/loading-spinner.component";
 import { ProcessCaptureFeature } from "../../features/process-capture/process-capture.feature";
-import { map } from "rxjs";
+import { ProcessCaptureNavigationComponent } from "../process-capture-navigation/process-capture-navigation.component";
+import { RouterModule } from "@angular/router";
 
 @Component({
   imports: [
     CommonModule,
+    LoadingSpinnerComponent,
     ProcessCaptureNavigationComponent,
     RouterModule
   ],
