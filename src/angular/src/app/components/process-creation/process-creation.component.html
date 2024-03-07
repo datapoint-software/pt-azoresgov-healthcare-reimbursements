@@ -142,10 +142,9 @@
         </form>
 
         <ng-container *ngIf="patientSearchResult$ | async">
-          <div *ngIf="patientSearchResultEmpty$ | async" class="card mb-4 bg-warning">
-            <div class="card-body">
-              Não existem resultados a apresentar.
-            </div>
+
+          <div *ngIf="patientSearchResultEmpty$ | async" class="alert alert-light">
+            Não existem resultados a apresentar.
           </div>
 
           <ng-container *ngFor="let match of (patientSearchResultMatches$ | async)">

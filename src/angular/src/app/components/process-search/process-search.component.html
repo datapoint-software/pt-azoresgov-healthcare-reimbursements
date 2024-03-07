@@ -53,16 +53,16 @@
                     <span class="text-nowrap">{{process.number}}</span>
                   </div>
                   <div class="d-flex flex-row align-items-center justify-content-center me-3">
-                    <i class="fe fe-calendar me-1"></i>
-                    <span class="text-nowrap">{{process.creation | date:'dd/MM/yyyy HH:mm:ss'}}</span>
-                  </div>
-                  <div class="d-flex flex-row align-items-center justify-content-center me-3">
                     <i class="fe fe-activity me-1"></i>
                     <span class="text-nowrap">{{searchResult.patients[process.patientId].healthNumber | integer}}</span>
                   </div>
                   <div class="d-flex flex-row align-items-center justify-content-center me-3">
                     <i class="fe fe-dollar-sign me-1"></i>
                     <span class="text-nowrap">{{searchResult.patients[process.patientId].taxNumber | integer}}</span>
+                  </div>
+                  <div class="d-flex flex-row align-items-center justify-content-center me-3">
+                    <i class="fe fe-calendar me-1"></i>
+                    <span class="text-nowrap">{{process.creation | date:'dd/MM/yyyy HH:mm:ss'}}</span>
                   </div>
                 </div>
 
@@ -97,7 +97,7 @@
               [class.is-invalid]="(searchFormGroup.controls.filter.touched || searchFormGroup.controls.filter.dirty) && searchFormGroup.controls.filter.invalid"
               class="form-label"
               for="filter">
-              Pesquisa
+              Processo
             </label>
 
             <div class="input-group input-group-lg input-group-merge input-group-reverse">
