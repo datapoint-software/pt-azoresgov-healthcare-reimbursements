@@ -2,6 +2,13 @@ import { EntityNature } from "../../enums/entity-nature.enum";
 import { Gender } from "../../enums/gender.enum";
 import { ProcessStatus } from "../../enums/process-status.enum";
 
+export interface ProcessCaptureConfigurationModel {
+  rowVersionId: string;
+  machadoJosephEnabled: boolean;
+  documentIssueDateBypassEnabled: boolean;
+  reimbursementLimitBypassEnabled: boolean;
+}
+
 export interface ProcessCaptureOptionsEntityResultModel {
   id: string;
   rowVersionId: string;
@@ -61,4 +68,8 @@ export interface ProcessCapturePatientModel {
 export interface ProcessCapturePatientResultModel {
   processRowVersionId: string;
   patientRowVersionId: string;
+}
+
+export interface ProcessCaptureConfigurationResultModel {
+  rowVersionId: string;
 }

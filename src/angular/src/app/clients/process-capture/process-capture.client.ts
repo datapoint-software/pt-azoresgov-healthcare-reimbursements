@@ -1,6 +1,6 @@
 import { Injectable, makeEnvironmentProviders } from "@angular/core";
 import { Client } from "../api.client";
-import { ProcessCaptureOptionsResultModel, ProcessCapturePatientModel, ProcessCapturePatientResultModel } from "./process-capture.models";
+import { ProcessCaptureConfigurationModel, ProcessCaptureConfigurationResultModel, ProcessCaptureOptionsResultModel, ProcessCapturePatientModel, ProcessCapturePatientResultModel } from "./process-capture.models";
 
 @Injectable()
 export class ProcessCaptureClient extends Client {
@@ -10,6 +10,13 @@ export class ProcessCaptureClient extends Client {
   readonly getOptions = (processId: string) =>
 
     this.get<ProcessCaptureOptionsResultModel>('/:processId', { path: { processId }});
+
+  readonly writeConfiguration = (processId: string, model: ProcessCaptureConfigurationModel) =>
+
+    this.post<ProcessCaptureConfigurationModel, ProcessCaptureConfigurationResultModel>(
+      '/:processId/configuration',
+      model,
+      { path: { processId }});
 
   readonly writePatient = (processId: string, model: ProcessCapturePatientModel) =>
 
