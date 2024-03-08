@@ -19,8 +19,8 @@
 
 	<PropertyGroup>
 		<AssemblyVersion>3.0.0</AssemblyVersion>
-		<FileVersion>3.0.0.24035</FileVersion>
-		<VersionPrefix>3.0.0-dev.2</VersionPrefix>
+		<FileVersion>3.0.0.24068</FileVersion>
+		<VersionPrefix>3.0.0-dev.3</VersionPrefix>
 	</PropertyGroup>
 
 </Project>
