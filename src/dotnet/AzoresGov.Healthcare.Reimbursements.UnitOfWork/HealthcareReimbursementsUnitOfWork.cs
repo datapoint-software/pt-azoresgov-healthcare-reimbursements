@@ -24,6 +24,8 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork
         public DbSet<ProcessEntity> ProcessEntities { get; set; } = default!;
 
         public DbSet<Process> Processes { get; set; } = default!;
+
+        public DbSet<ProcessConfiguration> ProcessSettings { get; set; } = default!;
         
         public DbSet<Role> Roles { get; set; } = default!;
 
