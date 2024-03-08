@@ -83,6 +83,9 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessSearch
                         p.PatientId,
                         p.Number,
                         p.Status,
+                        p.MachadoJosephEnabled,
+                        p.DocumentIssueDateBypassEnabled,
+                        p.ReimbursementLimitBypassEnabled,
                         p.Creation,
                         p.Expiration,
                         p.Touch))

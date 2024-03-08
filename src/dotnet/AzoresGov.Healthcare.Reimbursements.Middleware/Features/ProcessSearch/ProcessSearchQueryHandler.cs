@@ -21,14 +21,17 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessSearch
 
         private readonly IProcessRepository _processes;
 
+        private readonly IProcessConfigurationRepository _processSettings;
+
         private readonly IUserRepository _users;
 
-        public ProcessSearchQueryHandler(IEntityRepository entities, IUserEntityRepository userEntities, IPatientRepository patients, IProcessRepository processes, IUserRepository users)
+        public ProcessSearchQueryHandler(IEntityRepository entities, IUserEntityRepository userEntities, IPatientRepository patients, IProcessRepository processes, IProcessConfigurationRepository processSettings, IUserRepository users)
         {
             _entities = entities;
             _userEntities = userEntities;
             _patients = patients;
             _processes = processes;
+            _processSettings = processSettings;
             _users = users;
         }
 
@@ -69,6 +72,12 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessSearch
                 
                 .ToDictionary(p => p.Id);
 
+            var settings = (await _processSettings.GetAllByProcessIdAsync(
+                processes.Select(p => p.Id).ToArray(),
+                ct))
+
+                .ToDictionary(c => c.ProcessId);
+
             return new ProcessSearchResult(
                 entities.Values
                     .Select(e => new ProcessSearchEntityResult(
@@ -93,6 +102,9 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessSearch
                         patients[ p.PatientId ]!.PublicId,
                         p.Number,
                         p.Status,
+                        settings.TryGetValue(p.Id, out var configuration) && configuration.MachadoJosephEnabled,
+                        configuration?.DocumentIssueDateBypassEnabled ?? false,
+                        configuration?.ReimbursementLimitBypassEnabled ?? false,
                         p.Creation,
                         p.Expiration,
                         p.Touch

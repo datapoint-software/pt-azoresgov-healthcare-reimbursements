@@ -5,13 +5,16 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessSearch
 {
     public sealed class ProcessSearchProcessResultModel
     {
-        public ProcessSearchProcessResultModel(Guid id, Guid entityId, Guid patientId, string number, ProcessStatus status, DateTimeOffset creation, DateTimeOffset? expiration, DateTimeOffset touch)
+        public ProcessSearchProcessResultModel(Guid id, Guid entityId, Guid patientId, string number, ProcessStatus status, bool machadoJosephEnabled, bool documentIssueDateBypassEnabled, bool reimbursementLimitBypassEnabled, DateTimeOffset creation, DateTimeOffset? expiration, DateTimeOffset touch)
         {
             Id = id;
             EntityId = entityId;
             PatientId = patientId;
             Number = number;
             Status = status;
+            MachadoJosephEnabled = machadoJosephEnabled;
+            DocumentIssueDateBypassEnabled = documentIssueDateBypassEnabled;
+            ReimbursementLimitBypassEnabled = reimbursementLimitBypassEnabled;
             Creation = creation;
             Expiration = expiration;
             Touch = touch;
@@ -26,6 +29,12 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessSearch
         public string Number { get; }
         
         public ProcessStatus Status { get; }
+        
+        public bool MachadoJosephEnabled { get; }
+        
+        public bool DocumentIssueDateBypassEnabled { get; }
+        
+        public bool ReimbursementLimitBypassEnabled { get; }
         
         public DateTimeOffset Creation { get; }
         

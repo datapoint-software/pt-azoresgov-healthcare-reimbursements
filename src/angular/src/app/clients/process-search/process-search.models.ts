@@ -32,6 +32,9 @@ export interface ProcessSearchProcessResultModel {
   patientId: string;
   number: string;
   status: ProcessStatus;
+  machadoJosephEnabled: boolean;
+  documentIssueDateBypassEnabled: boolean;
+  reimbursementLimitBypassEnabled: boolean;
   creation: string;
   expiration?: string;
   touch: string;

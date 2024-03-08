@@ -73,6 +73,12 @@
             <span class="badge bg-secondary text-white me-2 p-2">
               {{process.status | processStatus}}
             </span>
+            <span class="badge bg-warning text-black me-2 p-2" *ngIf="process.documentIssueDateBypassEnabled || process.reimbursementLimitBypassEnabled">
+              Autorização Especial
+            </span>
+            <span class="badge bg-danger text-white me-2 p-2" *ngIf="process.machadoJosephEnabled">
+              Machado-Joseph
+            </span>
             <span class="badge bg-danger text-white me-2 p-2" *ngIf="late(process.expiration)">
               Em atraso
             </span>
