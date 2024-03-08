@@ -18,5 +18,5 @@ export class ProcessCaptureSpecialTermsComponent {
     private readonly processCapture: ProcessCaptureFeature
   ) {}
 
-  readonly specialTerms = this.processCapture.specialTerms;
+  readonly configuration = this.processCapture.configuration;
 }

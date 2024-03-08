@@ -55,6 +55,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
             processConfiguration ??= _processSettings.Add(
                 new ProcessConfiguration());
 
+            processConfiguration.Process = process;
             processConfiguration.MachadoJosephEnabled = command.MachadoJosephEnabled;
             processConfiguration.DocumentIssueDateBypassEnabled = command.DocumentIssueDateBypassEnabled;
             processConfiguration.ReimbursementLimitBypassEnabled = command.ReimbursementLimitBypassEnabled;

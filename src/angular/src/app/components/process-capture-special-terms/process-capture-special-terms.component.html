@@ -1,21 +1,64 @@
-<form [formGroup]="specialTerms">
+<form [formGroup]="configuration">
   <div class="card">
     <div class="card-header">
       <h4 class="card-header-title">
         Machado-Joseph
       </h4>
       <div class="form-check form-switch">
-        <input [formControlName]="'machadoJoseph'" class="form-check-input" type="checkbox" id="machadoJosephCheck" />
-        <label class="form-check-label d-none" for="machadoJosephCheck">Machado-Joseph</label>
+        <input [formControlName]="'machadoJosephEnabled'" class="form-check-input" type="checkbox" id="machadoJosephEnabled" />
+        <label class="form-check-label d-none" for="machadoJosephEnabled">Machado-Joseph</label>
       </div>
     </div>
     <div class="card-body">
-      <p class="mb-2 mt-2">
-        Aplica-se a processos de reembolso de utentes diagnosticados com a doença de <strong>Machado-Joseph</strong>,
+      <p>
+        Aplica-se a processos de reembolso a utentes diagnosticados com a doença de <strong>Machado-Joseph</strong>,
         também conhecida por <strong>Ataxia SCA3</strong>, é uma neuropatologia rara,
         de origem genética, que se manifesta por uma progressiva ataxia cerebelar traduzida em crescente perda do controle muscular e
         da coordenação motora nos membros superiores e inferiores, oftalmoplegia, perturbações da visão
         e dificuldades na fala e no engolir.
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h4 class="card-header-title">
+        Documentos emitidos além da data limite
+      </h4>
+      <div class="form-check form-switch">
+        <input [formControlName]="'documentIssueDateBypassEnabled'" class="form-check-input" type="checkbox" id="documentIssueDateBypassEnabled" />
+        <label class="form-check-label d-none" for="documentIssueDateBypassEnabled">Documentos fora de validade</label>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>
+        Permite o carregamento e codificação de <strong>faturas emitidas numa data anterior</strong>
+        ao limite definido no fluxo normal.
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h4 class="card-header-title">
+        Reembolso sem limite de quantidades
+      </h4>
+      <div class="form-check form-switch">
+        <input [formControlName]="'reimbursementLimitBypassEnabled'" class="form-check-input" type="checkbox" id="reimbursementLimitBypassEnabled" />
+        <label class="form-check-label d-none" for="reimbursementLimitBypassEnabled">Documentos fora de validade</label>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="mb-4">
+        Permite o reembolso sem a consideração pelas unidades anteriores ou limites máximos definidos
+        para o artigo em questão em termos de quantidade.
+      </p>
+      <p class="my-4">
+        As regras referentes ao cálculo do montante máximo reembolsável por quantidade unitária, relacionado
+        com o escalão IRS do utente e outros fatores, serão aplicadas normalmente.
+      </p>
+      <p class="mt-4">
+        Este processo será ignorado durante o cálculo de reembolsos futuros.
       </p>
     </div>
   </div>

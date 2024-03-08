@@ -1,5 +1,5 @@
 import { Actions, concatLatestFrom, ofType, provideEffects } from "@ngrx/effects";
-import { configure, debounceWritting, dispose, init, writePatient } from "./rx/process-capture.actions";
+import { configure, debounceWritting, dispose, init, writeConfiguration, writePatient } from "./rx/process-capture.actions";
 import { EnvironmentProviders, Injectable, makeEnvironmentProviders } from "@angular/core";
 import { Feature } from "../feature.abstractions";
 import { FEATURE_NAME } from "./process-capture.constants";
@@ -10,13 +10,19 @@ import { ProcessCaptureState } from "./rx/process-capture.state";
 import { reducer } from "./rx/process-capture.reducer";
 import { Store, provideState } from "@ngrx/store";
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
-import { Subject, debounceTime, distinct, filter, takeUntil, tap } from "rxjs";
+import { Subject, debounceTime, distinct, filter, skip, takeUntil, tap } from "rxjs";
 import { APP_AUTOSAVE_DELAY_MS } from "../../app.constants";
 
 @Injectable()
 export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
 
   private dispose$?: Subject<boolean>;
+
+  readonly configuration = new FormGroup({
+    machadoJosephEnabled:new FormControl(false, []),
+    documentIssueDateBypassEnabled:new FormControl(false, []),
+    reimbursementLimitBypassEnabled:new FormControl(false, [])
+  });
 
   readonly patient = new FormGroup({
     addressLine1: new FormControl('', [ Validators.required, Validators.maxLength(128) ]),
@@ -28,10 +34,6 @@ export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
     faxNumber: new FormControl('', [ Validators.maxLength(16) ]),
     mobileNumber: new FormControl('', [ Validators.maxLength(16) ]),
     phoneNumber: new FormControl('', [ Validators.maxLength(16) ])
-  });
-
-  readonly specialTerms = new FormGroup({
-    machadoJoseph: new FormControl(false, [])
   });
 
   readonly legalRepresentative = new FormGroup({
@@ -61,6 +63,16 @@ export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
     }));
   }
 
+  public writeConfiguration(configuration: {
+    machadoJosephEnabled: boolean;
+    documentIssueDateBypassEnabled: boolean;
+    reimbursementLimitBypassEnabled: boolean;
+  }) {
+    return this.dispatch(writeConfiguration({
+      payload: { ...configuration }
+    }));
+  }
+
   public writePatient(patient: {
     addressLine1: string;
     addressLine2?: string;
@@ -74,7 +86,7 @@ export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
   }) {
     return this.dispatch(writePatient({
       payload: { ...patient }
-    }))
+    }));
   }
 
   public override async init(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): Promise<void> {
@@ -85,6 +97,13 @@ export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
       .pipe(takeUntil(this.dispose$))
       .pipe(ofType(configure))
       .subscribe(({ payload }) => {
+
+        this.configuration.setValue({
+          machadoJosephEnabled: payload.configuration?.machadoJosephEnabled || false,
+          documentIssueDateBypassEnabled: payload.configuration?.documentIssueDateBypassEnabled || false,
+          reimbursementLimitBypassEnabled: payload.configuration?.reimbursementLimitBypassEnabled || false
+        });
+
         this.patient.setValue({
           addressLine1: payload.patient.addressLine1 || null,
           addressLine2: payload.patient.addressLine2 || null,
@@ -96,10 +115,29 @@ export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
           mobileNumber: payload.patient.mobileNumber || null,
           phoneNumber: payload.patient.phoneNumber || null
         });
+
+        this.configuration.updateValueAndValidity();
         this.patient.updateValueAndValidity();
       });
 
+    this.configuration.valueChanges
+      .pipe(skip(2))
+      .pipe(takeUntil(this.dispose$))
+      .pipe(filter(() => this.configuration.valid))
+      .pipe(distinct())
+      .pipe(tap(() => this.dispatch(debounceWritting())))
+      .pipe(debounceTime(APP_AUTOSAVE_DELAY_MS))
+      .pipe(takeUntil(this.dispose$))
+      .subscribe(() => {
+        this.writeConfiguration({
+          machadoJosephEnabled: this.configuration.value.machadoJosephEnabled || false,
+          documentIssueDateBypassEnabled: this.configuration.value.documentIssueDateBypassEnabled || false,
+          reimbursementLimitBypassEnabled: this.configuration.value.reimbursementLimitBypassEnabled || false
+        });
+      });
+
     this.patient.valueChanges
+      .pipe(skip(2))
       .pipe(takeUntil(this.dispose$))
       .pipe(filter(() => this.patient.valid))
       .pipe(distinct())

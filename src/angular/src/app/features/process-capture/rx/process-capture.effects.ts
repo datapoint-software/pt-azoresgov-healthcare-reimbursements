@@ -1,5 +1,5 @@
 import { Actions, concatLatestFrom, createEffect, ofType } from "@ngrx/effects";
-import { configure, dispose, init, writePatient, writePatientComplete } from "./process-capture.actions";
+import { configure, dispose, init, writeConfiguration, writeConfigurationComplete, writePatient, writePatientComplete } from "./process-capture.actions";
 import { Injectable } from "@angular/core";
 import { map, mergeMap } from "rxjs";
 import { ProcessCaptureClient } from "../../../clients/process-capture/process-capture.client";
@@ -24,6 +24,22 @@ export class ProcessCaptureEffects {
           ...response,
           writting: false
         }
+      }))
+    ))
+  ));
+
+  readonly writeConfiguration$ = createEffect(() => this.actions$.pipe(
+    ofType(writeConfiguration),
+    concatLatestFrom(() => [
+      this.store.select($$.processId),
+      this.store.select($$.processRowVersionId)
+    ]),
+    mergeMap(([ { payload }, id, rowVersionId ]) => this.processCaptureClient.writeConfiguration(id, {
+      rowVersionId,
+      ...payload
+    }).pipe(
+      map((response) => writeConfigurationComplete({
+        payload: { ...response }
       }))
     ))
   ));

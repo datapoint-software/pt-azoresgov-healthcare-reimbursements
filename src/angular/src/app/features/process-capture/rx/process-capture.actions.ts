@@ -26,6 +26,26 @@ export const debounceWritting = createAction(
   `${FEATURE_ACTION_PREFIX}/debounce-writting`
 );
 
+export const writeConfiguration = createAction(
+  `${FEATURE_ACTION_PREFIX}/write-configuration`,
+  props<{
+    payload: {
+      machadoJosephEnabled: boolean;
+      documentIssueDateBypassEnabled: boolean;
+      reimbursementLimitBypassEnabled: boolean;
+    };
+  }>()
+);
+
+export const writeConfigurationComplete = createAction(
+  `${FEATURE_ACTION_PREFIX}/write-configuration-complete`,
+  props<{
+    payload: {
+      rowVersionId: string;
+    };
+  }>()
+);
+
 export const writePatient = createAction(
   `${FEATURE_ACTION_PREFIX}/write-patient`,
   props<{

@@ -17,6 +17,12 @@ export interface ProcessCaptureOptionsEntityResultModel {
   nature: EntityNature;
 }
 
+export interface ProcessCaptureOptionsConfigurationResultModel {
+  machadoJosephEnabled: boolean;
+  documentIssueDateBypassEnabled: boolean;
+  reimbursementLimitBypassEnabled: boolean;
+}
+
 export interface ProcessCaptureOptionsPatientResultModel {
   id: string;
   rowVersionId: string;
@@ -45,6 +51,7 @@ export interface ProcessCaptureOptionsProcessResultModel {
 }
 
 export interface ProcessCaptureOptionsResultModel {
+  configuration?: ProcessCaptureOptionsConfigurationResultModel;
   entity: ProcessCaptureOptionsEntityResultModel;
   parentEntity?: ProcessCaptureOptionsEntityResultModel;
   patient: ProcessCaptureOptionsPatientResultModel;

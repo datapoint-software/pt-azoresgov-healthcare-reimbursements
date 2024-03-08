@@ -30,14 +30,12 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                         name: "FK_ProcessEntities_Entities_EntityId",
                         column: x => x.EntityId,
                         principalTable: "Entities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_ProcessEntities_Processes_ProcessId",
                         column: x => x.ProcessId,
                         principalTable: "Processes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(

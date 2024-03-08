@@ -1,6 +1,7 @@
-import { ProcessCaptureOptionsEntityResultModel, ProcessCaptureOptionsPatientResultModel, ProcessCaptureOptionsProcessResultModel } from "../../../clients/process-capture/process-capture.models";
+import { ProcessCaptureOptionsConfigurationResultModel, ProcessCaptureOptionsEntityResultModel, ProcessCaptureOptionsPatientResultModel, ProcessCaptureOptionsProcessResultModel } from "../../../clients/process-capture/process-capture.models";
 
 export interface ProcessCaptureState {
+  configuration?: ProcessCaptureOptionsConfigurationResultModel;
   entity: ProcessCaptureOptionsEntityResultModel;
   parentEntity?: ProcessCaptureOptionsEntityResultModel;
   patient: ProcessCaptureOptionsPatientResultModel;

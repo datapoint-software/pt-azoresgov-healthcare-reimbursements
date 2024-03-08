@@ -2,13 +2,16 @@
 {
     public sealed class ProcessCaptureOptionsResult
     {
-        public ProcessCaptureOptionsResult(ProcessCaptureOptionsEntityResult entity, ProcessCaptureOptionsEntityResult? parentEntity, ProcessCaptureOptionsPatientResult patient, ProcessCaptureOptionsProcessResult process)
+        public ProcessCaptureOptionsResult(ProcessCaptureOptionsConfigurationResult? configuration, ProcessCaptureOptionsEntityResult entity, ProcessCaptureOptionsEntityResult? parentEntity, ProcessCaptureOptionsPatientResult patient, ProcessCaptureOptionsProcessResult process)
         {
+            Configuration = configuration;
             Entity = entity;
             ParentEntity = parentEntity;
             Patient = patient;
             Process = process;
         }
+
+        public ProcessCaptureOptionsConfigurationResult? Configuration { get; }
 
         public ProcessCaptureOptionsEntityResult Entity { get; } 
         

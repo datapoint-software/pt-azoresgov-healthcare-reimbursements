@@ -17,12 +17,14 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.EntityTypeConfiguration
             builder.HasOne(e => e.Process)
                 .WithMany()
                 .HasForeignKey(e => e.ProcessId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(e => e.Entity)
                 .WithMany()
                 .HasForeignKey(e => e.EntityId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

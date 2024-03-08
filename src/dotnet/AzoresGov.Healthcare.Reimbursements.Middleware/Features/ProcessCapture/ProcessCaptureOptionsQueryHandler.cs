@@ -16,15 +16,18 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
         
         private readonly IProcessRepository _processes;
 
+        private readonly IProcessConfigurationRepository _processSettings;
+
         private readonly IUserEntityRepository _userEntities;
         
         private readonly IUserRepository _users;
 
-        public ProcessCaptureOptionsQueryHandler(IEntityRepository entities, IPatientRepository patients, IProcessRepository processes, IUserEntityRepository userEntities, IUserRepository users)
+        public ProcessCaptureOptionsQueryHandler(IEntityRepository entities, IPatientRepository patients, IProcessRepository processes, IProcessConfigurationRepository processSettings, IUserEntityRepository userEntities, IUserRepository users)
         {
             _entities = entities;
             _patients = patients;
             _processes = processes;
+            _processSettings = processSettings;
             _userEntities = userEntities;
             _users = users;
         }
@@ -39,17 +42,19 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
                 query.ProcessId,
                 ct);
 
-            if (process.Status is not ProcessStatus.Capture)
-            {
-                throw new BusinessException("Process status mismatch.")
-                    .WithErrorMessage("O processo não está numa fase compatível com esta operação.");
-            }
+            Assert.ProcessStatus(
+                ProcessStatus.Capture,
+                process.Status);
 
-            if (!await _userEntities.AnyByUserIdAndEntityIdAsync(user.Id, process.EntityId, ct))
-            {
-                throw new BusinessException("User does not have write access to this process.")
-                    .WithErrorMessage("O perfil do utilizador não tem acesso de escrita a este processo.");
-            }
+            await Assert.UserEntityAccessAsync(
+                _userEntities,
+                user.Id,
+                process.EntityId,
+                ct);
+
+            var configuration = await _processSettings.GetByProcessIdAsync(
+                process.Id,
+                ct);
 
             var entity = await _entities.GetByIdOrThrowExceptionAsync(
                 process.EntityId,
@@ -65,6 +70,11 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
                 ct);
 
             return new ProcessCaptureOptionsResult(
+                configuration is null ? null :
+                    new ProcessCaptureOptionsConfigurationResult(
+                        configuration.MachadoJosephEnabled,
+                        configuration.DocumentIssueDateBypassEnabled,
+                        configuration.ReimbursementLimitBypassEnabled),
                 new ProcessCaptureOptionsEntityResult(
                     entity.PublicId,
                     entity.RowVersionId,

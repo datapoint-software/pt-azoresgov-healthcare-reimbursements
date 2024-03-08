@@ -24,7 +24,7 @@ export class ProcessCaptureNavigationComponent {
 
   readonly patient = this.processCapture.patient;
 
-  readonly specialTerms = this.processCapture.specialTerms;
+  readonly configuration = this.processCapture.configuration;
 
   readonly process$ = this.processCapture.process$;
 

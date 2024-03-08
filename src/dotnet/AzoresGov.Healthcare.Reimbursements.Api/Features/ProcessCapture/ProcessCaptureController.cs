@@ -31,6 +31,11 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
                 ct);
 
             return new ProcessCaptureOptionsResultModel(
+                result.Configuration is null ? null : 
+                    new ProcessCaptureOptionsConfigurationResultModel(
+                        result.Configuration.MachadoJosephEnabled,
+                        result.Configuration.DocumentIssueDateBypassEnabled,
+                        result.Configuration.ReimbursementLimitBypassEnabled),
                 new ProcessCaptureOptionsEntityResultModel(
                     result.Entity.Id,
                     result.Entity.RowVersionId,

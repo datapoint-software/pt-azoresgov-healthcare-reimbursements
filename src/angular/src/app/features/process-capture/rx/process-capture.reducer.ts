@@ -1,6 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { ProcessCaptureState } from "./process-capture.state";
-import { configure, debounceWritting, dispose, init, writePatient, writePatientComplete } from "./process-capture.actions";
+import { configure, debounceWritting, dispose, init, writeConfigurationComplete, writePatient, writePatientComplete } from "./process-capture.actions";
 
 export const reducer = createReducer(
 
@@ -14,6 +14,15 @@ export const reducer = createReducer(
   on(debounceWritting, (state) => ({
     ...state,
     writting: true
+  })),
+
+  on(writeConfigurationComplete, (state, { payload }) => ({
+    ...state,
+    process: {
+      ...state.process,
+      rowVersionId: payload.rowVersionId
+    },
+    writting: false
   })),
 
   on(writePatientComplete, (state, { payload }) => ({
