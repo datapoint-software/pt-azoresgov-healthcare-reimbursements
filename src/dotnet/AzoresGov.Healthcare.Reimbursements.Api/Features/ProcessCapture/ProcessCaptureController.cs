@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
 {
-    [Route("/api/features/process-capture")]
+    [Route("/api/features/process-capture/{processId:guid}")]
     public sealed class ProcessCaptureController : Controller
     {
         private readonly IMediator _mediator;
@@ -19,7 +19,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
         }
 
         [Authorize("administrative")]
-        [HttpGet("{processId:guid}")]
+        [HttpGet("")]
         public async Task<ProcessCaptureOptionsResultModel> GetOptionsAsync(
             [FromRoute] Guid processId,
             CancellationToken ct)
@@ -71,7 +71,28 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
         }
 
         [Authorize("administrative")]
-        [HttpPost("{processId:guid}/patient")]
+        [HttpPost("configuration")]
+        public async Task<ProcessCaptureConfigurationResultModel> WriteConfigurationAsync(
+            [FromRoute] Guid processId,
+            [FromBody] ProcessCaptureConfigurationModel model,
+            CancellationToken ct)
+        {
+            var result = await _mediator.HandleCommandAsync<ProcessCaptureConfigurationCommand, ProcessCaptureConfigurationResult>(
+                new ProcessCaptureConfigurationCommand(
+                    User.GetId(),
+                    processId,
+                    model.RowVersionId,
+                    model.MachadoJosephEnabled,
+                    model.DocumentIssueDateBypassEnabled,
+                    model.ReimbursementLimitBypassEnabled),
+                ct);
+            
+            return new ProcessCaptureConfigurationResultModel(
+                result.RowVersionId);
+        }
+
+        [Authorize("administrative")]
+        [HttpPost("patient")]
         public async Task<ProcessCapturePatientResultModel> WritePatientAsync(
             [FromRoute] Guid processId,
             [FromBody] ProcessCapturePatientModel model,
