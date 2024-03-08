@@ -47,6 +47,12 @@ export class ProcessSearchFeature extends Feature<ProcessSearchState> {
 
     this.dispose$ = new Subject<boolean>();
 
+    this.searchFormGroup.setValue({
+      entityId: null,
+      filter: null,
+      status: null
+    });
+
     this.searchFormGroup.valueChanges
       .pipe(takeUntil(this.dispose$))
       .pipe(filter(() => this.searchFormGroup.valid))
