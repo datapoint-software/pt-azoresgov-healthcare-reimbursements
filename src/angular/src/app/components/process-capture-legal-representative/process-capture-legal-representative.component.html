@@ -1,3 +1,24 @@
-(( legal representative {{processNumber$ | async}}))
-
-<title>Hi</title>
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      Reembolso sem limite de quantidades
+    </h4>
+    <div class="form-check form-switch">
+      <input [formControlName]="'reimbursementLimitBypassEnabled'" class="form-check-input" type="checkbox" id="reimbursementLimitBypassEnabled" />
+      <label class="form-check-label d-none" for="reimbursementLimitBypassEnabled">Documentos fora de validade</label>
+    </div>
+  </div>
+  <div class="card-body">
+    <p class="mb-4">
+      Permite o reembolso sem a consideração pelas unidades anteriores ou limites máximos definidos
+      para o artigo em questão em termos de quantidade.
+    </p>
+    <p class="my-4">
+      As regras referentes ao cálculo do montante máximo reembolsável por quantidade unitária, relacionado
+      com o escalão IRS do utente e outros fatores, serão aplicadas normalmente.
+    </p>
+    <p class="mt-4">
+      Este processo será ignorado durante o cálculo de reembolsos futuros.
+    </p>
+  </div>
+</div>
