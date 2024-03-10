@@ -12,9 +12,9 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
     {
         private readonly IEntityRepository _entities;
         
-        private readonly IPatientRepository _patients;
-        
         private readonly IProcessRepository _processes;
+
+        private readonly IProcessPatientRepository _processPatients;
 
         private readonly IProcessConfigurationRepository _processSettings;
 
@@ -22,11 +22,11 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
         
         private readonly IUserRepository _users;
 
-        public ProcessCaptureOptionsQueryHandler(IEntityRepository entities, IPatientRepository patients, IProcessRepository processes, IProcessConfigurationRepository processSettings, IUserEntityRepository userEntities, IUserRepository users)
+        public ProcessCaptureOptionsQueryHandler(IEntityRepository entities, IProcessRepository processes, IProcessPatientRepository processPatients, IProcessConfigurationRepository processSettings, IUserEntityRepository userEntities, IUserRepository users)
         {
             _entities = entities;
-            _patients = patients;
             _processes = processes;
+            _processPatients = processPatients;
             _processSettings = processSettings;
             _userEntities = userEntities;
             _users = users;
@@ -65,7 +65,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
                 0,
                 ct);
 
-            var patient = await _patients.GetByIdOrThrowExceptionAsync(
+            var processPatient = await _processPatients.GetByProcessIdOrThrowExceptionAsync(
                 process.PatientId,
                 ct);
 
@@ -90,23 +90,23 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
                         parentEntity.Name,
                         parentEntity.Nature),
                 new ProcessCaptureOptionsPatientResult(
-                    patient.PublicId,
-                    patient.RowVersionId,
-                    patient.Name,
-                    patient.Birth,
-                    patient.Gender,
-                    patient.HealthNumber,
-                    patient.TaxNumber,
-                    patient.AddressLine1,
-                    patient.AddressLine2,
-                    patient.AddressLine3,
-                    patient.PostalCode,
-                    patient.PostalCodeArea,
-                    patient.EmailAddress,
-                    patient.FaxNumber,
-                    patient.MobileNumber,
-                    patient.PhoneNumber,
-                    patient.Death),
+                    processPatient.PublicId,
+                    processPatient.RowVersionId,
+                    processPatient.Name,
+                    processPatient.Birth,
+                    processPatient.Gender,
+                    processPatient.HealthNumber,
+                    processPatient.TaxNumber,
+                    processPatient.AddressLine1,
+                    processPatient.AddressLine2,
+                    processPatient.AddressLine3,
+                    processPatient.PostalCode,
+                    processPatient.PostalCodeArea,
+                    processPatient.EmailAddress,
+                    processPatient.FaxNumber,
+                    processPatient.MobileNumber,
+                    processPatient.PhoneNumber,
+                    processPatient.Death),
                 new ProcessCaptureOptionsProcessResult(
                     process.PublicId,
                     process.RowVersionId,

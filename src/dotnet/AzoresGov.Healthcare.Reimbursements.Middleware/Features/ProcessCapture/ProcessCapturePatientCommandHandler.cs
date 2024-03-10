@@ -11,21 +11,18 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
 {
     public sealed class ProcessCapturePatientCommandHandler : ICommandHandler<ProcessCapturePatientCommand, ProcessCapturePatientResult>
     {
-        private readonly IPatientRepository _patients;
-        
-        private readonly IProcessEntityRepository _processEntities;
-
         private readonly IProcessRepository _processes;
+
+        private readonly IProcessPatientRepository _processPatients;
         
         private readonly IUserEntityRepository _userEntities;
         
         private readonly IUserRepository _users;
 
-        public ProcessCapturePatientCommandHandler(IPatientRepository patients, IProcessEntityRepository processEntities, IProcessRepository processes, IUserEntityRepository userEntities, IUserRepository users)
+        public ProcessCapturePatientCommandHandler(IProcessRepository processes, IProcessPatientRepository processPatients, IUserEntityRepository userEntities, IUserRepository users)
         {
-            _patients = patients;
-            _processEntities = processEntities;
             _processes = processes;
+            _processPatients = processPatients;
             _userEntities = userEntities;
             _users = users;
         }
@@ -41,41 +38,39 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
                 command.ProcessRowVersionId,
                 ct);
 
-            if (process.Status is not ProcessStatus.Capture)
-            {
-                throw new BusinessException("Process status mismatch.")
-                    .WithErrorMessage("O processo não está numa fase compatível com esta operação.");
-            }
+            Assert.ProcessStatus(
+                ProcessStatus.Capture,
+                process.Status);
 
-            if (!await _userEntities.AnyByUserIdAndEntityIdAsync(user.Id, process.EntityId, ct))
-            {
-                throw new BusinessException("Process does not belong to this entity.")
-                    .WithErrorCode("Este processo não pertence a esta entidade.");
-            }
+            await Assert.UserEntityAccessAsync(
+                _userEntities,
+                user.Id,
+                process.EntityId,
+                ct);
 
-            var patient = await _patients.GetByIdOrThrowExceptionAsync(
-                process.PatientId,
+            var processPatient = await _processPatients.GetByProcessIdOrThrowExceptionAsync(
+                process.Id,
                 command.PatientRowVersionId,
                 ct);
 
-            patient.AddressLine1 = command.AddressLine1;
-            patient.AddressLine2 = command.AddressLine2;
-            patient.AddressLine3 = command.AddressLine3;
-            patient.PostalCode = command.PostalCode;
-            patient.PostalCodeArea = command.PostalCodeArea;
-            patient.EmailAddress = command.EmailAddress;
-            patient.FaxNumber = command.FaxNumber;
-            patient.MobileNumber = command.MobileNumber;
-            patient.PhoneNumber = command.PhoneNumber;
+            processPatient.AddressLine1 = command.AddressLine1;
+            processPatient.AddressLine2 = command.AddressLine2;
+            processPatient.AddressLine3 = command.AddressLine3;
+            processPatient.PostalCode = command.PostalCode;
+            processPatient.PostalCodeArea = command.PostalCodeArea;
+            processPatient.EmailAddress = command.EmailAddress;
+            processPatient.FaxNumber = command.FaxNumber;
+            processPatient.MobileNumber = command.MobileNumber;
+            processPatient.PhoneNumber = command.PhoneNumber;
 
-            patient.RowVersionId = Guid.NewGuid();
+            processPatient.RowVersionId = Guid.NewGuid();
             
             process.RowVersionId = Guid.NewGuid();
             process.Touch = command.Creation;
 
             return new ProcessCapturePatientResult(
                 process.RowVersionId,
-                patient.RowVersionId);
+                processPatient.RowVersionId);
         }
     }
 }

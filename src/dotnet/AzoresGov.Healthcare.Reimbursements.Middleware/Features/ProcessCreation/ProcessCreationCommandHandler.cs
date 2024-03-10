@@ -24,19 +24,22 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
 
         private readonly IProcessRepository _processes;
 
+        private readonly IProcessPatientRepository _processPatients;
+
         private readonly ISequenceRepository _sequences;
 
         private readonly IUserEntityRepository _userEntities;
         
         private readonly IUserRepository _users;
 
-        public ProcessCreationCommandHandler(IParameterManager parameterManager, IEntityRepository entities, IPatientEntityRepository patientEntities, IPatientRepository patients, IProcessRepository processes, ISequenceRepository sequences, IUserEntityRepository userEntities, IUserRepository users)
+        public ProcessCreationCommandHandler(IParameterManager parameterManager, IEntityRepository entities, IPatientEntityRepository patientEntities, IPatientRepository patients, IProcessRepository processes, IProcessPatientRepository processPatients, ISequenceRepository sequences, IUserEntityRepository userEntities, IUserRepository users)
         {
             _parameterManager = parameterManager;
             _entities = entities;
             _patientEntities = patientEntities;
             _patients = patients;
             _processes = processes;
+            _processPatients = processPatients;
             _sequences = sequences;
             _userEntities = userEntities;
             _users = users;
@@ -96,6 +99,26 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
                 Creation = command.Creation,
                 Expiration = command.Creation.AddDays(processExpirationInDays).UtcDateTime,
                 Touch = command.Creation
+            });
+
+            _processPatients.Add(new ProcessPatient()
+            {
+                Process = process,
+                Name = patient.Name,
+                Birth = patient.Birth,
+                Gender = patient.Gender,
+                HealthNumber = patient.HealthNumber,
+                TaxNumber = patient.TaxNumber,
+                AddressLine1 = patient.AddressLine1,
+                AddressLine2 = patient.AddressLine2,
+                AddressLine3 = patient.AddressLine3,
+                PostalCode = patient.PostalCode,
+                PostalCodeArea = patient.PostalCodeArea,
+                EmailAddress = patient.EmailAddress,
+                FaxNumber = patient.FaxNumber,
+                MobileNumber = patient.MobileNumber,
+                PhoneNumber = patient.PhoneNumber,
+                Death = patient.Death
             });
 
             return new ProcessCreationResult(
