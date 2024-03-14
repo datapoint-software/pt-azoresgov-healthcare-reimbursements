@@ -1,16 +1,14 @@
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
 import { complete, process, entities, entityId, entitySearchResult, entitySearchResultEntityIds, entitySearchResultTotalMatchCount, patientId, patientSearchResult, patientSearchResultEntityIds, patientSearchResultTotalMatchCount, patients, processId, state, step, steps, entityName } from "./rx/process-creation.selectors";
 import { concatLatestFrom, provideEffects } from "@ngrx/effects";
 import { dispose, init, next, previous, redirectToProcessPatientCapture, searchEntities, searchPatients, selectEntity, selectPatient } from "./rx/process-creation.actions";
 import { EnvironmentProviders, Injectable, makeEnvironmentProviders } from "@angular/core";
 import { Feature } from "../feature.abstractions";
 import { FEATURE_NAME } from "./process-creation.constants";
-import { map, mergeMap } from "rxjs";
+import { map } from "rxjs";
 import { ProcessCreationEffects } from "./rx/process-creation.effects";
 import { ProcessCreationState } from "./rx/process-creation.state";
 import { reducer } from "./rx/process-creation.reducer";
 import { Store, provideState } from "@ngrx/store";
-import { TypedAction } from "@ngrx/store/src/models";
 
 @Injectable()
 export class ProcessCreationFeature extends Feature<ProcessCreationState> {

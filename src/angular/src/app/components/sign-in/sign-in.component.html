@@ -8,7 +8,7 @@
         </div>
       </div>
       <div class="col-12 col-md-5 col-xl-4 order-md-1 my-5">
-        <ng-container *ngIf="(signInMethodIsBasic$ | async)">
+        <ng-container *ngIf="(signInBasicMethodVisible$ | async)">
           <!-- Heading -->
           <h1 class="display-4 text-center mb-3">
             Iniciar sessão
@@ -21,7 +21,7 @@
             {{ error.message }}
           </p>
           <!-- Form -->
-          <form [formGroup]="form" autocomplete="off" (submit)="onSubmit($event)">
+          <form [formGroup]="form" (ngSubmit)="onSubmit()" autocomplete="off">
             <!-- Email address -->
             <div class="form-group">
               <!-- Label -->
@@ -85,7 +85,7 @@
                   required
                   tabindex="2" />
                 <!-- Icon -->
-                <button class="input-group-text" type="button" (click)="onPasswordButtonClick($event)">
+                <button class="input-group-text" type="button" (click)="onPasswordVisibleButtonClick()">
                   <i [class]="isPasswordVisible ? 'fe-shield' : 'fe-shield-off'" class="fe"></i>
                 </button>
               </div>
