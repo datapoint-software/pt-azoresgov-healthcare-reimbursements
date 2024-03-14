@@ -1,10 +1,12 @@
 import { Component, Injectable } from "@angular/core";
 import { ProcessCaptureFeature } from "../../features/process-capture/process-capture.feature";
 import { CommonModule } from "@angular/common";
+import { ReactiveFormsModule } from "@angular/forms";
 
 @Component({
   imports: [
-    CommonModule
+    CommonModule,
+    ReactiveFormsModule
   ],
   selector: 'app-process-capture-legal-representative',
   standalone: true,

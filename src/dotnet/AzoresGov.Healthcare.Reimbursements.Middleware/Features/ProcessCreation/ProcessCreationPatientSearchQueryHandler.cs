@@ -30,24 +30,23 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
 
         public async Task<ProcessCreationPatientSearchResult> HandleQueryAsync(ProcessCreationPatientSearchQuery query, CancellationToken ct)
         {
-            var user = await _users.GetByPublicIdOrThrowExceptionAsync(
+            var user = await _users.GetByPublicIdOrThrowBusinessExceptionAsync(
                 query.UserId,
                 ct);
 
-            var entity = await _entities.GetByPublicIdOrThrowExceptionAsync(
+            var entity = await _entities.GetByPublicIdOrThrowBusinessExceptionAsync(
                 query.EntityId,
                 ct);
 
-            await EnsureUserEntityAccessAsync(
-                user,
-                entity,
-                ct);
+            Assert.EntityNature(
+                [ EntityNature.HealthCenter, EntityNature.Office ],
+                entity.Nature);
 
-            if (entity.Nature is not EntityNature.HealthCenter and not EntityNature.Office)
-            {
-                throw new BusinessException("Patient search can only be performed on health center and office entities.")
-                    .WithErrorMessage("A pesquisa de utentes só é permitida em Centros de Saúde ou Lojas do Cidadão.");
-            }
+            await Assert.UserEntityAccessAsync(
+                _userEntities,
+                user.Id,
+                entity.Id,
+                ct);
 
             var patients = await _patients.GetAllByEntitySearchCriteriaAsync(
                 entity.Id,
@@ -78,16 +77,6 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
                         e.Death))
                     .ToArray(),
                 patientCount);
-        }
-
-        private async Task EnsureUserEntityAccessAsync(User user, Entity entity, CancellationToken ct)
-        {
-            if (!await _userEntities.AnyByUserIdAndEntityIdAsync(user.Id, entity.Id, ct))
-            {
-                throw new AuthorizationException("User does not have access to this entity.")
-                    .WithErrorCode("ILLUEA")
-                    .WithErrorMessage("O perfil do utilizador não tem acesso a esta entidade.");
-            }
         }
     }
 }

@@ -1,14 +1,17 @@
 ﻿using System;
 
-namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features
+namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
 {
     public sealed class ProcessCaptureConfigurationResult
     {
-        public ProcessCaptureConfigurationResult(Guid rowVersionId)
+        public ProcessCaptureConfigurationResult(Guid processRowVersionId, Guid processConfigurationRowVersionId)
         {
-            RowVersionId = rowVersionId;
+            ProcessRowVersionId = processRowVersionId;
+            ProcessConfigurationRowVersionId = processConfigurationRowVersionId;
         }
+
+        public Guid ProcessRowVersionId { get; }
         
-        public Guid RowVersionId { get; }
+        public Guid ProcessConfigurationRowVersionId { get; }
     }
 }

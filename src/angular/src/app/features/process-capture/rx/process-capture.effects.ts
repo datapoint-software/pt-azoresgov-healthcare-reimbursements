@@ -31,11 +31,13 @@ export class ProcessCaptureEffects {
   readonly writeConfiguration$ = createEffect(() => this.actions$.pipe(
     ofType(writeConfiguration),
     concatLatestFrom(() => [
+      this.store.select($$.configurationRowVersionId),
       this.store.select($$.processId),
       this.store.select($$.processRowVersionId)
     ]),
-    mergeMap(([ { payload }, id, rowVersionId ]) => this.processCaptureClient.writeConfiguration(id, {
-      rowVersionId,
+    mergeMap(([ { payload }, processConfigurationRowVersionId, processId, processRowVersionId ]) => this.processCaptureClient.writeConfiguration(processId, {
+      processRowVersionId,
+      processConfigurationRowVersionId,
       ...payload
     }).pipe(
       map((response) => writeConfigurationComplete({
@@ -51,9 +53,9 @@ export class ProcessCaptureEffects {
       this.store.select($$.processId),
       this.store.select($$.processRowVersionId)
     ]),
-    mergeMap(([ { payload }, patientRowVersionId, processId, processRowVersionId ]) => this.processCaptureClient.writePatient(processId, {
-      patientRowVersionId,
+    mergeMap(([ { payload }, processPatientRowVersionId, processId, processRowVersionId ]) => this.processCaptureClient.writePatient(processId, {
       processRowVersionId,
+      processPatientRowVersionId,
       ...payload
     }).pipe(
       map((response) => writePatientComplete({

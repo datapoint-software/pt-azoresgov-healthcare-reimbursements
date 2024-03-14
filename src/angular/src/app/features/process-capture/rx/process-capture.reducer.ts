@@ -16,11 +16,24 @@ export const reducer = createReducer(
     writting: true
   })),
 
+  on(writePatient, (state, { payload }) => ({
+    ...state,
+    writting: true,
+    patient: {
+      ...state.patient,
+      writting: true
+    }
+  })),
+
   on(writeConfigurationComplete, (state, { payload }) => ({
     ...state,
+    configuration: {
+      ...state.configuration!,
+      rowVersionId: payload.processConfigurationRowVersionId
+    },
     process: {
       ...state.process,
-      rowVersionId: payload.rowVersionId
+      rowVersionId: payload.processRowVersionId
     },
     writting: false
   })),
@@ -29,7 +42,7 @@ export const reducer = createReducer(
     ...state,
     patient: {
       ...state.patient,
-      rowVersionId: payload.patientRowVersionId
+      rowVersionId: payload.processPatientRowVersionId
     },
     process: {
       ...state.process,

@@ -5,9 +5,8 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
 {
     public sealed class ProcessCaptureOptionsPatientResultModel
     {
-        public ProcessCaptureOptionsPatientResultModel(Guid id, Guid rowVersionId, string name, DateTimeOffset? birth, Gender? gender, string healthNumber, string taxNumber, string addressLine1, string? addressLine2, string? addressLine3, string? postalCode, string? postalCodeArea, string? emailAddress, string? faxNumber, string? mobileNumber, string? phoneNumber, DateTimeOffset? death)
+        public ProcessCaptureOptionsPatientResultModel(Guid? rowVersionId, string name, DateTimeOffset? birth, Gender? gender, string healthNumber, string taxNumber, string addressLine1, string? addressLine2, string? addressLine3, string? postalCode, string? postalCodeArea, string? emailAddress, string? faxNumber, string? mobileNumber, string? phoneNumber, DateTimeOffset? death)
         {
-            Id = id;
             RowVersionId = rowVersionId;
             Name = name;
             Birth = birth;
@@ -26,9 +25,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
             Death = death;
         }
 
-        public Guid Id { get; }
-
-        public Guid RowVersionId { get; }
+        public Guid? RowVersionId { get; }
 
         public string Name { get; }
 

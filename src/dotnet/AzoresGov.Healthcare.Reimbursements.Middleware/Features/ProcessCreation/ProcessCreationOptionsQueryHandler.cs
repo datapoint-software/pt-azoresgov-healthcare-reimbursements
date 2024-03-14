@@ -27,7 +27,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
 
         public async Task<ProcessCreationOptionsResult> HandleQueryAsync(ProcessCreationOptionsQuery query, CancellationToken ct)
         {
-            var user = await _users.GetByPublicIdOrThrowExceptionAsync(
+            var user = await _users.GetByPublicIdOrThrowBusinessExceptionAsync(
                 query.UserId,
                 ct);
 

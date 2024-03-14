@@ -15,6 +15,8 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
             RuleFor(c => c.ProcessRowVersionId)
                 .NotEmpty();
 
+            RuleFor(c => c.ProcessConfigurationRowVersionId);
+
             RuleFor(c => c.MachadoJosephEnabled);
 
             RuleFor(c => c.DocumentIssueDateBypassEnabled);

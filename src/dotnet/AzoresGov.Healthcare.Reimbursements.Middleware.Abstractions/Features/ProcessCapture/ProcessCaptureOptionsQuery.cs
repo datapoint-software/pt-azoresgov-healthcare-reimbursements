@@ -1,7 +1,7 @@
 ﻿using Datapoint.Mediator;
 using System;
 
-namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features
+namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
 {
     public sealed class ProcessCaptureOptionsQuery : Query<ProcessCaptureOptionsResult>
     {

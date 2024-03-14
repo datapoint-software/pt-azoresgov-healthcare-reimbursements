@@ -3,7 +3,20 @@ import { Gender } from "../../enums/gender.enum";
 import { ProcessStatus } from "../../enums/process-status.enum";
 
 export interface ProcessCaptureConfigurationModel {
-  rowVersionId: string;
+  processRowVersionId: string;
+  processConfigurationRowVersionId?: string;
+  machadoJosephEnabled: boolean;
+  documentIssueDateBypassEnabled: boolean;
+  reimbursementLimitBypassEnabled: boolean;
+}
+
+export interface ProcessCaptureConfigurationResultModel {
+  processRowVersionId: string;
+  processConfigurationRowVersionId: string;
+}
+
+export interface ProcessCaptureOptionsConfigurationResultModel {
+  rowVersionId?: string;
   machadoJosephEnabled: boolean;
   documentIssueDateBypassEnabled: boolean;
   reimbursementLimitBypassEnabled: boolean;
@@ -17,15 +30,18 @@ export interface ProcessCaptureOptionsEntityResultModel {
   nature: EntityNature;
 }
 
-export interface ProcessCaptureOptionsConfigurationResultModel {
-  machadoJosephEnabled: boolean;
-  documentIssueDateBypassEnabled: boolean;
-  reimbursementLimitBypassEnabled: boolean;
+export interface ProcessCaptureOptionsPatientLegalRepresentativeResultModel {
+  rowVersionId?: string;
+  name: string;
+  taxNumber: string;
+  emailAddress?: string;
+  faxNumber?: string;
+  mobileNumber?: string;
+  phoneNumber?: string;
 }
 
 export interface ProcessCaptureOptionsPatientResultModel {
-  id: string;
-  rowVersionId: string;
+  rowVersionId?: string;
   name: string;
   birth?: string;
   gender?: Gender;
@@ -55,12 +71,13 @@ export interface ProcessCaptureOptionsResultModel {
   entity: ProcessCaptureOptionsEntityResultModel;
   parentEntity?: ProcessCaptureOptionsEntityResultModel;
   patient: ProcessCaptureOptionsPatientResultModel;
+  patientLegalRepresentative?: ProcessCaptureOptionsPatientLegalRepresentativeResultModel;
   process: ProcessCaptureOptionsProcessResultModel;
 }
 
 export interface ProcessCapturePatientModel {
   processRowVersionId: string;
-  patientRowVersionId: string;
+  processPatientRowVersionId?: string;
   addressLine1: string;
   addressLine2?: string;
   addressLine3?: string;
@@ -74,9 +91,5 @@ export interface ProcessCapturePatientModel {
 
 export interface ProcessCapturePatientResultModel {
   processRowVersionId: string;
-  patientRowVersionId: string;
-}
-
-export interface ProcessCaptureConfigurationResultModel {
-  rowVersionId: string;
+  processPatientRowVersionId: string;
 }

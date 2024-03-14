@@ -8,14 +8,14 @@
     <div class="list-group list-group-flush">
       <a class="list-group-item pe-4 ps-4 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', process.id, 'capture', 'patient']">
         Utente
-        <span
+        <span *ngIf="(patientRowVersionId$ | async); else defaultStateIcon"
           [class]="icon(patient.valid)"
           class="fe ms-auto">
         </span>
       </a>
       <a class="list-group-item pe-4 ps-4 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', process.id, 'capture', 'special-terms']">
         Autorizações especiais
-        <span
+        <span *ngIf="(configurationRowVersionId$ | async); else defaultStateIcon"
           [class]="icon(configuration.valid)"
           class="fe ms-auto">
         </span>
@@ -47,3 +47,7 @@
     </div>
   </div>
 </ng-container>
+
+<ng-template #defaultStateIcon>
+  <span class="fe fe-edit ms-auto"></span>
+</ng-template>

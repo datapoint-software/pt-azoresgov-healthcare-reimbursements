@@ -1,7 +1,7 @@
 ﻿using AzoresGov.Healthcare.Reimbursements.Enumerations;
 using System;
 
-namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features
+namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
 {
     public sealed class ProcessCaptureOptionsEntityResult
     {

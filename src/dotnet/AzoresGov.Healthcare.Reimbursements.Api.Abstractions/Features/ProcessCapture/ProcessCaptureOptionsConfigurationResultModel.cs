@@ -1,14 +1,19 @@
-﻿namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
+﻿using System;
+
+namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
 {
     public sealed class ProcessCaptureOptionsConfigurationResultModel
     {
-        public ProcessCaptureOptionsConfigurationResultModel(bool machadoJosephEnabled, bool documentIssueDateBypassEnabled, bool reimbursementLimitBypassEnabled)
+        public ProcessCaptureOptionsConfigurationResultModel(Guid? rowVersionId, bool machadoJosephEnabled, bool documentIssueDateBypassEnabled, bool reimbursementLimitBypassEnabled)
         {
+            RowVersionId = rowVersionId;
             MachadoJosephEnabled = machadoJosephEnabled;
             DocumentIssueDateBypassEnabled = documentIssueDateBypassEnabled;
             ReimbursementLimitBypassEnabled = reimbursementLimitBypassEnabled;
         }
 
+        public Guid? RowVersionId { get; }
+        
         public bool MachadoJosephEnabled { get; }
         
         public bool DocumentIssueDateBypassEnabled { get; }

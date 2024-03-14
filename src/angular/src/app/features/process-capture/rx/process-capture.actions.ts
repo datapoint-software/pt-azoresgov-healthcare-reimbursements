@@ -1,6 +1,7 @@
 import { createAction, props } from "@ngrx/store";
 import { FEATURE_ACTION_PREFIX } from "../process-capture.constants";
 import { ProcessCaptureState } from "./process-capture.state";
+import { ProcessCaptureOptionsResultModel } from "../../../clients/process-capture/process-capture.models";
 
 export const init = createAction(
   `${FEATURE_ACTION_PREFIX}/init`,
@@ -26,6 +27,13 @@ export const debounceWritting = createAction(
   `${FEATURE_ACTION_PREFIX}/debounce-writting`
 );
 
+export const preConfigure = createAction(
+  `${FEATURE_ACTION_PREFIX}/pre-configure`,
+  props<{
+    payload: ProcessCaptureOptionsResultModel;
+  }>()
+);
+
 export const writeConfiguration = createAction(
   `${FEATURE_ACTION_PREFIX}/write-configuration`,
   props<{
@@ -41,7 +49,8 @@ export const writeConfigurationComplete = createAction(
   `${FEATURE_ACTION_PREFIX}/write-configuration-complete`,
   props<{
     payload: {
-      rowVersionId: string;
+      processRowVersionId: string;
+      processConfigurationRowVersionId: string;
     };
   }>()
 );
@@ -67,8 +76,8 @@ export const writePatientComplete = createAction(
   `${FEATURE_ACTION_PREFIX}/write-patient-complete`,
   props<{
     payload: {
-      patientRowVersionId: string;
       processRowVersionId: string;
+      processPatientRowVersionId: string;
     };
   }>()
 );

@@ -15,8 +15,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
             RuleFor(c => c.ProcessRowVersionId)
                 .NotEmpty();
 
-            RuleFor(c => c.PatientRowVersionId)
-                .NotEmpty();
+            RuleFor(c => c.ProcessPatientRowVersionId);
 
             RuleFor(c => c.AddressLine1)
                 .NotEmpty()

@@ -1,7 +1,7 @@
 ﻿using AzoresGov.Healthcare.Reimbursements.Enumerations;
 using System;
 
-namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features
+namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
 {
     public sealed class ProcessCaptureOptionsProcessResult
     {
@@ -12,7 +12,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features
             Number = number;
             Status = status;
         }
-
+        
         public Guid Id { get; }
 
         public Guid RowVersionId { get; }

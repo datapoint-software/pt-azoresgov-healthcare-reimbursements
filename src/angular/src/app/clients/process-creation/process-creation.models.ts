@@ -23,12 +23,6 @@ export interface ProcessCreationModel {
   patientRowVersionId: string;
 }
 
-export interface ProcessCreationResultModel {
-  id: string;
-  rowVersionId: string;
-  number: string;
-}
-
 export interface ProcessCreationOptionsResultModel {
   entities?: ProcessCreationEntityResultModel[];
   entityId?: string;
@@ -52,4 +46,10 @@ export interface ProcessCreationPatientSearchResultModel {
   patientIds: string[];
   patients: ProcessCreationPatientResultModel[];
   totalMatchCount: number;
+}
+
+export interface ProcessCreationResultModel {
+  id: string;
+  rowVersionId: string;
+  number: string;
 }

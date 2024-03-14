@@ -4,14 +4,14 @@ import { EnvironmentProviders, Injectable, makeEnvironmentProviders } from "@ang
 import { Feature } from "../feature.abstractions";
 import { FEATURE_NAME } from "./process-capture.constants";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { patient, patientHealthNumber, patientName, patientTaxNumber, process, processNumber, state, writting } from "./rx/process-capture.selectors";
+import { configurationRowVersionId, patient, patientHealthNumber, patientName, patientRowVersionId, patientTaxNumber, process, processNumber, state, writting } from "./rx/process-capture.selectors";
 import { ProcessCaptureEffects } from "./rx/process-capture.effects";
 import { ProcessCaptureState } from "./rx/process-capture.state";
 import { reducer } from "./rx/process-capture.reducer";
 import { Store, provideState } from "@ngrx/store";
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
 import { Subject, debounceTime, distinct, filter, skip, takeUntil, tap } from "rxjs";
-import { APP_AUTOSAVE_DELAY_MS } from "../../app.constants";
+import { APP_AUTOSAVE_DELAY_MS, APP_AUTOSAVE_QUICK_DELAY_MS } from "../../app.constants";
 
 @Injectable()
 export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
@@ -22,6 +22,16 @@ export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
     machadoJosephEnabled:new FormControl(false, []),
     documentIssueDateBypassEnabled:new FormControl(false, []),
     reimbursementLimitBypassEnabled:new FormControl(false, [])
+  });
+
+  readonly legalRepresentative = new FormGroup({
+    enabled: new FormControl(false, []),
+    name: new FormControl('', [ Validators.required, Validators.maxLength(128) ]),
+    taxNumber: new FormControl('', [ Validators.required ]),
+    emailAddress: new FormControl('', [ Validators.email, Validators.maxLength(256) ]),
+    faxNumber: new FormControl('', [ Validators.maxLength(16) ]),
+    mobileNumber: new FormControl('', [ Validators.maxLength(16) ]),
+    phoneNumber: new FormControl('', [ Validators.maxLength(16) ])
   });
 
   readonly patient = new FormGroup({
@@ -36,9 +46,7 @@ export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
     phoneNumber: new FormControl('', [ Validators.maxLength(16) ])
   });
 
-  readonly legalRepresentative = new FormGroup({
-
-  });
+  readonly configurationRowVersionId$ = this.of(configurationRowVersionId);
 
   readonly patient$ = this.of(patient);
 
@@ -47,6 +55,8 @@ export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
   readonly patientName$ = this.of(patientName);
 
   readonly patientTaxNumber$ = this.of(patientTaxNumber);
+
+  readonly patientRowVersionId$ = this.of(patientRowVersionId);
 
   readonly process$ = this.of(process);
 
@@ -60,32 +70,6 @@ export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
       payload: {
         processId: r.paramMap.get('processId')!
       }
-    }));
-  }
-
-  public writeConfiguration(configuration: {
-    machadoJosephEnabled: boolean;
-    documentIssueDateBypassEnabled: boolean;
-    reimbursementLimitBypassEnabled: boolean;
-  }) {
-    return this.dispatch(writeConfiguration({
-      payload: { ...configuration }
-    }));
-  }
-
-  public writePatient(patient: {
-    addressLine1: string;
-    addressLine2?: string;
-    addressLine3?: string;
-    postalCode: string;
-    postalCodeArea: string;
-    emailAddress?: string;
-    faxNumber?: string;
-    mobileNumber?: string;
-    phoneNumber?: string;
-  }) {
-    return this.dispatch(writePatient({
-      payload: { ...patient }
     }));
   }
 
@@ -126,14 +110,51 @@ export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
       .pipe(filter(() => this.configuration.valid))
       .pipe(distinct())
       .pipe(tap(() => this.dispatch(debounceWritting())))
-      .pipe(debounceTime(APP_AUTOSAVE_DELAY_MS))
+      .pipe(debounceTime(APP_AUTOSAVE_QUICK_DELAY_MS))
       .pipe(takeUntil(this.dispose$))
-      .subscribe(() => {
-        this.writeConfiguration({
+      .subscribe(() => this.dispatch(writeConfiguration({
+        payload: {
           machadoJosephEnabled: this.configuration.value.machadoJosephEnabled || false,
           documentIssueDateBypassEnabled: this.configuration.value.documentIssueDateBypassEnabled || false,
           reimbursementLimitBypassEnabled: this.configuration.value.reimbursementLimitBypassEnabled || false
-        });
+        }
+      })));
+
+    this.legalRepresentative.controls.enabled.valueChanges
+      .pipe(skip(2))
+      .pipe(takeUntil(this.dispose$))
+      .pipe(distinct())
+      .subscribe((enabled) => {
+
+        const controls = this.legalRepresentative.controls;
+
+        if (enabled) {
+          controls.name.enable();
+          controls.taxNumber.enable();
+          controls.emailAddress.enable();
+          controls.faxNumber.enable();
+          controls.mobileNumber.enable();
+          controls.phoneNumber.enable();
+        } else {
+
+          controls.name.disable();
+          controls.name.setValue('');
+
+          controls.taxNumber.disable();
+          controls.taxNumber.setValue('');
+
+          controls.emailAddress.disable();
+          controls.emailAddress.setValue('');
+
+          controls.faxNumber.disable();
+          controls.faxNumber.setValue('');
+
+          controls.mobileNumber.disable();
+          controls.mobileNumber.setValue('');
+
+          controls.phoneNumber.disable();
+          controls.phoneNumber.setValue('');
+        }
       });
 
     this.patient.valueChanges
@@ -144,8 +165,8 @@ export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
       .pipe(tap(() => this.dispatch(debounceWritting())))
       .pipe(debounceTime(APP_AUTOSAVE_DELAY_MS))
       .pipe(takeUntil(this.dispose$))
-      .subscribe(() => {
-        this.writePatient({
+      .subscribe(() => this.dispatch(writePatient({
+        payload: {
           addressLine1: this.patient.value.addressLine1!,
           addressLine2: this.patient.value.addressLine2 || undefined,
           addressLine3: this.patient.value.addressLine3 || undefined,
@@ -155,8 +176,8 @@ export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
           faxNumber: this.patient.value.faxNumber || undefined,
           mobileNumber: this.patient.value.mobileNumber || undefined,
           phoneNumber: this.patient.value.phoneNumber || undefined,
-        });
-      });
+        }
+      })));
 
     await super.init(activatedRoute, router);
   }

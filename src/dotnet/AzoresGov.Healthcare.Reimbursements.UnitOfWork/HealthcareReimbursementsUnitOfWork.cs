@@ -19,11 +19,15 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork
 
         public DbSet<PatientEntity> PatientEntities { get; set; } = default!;
 
+        public DbSet<PatientLegalRepresentative> PatientLegalRepresentatives { get; set; } = default!;
+
         public DbSet<Patient> Patients { get; set; } = default!;
 
         public DbSet<ProcessEntity> ProcessEntities { get; set; } = default!;
 
         public DbSet<Process> Processes { get; set; } = default!;
+
+        public DbSet<ProcessPatientLegalRepresentative> ProcessPatientLegalRepresentatives { get; set; } = default!;
 
         public DbSet<ProcessPatient> ProcessPatients { get; set; } = default!;
 

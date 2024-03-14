@@ -4,11 +4,13 @@ import { ProcessCaptureState } from "./process-capture.state";
 
 export const state = createFeatureSelector<ProcessCaptureState>(FEATURE_NAME);
 
+export const configuration = createSelector(state, state => state.configuration);
+
+export const configurationRowVersionId = createSelector(configuration, configuration => configuration?.rowVersionId);
+
 export const entity = createSelector(state, state => state.entity);
 
 export const patient = createSelector(state, state => state.patient);
-
-export const patientId = createSelector(patient, patient => patient.id);
 
 export const patientRowVersionId = createSelector(patient, patient => patient.rowVersionId);
 

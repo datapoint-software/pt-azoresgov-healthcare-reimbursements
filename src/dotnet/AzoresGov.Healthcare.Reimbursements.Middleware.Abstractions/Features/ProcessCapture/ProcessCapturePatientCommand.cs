@@ -1,16 +1,16 @@
 ﻿using Datapoint.Mediator;
 using System;
 
-namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features
+namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
 {
     public sealed class ProcessCapturePatientCommand : Command<ProcessCapturePatientResult>
     {
-        public ProcessCapturePatientCommand(Guid userId, Guid processId, Guid processRowVersionId, Guid patientRowVersionId, string addressLine1, string? addressLine2, string? addressLine3, string? postalCode, string? postalCodeArea, string? emailAddress, string? faxNumber, string? mobileNumber, string? phoneNumber)
+        public ProcessCapturePatientCommand(Guid userId, Guid processId, Guid processRowVersionId, Guid? processPatientRowVersionId, string addressLine1, string? addressLine2, string? addressLine3, string? postalCode, string? postalCodeArea, string? emailAddress, string? faxNumber, string? mobileNumber, string? phoneNumber)
         {
             UserId = userId;
             ProcessId = processId;
             ProcessRowVersionId = processRowVersionId;
-            PatientRowVersionId = patientRowVersionId;
+            ProcessPatientRowVersionId = processPatientRowVersionId;
             AddressLine1 = addressLine1;
             AddressLine2 = addressLine2;
             AddressLine3 = addressLine3;
@@ -28,7 +28,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features
         
         public Guid ProcessRowVersionId { get; }
         
-        public Guid PatientRowVersionId { get; }
+        public Guid? ProcessPatientRowVersionId { get; }
 
         public string AddressLine1 { get; }
 

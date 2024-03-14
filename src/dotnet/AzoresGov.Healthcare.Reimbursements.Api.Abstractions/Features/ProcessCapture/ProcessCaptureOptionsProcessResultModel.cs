@@ -12,7 +12,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
             Number = number;
             Status = status;
         }
-
+        
         public Guid Id { get; }
 
         public Guid RowVersionId { get; }

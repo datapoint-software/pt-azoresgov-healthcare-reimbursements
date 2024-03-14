@@ -22,7 +22,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessSearch
 
         public async Task<ProcessSearchOptionsResult> HandleQueryAsync(ProcessSearchOptionsQuery query, CancellationToken ct)
         {
-            var user = await _users.GetByPublicIdOrThrowExceptionAsync(
+            var user = await _users.GetByPublicIdOrThrowBusinessExceptionAsync(
                 query.UserId,
                 ct);
 

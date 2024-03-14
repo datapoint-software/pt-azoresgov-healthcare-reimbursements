@@ -29,14 +29,17 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
 
         public async Task<ProcessCaptureConfigurationResult> HandleCommandAsync(ProcessCaptureConfigurationCommand command, CancellationToken ct)
         {
-            var user = await _users.GetByPublicIdOrThrowExceptionAsync(
+            var user = await _users.GetByPublicIdOrThrowBusinessExceptionAsync(
                 command.UserId,
                 ct);
 
-            var process = await _processes.GetByPublicIdOrThrowExceptionAsync(
+            var process = await _processes.GetByPublicIdOrThrowBusinessExceptionAsync(
                 command.ProcessId,
-                command.ProcessRowVersionId,
                 ct);
+
+            Assert.RowVersion(
+                process.RowVersionId,
+                command.ProcessRowVersionId);
 
             Assert.ProcessStatus(
                 ProcessStatus.Capture, 
@@ -48,22 +51,45 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
                 process.EntityId,
                 ct);
 
-            var processConfiguration = await _processSettings.GetByProcessIdAsync(
-                process.Id,
+            var processConfiguration = await GetOrCreateProcessConfigurationAsync(
+                process,
+                command.ProcessConfigurationRowVersionId,
                 ct);
 
-            processConfiguration ??= _processSettings.Add(
-                new ProcessConfiguration());
-
-            processConfiguration.Process = process;
             processConfiguration.MachadoJosephEnabled = command.MachadoJosephEnabled;
             processConfiguration.DocumentIssueDateBypassEnabled = command.DocumentIssueDateBypassEnabled;
             processConfiguration.ReimbursementLimitBypassEnabled = command.ReimbursementLimitBypassEnabled;
             
             process.RowVersionId = Guid.NewGuid();
+            processConfiguration.RowVersionId = Guid.NewGuid();
 
             return new ProcessCaptureConfigurationResult(
-                process.RowVersionId);
+                process.RowVersionId,
+                processConfiguration.RowVersionId);
+        }
+
+        private async Task<ProcessConfiguration> GetOrCreateProcessConfigurationAsync(
+            Process process,
+            Guid? processConfigurationRowVersionId,
+            CancellationToken ct)
+        {
+            var processConfiguration = await _processSettings.GetByProcessIdAsync(
+                process.Id,
+                ct);
+
+            if (processConfiguration is null)
+            {
+                return _processSettings.Add(new ProcessConfiguration()
+                {
+                    Process = process
+                });
+            }
+            
+            Assert.RowVersion(
+                processConfiguration.RowVersionId,
+                processConfigurationRowVersionId);
+
+            return processConfiguration;
         }
     }
 }

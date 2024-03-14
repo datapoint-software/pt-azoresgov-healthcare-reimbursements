@@ -1,4 +1,4 @@
-﻿using AzoresGov.Healthcare.Reimbursements.Middleware.Features;
+﻿using AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture;
 using Datapoint.Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -33,6 +33,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
             return new ProcessCaptureOptionsResultModel(
                 result.Configuration is null ? null : 
                     new ProcessCaptureOptionsConfigurationResultModel(
+                        result.Configuration.RowVersionId,
                         result.Configuration.MachadoJosephEnabled,
                         result.Configuration.DocumentIssueDateBypassEnabled,
                         result.Configuration.ReimbursementLimitBypassEnabled),
@@ -51,7 +52,6 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
                         result.ParentEntity.Name,
                         result.ParentEntity.Nature),
                 new ProcessCaptureOptionsPatientResultModel(
-                    result.Patient.Id,
                     result.Patient.RowVersionId,
                     result.Patient.Name,
                     result.Patient.Birth,
@@ -68,6 +68,15 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
                     result.Patient.MobileNumber,
                     result.Patient.PhoneNumber,
                     result.Patient.Death),
+                result.PatientLegalRepresentative is null ? null :
+                    new ProcessCaptureOptionsPatientLegalRepresentativeResultModel(
+                        result.PatientLegalRepresentative.RowVersionId,
+                        result.PatientLegalRepresentative.Name,
+                        result.PatientLegalRepresentative.TaxNumber,
+                        result.PatientLegalRepresentative.EmailAddress,
+                        result.PatientLegalRepresentative.FaxNumber,
+                        result.PatientLegalRepresentative.MobileNumber,
+                        result.PatientLegalRepresentative.PhoneNumber),
                 new ProcessCaptureOptionsProcessResultModel(
                     result.Process.Id,
                     result.Process.RowVersionId,
@@ -86,14 +95,16 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
                 new ProcessCaptureConfigurationCommand(
                     User.GetId(),
                     processId,
-                    model.RowVersionId,
+                    model.ProcessRowVersionId,
+                    model.ProcessConfigurationRowVersionId,
                     model.MachadoJosephEnabled,
                     model.DocumentIssueDateBypassEnabled,
                     model.ReimbursementLimitBypassEnabled),
                 ct);
             
             return new ProcessCaptureConfigurationResultModel(
-                result.RowVersionId);
+                result.ProcessRowVersionId,
+                result.ProcessConfigurationRowVersionId);
         }
 
         [Authorize("administrative")]
@@ -108,7 +119,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
                     User.GetId(),
                     processId,
                     model.ProcessRowVersionId,
-                    model.PatientRowVersionId,
+                    model.ProcessPatientRowVersionId,
                     model.AddressLine1,
                     model.AddressLine2,
                     model.AddressLine3,
@@ -121,8 +132,8 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
                 ct);
 
             return new ProcessCapturePatientResultModel(
-                result.PatientRowVersionId,
-                result.ProcessRowVersionId);
+                result.ProcessRowVersionId,
+                result.ProcessPatientRowVersionId);
         }
     }
 }

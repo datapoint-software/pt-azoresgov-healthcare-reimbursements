@@ -4,6 +4,7 @@ using AzoresGov.Healthcare.Reimbursements.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
 {
     [DbContext(typeof(HealthcareReimbursementsUnitOfWork))]
-    partial class HealthcareReimbursementsUnitOfWorkModelSnapshot : ModelSnapshot
+    [Migration("20240310211902_PatientLegalRepresentatives")]
+    partial class PatientLegalRepresentatives
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -554,60 +557,6 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                     b.ToTable("ProcessPatients");
                 });
 
-            modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.ProcessPatientLegalRepresentative", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("EmailAddress")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("FaxNumber")
-                        .HasMaxLength(16)
-                        .HasColumnType("nvarchar(16)");
-
-                    b.Property<string>("MobileNumber")
-                        .HasMaxLength(16)
-                        .HasColumnType("nvarchar(16)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasMaxLength(16)
-                        .HasColumnType("nvarchar(16)");
-
-                    b.Property<long>("ProcessId")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("PublicId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("RowVersionId")
-                        .IsConcurrencyToken()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("TaxNumber")
-                        .IsRequired()
-                        .HasMaxLength(16)
-                        .HasColumnType("nvarchar(16)");
-
-                    b.HasKey("Id");
-
-                    b.HasAlternateKey("PublicId");
-
-                    b.HasIndex("ProcessId")
-                        .IsUnique();
-
-                    b.ToTable("ProcessPatientLegalRepresentatives");
-                });
-
             modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Role", b =>
                 {
                     b.Property<long>("Id")
@@ -960,17 +909,6 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                     b.HasOne("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Process", "Process")
                         .WithOne()
                         .HasForeignKey("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.ProcessPatient", "ProcessId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Process");
-                });
-
-            modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.ProcessPatientLegalRepresentative", b =>
-                {
-                    b.HasOne("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Process", "Process")
-                        .WithOne()
-                        .HasForeignKey("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.ProcessPatientLegalRepresentative", "ProcessId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 

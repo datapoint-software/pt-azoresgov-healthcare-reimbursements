@@ -37,7 +37,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessSearch
 
         public async Task<ProcessSearchResult> HandleQueryAsync(ProcessSearchQuery query, CancellationToken ct)
         {
-            var user = await _users.GetByPublicIdOrThrowExceptionAsync(
+            var user = await _users.GetByPublicIdOrThrowBusinessExceptionAsync(
                 query.UserId,
                 ct);
 
@@ -123,21 +123,15 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessSearch
                     ct);
             }
 
-            var entity = await _entities.GetByPublicIdOrThrowExceptionAsync(
+            var entity = await _entities.GetByPublicIdOrThrowBusinessExceptionAsync(
                 entityPublicId.Value,
                 ct);
 
-            if (entity is null)
-            {
-                throw new BusinessException("An entity was not found matching the given identifier.")
-                    .WithErrorMessage("A entidade não foi encontrada.");
-            }
-
-            if (!await _userEntities.AnyByUserIdAndEntityIdAsync(userId, entity.Id, ct))
-            {
-                throw new BusinessException("No match was found between this user and entity.")
-                    .WithErrorMessage("O perfil do utilizador não tem acesso a esta entidade.");
-            }
+            await Assert.UserEntityAccessAsync(
+                _userEntities,
+                userId,
+                entity.Id,
+                ct);
 
             return [ entity.Id ];
         }

@@ -19,12 +19,12 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
         private readonly IEntityRepository _entities;
 
         private readonly IPatientEntityRepository _patientEntities;
+
+        private readonly IPatientLegalRepresentativeRepository _patientLegalRepresentatives;
         
         private readonly IPatientRepository _patients;
 
         private readonly IProcessRepository _processes;
-
-        private readonly IProcessPatientRepository _processPatients;
 
         private readonly ISequenceRepository _sequences;
 
@@ -32,14 +32,14 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
         
         private readonly IUserRepository _users;
 
-        public ProcessCreationCommandHandler(IParameterManager parameterManager, IEntityRepository entities, IPatientEntityRepository patientEntities, IPatientRepository patients, IProcessRepository processes, IProcessPatientRepository processPatients, ISequenceRepository sequences, IUserEntityRepository userEntities, IUserRepository users)
+        public ProcessCreationCommandHandler(IParameterManager parameterManager, IEntityRepository entities, IPatientEntityRepository patientEntities, IPatientLegalRepresentativeRepository patientLegalRepresentatives, IPatientRepository patients, IProcessRepository processes, ISequenceRepository sequences, IUserEntityRepository userEntities, IUserRepository users)
         {
             _parameterManager = parameterManager;
             _entities = entities;
             _patientEntities = patientEntities;
+            _patientLegalRepresentatives = patientLegalRepresentatives;
             _patients = patients;
             _processes = processes;
-            _processPatients = processPatients;
             _sequences = sequences;
             _userEntities = userEntities;
             _users = users;
@@ -47,37 +47,45 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
 
         public async Task<ProcessCreationResult> HandleCommandAsync(ProcessCreationCommand command, CancellationToken ct)
         {
-            var user = await _users.GetByPublicIdOrThrowExceptionAsync(
+            var user = await _users.GetByPublicIdOrThrowBusinessExceptionAsync(
                 command.UserId,
                 ct);
 
-            var entity = await _entities.GetByPublicIdOrThrowExceptionAsync(
+            var entity = await _entities.GetByPublicIdOrThrowBusinessExceptionAsync(
                 command.EntityId,
-                command.EntityRowVersionId,
                 ct);
 
-            if (entity.Nature is not EntityNature.HealthCenter and not EntityNature.Office)
-            {
-                throw new BusinessException("Processes can not be registered for entities of this nature.")
-                    .WithErrorMessage("O registo de processos de reembolso não é permitido para este tipo de entidades.");
-            }
+            Assert.RowVersion(
+                entity.RowVersionId,
+                command.EntityRowVersionId);
             
-            if (!await _userEntities.AnyByUserIdAndEntityIdAsync(user.Id, entity.Id, ct))
-            {
-                throw new BusinessException("User is not linked to this entity.")
-                    .WithErrorMessage("O perfil do utilizador não está associado a esta entidade.");
-            }
+            Assert.EntityNature(
+                [ EntityNature.HealthCenter, EntityNature.Office],
+                entity.Nature);
 
-            var patient = await _patients.GetByPublicIdOrThrowExceptionAsync(
-                command.PatientId,
-                command.PatientRowVersionId,
+            await Assert.UserEntityAccessAsync(
+                _userEntities,
+                user.Id,
+                entity.Id,
                 ct);
 
-            if (!await _patientEntities.AnyByPatientIdAndEntityIdAsync(patient.Id, entity.Id, ct))
-            {
-                throw new BusinessException("Patient is not linked to this entity.")
-                    .WithErrorMessage("O perfil do utente não está associado a esta entidade.");
-            }
+            var patient = await _patients.GetByPublicIdOrThrowBusinessExceptionAsync(
+                command.PatientId,
+                ct);
+            
+            Assert.RowVersion(
+                patient.RowVersionId,
+                command.PatientRowVersionId);
+
+            await Assert.PatientEntityAccessAsync(
+                _patientEntities,
+                patient.Id,
+                entity.Id,
+                ct);
+
+            var patientLegalRepresentative = await _patientLegalRepresentatives.GetByPatientIdAsync(
+                patient.Id,
+                ct);
 
             var processExpirationInDays = await _parameterManager.GetProcessExpirationInDaysAsync(
                 ct);
@@ -99,26 +107,6 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
                 Creation = command.Creation,
                 Expiration = command.Creation.AddDays(processExpirationInDays).UtcDateTime,
                 Touch = command.Creation
-            });
-
-            _processPatients.Add(new ProcessPatient()
-            {
-                Process = process,
-                Name = patient.Name,
-                Birth = patient.Birth,
-                Gender = patient.Gender,
-                HealthNumber = patient.HealthNumber,
-                TaxNumber = patient.TaxNumber,
-                AddressLine1 = patient.AddressLine1,
-                AddressLine2 = patient.AddressLine2,
-                AddressLine3 = patient.AddressLine3,
-                PostalCode = patient.PostalCode,
-                PostalCodeArea = patient.PostalCodeArea,
-                EmailAddress = patient.EmailAddress,
-                FaxNumber = patient.FaxNumber,
-                MobileNumber = patient.MobileNumber,
-                PhoneNumber = patient.PhoneNumber,
-                Death = patient.Death
             });
 
             return new ProcessCreationResult(

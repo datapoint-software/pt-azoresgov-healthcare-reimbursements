@@ -1,13 +1,12 @@
 ﻿using AzoresGov.Healthcare.Reimbursements.Enumerations;
 using System;
 
-namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features
+namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
 {
     public sealed class ProcessCaptureOptionsPatientResult
     {
-        public ProcessCaptureOptionsPatientResult(Guid id, Guid rowVersionId, string name, DateTimeOffset? birth, Gender? gender, string healthNumber, string taxNumber, string addressLine1, string? addressLine2, string? addressLine3, string? postalCode, string? postalCodeArea, string? emailAddress, string? faxNumber, string? mobileNumber, string? phoneNumber, DateTimeOffset? death)
+        public ProcessCaptureOptionsPatientResult(Guid? rowVersionId, string name, DateTimeOffset? birth, Gender? gender, string healthNumber, string taxNumber, string addressLine1, string? addressLine2, string? addressLine3, string? postalCode, string? postalCodeArea, string? emailAddress, string? faxNumber, string? mobileNumber, string? phoneNumber, DateTimeOffset? death)
         {
-            Id = id;
             RowVersionId = rowVersionId;
             Name = name;
             Birth = birth;
@@ -26,9 +25,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features
             Death = death;
         }
 
-        public Guid Id { get; }
-
-        public Guid RowVersionId { get; }
+        public Guid? RowVersionId { get; }
 
         public string Name { get; }
 

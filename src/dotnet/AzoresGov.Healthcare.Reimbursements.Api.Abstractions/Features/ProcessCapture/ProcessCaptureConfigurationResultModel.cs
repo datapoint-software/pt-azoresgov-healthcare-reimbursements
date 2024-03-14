@@ -4,11 +4,14 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
 {
     public sealed class ProcessCaptureConfigurationResultModel
     {
-        public ProcessCaptureConfigurationResultModel(Guid rowVersionId)
+        public ProcessCaptureConfigurationResultModel(Guid processRowVersionId, Guid processConfigurationRowVersionId)
         {
-            RowVersionId = rowVersionId;
+            ProcessRowVersionId = processRowVersionId;
+            ProcessConfigurationRowVersionId = processConfigurationRowVersionId;
         }
 
-        public Guid RowVersionId { get; }
+        public Guid ProcessRowVersionId { get; }
+        
+        public Guid ProcessConfigurationRowVersionId { get; }
     }
 }
