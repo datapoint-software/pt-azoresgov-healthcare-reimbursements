@@ -9,16 +9,16 @@
 </label>
 <ng-content></ng-content>
 <ng-container *ngIf="control">
-  <div class="invalid-feedback mt-1" *ngIf="control?.errors?.['required']">
+  <div class="invalid-feedback mt-1" *ngIf="control.errors?.['required']">
     Este campo é de preenchimento obrigatório.
   </div>
-  <div class="invalid-feedback mt-1" *ngIf="control?.errors?.['email']">
+  <div class="invalid-feedback mt-1" *ngIf="control.errors?.['email']">
     Este campo é de preenchimento obrigatório.
   </div>
-  <div class="invalid-feedback mt-1" *ngIf="control?.errors?.['minlength']">
+  <div class="invalid-feedback mt-1" *ngIf="control.errors?.['minlength']">
     Este campo é demasiado curto.
   </div>
-  <div class="invalid-feedback mt-1" *ngIf="control?.errors?.['maxlength']">
+  <div class="invalid-feedback mt-1" *ngIf="control.errors?.['maxlength']">
     Este campo é demasiado longo.
   </div>
 </ng-container>
