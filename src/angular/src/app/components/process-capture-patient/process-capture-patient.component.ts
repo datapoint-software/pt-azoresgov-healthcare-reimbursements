@@ -4,10 +4,12 @@ import { FormGroup, FormControl, Validators, ReactiveFormsModule } from "@angula
 import { ProcessCaptureFeature } from "../../features/process-capture/process-capture.feature";
 import { Subject, take, takeUntil } from "rxjs";
 import { IntegerPipe } from "../../pipes/integer.pipe";
+import { FormGroupComponent } from "../form-group/form-group.component";
 
 @Component({
   imports: [
     CommonModule,
+    FormGroupComponent,
     IntegerPipe,
     ReactiveFormsModule
   ],
