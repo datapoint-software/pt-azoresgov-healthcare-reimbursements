@@ -1,12 +1,12 @@
-import { CollapseComponent } from "../core/collapse/collapse.component";
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
 import { filter, map, mergeMap, of, startWith, tap } from "rxjs";
 import { NavigationEnd, Router, RouterModule } from "@angular/router";
+import { CollapseDirective } from "../../directives/collapse.directive";
 
 @Component({
   imports: [
-    CollapseComponent,
+    CollapseDirective,
     CommonModule,
     RouterModule
   ],

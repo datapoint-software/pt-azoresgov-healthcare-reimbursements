@@ -1,12 +1,11 @@
 import { AnimationBuilder, animate, style } from "@angular/animations";
-import { Component, ElementRef, HostListener, Input } from "@angular/core";
+import { Directive, ElementRef, HostListener, Input } from "@angular/core";
 
-@Component({
+@Directive({
   selector: '[data-bs-toggle="collapse"]',
-  standalone: true,
-  template: '<ng-content />'
+  standalone: true
 })
-export class CollapseComponent {
+export class CollapseDirective {
 
   @Input('href')
   public href?: string;

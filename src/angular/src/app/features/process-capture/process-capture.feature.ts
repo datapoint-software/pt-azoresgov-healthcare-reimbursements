@@ -12,6 +12,7 @@ import { Store, provideState } from "@ngrx/store";
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
 import { Subject, debounceTime, distinct, filter, skip, takeUntil, tap } from "rxjs";
 import { APP_AUTOSAVE_DELAY_MS, APP_AUTOSAVE_QUICK_DELAY_MS } from "../../app.constants";
+import { setControlsEnabled } from "../../helpers/reactive-forms.helper";
 
 @Injectable()
 export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
@@ -82,13 +83,13 @@ export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
       .pipe(ofType(configure))
       .subscribe(({ payload }) => {
 
-        this.configuration.setValue({
+        this.configuration.reset({
           machadoJosephEnabled: payload.configuration?.machadoJosephEnabled || false,
           documentIssueDateBypassEnabled: payload.configuration?.documentIssueDateBypassEnabled || false,
           reimbursementLimitBypassEnabled: payload.configuration?.reimbursementLimitBypassEnabled || false
-        });
+        }, { emitEvent: false });
 
-        this.patient.setValue({
+        this.patient.reset({
           addressLine1: payload.patient.addressLine1 || null,
           addressLine2: payload.patient.addressLine2 || null,
           addressLine3: payload.patient.addressLine3 || null,
@@ -98,14 +99,16 @@ export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
           faxNumber: payload.patient.faxNumber || null,
           mobileNumber: payload.patient.mobileNumber || null,
           phoneNumber: payload.patient.phoneNumber || null
-        });
+        }, { emitEvent: false });
 
-        this.configuration.updateValueAndValidity();
-        this.patient.updateValueAndValidity();
+        this.legalRepresentative.reset({
+          enabled: false
+        }, { emitEvent: false });
+
+        this.updateLegalRepresentativeControls();
       });
 
     this.configuration.valueChanges
-      .pipe(skip(2))
       .pipe(takeUntil(this.dispose$))
       .pipe(filter(() => this.configuration.valid))
       .pipe(distinct())
@@ -121,44 +124,16 @@ export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
       })));
 
     this.legalRepresentative.controls.enabled.valueChanges
-      .pipe(skip(2))
       .pipe(takeUntil(this.dispose$))
-      .pipe(distinct())
       .subscribe((enabled) => {
 
-        const controls = this.legalRepresentative.controls;
+        if (!enabled)
+          this.legalRepresentative.reset({}, { emitEvent: false });
 
-        if (enabled) {
-          controls.name.enable();
-          controls.taxNumber.enable();
-          controls.emailAddress.enable();
-          controls.faxNumber.enable();
-          controls.mobileNumber.enable();
-          controls.phoneNumber.enable();
-        } else {
-
-          controls.name.disable();
-          controls.name.setValue('');
-
-          controls.taxNumber.disable();
-          controls.taxNumber.setValue('');
-
-          controls.emailAddress.disable();
-          controls.emailAddress.setValue('');
-
-          controls.faxNumber.disable();
-          controls.faxNumber.setValue('');
-
-          controls.mobileNumber.disable();
-          controls.mobileNumber.setValue('');
-
-          controls.phoneNumber.disable();
-          controls.phoneNumber.setValue('');
-        }
+        this.updateLegalRepresentativeControls();
       });
 
     this.patient.valueChanges
-      .pipe(skip(2))
       .pipe(takeUntil(this.dispose$))
       .pipe(filter(() => this.patient.valid))
       .pipe(distinct())
@@ -193,6 +168,24 @@ export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
     }
 
     await super.dispose();
+  }
+
+  private updateLegalRepresentativeControls() {
+
+    const fc = this.legalRepresentative.controls;
+
+    var controls = [
+      fc.name,
+      fc.taxNumber,
+      fc.emailAddress,
+      fc.faxNumber,
+      fc.mobileNumber,
+      fc.phoneNumber
+    ];
+
+    const enabled = fc.enabled.value || false;
+
+    setControlsEnabled(enabled, controls);
   }
 }
 

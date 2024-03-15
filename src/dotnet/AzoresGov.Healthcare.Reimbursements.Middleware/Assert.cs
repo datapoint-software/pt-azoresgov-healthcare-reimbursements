@@ -5,6 +5,7 @@ using Datapoint;
 using Datapoint.UnitOfWork;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,7 +32,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware
                 .WithErrorMessage("O tipo de entidade não é compatível com esta operação.");
         }
 
-        internal static void Found<TEntity>(TEntity entity) where TEntity : class, IEntity
+        internal static void Found<TEntity>([NotNull] TEntity? entity) where TEntity : class, IEntity
         {
             if (entity is null)
             {
@@ -40,7 +41,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware
             }
         }
 
-        internal static void NotEmpty<TSubject>(TSubject? subject) where TSubject : struct
+        internal static void NotEmpty<TSubject>([NotNull] TSubject? subject) where TSubject : struct
         {
             if (subject.HasValue && !subject.Equals(default))
                 return;

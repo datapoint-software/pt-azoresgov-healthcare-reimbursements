@@ -1,6 +1,10 @@
 /* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
   "extends": "./tsconfig.json",
+  "angularCompilerOptions": {
+    "preserveWhitespaces": false,
+    "strictTemplates": true
+  },
   "compilerOptions": {
     "outDir": "./out-tsc/app",
     "types": []

@@ -1,0 +1,17 @@
+import { FormControl } from "@angular/forms";
+
+export const invalid = (control: FormControl) =>
+
+  control.enabled &&
+  control.invalid &&
+  (control.dirty || control.touched);
+
+export const setControlsEnabled = (enabled: boolean, controls: Array<FormControl>) => {
+
+  const fn = (enabled) ?
+    ((c: FormControl) => c.enable()) :
+    ((c: FormControl) => c.disable());
+
+  for (let control of controls)
+    fn(control);
+};

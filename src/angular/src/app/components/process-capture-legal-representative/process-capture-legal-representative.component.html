@@ -1,1 +1,117 @@
-(( legal representative ))
+<form [formGroup]="legalRepresentative" (ngSubmit)="onSubmit()" class="card">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      Representante legal
+    </h4>
+    <div class="form-check form-switch">
+      <input [formControlName]="'enabled'" class="form-check-input" type="checkbox" id="legalRepresentativeEnabled" />
+      <label class="form-check-label d-none" for="legalRepresentativeEnabled">Representante legal</label>
+    </div>
+  </div>
+  <div  class="card-body">
+    <div class="row">
+      <div class="col-12 col-lg-8">
+        <app-form-group
+          #legalRepresentativeName
+          [name]="'name'"
+          [label]="'Nome'"
+          class="form-group d-block mb-4">
+          <!-- Input -->
+          <input
+            [class.is-invalid]="legalRepresentativeName?.invalid"
+            [formControl]="legalRepresentativeName.control"
+            [id]="legalRepresentativeName.name"
+            class="form-control"
+            placeholder="Nome"
+            tabindex="1"
+            type="text" />
+        </app-form-group>
+      </div>
+      <div class="col-12 col-lg-4">
+        <app-form-group
+          #legalRepresentativeTaxNumber
+          [name]="'taxNumber'"
+          [label]="'Contribuínte'"
+          class="form-group d-block mb-4">
+          <!-- Input -->
+          <input
+            [class.is-invalid]="legalRepresentativeTaxNumber.invalid"
+            [formControl]="legalRepresentativeTaxNumber.control"
+            [id]="legalRepresentativeTaxNumber.name"
+            class="form-control"
+            placeholder="Contribuínte"
+            tabindex="2"
+            type="text" />
+        </app-form-group>
+      </div>
+      <div class="col-12">
+        <app-form-group
+          #legalRepresentativeEmailAddress
+          [label]="'Correio eletrónico'"
+          [name]="'emailAddress'"
+          class="form-group d-block mb-4">
+          <!-- Input -->
+          <input
+            [class.is-invalid]="legalRepresentativeEmailAddress.invalid"
+            [formControl]="legalRepresentativeEmailAddress.control"
+            [id]="legalRepresentativeEmailAddress.name"
+            class="form-control"
+            placeholder="Correio eletrónico"
+            tabindex="3"
+            type="email" />
+        </app-form-group>
+      </div>
+      <div class="col-12 col-lg-4">
+        <app-form-group
+          #legalRepresentativeFaxNumber
+          [label]="'Fax'"
+          [name]="'faxNumber'"
+          class="form-group d-block mb-4">
+          <!-- Input -->
+          <input
+            [class.is-invalid]="legalRepresentativeFaxNumber.invalid"
+            [formControl]="legalRepresentativeFaxNumber.control"
+            [id]="legalRepresentativeFaxNumber.name"
+            class="form-control"
+            placeholder="Fax"
+            tabindex="4"
+            type="text" />
+        </app-form-group>
+      </div>
+      <div class="col-12 col-lg-4">
+        <app-form-group
+          #legalRepresentativeMobileNumber
+          [label]="'Telemóvel'"
+          [name]="'mobileNumber'"
+          class="form-group d-block mb-4">
+          <!-- Input -->
+          <input
+            [class.is-invalid]="legalRepresentativeMobileNumber.invalid"
+            [formControl]="legalRepresentativeMobileNumber.control"
+            [id]="legalRepresentativeMobileNumber.name"
+            class="form-control"
+            placeholder="Telemóvel"
+            tabindex="5"
+            type="text" />
+        </app-form-group>
+      </div>
+      <div class="col-12 col-lg-4">
+        <app-form-group
+          #legalRepresentativePhoneNumber
+          [label]="'Telefone'"
+          [name]="'phoneNumber'"
+          class="form-group d-block mb-4">
+          <!-- Input -->
+          <input
+            [class.is-invalid]="legalRepresentativePhoneNumber.invalid"
+            [formControl]="legalRepresentativePhoneNumber.control"
+            [id]="legalRepresentativePhoneNumber.name"
+            class="form-control"
+            placeholder="Telefone"
+            tabindex="6"
+            type="text" />
+        </app-form-group>
+      </div>
+    </div>
+  </div>
+</form>

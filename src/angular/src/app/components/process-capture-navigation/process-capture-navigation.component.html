@@ -9,20 +9,23 @@
       <a class="list-group-item pe-4 ps-4 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', process.id, 'capture', 'patient']">
         Utente
         <span *ngIf="(patientRowVersionId$ | async); else defaultStateIcon"
-          [class]="icon(patient.valid)"
+          [class]="icon(patient)"
           class="fe ms-auto">
         </span>
       </a>
       <a class="list-group-item pe-4 ps-4 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', process.id, 'capture', 'special-terms']">
         Autorizações especiais
         <span *ngIf="(configurationRowVersionId$ | async); else defaultStateIcon"
-          [class]="icon(configuration.valid)"
+          [class]="icon(configuration)"
           class="fe ms-auto">
         </span>
       </a>
       <a class="list-group-item pe-4 ps-4 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', process.id, 'capture', 'legal-representative']">
         Representante legal
-        <span class="fe fe-edit ms-auto"></span>
+        <span
+          [class]="icon(legalRepresentative)"
+          class="fe ms-auto">
+        </span>
       </a>
       <a class="list-group-item pe-4 ps-4 text-muted d-flex align-items-center justify-content-center">
         Situação de desemprego

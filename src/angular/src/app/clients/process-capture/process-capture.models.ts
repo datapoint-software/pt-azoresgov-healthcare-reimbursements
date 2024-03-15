@@ -15,6 +15,15 @@ export interface ProcessCaptureConfigurationResultModel {
   processConfigurationRowVersionId: string;
 }
 
+export interface ProcessCaptureDeleteLegalRepresentativeModel {
+  processRowVersionId: string;
+  processPatientLegalRepresentativeRowVersionId: string;
+}
+
+export interface ProcessCaptureDeleteLegalRepresentativeResultModel {
+  processRowVersionId: string;
+}
+
 export interface ProcessCaptureOptionsConfigurationResultModel {
   rowVersionId?: string;
   machadoJosephEnabled: boolean;
@@ -92,4 +101,20 @@ export interface ProcessCapturePatientModel {
 export interface ProcessCapturePatientResultModel {
   processRowVersionId: string;
   processPatientRowVersionId: string;
+}
+
+export interface ProcessCaptureWriteLegalRepresentativeModel {
+  processRowVersionId: string;
+  processPatientLegalRepresentativeId?: string;
+  name: string;
+  taxNumber: string;
+  emailAddress?: string;
+  faxNumber?: string;
+  mobileNumber?: string;
+  phoneNumber?: string;
+}
+
+export interface ProcessCaptureWriteLegalRepresentativeResultModel {
+  processRowVersionId: string;
+  processPatientLegalRepresentativeRowVersionId: string;
 }

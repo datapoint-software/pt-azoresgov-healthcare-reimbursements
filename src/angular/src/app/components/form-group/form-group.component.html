@@ -1,0 +1,24 @@
+<label *ngIf="label"
+  [class.is-invalid]="invalid"
+  [class.is-required]="required"
+  [class.text-danger]="invalid"
+  [class.text-muted]="disabled"
+  [for]="name"
+  class="form-label"
+  >{{label}}<span *ngIf="required" class="fe fe-alert-circle align-top text-danger fs-6 ms-1"></span>
+</label>
+<ng-content></ng-content>
+<ng-container *ngIf="control">
+  <div class="invalid-feedback mt-1" *ngIf="control?.errors?.['required']">
+    Este campo é de preenchimento obrigatório.
+  </div>
+  <div class="invalid-feedback mt-1" *ngIf="control?.errors?.['email']">
+    Este campo é de preenchimento obrigatório.
+  </div>
+  <div class="invalid-feedback mt-1" *ngIf="control?.errors?.['minlength']">
+    Este campo é demasiado curto.
+  </div>
+  <div class="invalid-feedback mt-1" *ngIf="control?.errors?.['maxlength']">
+    Este campo é demasiado longo.
+  </div>
+</ng-container>

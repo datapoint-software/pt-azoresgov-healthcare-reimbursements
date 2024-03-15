@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { ProcessCaptureFeature } from "../../features/process-capture/process-capture.feature";
 import { CommonModule } from "@angular/common";
+import { FormGroup } from "@angular/forms";
 
 const icon = (valid: boolean) => valid ? 'fe-check text-success' :
   'fe-alert-triangle text-danger';
@@ -25,13 +26,26 @@ export class ProcessCaptureNavigationComponent {
 
   readonly configuration = this.processCapture.configuration;
 
+  readonly legalRepresentative = this.processCapture.legalRepresentative;
+
   readonly configurationRowVersionId$ = this.processCapture.configurationRowVersionId$;
 
   readonly patientRowVersionId$ = this.processCapture.patientRowVersionId$;
 
   readonly process$ = this.processCapture.process$;
 
-  icon(valid: boolean) {
-    return valid ? 'fe-check text-success' : 'fe-alert-triangle text-danger';
+  icon(formGroup: FormGroup) {
+
+    if (formGroup.valid) {
+
+      const enabledControl = formGroup.get('enabled');
+
+      if (enabledControl && !enabledControl.value)
+        return 'fe-eye-off text-muted';
+
+      return 'fe-check text-success';
+    }
+
+    return 'fe-alert-triangle text-danger';
   }
 }

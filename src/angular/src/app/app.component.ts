@@ -1,11 +1,13 @@
+import { CollapseDirective } from './directives/collapse.directive';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterOutlet } from '@angular/router';
 import { LoadingOverlayComponent } from './components/loading-overlay/loading-overlay.component';
-import { Subject, takeUntil } from 'rxjs';
 import { LoadingOverlayFeature } from './features/loading-overlay/loading-overlay.feature';
+import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterOutlet } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   imports: [
+    CollapseDirective,
     LoadingOverlayComponent,
     RouterOutlet
   ],

@@ -19,6 +19,25 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
         }
 
         [Authorize("administrative")]
+        [HttpPost("delete-legal-representative")]
+        public async Task<ProcessCaptureDeleteLegalRepresentativeResultModel> DeleteLegalRepresentativeAsync(
+            [FromRoute] Guid processId,
+            [FromBody] ProcessCaptureDeleteLegalRepresentativeModel model,
+            CancellationToken ct)
+        {
+            var result = await _mediator.HandleCommandAsync<ProcessCaptureDeleteLegalRepresentativeCommand, ProcessCaptureDeleteLegalRepresentativeResult>(
+                new ProcessCaptureDeleteLegalRepresentativeCommand(
+                    User.GetId(),
+                    processId,
+                    model.ProcessRowVersionId,
+                    model.ProcessPatientLegalRepresentativeRowVersionId),
+                ct);
+
+            return new ProcessCaptureDeleteLegalRepresentativeResultModel(
+                result.ProcessRowVersionId);
+        }
+
+        [Authorize("administrative")]
         [HttpGet("")]
         public async Task<ProcessCaptureOptionsResultModel> GetOptionsAsync(
             [FromRoute] Guid processId,
@@ -134,6 +153,32 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
             return new ProcessCapturePatientResultModel(
                 result.ProcessRowVersionId,
                 result.ProcessPatientRowVersionId);
+        }
+
+        [Authorize("administrative")]
+        [HttpPost("write-legal-representative")]
+        public async Task<ProcessCaptureWriteLegalRepresentativeResultModel> WriteLegalRepresentativeAsync(
+            [FromRoute] Guid processId,
+            [FromBody] ProcessCaptureWriteLegalRepresentativeModel model,
+            CancellationToken ct)
+        {
+            var result = await _mediator.HandleCommandAsync<ProcessCaptureWriteLegalRepresentativeCommand, ProcessCaptureWriteLegalRepresentativeResult>(
+                new ProcessCaptureWriteLegalRepresentativeCommand(
+                    User.GetId(),
+                    processId,
+                    model.ProcessRowVersionId,
+                    model.ProcessPatientLegalRepresentativeId,
+                    model.Name,
+                    model.TaxNumber,
+                    model.EmailAddress,
+                    model.FaxNumber,
+                    model.MobileNumber,
+                    model.PhoneNumber),
+                ct);
+
+            return new ProcessCaptureWriteLegalRepresentativeResultModel(
+                result.ProcessRowVersionId,
+                result.ProcessPatientLegalRepresentativeRowVersionId);
         }
     }
 }
