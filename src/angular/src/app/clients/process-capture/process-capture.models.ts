@@ -3,6 +3,7 @@ import { Gender } from "../../enums/gender.enum";
 import { ProcessStatus } from "../../enums/process-status.enum";
 
 export interface ProcessCaptureConfigurationModel {
+  processId: string;
   processRowVersionId: string;
   processConfigurationRowVersionId?: string;
   machadoJosephEnabled: boolean;
@@ -12,6 +13,7 @@ export interface ProcessCaptureConfigurationModel {
 }
 
 export interface ProcessCaptureConfigurationResultModel {
+  processId: string;
   processRowVersionId: string;
   processConfigurationRowVersionId: string;
 }
@@ -113,6 +115,7 @@ export interface ProcessCaptureOptionsResultModel {
 }
 
 export interface ProcessCapturePatientModel {
+  processId: string;
   processRowVersionId: string;
   processPatientRowVersionId?: string;
   addressLine1: string;
@@ -132,6 +135,7 @@ export interface ProcessCapturePatientResultModel {
 }
 
 export interface ProcessCaptureLegalRepresentativeModel {
+  processId: string;
   processRowVersionId: string;
   processPatientLegalRepresentativeId?: string;
   name: string;
@@ -148,6 +152,7 @@ export interface ProcessCaptureLegalRepresentativeResultModel {
 }
 
 export interface ProcessCaptureLegalRepresentativeDeleteModel {
+  processId: string;
   processRowVersionId: string;
   processPatientLegalRepresentativeRowVersionId: string;
 }

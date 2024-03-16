@@ -54,7 +54,8 @@ export class ProcessCaptureEffects {
       processPatientLegalRepresentativeRowVersionId,
       processId,
       processRowVersionId
-    ]) => this.processCaptureClient.deleteLegalRepresentative(processId, {
+    ]) => this.processCaptureClient.deleteLegalRepresentative({
+      processId,
       processRowVersionId,
       processPatientLegalRepresentativeRowVersionId: processPatientLegalRepresentativeRowVersionId!
     }).pipe(
@@ -99,7 +100,8 @@ export class ProcessCaptureEffects {
       this.store.select($$.processId),
       this.store.select($$.processRowVersionId)
     ]),
-    mergeMap(([ { payload }, processConfigurationRowVersionId, processId, processRowVersionId ]) => this.processCaptureClient.writeConfiguration(processId, {
+    mergeMap(([ { payload }, processConfigurationRowVersionId, processId, processRowVersionId ]) => this.processCaptureClient.writeConfiguration({
+      processId,
       processRowVersionId,
       processConfigurationRowVersionId,
       ...payload.configuration
@@ -139,7 +141,8 @@ export class ProcessCaptureEffects {
       this.store.select($$.processId),
       this.store.select($$.processRowVersionId),
     ]),
-    mergeMap(([ { payload }, processPatientLegalRepresentativeId, processId, processRowVersionId ]) => this.processCaptureClient.writeLegalRepresentative(processId, {
+    mergeMap(([ { payload }, processPatientLegalRepresentativeId, processId, processRowVersionId ]) => this.processCaptureClient.writeLegalRepresentative({
+      processId,
       processRowVersionId,
       processPatientLegalRepresentativeId,
       ...payload.legalRepresentative
@@ -158,7 +161,8 @@ export class ProcessCaptureEffects {
       this.store.select($$.processId),
       this.store.select($$.processRowVersionId)
     ]),
-    mergeMap(([ { payload }, processPatientRowVersionId, processId, processRowVersionId ]) => this.processCaptureClient.writePatient(processId, {
+    mergeMap(([ { payload }, processPatientRowVersionId, processId, processRowVersionId ]) => this.processCaptureClient.writePatient({
+      processId,
       processRowVersionId,
       processPatientRowVersionId,
       ...payload.patient

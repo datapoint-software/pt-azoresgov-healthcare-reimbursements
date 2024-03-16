@@ -13,23 +13,21 @@ export class ProcessCaptureClient extends Client {
       '/delete-family-income-statement',
       model);
 
-  readonly deleteLegalRepresentative = (processId: string, model: ProcessCaptureLegalRepresentativeDeleteModel) =>
+  readonly deleteLegalRepresentative = (model: ProcessCaptureLegalRepresentativeDeleteModel) =>
 
     this.post<ProcessCaptureLegalRepresentativeDeleteModel, ProcessCaptureLegalRepresentativeDeleteResultModel>(
-      '/:processId/delete-legal-representative',
-      model,
-      { path: { processId }});
+      '/delete-legal-representative',
+      model);
 
   readonly getOptions = (processId: string) =>
 
     this.get<ProcessCaptureOptionsResultModel>('/:processId', { path: { processId }});
 
-  readonly writeConfiguration = (processId: string, model: ProcessCaptureConfigurationModel) =>
+  readonly writeConfiguration = (model: ProcessCaptureConfigurationModel) =>
 
     this.post<ProcessCaptureConfigurationModel, ProcessCaptureConfigurationResultModel>(
-      '/:processId/configuration',
-      model,
-      { path: { processId }});
+      '/write-configuration',
+      model);
 
   readonly writeFamilyIncomeStatement = (model: ProcessCaptureFamilyIncomeStatementModel) =>
 
@@ -37,19 +35,17 @@ export class ProcessCaptureClient extends Client {
       '/write-family-income-statement',
       model)
 
-  readonly writeLegalRepresentative = (processId: string, model: ProcessCaptureLegalRepresentativeModel) =>
+  readonly writeLegalRepresentative = (model: ProcessCaptureLegalRepresentativeModel) =>
 
     this.post<ProcessCaptureLegalRepresentativeModel, ProcessCaptureLegalRepresentativeResultModel>(
-      '/:processId/write-legal-representative',
-      model,
-      { path: { processId }});
+      '/write-legal-representative',
+      model);
 
-  readonly writePatient = (processId: string, model: ProcessCapturePatientModel) =>
+  readonly writePatient = (model: ProcessCapturePatientModel) =>
 
     this.post<ProcessCapturePatientModel, ProcessCapturePatientResultModel>(
-      '/:processId/patient',
-      model,
-      { path: { processId }});
+      '/write-patient',
+      model);
 
 }
 

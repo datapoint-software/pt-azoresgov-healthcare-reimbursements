@@ -4,8 +4,9 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
 {
     public sealed class ProcessCaptureConfigurationModel
     {
-        public ProcessCaptureConfigurationModel(Guid processRowVersionId, Guid? processConfigurationRowVersionId, bool machadoJosephEnabled, bool documentIssueDateBypassEnabled, bool reimbursementLimitBypassEnabled, bool unemploymentEnabled)
+        public ProcessCaptureConfigurationModel(Guid processId, Guid processRowVersionId, Guid? processConfigurationRowVersionId, bool machadoJosephEnabled, bool documentIssueDateBypassEnabled, bool reimbursementLimitBypassEnabled, bool unemploymentEnabled)
         {
+            ProcessId = processId;
             ProcessRowVersionId = processRowVersionId;
             ProcessConfigurationRowVersionId = processConfigurationRowVersionId;
             MachadoJosephEnabled = machadoJosephEnabled;
@@ -13,6 +14,8 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
             ReimbursementLimitBypassEnabled = reimbursementLimitBypassEnabled;
             UnemploymentEnabled = unemploymentEnabled;
         }
+
+        public Guid ProcessId { get; }
 
         public Guid ProcessRowVersionId { get; }
 

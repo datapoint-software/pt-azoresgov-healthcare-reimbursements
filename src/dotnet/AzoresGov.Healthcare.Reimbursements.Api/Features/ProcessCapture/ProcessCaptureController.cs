@@ -19,16 +19,15 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
         }
 
         [Authorize("administrative")]
-        [HttpPost("{processId:guid}/delete-legal-representative")]
+        [HttpPost("delete-legal-representative")]
         public async Task<ProcessCaptureLegalRepresentativeDeleteResultModel> DeleteLegalRepresentativeAsync(
-            [FromRoute] Guid processId,
             [FromBody] ProcessCaptureLegalRepresentativeDeleteModel model,
             CancellationToken ct)
         {
             var result = await _mediator.HandleCommandAsync<ProcessCaptureLegalRepresentativeDeleteCommand, ProcessCaptureLegalRepresentativeDeleteResult>(
                 new ProcessCaptureLegalRepresentativeDeleteCommand(
                     User.GetId(),
-                    processId,
+                    model.ProcessId,
                     model.ProcessRowVersionId,
                     model.ProcessPatientLegalRepresentativeRowVersionId),
                 ct);
@@ -131,16 +130,15 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
         }
 
         [Authorize("administrative")]
-        [HttpPost("{processId:guid}/configuration")]
+        [HttpPost("write-configuration")]
         public async Task<ProcessCaptureConfigurationResultModel> WriteConfigurationAsync(
-            [FromRoute] Guid processId,
             [FromBody] ProcessCaptureConfigurationModel model,
             CancellationToken ct)
         {
             var result = await _mediator.HandleCommandAsync<ProcessCaptureConfigurationCommand, ProcessCaptureConfigurationResult>(
                 new ProcessCaptureConfigurationCommand(
                     User.GetId(),
-                    processId,
+                    model.ProcessId,
                     model.ProcessRowVersionId,
                     model.ProcessConfigurationRowVersionId,
                     model.MachadoJosephEnabled,
@@ -155,16 +153,15 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
         }
 
         [Authorize("administrative")]
-        [HttpPost("{processId:guid}/patient")]
+        [HttpPost("write-patient")]
         public async Task<ProcessCapturePatientResultModel> WritePatientAsync(
-            [FromRoute] Guid processId,
             [FromBody] ProcessCapturePatientModel model,
             CancellationToken ct)
         {
             var result = await _mediator.HandleCommandAsync<ProcessCapturePatientCommand, ProcessCapturePatientResult>(
                 new ProcessCapturePatientCommand(
                     User.GetId(),
-                    processId,
+                    model.ProcessId,
                     model.ProcessRowVersionId,
                     model.ProcessPatientRowVersionId,
                     model.AddressLine1,
@@ -207,7 +204,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
         }
 
         [Authorize("administrative")]
-        [HttpPost("{processId:guid}/write-legal-representative")]
+        [HttpPost("write-legal-representative")]
         public async Task<ProcessCaptureLegalRepresentativeResultModel> WriteLegalRepresentativeAsync(
             [FromRoute] Guid processId,
             [FromBody] ProcessCaptureLegalRepresentativeModel model,
@@ -216,7 +213,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
             var result = await _mediator.HandleCommandAsync<ProcessCaptureLegalRepresentativeCommand, ProcessCaptureLegalRepresentativeResult>(
                 new ProcessCaptureLegalRepresentativeCommand(
                     User.GetId(),
-                    processId,
+                    model.ProcessId,
                     model.ProcessRowVersionId,
                     model.ProcessPatientLegalRepresentativeId,
                     model.Name,
