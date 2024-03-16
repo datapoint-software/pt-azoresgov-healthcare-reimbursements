@@ -1,7 +1,22 @@
-﻿namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities
+﻿using Datapoint.UnitOfWork;
+using System;
+
+namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities
 {
-    public class ProcessPaymentWireTransferConfiguration
+    public sealed class ProcessPaymentWireTransferConfiguration : IEntity
     {
-        
+        public long Id { get; set; } = default!;
+
+        public Guid PublicId { get; set; } = default!;
+
+        public Guid RowVersionId { get; set; } = default!;
+
+        public Process Process { get; set; } = default!;
+
+        public long ProcessId { get; set; } = default!;
+
+        public string Iban { get; set; } = default!;
+
+        public string Swift { get; set; } = default!;
     }
 }

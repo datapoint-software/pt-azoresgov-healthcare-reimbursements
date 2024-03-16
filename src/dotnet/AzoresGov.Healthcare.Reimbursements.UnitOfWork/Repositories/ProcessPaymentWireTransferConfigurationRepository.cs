@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
 {
-    public sealed class ProcessPaymentConfigurationRepository : EntityFrameworkCoreRepository<HealthcareReimbursementsUnitOfWork, ProcessPaymentConfiguration>, IProcessPaymentConfigurationRepository
+    public sealed class ProcessPaymentWireTransferConfigurationRepository : EntityFrameworkCoreRepository<HealthcareReimbursementsUnitOfWork, ProcessPaymentWireTransferConfiguration>, IProcessPaymentWireTransferConfigurationRepository
     {
-        public ProcessPaymentConfigurationRepository(HealthcareReimbursementsUnitOfWork unitOfWork) : base(unitOfWork)
+        public ProcessPaymentWireTransferConfigurationRepository(HealthcareReimbursementsUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
 
-        public Task<ProcessPaymentConfiguration?> GetByProcessIdAsync(long processId, CancellationToken ct) =>
+        public Task<ProcessPaymentWireTransferConfiguration?> GetByProcessIdAsync(long processId, CancellationToken ct) =>
 
             Entities.FirstOrDefaultAsync(e => e.ProcessId == processId, ct);
     }

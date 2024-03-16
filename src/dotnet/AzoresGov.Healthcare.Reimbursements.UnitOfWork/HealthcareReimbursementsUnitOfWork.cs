@@ -36,6 +36,8 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork
 
         public DbSet<ProcessPaymentConfiguration> ProcessPaymentSettings { get; set; } = default!;
 
+        public DbSet<ProcessPaymentWireTransferConfiguration> ProcessPaymentWireTransferSettings { get; set; } = default!;
+
         public DbSet<ProcessConfiguration> ProcessSettings { get; set; } = default!;
         
         public DbSet<Role> Roles { get; set; } = default!;
