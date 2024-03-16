@@ -1,6 +1,7 @@
 import { createReducer, on } from "@ngrx/store";
 import { ProcessCaptureState } from "./process-capture.state";
-import { configure, deleteFamilyIncomeStatement, deleteFamilyIncomeStatementComplete, deleteLegalRepresentative, deleteLegalRepresentativeComplete, dispose, init, writeConfiguration, writeConfigurationComplete, writeFamilyIncomeStatement, writeFamilyIncomeStatementComplete, writeLegalRepresentative, writeLegalRepresentativeComplete, writePatient, writePatientComplete } from "./process-capture.actions";
+import { configure, deleteFamilyIncomeStatement, deleteFamilyIncomeStatementComplete, deleteLegalRepresentative, deleteLegalRepresentativeComplete, dispose, init, writeConfiguration, writeConfigurationComplete, writeFamilyIncomeStatement, writeFamilyIncomeStatementComplete, writeLegalRepresentative, writeLegalRepresentativeComplete, writePatient, writePatientComplete, writePayment, writePaymentComplete } from "./process-capture.actions";
+import { writting } from "./process-capture.selectors";
 
 export const reducer = createReducer(
 
@@ -130,6 +131,29 @@ export const reducer = createReducer(
     process: {
       ...state.process,
       rowVersionId: payload.processRowVersionId
+    }
+  })),
+
+  on(writePayment, (state, { payload }) => ({
+    ...state,
+    payment: {
+      ...state.payment,
+      ...payload.payment,
+      writting: true
+    }
+  })),
+
+  on(writePaymentComplete, (state, { payload }) => ({
+    ...state,
+    process: {
+      ...state.process,
+      rowVersionId: payload.processRowVersionId
+    },
+    payment: {
+      ...state.payment!,
+      processPaymentConfigurationRowVersionId: payload.processPaymentConfigurationRowVersionId,
+      processPaymentWireTransferConfigurationRowVersionId: payload.processPaymentWireTransferConfigurationRowVersionId,
+      writting: false
     }
   }))
 );

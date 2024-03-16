@@ -122,6 +122,14 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
                         result.PatientLegalRepresentative.FaxNumber,
                         result.PatientLegalRepresentative.MobileNumber,
                         result.PatientLegalRepresentative.PhoneNumber),
+                result.Payment is null ? null :
+                    new ProcessCaptureOptionsPaymentResultModel(
+                        result.Payment.ProcessPaymentConfigurationRowVersionId,
+                        result.Payment.ProcessPaymentWireTransferConfigurationRowVersionId,
+                        result.Payment.Method,
+                        result.Payment.Receiver,
+                        result.Payment.Iban,
+                        result.Payment.Swift),
                 new ProcessCaptureOptionsProcessResultModel(
                     result.Process.Id,
                     result.Process.RowVersionId,
@@ -227,6 +235,31 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
             return new ProcessCaptureLegalRepresentativeResultModel(
                 result.ProcessRowVersionId,
                 result.ProcessPatientLegalRepresentativeRowVersionId);
+        }
+
+        [Authorize("administrative")]
+        [HttpPost("write-payment")]
+        public async Task<ProcessCapturePaymentResultModel> WritePaymentAsync(
+            [FromBody] ProcessCapturePaymentModel model,
+            CancellationToken ct)
+        {
+            var result = await _mediator.HandleCommandAsync<ProcessCapturePaymentCommand, ProcessCapturePaymentResult>(
+                new ProcessCapturePaymentCommand(
+                    User.GetId(),
+                    model.ProcessId,
+                    model.ProcessRowVersionId,
+                    model.ProcessPaymentConfigurationRowVersionId,
+                    model.ProcessPaymentWireTransferConfigurationRowVersionId,
+                    model.Method,
+                    model.Receiver,
+                    model.Iban,
+                    model.Swift),
+                ct);
+
+            return new ProcessCapturePaymentResultModel(
+                result.ProcessRowVersionId,
+                result.ProcessPaymentConfigurationRowVersionId,
+                result.ProcessPaymentWireTransferConfigurationRowVersionId);
         }
     }
 }

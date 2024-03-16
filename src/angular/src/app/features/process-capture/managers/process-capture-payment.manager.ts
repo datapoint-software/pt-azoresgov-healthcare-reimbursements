@@ -1,25 +1,140 @@
 import { Injectable } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { FormControl, FormGroup } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { Manager } from "../../feature.abstractions";
-import { state } from "../rx/process-capture.selectors";
+import { paymentConfigurationRowVersionId, paymentWritting, state } from "../rx/process-capture.selectors";
 import { ProcessCaptureState } from "../rx/process-capture.state";
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
+import { Actions, ofType } from "@ngrx/effects";
+import { map, takeUntil } from "rxjs";
+import { configure, writePayment } from "../rx/process-capture.actions";
+import { ProcessCaptureOptionsPaymentResultModel } from "../../../clients/process-capture/process-capture.models";
+import { PaymentReceiver } from "../../../enums/payment-receiver.enum";
+import { PaymentMethod } from "../../../enums/payment-method.enum";
+import { setControlsEnabled } from "../../../helpers/reactive-forms.helper";
+import { ProcessCaptureLegalRepresentativeManager } from "./process-capture-legal-representative.manager";
+import { Validators } from "../../../app.validators";
 
 @Injectable()
 export class ProcessCapturePaymentManager extends Manager<ProcessCaptureState> {
 
-  readonly form = new FormGroup({
-    receiver: new FormControl(null, [ Validators.required ]),
-    method: new FormControl(null, [ Validators.required ]),
-    iban: new FormControl(null, [ Validators.required ]),
-    swift: new FormControl(null, [ Validators.required ])
+  public readonly written$ = this.of(paymentConfigurationRowVersionId)
+    .pipe(map((paymentConfigurationRowVersionId) => !!paymentConfigurationRowVersionId));
+
+  public readonly writting$ = this.of(paymentWritting)
+    .pipe(map((writting) => !!writting));
+
+  public readonly form = new FormGroup({
+    method: new FormControl((null as PaymentMethod | null), [ Validators.required ]),
+    receiver: new FormControl((null as PaymentReceiver | null), [ Validators.required ]),
+    iban: new FormControl((null as string | null), [ Validators.required, Validators.iban ]),
+    swift: new FormControl((null as string | null), [ Validators.required ])
   });
 
-  constructor(store: Store) {
+  constructor(
+    store: Store,
+    private readonly legalRepresentative: ProcessCaptureLegalRepresentativeManager,
+    private readonly actions$: Actions) {
     super(store, state);
   }
 
-  submit() {
+  private configure(payment: ProcessCaptureOptionsPaymentResultModel | undefined) {
 
+    const method = payment?.method || PaymentMethod.WireTransfer;
+
+    this.form.reset({
+      method,
+      receiver: payment?.receiver || PaymentReceiver.Patient
+    }, {
+      emitEvent: false
+    });
+
+    this.methodChanges(method);
+  }
+
+  private legalRepresentativeEnabledChanges(enabled: boolean) {
+
+    if (this.form.controls.receiver.value === PaymentReceiver.LegalRepresentative && !enabled) {
+      this.form.controls.receiver.setValue(PaymentReceiver.Patient);
+    }
+  }
+
+  public override async init(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot) {
+
+    await super.init(activatedRoute, router);
+
+    this.actions$
+      .pipe(takeUntil(this.dispose$))
+      .pipe(ofType(configure))
+      .subscribe(({ payload }) => this.configure(payload.payment));
+
+    this.form.valueChanges
+      .pipe(takeUntil(this.dispose$))
+      .subscribe((payment) => this.formChanges(payment));
+
+    this.form.controls.method.valueChanges
+      .pipe(takeUntil(this.dispose$))
+      .subscribe((method) => this.methodChanges(method!));
+
+    this.legalRepresentative.form.controls.enabled.valueChanges
+      .pipe(takeUntil(this.dispose$))
+      .subscribe((enabled) => this.legalRepresentativeEnabledChanges(enabled!));
+  }
+
+  private formChanges(payment: Partial<{
+    method: PaymentMethod | null;
+    receiver: PaymentReceiver | null;
+    iban: string | null;
+    swift: string | null;
+  }>): void {
+
+    if (!this.form.valid)
+      return;
+
+    this.write(true, this.form.value);
+  }
+
+  private methodChanges(method: PaymentMethod) {
+
+    const enabled = method === PaymentMethod.WireTransfer;
+
+    const { iban, swift } = this.form.controls;
+
+    setControlsEnabled(enabled, [
+      iban,
+      swift
+    ]);
+
+    if (!enabled) {
+      for (const c of [ iban, swift ])
+        c.reset(null, { emitEvent: false });
+    }
+  }
+
+  public submit() {
+
+    if (!this.form.valid)
+      return;
+
+    this.write(false, this.form.value);
+  }
+
+  public write(debounce: boolean, payment: Partial<{
+    method: PaymentMethod | null;
+    receiver: PaymentReceiver | null;
+    iban: string | null;
+    swift: string | null;
+  }>) {
+    this.dispatch(writePayment({
+      payload: {
+        debounce,
+        payment: {
+          method: payment.method!,
+          receiver: payment.receiver!,
+          iban: payment.iban || undefined,
+          swift: payment.swift || undefined
+        }
+      }
+    }));
   }
 }

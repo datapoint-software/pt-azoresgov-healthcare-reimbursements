@@ -38,6 +38,14 @@ export const patientWritting = createSelector(patient, patient => patient.writti
 
 export const parentEntity = createSelector(state, state => state.parentEntity);
 
+export const payment = createSelector(state, state => state.payment);
+
+export const paymentConfigurationRowVersionId = createSelector(payment, payment => payment?.processPaymentConfigurationRowVersionId);
+
+export const paymentWireTransferConfigurationRowVersionId = createSelector(payment, payment => payment?.processPaymentWireTransferConfigurationRowVersionId);
+
+export const paymentWritting = createSelector(payment, payment => payment?.writting);
+
 export const process = createSelector(state, state => state.process);
 
 export const processId = createSelector(process, process => process.id);

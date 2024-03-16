@@ -1,5 +1,7 @@
 import { EntityNature } from "../../enums/entity-nature.enum";
 import { Gender } from "../../enums/gender.enum";
+import { PaymentMethod } from "../../enums/payment-method.enum";
+import { PaymentReceiver } from "../../enums/payment-receiver.enum";
 import { ProcessStatus } from "../../enums/process-status.enum";
 
 export interface ProcessCaptureConfigurationModel {
@@ -97,6 +99,15 @@ export interface ProcessCaptureOptionsPatientResultModel {
   death?: string;
 }
 
+export interface ProcessCaptureOptionsPaymentResultModel {
+  processPaymentConfigurationRowVersionId?: string;
+  processPaymentWireTransferConfigurationRowVersionId?: string;
+  method: PaymentMethod;
+  receiver: PaymentReceiver;
+  iban?: string;
+  swift?: string;
+}
+
 export interface ProcessCaptureOptionsProcessResultModel {
   id: string;
   rowVersionId: string;
@@ -111,6 +122,7 @@ export interface ProcessCaptureOptionsResultModel {
   parentEntity?: ProcessCaptureOptionsEntityResultModel;
   patient: ProcessCaptureOptionsPatientResultModel;
   patientLegalRepresentative?: ProcessCaptureOptionsPatientLegalRepresentativeResultModel;
+  payment?: ProcessCaptureOptionsPaymentResultModel;
   process: ProcessCaptureOptionsProcessResultModel;
 }
 
@@ -159,4 +171,32 @@ export interface ProcessCaptureLegalRepresentativeDeleteModel {
 
 export interface ProcessCaptureLegalRepresentativeDeleteResultModel {
   processRowVersionId: string;
+}
+
+export interface ProcessCapturePaymentDeleteModel {
+  processId: string;
+  processRowVersionId: string;
+  processPaymentConfigurationRowVersionId: string;
+  processPaymentWireTransferConfigurationRowVersionId?: string;
+}
+
+export interface ProcessCapturePaymentDeleteResultModel {
+  processRowVersionId: string;
+}
+
+export interface ProcessCapturePaymentModel {
+  processId: string;
+  processRowVersionId: string;
+  processPaymentConfigurationRowVersionId?: string;
+  processPaymentWireTransferConfigurationRowVersionId?: string;
+  method: PaymentMethod;
+  receiver: PaymentReceiver;
+  iban?: string;
+  swift?: string;
+}
+
+export interface ProcessCapturePaymentResultModel {
+  processRowVersionId: string;
+  processPaymentConfigurationRowVersionId: string;
+  processPaymentWireTransferConfigurationRowVersionId?: string;
 }

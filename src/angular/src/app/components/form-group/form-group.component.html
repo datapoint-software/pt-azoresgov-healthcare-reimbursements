@@ -21,6 +21,9 @@
   <div class="invalid-feedback mt-1" *ngIf="control.errors?.['email']">
     Este campo requere um endereço de correio eletrónico válido.
   </div>
+  <div class="invalid-feedback mt-1" *ngIf="control.errors?.['iban']">
+    Este campo requere um número de identificação bancário válido.
+  </div>
   <div class="invalid-feedback mt-1" *ngIf="control.errors?.['minlength']">
     Este campo é demasiado curto.
   </div>

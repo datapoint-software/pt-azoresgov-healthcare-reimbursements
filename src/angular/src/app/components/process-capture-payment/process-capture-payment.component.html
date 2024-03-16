@@ -1,0 +1,91 @@
+<form [formGroup]="processCapture.payment.form" (ngSubmit)="processCapture.payment.submit()" class="card">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      Pagamento
+    </h4>
+  </div>
+  <div  class="card-body">
+    <div class="row">
+      <div class="col-12 col-lg-4">
+        <app-form-group
+          #receiver
+          [name]="'receiver'"
+          [label]="'Destinatário'"
+          class="form-group d-block mb-4">
+          <select
+            [class.is-invalid]="receiver?.invalid"
+            [formControl]="receiver.control"
+            [id]="receiver.name"
+            class="form-select"
+            tabindex="1">
+            <option [ngValue]="null" disabled></option>
+            <option [ngValue]="PaymentReceiver.Patient">Utente</option>
+            <option [ngValue]="PaymentReceiver.LegalRepresentative" *ngIf="processCapture.legalRepresentative.form.value.enabled">Representante legal</option>
+          </select>
+          @if (processCapture.payment.form.value.receiver === PaymentReceiver.LegalRepresentative) {
+            <div class="form-text text-muted text-uppercase mt-2">{{ processCapture.legalRepresentative.form.value.name }}</div>
+          }
+          @if (processCapture.payment.form.value.receiver === PaymentReceiver.Patient) {
+            <div class="form-text text-muted text-uppercase mt-2">{{ processCapture.patient.name$ | async}}</div>
+          }
+        </app-form-group>
+      </div>
+      <div class="col-12 col-lg-4">
+        <app-form-group
+          #method
+          [name]="'method'"
+          [label]="'Método'"
+          class="form-group d-block mb-4">
+          <!-- Input -->
+          <select
+            [class.is-invalid]="method?.invalid"
+            [formControl]="method.control"
+            [id]="method.name"
+            class="form-select"
+            tabindex="2">
+            <option [ngValue]="null" disabled></option>
+            <option [ngValue]="PaymentMethod.Cash">Numerário</option>
+            <option [ngValue]="PaymentMethod.MoneyOrder">Cheque</option>
+            <option [ngValue]="PaymentMethod.WireTransfer">Transferência bancária</option>
+          </select>
+        </app-form-group>
+      </div>
+      @if (processCapture.payment.form.value.method === PaymentMethod.WireTransfer) {
+        <div class="col-12 col-lg-8">
+          <app-form-group
+            #iban
+            [name]="'iban'"
+            [label]="'IBAN'"
+            class="form-group d-block mb-4">
+            <!-- Input -->
+            <input
+              [class.is-invalid]="iban?.invalid"
+              [formControl]="iban.control"
+              [id]="iban.name"
+              [placeholder]="iban.label"
+              class="form-control"
+              tabindex="3"
+              type="text" />
+          </app-form-group>
+        </div>
+        <div class="col-12 col-lg-4">
+          <app-form-group
+            #swift
+            [name]="'swift'"
+            [label]="'BIC/SWIFT'"
+            class="form-group d-block mb-4">
+            <!-- Input -->
+            <input
+              [class.is-invalid]="swift?.invalid"
+              [formControl]="swift.control"
+              [id]="swift.name"
+              [placeholder]="swift.label"
+              class="form-control"
+              tabindex="4"
+              type="text" />
+          </app-form-group>
+        </div>
+      }
+    </div>
+  </div>
+</form>

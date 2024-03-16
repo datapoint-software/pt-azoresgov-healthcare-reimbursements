@@ -1,6 +1,6 @@
 import { Client } from "../api.client";
 import { Injectable, makeEnvironmentProviders } from "@angular/core";
-import { ProcessCaptureConfigurationModel, ProcessCaptureConfigurationResultModel, ProcessCaptureLegalRepresentativeDeleteModel, ProcessCaptureLegalRepresentativeDeleteResultModel, ProcessCaptureOptionsResultModel, ProcessCapturePatientModel, ProcessCapturePatientResultModel, ProcessCaptureLegalRepresentativeModel, ProcessCaptureLegalRepresentativeResultModel, ProcessCaptureFamilyIncomeStatementModel, ProcessCaptureFamilyIncomeStatementResultModel, ProcessCaptureFamilyIncomeStatementDeleteModel, ProcessCaptureFamilyIncomeStatementDeleteResultModel } from "./process-capture.models";
+import { ProcessCaptureConfigurationModel, ProcessCaptureConfigurationResultModel, ProcessCaptureLegalRepresentativeDeleteModel, ProcessCaptureLegalRepresentativeDeleteResultModel, ProcessCaptureOptionsResultModel, ProcessCapturePatientModel, ProcessCapturePatientResultModel, ProcessCaptureLegalRepresentativeModel, ProcessCaptureLegalRepresentativeResultModel, ProcessCaptureFamilyIncomeStatementModel, ProcessCaptureFamilyIncomeStatementResultModel, ProcessCaptureFamilyIncomeStatementDeleteModel, ProcessCaptureFamilyIncomeStatementDeleteResultModel, ProcessCapturePaymentDeleteModel, ProcessCapturePaymentDeleteResultModel, ProcessCapturePaymentModel, ProcessCapturePaymentResultModel } from "./process-capture.models";
 
 @Injectable()
 export class ProcessCaptureClient extends Client {
@@ -18,6 +18,12 @@ export class ProcessCaptureClient extends Client {
     this.post<ProcessCaptureLegalRepresentativeDeleteModel, ProcessCaptureLegalRepresentativeDeleteResultModel>(
       '/delete-legal-representative',
       model);
+
+  readonly deletePayment = (model: ProcessCapturePaymentDeleteModel) =>
+
+      this.post<ProcessCapturePaymentDeleteModel, ProcessCapturePaymentDeleteResultModel>(
+        '/delete-payment',
+        model);
 
   readonly getOptions = (processId: string) =>
 
@@ -45,6 +51,12 @@ export class ProcessCaptureClient extends Client {
 
     this.post<ProcessCapturePatientModel, ProcessCapturePatientResultModel>(
       '/write-patient',
+      model);
+
+  readonly writePayment = (model: ProcessCapturePaymentModel) =>
+
+    this.post<ProcessCapturePaymentModel, ProcessCapturePaymentResultModel>(
+      '/write-payment',
       model);
 
 }

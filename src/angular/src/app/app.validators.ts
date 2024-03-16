@@ -1,8 +1,11 @@
 import { AbstractControl, Validators as CoreValidators, ValidationErrors, ValidatorFn } from "@angular/forms";
+import { isLetter } from "./helpers/string.helper";
 
 const DECIMAL_REGEX = /^\-?(\d+|(\d*(\.\d+)))$/;
 
 const DECIMAL_UNSIGNED_REGEX = /^(\d+|(\d*(\.\d+)))$/;
+
+const IBAN_REGEX = /^[A-Z]{2}\d{2}[A-Z0-9]+$/;
 
 const INTEGER_REGEX = /^\-?\d+$/;
 
@@ -43,11 +46,48 @@ export class Validators extends CoreValidators {
     });
   }
 
+  static iban(control: AbstractControl<string | null>): ValidationErrors | null {
+
+    if (!control.value)
+      return null;
+
+    if (IBAN_REGEX.test(control.value)) {
+
+      const shift = 55;
+      const iban = control.value.toUpperCase();
+
+      let inverse = iban.substring(4) + iban.substring(0, 4);
+      let str = '';
+
+      for (const chr of inverse.split('')) {
+
+        let cv = isLetter(chr)
+          ? (chr.charCodeAt(0) - shift)
+          : (parseInt(chr));
+
+        str += cv.toString();
+      }
+
+      let i;
+      let cm = parseInt(str.charAt(0));
+
+      for (i = 1; i < str.length; i++) {
+          cm *= 10;
+          cm += parseInt(str.charAt(i));
+          cm %= 97;
+      }
+
+      if (cm === 1)
+        return null;
+    }
+
+    return ({ iban: true });
+  }
+
   static integer(options?: { unsigned: boolean }): ValidatorFn {
     return ((control: AbstractControl<string | null>) => {
 
-      if (control.value)
-      {
+      if (control.value) {
         const unsigned = options?.unsigned ?? false;
         const pattern = unsigned ? INTEGER_UNSIGNED_REGEX : INTEGER_REGEX;
 

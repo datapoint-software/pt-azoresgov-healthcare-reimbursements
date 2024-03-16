@@ -1,6 +1,8 @@
 import { createAction, props } from "@ngrx/store";
 import { FEATURE_ACTION_PREFIX } from "../process-capture.constants";
 import { ProcessCaptureState } from "./process-capture.state";
+import { PaymentMethod } from "../../../enums/payment-method.enum";
+import { PaymentReceiver } from "../../../enums/payment-receiver.enum";
 
 export const deleteFamilyIncomeStatement = createAction(
   `${FEATURE_ACTION_PREFIX}/delete-family-income-statement`
@@ -151,6 +153,32 @@ export const writePatientComplete = createAction(
     payload: {
       processRowVersionId: string;
       processPatientRowVersionId: string;
+    };
+  }>()
+);
+
+export const writePayment = createAction(
+  `${FEATURE_ACTION_PREFIX}/write-payment`,
+  props<{
+    payload: {
+      debounce: boolean;
+      payment: {
+        method: PaymentMethod;
+        receiver: PaymentReceiver;
+        iban?: string;
+        swift?: string;
+      }
+    };
+  }>()
+);
+
+export const writePaymentComplete = createAction(
+  `${FEATURE_ACTION_PREFIX}/write-payment-complete`,
+  props<{
+    payload: {
+      processRowVersionId: string;
+      processPaymentConfigurationRowVersionId: string;
+      processPaymentWireTransferConfigurationRowVersionId?: string;
     };
   }>()
 );

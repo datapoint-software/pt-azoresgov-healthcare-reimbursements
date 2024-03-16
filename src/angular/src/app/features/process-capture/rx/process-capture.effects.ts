@@ -1,5 +1,5 @@
 import { Actions, concatLatestFrom, createEffect, ofType } from "@ngrx/effects";
-import { configure, deleteFamilyIncomeStatement, deleteFamilyIncomeStatementComplete, deleteLegalRepresentative, deleteLegalRepresentativeComplete, dispose, init, writeConfiguration, writeConfigurationComplete, writeFamilyIncomeStatement, writeFamilyIncomeStatementComplete, writeLegalRepresentative, writeLegalRepresentativeComplete, writePatient, writePatientComplete } from "./process-capture.actions";
+import { configure, deleteFamilyIncomeStatement, deleteFamilyIncomeStatementComplete, deleteLegalRepresentative, deleteLegalRepresentativeComplete, dispose, init, writeConfiguration, writeConfigurationComplete, writeFamilyIncomeStatement, writeFamilyIncomeStatementComplete, writeLegalRepresentative, writeLegalRepresentativeComplete, writePatient, writePatientComplete, writePayment, writePaymentComplete } from "./process-capture.actions";
 import { Injectable } from "@angular/core";
 import { debounce, debounceTime, filter, map, mergeMap, of, switchMap, tap, timer } from "rxjs";
 import { ProcessCaptureClient } from "../../../clients/process-capture/process-capture.client";
@@ -86,6 +86,10 @@ export class ProcessCaptureEffects {
           legalRepresentative: response.patientLegalRepresentative && {
             ...response.patientLegalRepresentative,
             writting: false
+          },
+          payment: response.payment && {
+            ...response.payment,
+            writting: false
           }
         }
       }))
@@ -168,6 +172,34 @@ export class ProcessCaptureEffects {
       ...payload.patient
     }).pipe(
       map((response) => writePatientComplete({
+        payload: { ...response }
+      }))
+    ))
+  ));
+
+  readonly writePayment$ = createEffect(() => this.actions$.pipe(
+    ofType(writePayment),
+    debounce(({ payload }) => payload.debounce ? (timer(APP_AUTOSAVE_DELAY_MS)) : (of(true))),
+    concatLatestFrom(() => [
+      this.store.select($$.paymentConfigurationRowVersionId),
+      this.store.select($$.paymentWireTransferConfigurationRowVersionId),
+      this.store.select($$.processId),
+      this.store.select($$.processRowVersionId)
+    ]),
+    mergeMap(([
+      { payload },
+      processPaymentConfigurationRowVersionId,
+      processPaymentWireTransferConfigurationRowVersionId,
+      processId,
+      processRowVersionId
+    ]) => this.processCaptureClient.writePayment({
+      processId,
+      processRowVersionId,
+      processPaymentConfigurationRowVersionId,
+      processPaymentWireTransferConfigurationRowVersionId,
+      ...payload.payment
+    }).pipe(
+      map((response) => writePaymentComplete({
         payload: { ...response }
       }))
     ))

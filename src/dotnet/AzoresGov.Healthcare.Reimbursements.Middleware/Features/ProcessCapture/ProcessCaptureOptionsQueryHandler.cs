@@ -26,13 +26,17 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
 
         private readonly IProcessPatientRepository _processPatients;
 
+        private readonly IProcessPaymentConfigurationRepository _processPaymentSettings;
+
+        private readonly IProcessPaymentWireTransferConfigurationRepository _processPaymentWireTransferSettings;
+
         private readonly IProcessConfigurationRepository _processSettings;
 
         private readonly IUserEntityRepository _userEntities;
         
         private readonly IUserRepository _users;
 
-        public ProcessCaptureOptionsQueryHandler(IEntityRepository entities, IPatientRepository patients, IPatientFamilyIncomeStatementRepository patientFamilyIncomeStatements, IPatientLegalRepresentativeRepository patientLegalRepresentatives, IProcessRepository processes, IProcessPatientFamilyIncomeStatementRepository processPatientFamilyIncomeStatements, IProcessPatientLegalRepresentativeRepository processPatientLegalRepresentatives, IProcessPatientRepository processPatients, IProcessConfigurationRepository processSettings, IUserEntityRepository userEntities, IUserRepository users)
+        public ProcessCaptureOptionsQueryHandler(IEntityRepository entities, IPatientRepository patients, IPatientFamilyIncomeStatementRepository patientFamilyIncomeStatements, IPatientLegalRepresentativeRepository patientLegalRepresentatives, IProcessRepository processes, IProcessPatientFamilyIncomeStatementRepository processPatientFamilyIncomeStatements, IProcessPatientLegalRepresentativeRepository processPatientLegalRepresentatives, IProcessPatientRepository processPatients, IProcessPaymentConfigurationRepository processPaymentSettings, IProcessPaymentWireTransferConfigurationRepository processPaymentWireTransferSettings, IProcessConfigurationRepository processSettings, IUserEntityRepository userEntities, IUserRepository users)
         {
             _entities = entities;
             _patients = patients;
@@ -42,6 +46,8 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
             _processPatientFamilyIncomeStatements = processPatientFamilyIncomeStatements;
             _processPatientLegalRepresentatives = processPatientLegalRepresentatives;
             _processPatients = processPatients;
+            _processPaymentSettings = processPaymentSettings;
+            _processPaymentWireTransferSettings = processPaymentWireTransferSettings;
             _processSettings = processSettings;
             _userEntities = userEntities;
             _users = users;
@@ -103,6 +109,19 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
             var processPatientLegalRepresentative = await _processPatientLegalRepresentatives.GetByProcessIdAsync(
                 process.Id,
                 ct);
+
+            var processPaymentSettings = await _processPaymentSettings.GetByProcessIdAsync(
+                process.Id,
+                ct);
+            
+            var processPaymentWireTransferSettings = (
+                processPaymentSettings is null || 
+                processPaymentSettings.Method is not PaymentMethod.WireTransfer)
+                
+                ? null 
+                : await _processPaymentWireTransferSettings.GetByProcessIdAsync(
+                    process.Id,
+                    ct);
 
             return new ProcessCaptureOptionsResult(
                 configuration is null ? null :
@@ -177,6 +196,15 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
                             patientLegalRepresentative.MobileNumber,
                             patientLegalRepresentative.PhoneNumber) :
                         null,
+                processPaymentSettings is not null ?
+                    new ProcessCaptureOptionsPaymentResult(
+                        processPaymentSettings.RowVersionId,
+                        processPaymentWireTransferSettings?.RowVersionId,
+                        processPaymentSettings.Method,
+                        processPaymentSettings.Receiver,
+                        processPaymentWireTransferSettings?.Iban,
+                        processPaymentWireTransferSettings?.Swift) :
+                    null,
                 new ProcessCaptureOptionsProcessResult(
                     process.PublicId,
                     process.RowVersionId,

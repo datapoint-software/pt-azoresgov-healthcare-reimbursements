@@ -17,6 +17,7 @@ import { canActivateProcessCreation } from './guards/process-creation/process-cr
 import { canActivateProcessSearch } from './guards/process-search/process-search.guards';
 import { canActivateSignIn } from './guards/sign-in/sign-in.guards';
 import { ProcessCaptureFamilyIncomeStatementComponent } from './components/process-capture-family-income-statement/process-capture-family-income-statement.component';
+import { ProcessCapturePaymentComponent } from './components/process-capture-payment/process-capture-payment.component';
 
 export const routes: Routes = [
   {
@@ -85,6 +86,10 @@ export const routes: Routes = [
                       {
                         path: 'family-income-statement',
                         component: ProcessCaptureFamilyIncomeStatementComponent
+                      },
+                      {
+                        path: 'payment',
+                        component: ProcessCapturePaymentComponent
                       }
                     ]
                   }

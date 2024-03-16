@@ -2,7 +2,7 @@
 {
     public sealed class ProcessCaptureOptionsResultModel
     {
-        public ProcessCaptureOptionsResultModel(ProcessCaptureOptionsConfigurationResultModel? configuration, ProcessCaptureOptionsEntityResultModel entity, ProcessCaptureOptionsFamilyIncomeStatementResultModel? familyIncomeStatement, ProcessCaptureOptionsEntityResultModel? parentEntity, ProcessCaptureOptionsPatientResultModel patient, ProcessCaptureOptionsPatientLegalRepresentativeResultModel? patientLegalRepresentative, ProcessCaptureOptionsProcessResultModel process)
+        public ProcessCaptureOptionsResultModel(ProcessCaptureOptionsConfigurationResultModel? configuration, ProcessCaptureOptionsEntityResultModel entity, ProcessCaptureOptionsFamilyIncomeStatementResultModel? familyIncomeStatement, ProcessCaptureOptionsEntityResultModel? parentEntity, ProcessCaptureOptionsPatientResultModel patient, ProcessCaptureOptionsPatientLegalRepresentativeResultModel? patientLegalRepresentative, ProcessCaptureOptionsPaymentResultModel? payment, ProcessCaptureOptionsProcessResultModel process)
         {
             Configuration = configuration;
             Entity = entity;
@@ -10,6 +10,7 @@
             ParentEntity = parentEntity;
             Patient = patient;
             PatientLegalRepresentative = patientLegalRepresentative;
+            Payment = payment;
             Process = process;
         }
 
@@ -24,6 +25,8 @@
         public ProcessCaptureOptionsPatientResultModel Patient { get; }
         
         public ProcessCaptureOptionsPatientLegalRepresentativeResultModel? PatientLegalRepresentative { get; }
+        
+        public ProcessCaptureOptionsPaymentResultModel? Payment { get; }
         
         public ProcessCaptureOptionsProcessResultModel Process { get; }
     }
