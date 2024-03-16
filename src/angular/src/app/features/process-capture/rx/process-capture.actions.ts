@@ -60,6 +60,31 @@ export const writeConfigurationComplete = createAction(
   }>()
 );
 
+export const writeFamilyIncomeStatement = createAction(
+  `${FEATURE_ACTION_PREFIX}/write-family-income-statement`,
+  props<{
+    payload: {
+      debounce: boolean;
+      familyIncomeStatement: {
+        year: number;
+        accessCode?: string;
+        familyMemberCount: number;
+        familyIncome: number;
+      };
+    };
+  }>()
+);
+
+export const writeFamilyIncomeStatementComplete = createAction(
+  `${FEATURE_ACTION_PREFIX}/write-family-income-statement-complete`,
+  props<{
+    payload: {
+      processRowVersionId: string;
+      processPatientFamilyIncomeStatementRowVersionId: string;
+    };
+  }>()
+);
+
 export const writeLegalRepresentative = createAction(
   `${FEATURE_ACTION_PREFIX}/write-legal-representative`,
   props<{

@@ -9,7 +9,7 @@ import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
 import { setControlsEnabled } from "../../../helpers/reactive-forms.helper";
 import { map, takeUntil } from "rxjs";
 import { Actions, ofType } from "@ngrx/effects";
-import { configure } from "../rx/process-capture.actions";
+import { configure, writeFamilyIncomeStatement } from "../rx/process-capture.actions";
 
 @Injectable()
 export class ProcessCaptureFamilyIncomeStatementManager extends Manager<ProcessCaptureState> {
@@ -22,7 +22,7 @@ export class ProcessCaptureFamilyIncomeStatementManager extends Manager<ProcessC
   public readonly form = new FormGroup({
     enabled: new FormControl(false, []),
     year: new FormControl((null as number | null), [ Validators.required, Validators.year ]),
-    accessCode: new FormControl((null as string | null), [ Validators.required ]),
+    accessCode: new FormControl((null as string | null), [ Validators.maxLength(16) ]),
     familyMemberCount: new FormControl((null as number | null), [ Validators.required, Validators.integer({ unsigned: true }) ]),
     familyIncome: new FormControl((null as number | null), [ Validators.required, Validators.decimal({ unsigned: true, precision: 2}) ])
   });
@@ -53,7 +53,9 @@ export class ProcessCaptureFamilyIncomeStatementManager extends Manager<ProcessC
       accessCode: configuration.familyIncomeStatement.accessCode || null,
       familyMemberCount: configuration.familyIncomeStatement.familyMemberCount || null,
       familyIncome: configuration.familyIncomeStatement.familyIncome || null
-    })
+    }, {
+      emitEvent: false
+    });
   }
 
   private enabledChanged(enabled: boolean) {
@@ -67,11 +69,35 @@ export class ProcessCaptureFamilyIncomeStatementManager extends Manager<ProcessC
       fc.familyIncome
     ]);
 
-    enabled || this.form.reset({
-      enabled: false
-    }, {
-      emitEvent: false
-    });
+    if (!enabled) {
+
+      // TODO <joao.pl.lopes>
+      //
+      // Delete the family income statement.
+
+      this.form.reset({
+        enabled: false
+      }, {
+        emitEvent: false
+      });
+    }
+  }
+
+  public formChanges(familyIncomeStatement: Partial<{
+    enabled: boolean | null;
+    year: number | null;
+    accessCode: string | null;
+    familyMemberCount: number | null;
+    familyIncome: number | null;
+  }>) {
+
+    if (!this.form.valid)
+      return;
+
+    if (!this.form.value.enabled)
+      return;
+
+    this.write(true, familyIncomeStatement);
   }
 
   public override async init(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot) {
@@ -92,9 +118,32 @@ export class ProcessCaptureFamilyIncomeStatementManager extends Manager<ProcessC
     this.form.controls.enabled.valueChanges
       .pipe(takeUntil(this.dispose$))
       .subscribe((enabled) => { this.enabledChanged(enabled!) });
+
+    this.form.valueChanges
+      .pipe(takeUntil(this.dispose$))
+      .subscribe((familyIncomeStatement) => this.formChanges(familyIncomeStatement));
   }
 
   public submit() {
 
+  }
+
+  private write(debounce: boolean, familyIncomeStatement: Partial<{
+    year: number | null;
+    accessCode: string | null;
+    familyMemberCount: number | null;
+    familyIncome: number | null;
+  }>) {
+    this.dispatch(writeFamilyIncomeStatement({
+      payload: {
+        debounce,
+        familyIncomeStatement: {
+          year: familyIncomeStatement.year!,
+          accessCode: familyIncomeStatement.accessCode || undefined,
+          familyMemberCount: familyIncomeStatement.familyMemberCount!,
+          familyIncome: familyIncomeStatement.familyIncome!,
+        }
+      }
+    }));
   }
 }

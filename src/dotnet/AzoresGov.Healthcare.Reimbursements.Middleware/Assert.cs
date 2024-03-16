@@ -72,7 +72,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware
                 .WithErrorMessage("O estado do processo não é compatível com esta operação.");
         }
 
-        internal static void RowVersion(Guid rowVersionIdExpectation, Guid? rowVersionId)
+        internal static void RowVersion(Guid rowVersionIdExpectation, [NotNull] Guid? rowVersionId)
         {
             if (!rowVersionId.HasValue)
             {

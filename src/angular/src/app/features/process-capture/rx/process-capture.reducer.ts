@@ -1,6 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { ProcessCaptureState } from "./process-capture.state";
-import { configure, deleteLegalRepresentativeComplete, dispose, init, writeConfiguration, writeConfigurationComplete, writeLegalRepresentative, writeLegalRepresentativeComplete, writePatient, writePatientComplete } from "./process-capture.actions";
+import { configure, deleteLegalRepresentativeComplete, dispose, init, writeConfiguration, writeConfigurationComplete, writeFamilyIncomeStatement, writeFamilyIncomeStatementComplete, writeLegalRepresentative, writeLegalRepresentativeComplete, writePatient, writePatientComplete } from "./process-capture.actions";
 
 export const reducer = createReducer(
 
@@ -26,6 +26,28 @@ export const reducer = createReducer(
       ...state.configuration,
       ...payload.configuration,
       writting: true
+    }
+  })),
+
+  on(writeFamilyIncomeStatement, (state, { payload }) => ({
+    ...state,
+    familyIncomeStatement: {
+      ...state.familyIncomeStatement,
+      ...payload.familyIncomeStatement!,
+      writting: true
+    }
+  })),
+
+  on(writeFamilyIncomeStatementComplete, (state, { payload }) => ({
+    ...state,
+    familyIncomeStatement: {
+      ...state.familyIncomeStatement!,
+      rowVersionId: payload.processPatientFamilyIncomeStatementRowVersionId,
+      writting: false
+    },
+    process: {
+      ...state.process,
+      rowVersionId: payload.processRowVersionId
     }
   })),
 

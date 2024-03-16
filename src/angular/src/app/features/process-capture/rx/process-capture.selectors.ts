@@ -14,9 +14,9 @@ export const entity = createSelector(state, state => state.entity);
 
 export const familyIncomeStatement = createSelector(state, state => state.familyIncomeStatement);
 
-export const familyIncomeStatementRowVersionId = createSelector(state, state => state.familyIncomeStatement?.rowVersionId);
+export const familyIncomeStatementRowVersionId = createSelector(familyIncomeStatement, familyIncomeStatement => familyIncomeStatement?.rowVersionId);
 
-export const familyIncomeStatementWritting = createSelector(state, state => state.familyIncomeStatement?.writting);
+export const familyIncomeStatementWritting = createSelector(familyIncomeStatement, familyIncomeStatement => familyIncomeStatement?.writting);
 
 export const legalRepresentative = createSelector(state, state => state.legalRepresentative);
 

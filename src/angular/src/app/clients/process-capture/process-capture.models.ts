@@ -16,6 +16,21 @@ export interface ProcessCaptureConfigurationResultModel {
   processConfigurationRowVersionId: string;
 }
 
+export interface ProcessCaptureFamilyIncomeStatementModel {
+  processId: string;
+  processRowVersionId: string;
+  processPatientFamilyIncomeStatementRowVersionId?: string;
+  year: number;
+  accessCode?: string;
+  familyMemberCount: number;
+  familyIncome: number;
+}
+
+export interface ProcessCaptureFamilyIncomeStatementResultModel {
+  processRowVersionId: string;
+  processPatientFamilyIncomeStatementRowVersionId: string;
+}
+
 export interface ProcessCaptureOptionsConfigurationResultModel {
   documentIssueDateBypassEnabled: boolean;
   machadoJosephEnabled: boolean;

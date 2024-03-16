@@ -1,5 +1,5 @@
 import { Actions, concatLatestFrom, createEffect, ofType } from "@ngrx/effects";
-import { configure, deleteLegalRepresentative, deleteLegalRepresentativeComplete, dispose, init, writeConfiguration, writeConfigurationComplete, writeLegalRepresentative, writeLegalRepresentativeComplete, writePatient, writePatientComplete } from "./process-capture.actions";
+import { configure, deleteLegalRepresentative, deleteLegalRepresentativeComplete, dispose, init, writeConfiguration, writeConfigurationComplete, writeFamilyIncomeStatement, writeFamilyIncomeStatementComplete, writeLegalRepresentative, writeLegalRepresentativeComplete, writePatient, writePatientComplete } from "./process-capture.actions";
 import { Injectable } from "@angular/core";
 import { debounce, debounceTime, filter, map, mergeMap, of, switchMap, tap, timer } from "rxjs";
 import { ProcessCaptureClient } from "../../../clients/process-capture/process-capture.client";
@@ -81,6 +81,27 @@ export class ProcessCaptureEffects {
       ...payload.configuration
     }).pipe(
       map((response) => writeConfigurationComplete({
+        payload: { ...response }
+      }))
+    ))
+  ));
+
+  readonly writeFamilyIncomeStatement$ = createEffect(() => this.actions$.pipe(
+    ofType(writeFamilyIncomeStatement),
+    debounce(({ payload }) => payload.debounce ? (timer(APP_AUTOSAVE_DELAY_MS)) : (of(true))),
+    concatLatestFrom(() => [
+      this.store.select($$.familyIncomeStatementRowVersionId),
+      this.store.select($$.processId),
+      this.store.select($$.processRowVersionId),
+    ]),
+    tap(console.log),
+    mergeMap(([ { payload }, processPatientFamilyIncomeStatementRowVersionId, processId, processRowVersionId ]) => this.processCaptureClient.writeFamilyIncomeStatement({
+      processId,
+      processRowVersionId,
+      processPatientFamilyIncomeStatementRowVersionId,
+      ...payload.familyIncomeStatement
+    }).pipe(
+      map((response) => writeFamilyIncomeStatementComplete({
         payload: { ...response }
       }))
     ))

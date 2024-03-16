@@ -1,6 +1,6 @@
 import { Client } from "../api.client";
 import { Injectable, makeEnvironmentProviders } from "@angular/core";
-import { ProcessCaptureConfigurationModel, ProcessCaptureConfigurationResultModel, ProcessCaptureLegalRepresentativeDeleteModel, ProcessCaptureLegalRepresentativeDeleteResultModel, ProcessCaptureOptionsResultModel, ProcessCapturePatientModel, ProcessCapturePatientResultModel, ProcessCaptureLegalRepresentativeModel, ProcessCaptureLegalRepresentativeResultModel } from "./process-capture.models";
+import { ProcessCaptureConfigurationModel, ProcessCaptureConfigurationResultModel, ProcessCaptureLegalRepresentativeDeleteModel, ProcessCaptureLegalRepresentativeDeleteResultModel, ProcessCaptureOptionsResultModel, ProcessCapturePatientModel, ProcessCapturePatientResultModel, ProcessCaptureLegalRepresentativeModel, ProcessCaptureLegalRepresentativeResultModel, ProcessCaptureFamilyIncomeStatementModel, ProcessCaptureFamilyIncomeStatementResultModel } from "./process-capture.models";
 
 @Injectable()
 export class ProcessCaptureClient extends Client {
@@ -26,12 +26,18 @@ export class ProcessCaptureClient extends Client {
       model,
       { path: { processId }});
 
-    readonly writeLegalRepresentative = (processId: string, model: ProcessCaptureLegalRepresentativeModel) =>
+  readonly writeFamilyIncomeStatement = (model: ProcessCaptureFamilyIncomeStatementModel) =>
 
-      this.post<ProcessCaptureLegalRepresentativeModel, ProcessCaptureLegalRepresentativeResultModel>(
-        '/:processId/write-legal-representative',
-        model,
-        { path: { processId }});
+    this.post<ProcessCaptureFamilyIncomeStatementModel, ProcessCaptureFamilyIncomeStatementResultModel>(
+      '/write-family-income-statement',
+      model)
+
+  readonly writeLegalRepresentative = (processId: string, model: ProcessCaptureLegalRepresentativeModel) =>
+
+    this.post<ProcessCaptureLegalRepresentativeModel, ProcessCaptureLegalRepresentativeResultModel>(
+      '/:processId/write-legal-representative',
+      model,
+      { path: { processId }});
 
   readonly writePatient = (processId: string, model: ProcessCapturePatientModel) =>
 
