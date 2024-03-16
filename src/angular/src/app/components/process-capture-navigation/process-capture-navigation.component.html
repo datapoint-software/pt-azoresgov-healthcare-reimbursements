@@ -36,9 +36,14 @@
           [writting]="(processCapture.legalRepresentative.writting$ | async)!"
           class="ms-auto" />
       </a>
-      <a class="list-group-item pe-4 ps-4 text-muted d-flex align-items-center justify-content-center">
+      <a class="list-group-item pe-4 ps-4 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', id, 'capture', 'family-income-statement']">
         Declaração de rendimentos
-        <span class="fe fe-lock ms-auto"></span>
+        <app-process-capture-navigation-icon
+          [enabled]="processCapture.familyIncomeStatement.form.value.enabled === true"
+          [invalid]="processCapture.familyIncomeStatement.form.invalid"
+          [written]="(processCapture.familyIncomeStatement.written$ | async)!"
+          [writting]="(processCapture.familyIncomeStatement.writting$ | async)!"
+          class="ms-auto" />
       </a>
       <a class="list-group-item pe-4 ps-4 text-muted d-flex align-items-center justify-content-center">
         Pagamento

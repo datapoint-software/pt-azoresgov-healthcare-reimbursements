@@ -14,9 +14,13 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
 
         private readonly IPatientRepository _patients;
 
+        private readonly IPatientFamilyIncomeStatementRepository _patientFamilyIncomeStatements;
+
         private readonly IPatientLegalRepresentativeRepository _patientLegalRepresentatives;
         
         private readonly IProcessRepository _processes;
+
+        private readonly IProcessPatientFamilyIncomeStatementRepository _processPatientFamilyIncomeStatements;
 
         private readonly IProcessPatientLegalRepresentativeRepository _processPatientLegalRepresentatives;
 
@@ -28,12 +32,14 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
         
         private readonly IUserRepository _users;
 
-        public ProcessCaptureOptionsQueryHandler(IEntityRepository entities, IPatientRepository patients, IPatientLegalRepresentativeRepository patientLegalRepresentatives, IProcessRepository processes, IProcessPatientLegalRepresentativeRepository processPatientLegalRepresentatives, IProcessPatientRepository processPatients, IProcessConfigurationRepository processSettings, IUserEntityRepository userEntities, IUserRepository users)
+        public ProcessCaptureOptionsQueryHandler(IEntityRepository entities, IPatientRepository patients, IPatientFamilyIncomeStatementRepository patientFamilyIncomeStatements, IPatientLegalRepresentativeRepository patientLegalRepresentatives, IProcessRepository processes, IProcessPatientFamilyIncomeStatementRepository processPatientFamilyIncomeStatements, IProcessPatientLegalRepresentativeRepository processPatientLegalRepresentatives, IProcessPatientRepository processPatients, IProcessConfigurationRepository processSettings, IUserEntityRepository userEntities, IUserRepository users)
         {
             _entities = entities;
             _patients = patients;
+            _patientFamilyIncomeStatements = patientFamilyIncomeStatements;
             _patientLegalRepresentatives = patientLegalRepresentatives;
             _processes = processes;
+            _processPatientFamilyIncomeStatements = processPatientFamilyIncomeStatements;
             _processPatientLegalRepresentatives = processPatientLegalRepresentatives;
             _processPatients = processPatients;
             _processSettings = processSettings;
@@ -78,11 +84,19 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
                 process.PatientId,
                 ct);
 
+            var patientFamilyIncomeStatement = await _patientFamilyIncomeStatements.GetByPatientIdAsync(
+                patient.Id,
+                ct);
+
             var patientLegalRepresentative = await _patientLegalRepresentatives.GetByPatientIdAsync(
                 patient.Id,
                 ct);
 
             var processPatient = await _processPatients.GetByProcessIdAsync(
+                process.Id,
+                ct);
+
+            var processPatientFamilyIncomeStatement = await _processPatientFamilyIncomeStatements.GetByProcessIdAsync(
                 process.Id,
                 ct);
 
@@ -104,6 +118,21 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
                     entity.Code,
                     entity.Name,
                     entity.Nature),
+                processPatientFamilyIncomeStatement is not null ?
+                    new ProcessCaptureOptionsFamilyIncomeStatementResult(
+                        processPatientFamilyIncomeStatement.RowVersionId,
+                        processPatientFamilyIncomeStatement.Year,
+                        processPatientFamilyIncomeStatement.AccessCode,
+                        processPatientFamilyIncomeStatement.FamilyMemberCount,
+                        processPatientFamilyIncomeStatement.FamilyIncome) :
+                    patientFamilyIncomeStatement is not null ?
+                        new ProcessCaptureOptionsFamilyIncomeStatementResult(
+                            null,
+                            patientFamilyIncomeStatement.Year,
+                            patientFamilyIncomeStatement.AccessCode,
+                            patientFamilyIncomeStatement.FamilyMemberCount,
+                            patientFamilyIncomeStatement.FamilyIncome) :
+                        null,
                 parentEntity is null
                     ? null
                     : new ProcessCaptureOptionsEntityResult(

@@ -1,0 +1,83 @@
+<form [formGroup]="processCapture.familyIncomeStatement.form" (ngSubmit)="processCapture.familyIncomeStatement.submit()" class="card">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      Declaração de rendimentos
+    </h4>
+    <div class="form-check form-switch">
+      <input [formControlName]="'enabled'" class="form-check-input" type="checkbox" id="enabled" />
+      <label class="form-check-label d-none" for="enabled">Declaração de rendimentos</label>
+    </div>
+  </div>
+  <div  class="card-body">
+    <div class="row">
+      <div class="col-12 col-lg-6 col-xxl-3">
+        <app-form-group
+          #year
+          [name]="'year'"
+          [label]="'Ano'"
+          class="form-group d-block mb-4">
+          <!-- Input -->
+          <input
+            [class.is-invalid]="year?.invalid"
+            [formControl]="year.control"
+            [id]="year.name"
+            [placeholder]="year.label"
+            class="form-control"
+            tabindex="1"
+            type="number" />
+        </app-form-group>
+      </div>
+      <div class="col-12 col-lg-6 col-xxl-3">
+        <app-form-group
+          #accessCode
+          [name]="'accessCode'"
+          [label]="'Código de acesso'"
+          class="form-group d-block mb-4">
+          <!-- Input -->
+          <input
+            [class.is-invalid]="accessCode?.invalid"
+            [formControl]="accessCode.control"
+            [id]="accessCode.name"
+            [placeholder]="accessCode.label"
+            class="form-control"
+            tabindex="2"
+            type="text" />
+        </app-form-group>
+      </div>
+      <div class="col-12 col-lg-6 col-xxl-3">
+        <app-form-group
+          #familyMemberCount
+          [name]="'familyMemberCount'"
+          [label]="'Agregado familiar'"
+          class="form-group d-block mb-4">
+          <!-- Input -->
+          <input
+            [class.is-invalid]="familyMemberCount?.invalid"
+            [formControl]="familyMemberCount.control"
+            [id]="familyMemberCount.name"
+            [placeholder]="familyMemberCount.label"
+            class="form-control"
+            tabindex="3"
+            type="text" />
+        </app-form-group>
+      </div>
+      <div class="col-12 col-lg-6 col-xxl-3">
+        <app-form-group
+          #familyIncome
+          [name]="'familyIncome'"
+          [label]="'Rendimentos'"
+          class="form-group d-block mb-4">
+          <!-- Input -->
+          <input
+            [class.is-invalid]="familyIncome?.invalid"
+            [formControl]="familyIncome.control"
+            [id]="familyIncome.name"
+            [placeholder]="familyIncome.label"
+            class="form-control"
+            tabindex="4"
+            type="text" />
+        </app-form-group>
+      </div>
+    </div>
+  </div>
+</form>

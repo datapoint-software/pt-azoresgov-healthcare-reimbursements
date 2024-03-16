@@ -33,6 +33,14 @@ export interface ProcessCaptureOptionsEntityResultModel {
   nature: EntityNature;
 }
 
+export interface ProcessCaptureOptionsFamilyIncomeStatementResultModel {
+  rowVersionId?: string;
+  year: number;
+  accessCode?: string;
+  familyMemberCount: number;
+  familyIncome: number;
+}
+
 export interface ProcessCaptureOptionsPatientLegalRepresentativeResultModel {
   rowVersionId?: string;
   name: string;
@@ -72,6 +80,7 @@ export interface ProcessCaptureOptionsProcessResultModel {
 export interface ProcessCaptureOptionsResultModel {
   configuration?: ProcessCaptureOptionsConfigurationResultModel;
   entity: ProcessCaptureOptionsEntityResultModel;
+  familyIncomeStatement?: ProcessCaptureOptionsFamilyIncomeStatementResultModel;
   parentEntity?: ProcessCaptureOptionsEntityResultModel;
   patient: ProcessCaptureOptionsPatientResultModel;
   patientLegalRepresentative?: ProcessCaptureOptionsPatientLegalRepresentativeResultModel;

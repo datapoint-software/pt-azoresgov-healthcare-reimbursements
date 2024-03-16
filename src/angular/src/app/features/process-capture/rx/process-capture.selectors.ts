@@ -12,6 +12,12 @@ export const configurationWritting = createSelector(configuration, configuration
 
 export const entity = createSelector(state, state => state.entity);
 
+export const familyIncomeStatement = createSelector(state, state => state.familyIncomeStatement);
+
+export const familyIncomeStatementRowVersionId = createSelector(state, state => state.familyIncomeStatement?.rowVersionId);
+
+export const familyIncomeStatementWritting = createSelector(state, state => state.familyIncomeStatement?.writting);
+
 export const legalRepresentative = createSelector(state, state => state.legalRepresentative);
 
 export const legalRepresentativeRowVersionId = createSelector(legalRepresentative, patientLegalRepresentative => patientLegalRepresentative?.rowVersionId);

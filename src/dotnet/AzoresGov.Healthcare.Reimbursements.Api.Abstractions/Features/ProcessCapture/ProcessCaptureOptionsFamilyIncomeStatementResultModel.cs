@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
+namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
 {
-    public sealed class ProcessCaptureOptionsFamilyIncomeStatementResult
+    public sealed class ProcessCaptureOptionsFamilyIncomeStatementResultModel
     {
-        public ProcessCaptureOptionsFamilyIncomeStatementResult(Guid? rowVersionId, int year, string? accessCode, int familyMemberCount, decimal familyIncome)
+        public ProcessCaptureOptionsFamilyIncomeStatementResultModel(Guid? rowVersionId, int year, string? accessCode, int familyMemberCount, decimal familyIncome)
         {
             RowVersionId = rowVersionId;
             Year = year;
@@ -20,7 +20,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
         public string? AccessCode { get; }
         
         public int FamilyMemberCount { get; }
-
+        
         public decimal FamilyIncome { get; }
     }
 }

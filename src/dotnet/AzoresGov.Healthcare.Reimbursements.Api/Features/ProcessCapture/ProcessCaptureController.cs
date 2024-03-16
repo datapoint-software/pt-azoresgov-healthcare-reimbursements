@@ -63,6 +63,14 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
                     result.Entity.Code,
                     result.Entity.Name,
                     result.Entity.Nature),
+                result.FamilyIncomeStatement is null
+                    ? null
+                    : new ProcessCaptureOptionsFamilyIncomeStatementResultModel(
+                        result.FamilyIncomeStatement.RowVersionId,
+                        result.FamilyIncomeStatement.Year,
+                        result.FamilyIncomeStatement.AccessCode,
+                        result.FamilyIncomeStatement.FamilyMemberCount,
+                        result.FamilyIncomeStatement.FamilyIncome),
                 result.ParentEntity is null
                     ? null
                     : new ProcessCaptureOptionsEntityResultModel(

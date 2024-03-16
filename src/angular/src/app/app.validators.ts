@@ -16,16 +16,23 @@ const YEAR_REGEX = /^\d{4}$/;
 
 export class Validators extends CoreValidators {
 
-  static decimal(options?: { unsigned: boolean }): ValidatorFn {
+  static decimal(options?: { unsigned: boolean, precision: number }): ValidatorFn {
     return ((control: AbstractControl<string | null>) => {
 
       if (control.value)
       {
         const unsigned = options?.unsigned ?? false;
+        const precision = options?.precision;
+
         const pattern = unsigned ? DECIMAL_UNSIGNED_REGEX : DECIMAL_REGEX;
 
         if (!pattern.test(control.value))
-          return ({ decimal: true, unsigned });
+          return ({ decimal: true, unsigned, precision });
+
+        let decimals: string | undefined;
+
+        if (precision && precision < (control.value.split('.')[1] ?? '').length)
+          return ({ decimal: true, unsigned, precision });
       }
 
       return null;

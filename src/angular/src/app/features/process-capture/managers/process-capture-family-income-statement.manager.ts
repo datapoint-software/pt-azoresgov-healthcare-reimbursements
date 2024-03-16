@@ -3,25 +3,75 @@ import { FormControl, FormGroup } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { Validators } from "../../../app.validators";
 import { Manager } from "../../feature.abstractions";
-import { state } from "../rx/process-capture.selectors";
+import { familyIncomeStatementRowVersionId, familyIncomeStatementWritting, state } from "../rx/process-capture.selectors";
 import { ProcessCaptureState } from "../rx/process-capture.state";
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
 import { setControlsEnabled } from "../../../helpers/reactive-forms.helper";
-import { takeUntil } from "rxjs";
+import { map, takeUntil } from "rxjs";
+import { Actions, ofType } from "@ngrx/effects";
+import { configure } from "../rx/process-capture.actions";
 
 @Injectable()
 export class ProcessCaptureFamilyIncomeStatementManager extends Manager<ProcessCaptureState> {
 
-  readonly form = new FormGroup({
+  public readonly written$ = this.of(familyIncomeStatementRowVersionId)
+    .pipe(map((rowVersionId) => !!rowVersionId));
+
+  public readonly writting$ = this.of(familyIncomeStatementWritting);
+
+  public readonly form = new FormGroup({
     enabled: new FormControl(false, []),
-    year: new FormControl(null, [ Validators.required, Validators.year ]),
-    accessCode: new FormControl(null, [ Validators.required ]),
-    familyMemberCount: new FormControl(null, [ Validators.required, Validators.integer({ unsigned: true }) ]),
-    familyIncome: new FormControl(null, [ Validators.required, Validators.decimal() ])
+    year: new FormControl((null as number | null), [ Validators.required, Validators.year ]),
+    accessCode: new FormControl((null as string | null), [ Validators.required ]),
+    familyMemberCount: new FormControl((null as number | null), [ Validators.required, Validators.integer({ unsigned: true }) ]),
+    familyIncome: new FormControl((null as number | null), [ Validators.required, Validators.decimal({ unsigned: true, precision: 2}) ])
   });
 
-  constructor(store: Store) {
+  constructor(store: Store, private readonly actions$: Actions) {
     super(store, state);
+  }
+
+  private configure(configuration: ProcessCaptureState) {
+
+    if (!configuration.familyIncomeStatement) {
+
+      const fc = this.form.controls;
+
+      setControlsEnabled(false, [
+        fc.year,
+        fc.accessCode,
+        fc.familyMemberCount,
+        fc.familyIncome
+      ]);
+
+      return;
+    }
+
+    this.form.reset({
+      enabled: true,
+      year: configuration.familyIncomeStatement.year,
+      accessCode: configuration.familyIncomeStatement.accessCode || null,
+      familyMemberCount: configuration.familyIncomeStatement.familyMemberCount || null,
+      familyIncome: configuration.familyIncomeStatement.familyIncome || null
+    })
+  }
+
+  private enabledChanged(enabled: boolean) {
+
+    const fc = this.form.controls;
+
+    setControlsEnabled(enabled, [
+      fc.year,
+      fc.accessCode,
+      fc.familyMemberCount,
+      fc.familyIncome
+    ]);
+
+    enabled || this.form.reset({
+      enabled: false
+    }, {
+      emitEvent: false
+    });
   }
 
   public override async init(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot) {
@@ -34,25 +84,17 @@ export class ProcessCaptureFamilyIncomeStatementManager extends Manager<ProcessC
       emitEvent: false
     });
 
+    this.actions$
+      .pipe(takeUntil(this.dispose$))
+      .pipe(ofType(configure))
+      .subscribe(({ payload }) => this.configure(payload));
+
     this.form.controls.enabled.valueChanges
       .pipe(takeUntil(this.dispose$))
-      .subscribe(() => { this.refreshControls() });
+      .subscribe((enabled) => { this.enabledChanged(enabled!) });
   }
 
   public submit() {
 
-  }
-
-  private refreshControls() {
-
-    const fc = this.form.controls;
-    const enabled = fc.enabled.value || false;
-
-    setControlsEnabled(enabled, [
-      fc.year,
-      fc.accessCode,
-      fc.familyMemberCount,
-      fc.familyIncome
-    ]);
   }
 }

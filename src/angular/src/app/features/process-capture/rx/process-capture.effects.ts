@@ -50,6 +50,10 @@ export class ProcessCaptureEffects {
             ...response.configuration,
             writting: false
           },
+          familyIncomeStatement: response.familyIncomeStatement && {
+            ...response.familyIncomeStatement,
+            writting: false
+          },
           patient: {
             ...response.patient,
             writting: false

@@ -16,6 +16,7 @@ import { canActivateProcessCapture, canDeactivateProcessCapture } from './guards
 import { canActivateProcessCreation } from './guards/process-creation/process-creation.guards';
 import { canActivateProcessSearch } from './guards/process-search/process-search.guards';
 import { canActivateSignIn } from './guards/sign-in/sign-in.guards';
+import { ProcessCaptureFamilyIncomeStatementComponent } from './components/process-capture-family-income-statement/process-capture-family-income-statement.component';
 
 export const routes: Routes = [
   {
@@ -80,6 +81,10 @@ export const routes: Routes = [
                       {
                         path: 'legal-representative',
                         component: ProcessCaptureLegalRepresentativeComponent
+                      },
+                      {
+                        path: 'family-income-statement',
+                        component: ProcessCaptureFamilyIncomeStatementComponent
                       }
                     ]
                   }
