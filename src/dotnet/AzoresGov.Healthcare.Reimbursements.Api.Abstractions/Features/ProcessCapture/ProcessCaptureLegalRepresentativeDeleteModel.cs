@@ -2,9 +2,9 @@
 
 namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
 {
-    public sealed class ProcessCaptureDeleteLegalRepresentativeModel
+    public sealed class ProcessCaptureLegalRepresentativeDeleteModel
     {
-        public ProcessCaptureDeleteLegalRepresentativeModel(Guid processRowVersionId, Guid processPatientLegalRepresentativeRowVersionId)
+        public ProcessCaptureLegalRepresentativeDeleteModel(Guid processRowVersionId, Guid processPatientLegalRepresentativeRowVersionId)
         {
             ProcessRowVersionId = processRowVersionId;
             ProcessPatientLegalRepresentativeRowVersionId = processPatientLegalRepresentativeRowVersionId;

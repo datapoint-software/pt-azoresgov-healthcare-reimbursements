@@ -8,6 +8,7 @@ import { provideEffects } from "@ngrx/effects";
 import { ErrorEffects } from "./rx/error.effects";
 import { FEATURE_NAME } from "./error.constants";
 import { reducer } from "./rx/error.reducer";
+import { ActivatedRouteSnapshot } from "@angular/router";
 
 @Injectable()
 export class ErrorFeature extends Feature<ErrorState> {
@@ -23,19 +24,25 @@ export class ErrorFeature extends Feature<ErrorState> {
   readonly status$ = this.of(status);
 
   constructor(store: Store) {
-    super(store, state, dispose, (r) => {
+    super(store, state);
+  }
 
-      const statusCode = r.queryParamMap.get('statusCode');
+  protected override dispose$$$() {
+    return dispose();
+  }
 
-      return init({
-        payload: {
-          id: r.queryParamMap.get('id') || undefined,
-          correlationId: r.queryParamMap.get('correlationId') || undefined,
-          message: r.queryParamMap.get('message') || undefined,
-          stackTrace: r.queryParamMap.get('stackTrace') || undefined,
-          statusCode: (statusCode && parseInt(statusCode)) || undefined
-        }
-      });
+  protected override init$$$(activatedRoute: ActivatedRouteSnapshot) {
+
+    const statusCode = activatedRoute.queryParamMap.get('statusCode');
+
+    return init({
+      payload: {
+        id: activatedRoute.queryParamMap.get('id') || undefined,
+        correlationId: activatedRoute.queryParamMap.get('correlationId') || undefined,
+        message: activatedRoute.queryParamMap.get('message') || undefined,
+        stackTrace: activatedRoute.queryParamMap.get('stackTrace') || undefined,
+        statusCode: (statusCode && parseInt(statusCode)) || undefined
+      }
     });
   }
 }

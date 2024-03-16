@@ -15,3 +15,20 @@ export const setControlsEnabled = (enabled: boolean, controls: Array<FormControl
   for (let control of controls)
     fn(control);
 };
+
+export const parseBoolean = (subject: string | boolean | null | undefined): boolean | null | undefined => {
+
+  if (subject === null || subject === undefined)
+    return null;
+
+  if (subject === true || subject === false)
+    return subject;
+
+  if (subject === 'true')
+    return true;
+
+  if (subject === 'false')
+    return false;
+
+  return undefined;
+};

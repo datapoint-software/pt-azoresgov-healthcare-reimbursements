@@ -3,9 +3,9 @@ using System;
 
 namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
 {
-    public sealed class ProcessCaptureDeleteLegalRepresentativeCommand : Command<ProcessCaptureDeleteLegalRepresentativeResult>
+    public sealed class ProcessCaptureLegalRepresentativeDeleteCommand : Command<ProcessCaptureLegalRepresentativeDeleteResult>
     {
-        public ProcessCaptureDeleteLegalRepresentativeCommand(Guid userId, Guid processId, Guid processRowVersionId, Guid processPatientLegalRepresentativeRowVersionId)
+        public ProcessCaptureLegalRepresentativeDeleteCommand(Guid userId, Guid processId, Guid processRowVersionId, Guid processPatientLegalRepresentativeRowVersionId)
         {
             UserId = userId;
             ProcessId = processId;

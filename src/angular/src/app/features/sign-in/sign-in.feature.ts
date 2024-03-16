@@ -11,6 +11,7 @@ import { Store, provideState } from "@ngrx/store";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { map } from "rxjs";
 import { AuthenticationMethod } from "../../enums/authentication-method.enum";
+import { ActivatedRoute, ActivatedRouteSnapshot } from "@angular/router";
 
 @Injectable()
 export class SignInFeature extends Feature<SignInState> {
@@ -33,11 +34,19 @@ export class SignInFeature extends Feature<SignInState> {
   readonly method$ = this.of(method);
 
   constructor(store: Store) {
-    super(store, state, dispose, (r) => init({
+    super(store, state);
+  }
+
+  protected override dispose$$$() {
+    return dispose();
+  }
+
+  protected override init$$$(activatedRoute: ActivatedRouteSnapshot) {
+    return init({
       payload: {
-        redirectUrl: r.queryParamMap.get('redirect') || undefined
+        redirectUrl: activatedRoute.queryParamMap.get('redirect') || undefined
       }
-    }));
+    })
   }
 
   signIn() {

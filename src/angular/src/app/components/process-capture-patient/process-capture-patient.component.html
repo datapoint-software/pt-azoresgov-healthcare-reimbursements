@@ -8,20 +8,20 @@
     <div class="row">
       <div class="col col-12 col-lg-3 mb-4">
         <div class="text-muted text-uppercase fs-6 mb-2">Utente</div>
-        <div class="text-nowrap">{{patientHealthNumber$ | async | integer}}</div>
+        <div class="text-nowrap">{{processCapture.patient.healthNumber$ | async | integer}}</div>
       </div>
       <div class="col col-12 col-lg-3 mb-4">
         <div class="text-muted text-uppercase fs-6 mb-2">Contribuínte</div>
-        <div class="text-nowrap">{{patientTaxNumber$ | async | integer }}</div>
+        <div class="text-nowrap">{{processCapture.patient.taxNumber$ | async | integer }}</div>
       </div>
       <div class="col col-12 col-lg-6 mb-4">
         <div class="text-muted text-uppercase fs-6 mb-2">Nome</div>
-        <div class="text-nowrap">{{patientName$ | async }}</div>
+        <div class="text-nowrap">{{processCapture.patient.name$ | async }}</div>
       </div>
     </div>
   </div>
 </div>
-<form [formGroup]="patient" (ngSubmit)="onSubmit()">
+<form [formGroup]="processCapture.patient.form" (ngSubmit)="processCapture.patient.submit()">
   <div class="card">
     <div class="card-header">
       <h4 class="card-header-title">
@@ -32,46 +32,46 @@
       <div class="row">
         <div class="col col-12 col-lg-6">
           <app-form-group
-            #patientAddressLine1
+            #addressLine1
             [label]="'Arruamento / Porta'"
             [name]="'addressLine1'"
             class="form-group d-block mb-4">
             <!-- Input -->
             <input
-              [class.is-invalid]="patientAddressLine1.invalid"
-              [formControl]="patientAddressLine1.control"
-              [id]="patientAddressLine1.name"
-              [placeholder]="patientAddressLine1.label"
+              [class.is-invalid]="addressLine1.invalid"
+              [formControl]="addressLine1.control"
+              [id]="addressLine1.name"
+              [placeholder]="addressLine1.label"
               class="form-control"
               tabindex="1"
               type="text" />
           </app-form-group>
           <app-form-group
-            #patientAddressLine2
+            #addressLine2
             [label]="'Localidade'"
             [name]="'addressLine2'"
             class="form-group d-block mb-4">
             <!-- Input -->
             <input
-              [class.is-invalid]="patientAddressLine2.invalid"
-              [formControl]="patientAddressLine2.control"
-              [id]="patientAddressLine2.name"
-              [placeholder]="patientAddressLine2.label"
+              [class.is-invalid]="addressLine2.invalid"
+              [formControl]="addressLine2.control"
+              [id]="addressLine2.name"
+              [placeholder]="addressLine2.label"
               class="form-control"
               tabindex="2"
               type="text" />
           </app-form-group>
           <app-form-group
-            #patientAddressLine3
+            #addressLine3
             [label]="'Distrito'"
             [name]="'addressLine3'"
             class="form-group d-block mb-4">
             <!-- Input -->
             <input
-              [class.is-invalid]="patientAddressLine3.invalid"
-              [formControl]="patientAddressLine3.control"
-              [id]="patientAddressLine3.name"
-              [placeholder]="patientAddressLine3.label"
+              [class.is-invalid]="addressLine3.invalid"
+              [formControl]="addressLine3.control"
+              [id]="addressLine3.name"
+              [placeholder]="addressLine3.label"
               class="form-control"
               tabindex="3"
               type="text" />
@@ -79,31 +79,31 @@
         </div>
         <div class="col col-12 col-lg-6">
           <app-form-group
-            #patientPostalCode
+            #postalCode
             [label]="'Código postal'"
             [name]="'postalCode'"
             class="form-group d-block mb-4">
             <!-- Input -->
             <input
-              [class.is-invalid]="patientPostalCode.invalid"
-              [formControl]="patientPostalCode.control"
-              [id]="patientPostalCode.name"
-              [placeholder]="patientPostalCode.label"
+              [class.is-invalid]="postalCode.invalid"
+              [formControl]="postalCode.control"
+              [id]="postalCode.name"
+              [placeholder]="postalCode.label"
               class="form-control"
               tabindex="4"
               type="text" />
           </app-form-group>
           <app-form-group
-            #patientPostalCodeArea
+            #postalCodeArea
             [label]="'Designação postal'"
             [name]="'postalCodeArea'"
             class="form-group d-block mb-4">
             <!-- Input -->
             <input
-              [class.is-invalid]="patientPostalCodeArea.invalid"
-              [formControl]="patientPostalCodeArea.control"
-              [id]="patientPostalCodeArea.name"
-              [placeholder]="patientPostalCodeArea.label"
+              [class.is-invalid]="postalCodeArea.invalid"
+              [formControl]="postalCodeArea.control"
+              [id]="postalCodeArea.name"
+              [placeholder]="postalCodeArea.label"
               class="form-control"
               tabindex="5"
               type="text" />
@@ -122,16 +122,16 @@
       <div class="row">
         <div class="col col-12">
           <app-form-group
-            #patientEmailAddress
+            #emailAddress
             [label]="'Correio eletrónico'"
             [name]="'emailAddress'"
             class="form-group d-block mb-4">
             <!-- Input -->
             <input
-              [class.is-invalid]="patientEmailAddress.invalid"
-              [formControl]="patientEmailAddress.control"
-              [id]="patientEmailAddress.name"
-              [placeholder]="patientEmailAddress.label"
+              [class.is-invalid]="emailAddress.invalid"
+              [formControl]="emailAddress.control"
+              [id]="emailAddress.name"
+              [placeholder]="emailAddress.label"
               class="form-control"
               tabindex="6"
               type="email" />
@@ -139,16 +139,16 @@
         </div>
         <div class="col col-12 col-lg-4">
           <app-form-group
-            #patientFaxNumber
+            #faxNumber
             [label]="'Fax'"
             [name]="'faxNumber'"
             class="form-group d-block mb-4">
             <!-- Input -->
             <input
-              [class.is-invalid]="patientFaxNumber.invalid"
-              [formControl]="patientFaxNumber.control"
-              [id]="patientFaxNumber.name"
-              [placeholder]="patientFaxNumber.label"
+              [class.is-invalid]="faxNumber.invalid"
+              [formControl]="faxNumber.control"
+              [id]="faxNumber.name"
+              [placeholder]="faxNumber.label"
               class="form-control"
               tabindex="7"
               type="text" />
@@ -156,16 +156,16 @@
         </div>
         <div class="col col-12 col-lg-4">
           <app-form-group
-            #patientMobileNumber
+            #mobileNumber
             [label]="'Telemóvel'"
             [name]="'mobileNumber'"
             class="form-group d-block mb-4">
             <!-- Input -->
             <input
-              [class.is-invalid]="patientMobileNumber.invalid"
-              [formControl]="patientMobileNumber.control"
-              [id]="patientMobileNumber.name"
-              [placeholder]="patientMobileNumber.label"
+              [class.is-invalid]="mobileNumber.invalid"
+              [formControl]="mobileNumber.control"
+              [id]="mobileNumber.name"
+              [placeholder]="mobileNumber.label"
               class="form-control"
               tabindex="8"
               type="text" />
@@ -173,16 +173,16 @@
         </div>
         <div class="col col-12 col-lg-4">
           <app-form-group
-            #patientPhoneNumber
+            #phoneNumber
             [label]="'Telefone'"
             [name]="'phoneNumber'"
             class="form-group d-block mb-4">
             <!-- Input -->
             <input
-              [class.is-invalid]="patientPhoneNumber.invalid"
-              [formControl]="patientPhoneNumber.control"
-              [id]="patientPhoneNumber.name"
-              [placeholder]="patientPhoneNumber.label"
+              [class.is-invalid]="phoneNumber.invalid"
+              [formControl]="phoneNumber.control"
+              [id]="phoneNumber.name"
+              [placeholder]="phoneNumber.label"
               class="form-control"
               tabindex="9"
               type="text" />

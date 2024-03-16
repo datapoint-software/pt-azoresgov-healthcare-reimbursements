@@ -1,0 +1,15 @@
+@if (writting) {
+  <app-loading-spinner class="ms-auto"/>
+}
+@else if (invalid) {
+  <span class="fe fe-alert-triangle text-danger ms-auto"></span>
+}
+@else if (enabled === false) {
+  <span class="fe fe-toggle-left text-muted ms-auto"></span>
+}
+@else if (written) {
+  <span class="fe fe-check text-success ms-auto"></span>
+}
+@else {
+  <span class="fe fe-eye-off text-muted ms-auto"></span>
+}

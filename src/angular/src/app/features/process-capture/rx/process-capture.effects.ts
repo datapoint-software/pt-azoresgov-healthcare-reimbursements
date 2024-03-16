@@ -1,11 +1,12 @@
 import { Actions, concatLatestFrom, createEffect, ofType } from "@ngrx/effects";
-import { configure, dispose, init, writeConfiguration, writeConfigurationComplete, writePatient, writePatientComplete } from "./process-capture.actions";
+import { configure, deleteLegalRepresentative, deleteLegalRepresentativeComplete, dispose, init, writeConfiguration, writeConfigurationComplete, writeLegalRepresentative, writeLegalRepresentativeComplete, writePatient, writePatientComplete } from "./process-capture.actions";
 import { Injectable } from "@angular/core";
-import { map, mergeMap } from "rxjs";
+import { debounce, debounceTime, filter, map, mergeMap, of, switchMap, tap, timer } from "rxjs";
 import { ProcessCaptureClient } from "../../../clients/process-capture/process-capture.client";
 import { Store } from "@ngrx/store";
 
 import * as $$ from "./process-capture.selectors";
+import { APP_AUTOSAVE_DELAY_MS, APP_AUTOSAVE_QUICK_DELAY_MS } from "../../../app.constants";
 
 @Injectable()
 export class ProcessCaptureEffects {
@@ -16,13 +17,47 @@ export class ProcessCaptureEffects {
     private readonly store: Store
   ) {}
 
+  readonly deleteLegalRepresentative$ = createEffect(() => this.actions$.pipe(
+    ofType(deleteLegalRepresentative),
+    concatLatestFrom(() => [
+      this.store.select($$.legalRepresentativeRowVersionId),
+      this.store.select($$.processId),
+      this.store.select($$.processRowVersionId)
+    ]),
+    filter(([ _, processPatientLegalRepresentativeRowVersionId ]) => !!processPatientLegalRepresentativeRowVersionId),
+    mergeMap(([
+      _,
+      processPatientLegalRepresentativeRowVersionId,
+      processId,
+      processRowVersionId
+    ]) => this.processCaptureClient.deleteLegalRepresentative(processId, {
+      processRowVersionId,
+      processPatientLegalRepresentativeRowVersionId: processPatientLegalRepresentativeRowVersionId!
+    }).pipe(
+      map((response) => deleteLegalRepresentativeComplete({
+        payload: { ...response }
+      }))
+    ))
+  ));
+
   readonly init$ = createEffect(() => this.actions$.pipe(
     ofType(init),
     mergeMap(({ payload }) => this.processCaptureClient.getOptions(payload.processId).pipe(
       map((response) => configure({
         payload: {
           ...response,
-          writting: false
+          configuration: response.configuration && {
+            ...response.configuration,
+            writting: false
+          },
+          patient: {
+            ...response.patient,
+            writting: false
+          },
+          legalRepresentative: response.patientLegalRepresentative && {
+            ...response.patientLegalRepresentative,
+            writting: false
+          }
         }
       }))
     ))
@@ -30,6 +65,7 @@ export class ProcessCaptureEffects {
 
   readonly writeConfiguration$ = createEffect(() => this.actions$.pipe(
     ofType(writeConfiguration),
+    debounce(({ payload }) => payload.debounce ? (timer(APP_AUTOSAVE_QUICK_DELAY_MS)) : (of(true))),
     concatLatestFrom(() => [
       this.store.select($$.configurationRowVersionId),
       this.store.select($$.processId),
@@ -38,7 +74,7 @@ export class ProcessCaptureEffects {
     mergeMap(([ { payload }, processConfigurationRowVersionId, processId, processRowVersionId ]) => this.processCaptureClient.writeConfiguration(processId, {
       processRowVersionId,
       processConfigurationRowVersionId,
-      ...payload
+      ...payload.configuration
     }).pipe(
       map((response) => writeConfigurationComplete({
         payload: { ...response }
@@ -46,8 +82,28 @@ export class ProcessCaptureEffects {
     ))
   ));
 
+  readonly writeLegalRepresentative$ = createEffect(() => this.actions$.pipe(
+    ofType(writeLegalRepresentative),
+    debounce(({ payload }) => payload.debounce ? (timer(APP_AUTOSAVE_DELAY_MS)) : (of(true))),
+    concatLatestFrom(() => [
+      this.store.select($$.legalRepresentativeRowVersionId),
+      this.store.select($$.processId),
+      this.store.select($$.processRowVersionId),
+    ]),
+    mergeMap(([ { payload }, processPatientLegalRepresentativeId, processId, processRowVersionId ]) => this.processCaptureClient.writeLegalRepresentative(processId, {
+      processRowVersionId,
+      processPatientLegalRepresentativeId,
+      ...payload.legalRepresentative
+    }).pipe(
+      map((response) => writeLegalRepresentativeComplete({
+        payload: { ...response }
+      }))
+    ))
+  ));
+
   readonly writePatient$ = createEffect(() => this.actions$.pipe(
     ofType(writePatient),
+    debounce(({ payload }) => payload.debounce ? (timer(APP_AUTOSAVE_DELAY_MS)) : (of(true))),
     concatLatestFrom(() => [
       this.store.select($$.patientRowVersionId),
       this.store.select($$.processId),
@@ -56,7 +112,7 @@ export class ProcessCaptureEffects {
     mergeMap(([ { payload }, processPatientRowVersionId, processId, processRowVersionId ]) => this.processCaptureClient.writePatient(processId, {
       processRowVersionId,
       processPatientRowVersionId,
-      ...payload
+      ...payload.patient
     }).pipe(
       map((response) => writePatientComplete({
         payload: { ...response }

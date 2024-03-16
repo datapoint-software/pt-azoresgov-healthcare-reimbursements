@@ -1,21 +1,22 @@
-import { authorize } from './guards/identity/identity.guards';
-import { canActivateApp } from './guards/app/app.guards';
-import { canActivateError } from './guards/error/error.guards';
-import { canActivateProcessCreation } from './guards/process-creation/process-creation.guards';
-import { canActivateSignIn } from './guards/sign-in/sign-in.guards';
+import { Routes } from '@angular/router';
 import { ErrorComponent } from './components/error/error.component';
 import { HomeComponent } from './components/home/home.component';
-import { ProcessCreationComponent } from './components/process-creation/process-creation.component';
-import { Routes } from '@angular/router';
-import { SignInComponent } from './components/sign-in/sign-in.component';
 import { LayoutComponent } from './components/layout/layout.component';
-import { ProcessSearchComponent } from './components/process-search/process-search.component';
-import { ProcessCapturePatientComponent } from './components/process-capture-patient/process-capture-patient.component';
-import { ProcessCaptureComponent } from './components/process-capture/process-capture.component';
-import { canActivateProcessCapture, canDeactivateProcessCapture } from './guards/process-capture/process-capture.guards';
+import { ProcessCaptureConfigurationComponent } from './components/process-capture-configuration/process-capture-configuration.component';
 import { ProcessCaptureLegalRepresentativeComponent } from './components/process-capture-legal-representative/process-capture-legal-representative.component';
-import { ProcessCaptureSpecialTermsComponent } from './components/process-capture-special-terms/process-capture-special-terms.component';
+import { ProcessCapturePatientComponent } from './components/process-capture-patient/process-capture-patient.component';
+import { ProcessCaptureUnemploymentComponent } from './components/process-capture-unemployment/process-capture-unemployment.component';
+import { ProcessCaptureComponent } from './components/process-capture/process-capture.component';
+import { ProcessCreationComponent } from './components/process-creation/process-creation.component';
+import { ProcessSearchComponent } from './components/process-search/process-search.component';
+import { SignInComponent } from './components/sign-in/sign-in.component';
+import { canActivateApp } from './guards/app/app.guards';
+import { canActivateError } from './guards/error/error.guards';
+import { authorize } from './guards/identity/identity.guards';
+import { canActivateProcessCapture, canDeactivateProcessCapture } from './guards/process-capture/process-capture.guards';
+import { canActivateProcessCreation } from './guards/process-creation/process-creation.guards';
 import { canActivateProcessSearch } from './guards/process-search/process-search.guards';
+import { canActivateSignIn } from './guards/sign-in/sign-in.guards';
 
 export const routes: Routes = [
   {
@@ -74,12 +75,16 @@ export const routes: Routes = [
                         component: ProcessCapturePatientComponent
                       },
                       {
-                        path: 'special-terms',
-                        component: ProcessCaptureSpecialTermsComponent
+                        path: 'configuration',
+                        component: ProcessCaptureConfigurationComponent
                       },
                       {
                         path: 'legal-representative',
                         component: ProcessCaptureLegalRepresentativeComponent
+                      },
+                      {
+                        path: 'unemployment',
+                        component: ProcessCaptureUnemploymentComponent
                       }
                     ]
                   }

@@ -1,14 +1,11 @@
-﻿using Datapoint.Mediator;
-using System;
+﻿using System;
 
-namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
+namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
 {
-    public sealed class ProcessCaptureWriteLegalRepresentativeCommand : Command<ProcessCaptureWriteLegalRepresentativeResult>
+    public sealed class ProcessCaptureLegalRepresentativeModel
     {
-        public ProcessCaptureWriteLegalRepresentativeCommand(Guid userId, Guid processId, Guid processRowVersionId, Guid? processPatientLegalRepresentativeId, string name, string taxNumber, string? emailAddress, string? faxNumber, string? mobileNumber, string? phoneNumber)
+        public ProcessCaptureLegalRepresentativeModel(Guid processRowVersionId, Guid? processPatientLegalRepresentativeId, string name, string taxNumber, string? emailAddress, string? faxNumber, string? mobileNumber, string? phoneNumber)
         {
-            UserId = userId;
-            ProcessId = processId;
             ProcessRowVersionId = processRowVersionId;
             ProcessPatientLegalRepresentativeId = processPatientLegalRepresentativeId;
             Name = name;
@@ -19,10 +16,6 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
             PhoneNumber = phoneNumber;
         }
 
-        public Guid UserId { get; }
-
-        public Guid ProcessId { get; }
-        
         public Guid ProcessRowVersionId { get; }
         
         public Guid? ProcessPatientLegalRepresentativeId { get; }

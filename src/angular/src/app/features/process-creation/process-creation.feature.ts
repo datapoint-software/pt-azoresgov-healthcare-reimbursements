@@ -95,7 +95,15 @@ export class ProcessCreationFeature extends Feature<ProcessCreationState> {
   );
 
   constructor(store: Store) {
-    super(store, state, dispose, init);
+    super(store, state);
+  }
+
+  protected override dispose$$$() {
+    return dispose();
+  }
+
+  protected override init$$$() {
+    return init();
   }
 
   next() {

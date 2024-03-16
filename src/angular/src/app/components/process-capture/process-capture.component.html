@@ -12,12 +12,9 @@
 
           <!-- Title -->
           <h1 class="header-title">
-            {{ processNumber$ | async }}
+            {{ processCapture.number$ | async }}
           </h1>
 
-        </div>
-        <div class="col-auto">
-          <app-loading-spinner [class.show]="writting$ | async" />
         </div>
       </div> <!-- / .row -->
     </div> <!-- / .header-body -->

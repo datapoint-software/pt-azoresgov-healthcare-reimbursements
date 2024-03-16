@@ -1,6 +1,5 @@
 import { CommonModule } from "@angular/common";
 import { Component, OnDestroy } from "@angular/core";
-import { LoadingSpinnerComponent } from "../loading-spinner/loading-spinner.component";
 import { ProcessCaptureFeature } from "../../features/process-capture/process-capture.feature";
 import { ProcessCaptureNavigationComponent } from "../process-capture-navigation/process-capture-navigation.component";
 import { RouterModule } from "@angular/router";
@@ -8,7 +7,6 @@ import { RouterModule } from "@angular/router";
 @Component({
   imports: [
     CommonModule,
-    LoadingSpinnerComponent,
     ProcessCaptureNavigationComponent,
     RouterModule
   ],
@@ -20,12 +18,8 @@ import { RouterModule } from "@angular/router";
 export class ProcessCaptureComponent implements OnDestroy {
 
   constructor(
-    private readonly processCapture: ProcessCaptureFeature
+    public readonly processCapture: ProcessCaptureFeature
   ) {}
-
-  readonly processNumber$ = this.processCapture.processNumber$;
-
-  readonly writting$ = this.processCapture.writting$;
 
   ngOnDestroy() {
     this.processCapture.dispose();

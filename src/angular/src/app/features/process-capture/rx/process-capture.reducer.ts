@@ -1,6 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { ProcessCaptureState } from "./process-capture.state";
-import { configure, debounceWritting, dispose, init, writeConfigurationComplete, writePatient, writePatientComplete } from "./process-capture.actions";
+import { configure, deleteLegalRepresentativeComplete, dispose, init, writeConfiguration, writeConfigurationComplete, writeLegalRepresentative, writeLegalRepresentativeComplete, writePatient, writePatientComplete } from "./process-capture.actions";
 
 export const reducer = createReducer(
 
@@ -11,16 +11,29 @@ export const reducer = createReducer(
 
   on(configure, (_, { payload }) => ({ ...payload })),
 
-  on(debounceWritting, (state) => ({
+  on(deleteLegalRepresentativeComplete, (state, { payload }) => ({
     ...state,
-    writting: true
+    legalRepresentative: undefined,
+    process: {
+      ...state.process,
+      rowVersionId: payload.processRowVersionId
+    }
+  })),
+
+  on(writeConfiguration, (state, { payload }) => ({
+    ...state,
+    configuration: {
+      ...state.configuration,
+      ...payload.configuration,
+      writting: true
+    }
   })),
 
   on(writePatient, (state, { payload }) => ({
     ...state,
-    writting: true,
     patient: {
       ...state.patient,
+      ...payload.patient,
       writting: true
     }
   })),
@@ -29,25 +42,47 @@ export const reducer = createReducer(
     ...state,
     configuration: {
       ...state.configuration!,
-      rowVersionId: payload.processConfigurationRowVersionId
+      rowVersionId: payload.processConfigurationRowVersionId,
+      writting: false
     },
     process: {
       ...state.process,
       rowVersionId: payload.processRowVersionId
+    }
+  })),
+
+  on(writeLegalRepresentative, (state, { payload }) => ({
+    ...state,
+    legalRepresentative: {
+      ...state.legalRepresentative,
+      ...payload.legalRepresentative,
+      writting: true
+    }
+  })),
+
+  on(writeLegalRepresentativeComplete, (state, { payload }) => ({
+    ...state,
+    legalRepresentative: {
+      ...state.legalRepresentative!,
+      rowVersionId: payload.processPatientLegalRepresentativeRowVersionId,
+      writting: false
     },
-    writting: false
+    process: {
+      ...state.process,
+      rowVersionId: payload.processRowVersionId
+    }
   })),
 
   on(writePatientComplete, (state, { payload }) => ({
     ...state,
     patient: {
       ...state.patient,
-      rowVersionId: payload.processPatientRowVersionId
+      rowVersionId: payload.processPatientRowVersionId,
+      writting: false
     },
     process: {
       ...state.process,
       rowVersionId: payload.processRowVersionId
-    },
-    writting: false
+    }
   }))
 );

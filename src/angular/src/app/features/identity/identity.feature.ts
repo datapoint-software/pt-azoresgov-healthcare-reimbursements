@@ -16,8 +16,18 @@ export class IdentityFeature extends Feature<IdentityState> {
 
   public readonly user$ = this.of(user);
 
-  constructor(private readonly router: Router, store: Store) {
-    super(store, state, dispose, init);
+  constructor(
+    store: Store,
+    private readonly router: Router) {
+    super(store, state);
+  }
+
+  protected override dispose$$$() {
+    return dispose();
+  }
+
+  protected override init$$$() {
+    return init();
   }
 
   public async authorize(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot, roles?: Array<string>) {

@@ -1,4 +1,4 @@
-<ng-container *ngIf="(process$ | async) as process">
+<ng-container *ngIf="(processCapture.id$ | async) as id">
   <div class="card">
     <div class="card-header">
       <h4 class="card-header-title">
@@ -6,28 +6,33 @@
       </h4>
     </div>
     <div class="list-group list-group-flush">
-      <a class="list-group-item pe-4 ps-4 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', process.id, 'capture', 'patient']">
+      <a class="list-group-item pe-4 ps-4 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', id, 'capture', 'patient']">
         Utente
-        <span *ngIf="(patientRowVersionId$ | async); else defaultStateIcon"
-          [class]="icon(patient)"
-          class="fe ms-auto">
-        </span>
+        <app-process-capture-navigation-icon
+          [invalid]="processCapture.patient.form.invalid"
+          [written]="(processCapture.patient.written$ | async)!"
+          [writting]="(processCapture.patient.writting$ | async)!"
+          class="ms-auto" />
       </a>
-      <a class="list-group-item pe-4 ps-4 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', process.id, 'capture', 'special-terms']">
-        Autorizações especiais
-        <span *ngIf="(configurationRowVersionId$ | async); else defaultStateIcon"
-          [class]="icon(configuration)"
-          class="fe ms-auto">
-        </span>
+      <a class="list-group-item pe-4 ps-4 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', id, 'capture', 'configuration']">
+        Condições especiais
+        <app-process-capture-navigation-icon
+          [enabled]="!!(processCapture.configuration.form.value.documentIssueDateBypassEnabled || processCapture.configuration.form.value.machadoJosephEnabled || processCapture.configuration.form.value.reimbursementLimitBypassEnabled)"
+          [invalid]="processCapture.configuration.form.invalid"
+          [written]="(processCapture.configuration.written$ | async)!"
+          [writting]="(processCapture.configuration.writting$ | async)!"
+          class="ms-auto" />
       </a>
-      <a class="list-group-item pe-4 ps-4 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', process.id, 'capture', 'legal-representative']">
+      <a class="list-group-item pe-4 ps-4 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', id, 'capture', 'legal-representative']">
         Representante legal
-        <span
-          [class]="icon(legalRepresentative)"
-          class="fe ms-auto">
-        </span>
+        <app-process-capture-navigation-icon
+          [enabled]="processCapture.legalRepresentative.form.value.enabled === true"
+          [invalid]="processCapture.legalRepresentative.form.invalid"
+          [written]="(processCapture.legalRepresentative.written$ | async)!"
+          [writting]="(processCapture.legalRepresentative.writting$ | async)!"
+          class="ms-auto" />
       </a>
-      <a class="list-group-item pe-4 ps-4 text-muted d-flex align-items-center justify-content-center">
+      <a class="list-group-item pe-4 ps-4 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', id, 'capture', 'unemployment']">
         Situação de desemprego
         <span class="fe fe-lock ms-auto"></span>
       </a>

@@ -1,7 +1,19 @@
 import { createAction, props } from "@ngrx/store";
 import { FEATURE_ACTION_PREFIX } from "../process-capture.constants";
 import { ProcessCaptureState } from "./process-capture.state";
-import { ProcessCaptureOptionsResultModel } from "../../../clients/process-capture/process-capture.models";
+
+export const deleteLegalRepresentative = createAction(
+  `${FEATURE_ACTION_PREFIX}/delete-legal-representative`
+);
+
+export const deleteLegalRepresentativeComplete = createAction(
+  `${FEATURE_ACTION_PREFIX}/delete-legal-representative-complete`,
+  props<{
+    payload: {
+      processRowVersionId: string;
+    };
+  }>()
+);
 
 export const init = createAction(
   `${FEATURE_ACTION_PREFIX}/init`,
@@ -23,24 +35,16 @@ export const dispose = createAction(
   `${FEATURE_ACTION_PREFIX}/dispose`
 );
 
-export const debounceWritting = createAction(
-  `${FEATURE_ACTION_PREFIX}/debounce-writting`
-);
-
-export const preConfigure = createAction(
-  `${FEATURE_ACTION_PREFIX}/pre-configure`,
-  props<{
-    payload: ProcessCaptureOptionsResultModel;
-  }>()
-);
-
 export const writeConfiguration = createAction(
   `${FEATURE_ACTION_PREFIX}/write-configuration`,
   props<{
     payload: {
-      machadoJosephEnabled: boolean;
-      documentIssueDateBypassEnabled: boolean;
-      reimbursementLimitBypassEnabled: boolean;
+      debounce: boolean;
+      configuration: {
+        machadoJosephEnabled: boolean;
+        documentIssueDateBypassEnabled: boolean;
+        reimbursementLimitBypassEnabled: boolean;
+      };
     };
   }>()
 );
@@ -55,19 +59,49 @@ export const writeConfigurationComplete = createAction(
   }>()
 );
 
+export const writeLegalRepresentative = createAction(
+  `${FEATURE_ACTION_PREFIX}/write-legal-representative`,
+  props<{
+    payload: {
+      debounce: boolean;
+      legalRepresentative: {
+        name: string;
+        taxNumber: string;
+        emailAddress?: string;
+        faxNumber?: string;
+        mobileNumber?: string;
+        phoneNumber?: string;
+      };
+    };
+  }>()
+);
+
+export const writeLegalRepresentativeComplete = createAction(
+  `${FEATURE_ACTION_PREFIX}/write-legal-representative-complete`,
+  props<{
+    payload: {
+      processRowVersionId: string;
+      processPatientLegalRepresentativeRowVersionId: string;
+    };
+  }>()
+);
+
 export const writePatient = createAction(
   `${FEATURE_ACTION_PREFIX}/write-patient`,
   props<{
     payload: {
-      addressLine1: string;
-      addressLine2?: string;
-      addressLine3?: string;
-      postalCode: string;
-      postalCodeArea: string;
-      emailAddress?: string;
-      faxNumber?: string;
-      mobileNumber?: string;
-      phoneNumber?: string;
+      debounce: boolean;
+      patient: {
+        addressLine1: string;
+        addressLine2?: string;
+        addressLine3?: string;
+        postalCode: string;
+        postalCodeArea: string;
+        emailAddress?: string;
+        faxNumber?: string;
+        mobileNumber?: string;
+        phoneNumber?: string;
+      }
     };
   }>()
 );

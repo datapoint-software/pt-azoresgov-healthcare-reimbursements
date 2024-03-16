@@ -13,12 +13,18 @@
     Este campo é de preenchimento obrigatório.
   </div>
   <div class="invalid-feedback mt-1" *ngIf="control.errors?.['email']">
-    Este campo é de preenchimento obrigatório.
+    Este campo requere um endereço de correio eletrónico válido.
   </div>
   <div class="invalid-feedback mt-1" *ngIf="control.errors?.['minlength']">
     Este campo é demasiado curto.
   </div>
   <div class="invalid-feedback mt-1" *ngIf="control.errors?.['maxlength']">
     Este campo é demasiado longo.
+  </div>
+  <div class="invalid-feedback mt-1" *ngIf="control.errors?.['phonenumber']">
+    Este campo requere um número de telefone válido.
+  </div>
+  <div class="invalid-feedback mt-1" *ngIf="control.errors?.['taxnumber']">
+    Este campo requere um número de identificação fiscal válido.
   </div>
 </ng-container>

@@ -1,4 +1,5 @@
 ﻿using AzoresGov.Healthcare.Reimbursements.Enumerations;
+using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities;
 using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories;
 using Datapoint.Mediator;
 using System;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
 {
-    public sealed class ProcessCaptureWriteLegalRepresentativeCommandHandler : ICommandHandler<ProcessCaptureWriteLegalRepresentativeCommand, ProcessCaptureWriteLegalRepresentativeResult>
+    public sealed class ProcessCaptureLegalRepresentativeCommandHandler : ICommandHandler<ProcessCaptureLegalRepresentativeCommand, ProcessCaptureLegalRepresentativeResult>
     {
         private readonly IProcessPatientLegalRepresentativeRepository _processPatientLegalRepresentatives;
         
@@ -17,7 +18,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
         
         private readonly IUserRepository _users;
 
-        public ProcessCaptureWriteLegalRepresentativeCommandHandler(IProcessPatientLegalRepresentativeRepository processPatientLegalRepresentatives, IProcessRepository processes, IUserEntityRepository userEntities, IUserRepository users)
+        public ProcessCaptureLegalRepresentativeCommandHandler(IProcessPatientLegalRepresentativeRepository processPatientLegalRepresentatives, IProcessRepository processes, IUserEntityRepository userEntities, IUserRepository users)
         {
             _processPatientLegalRepresentatives = processPatientLegalRepresentatives;
             _processes = processes;
@@ -25,8 +26,8 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
             _users = users;
         }
 
-        public async Task<ProcessCaptureWriteLegalRepresentativeResult> HandleCommandAsync(
-            ProcessCaptureWriteLegalRepresentativeCommand command, 
+        public async Task<ProcessCaptureLegalRepresentativeResult> HandleCommandAsync(
+            ProcessCaptureLegalRepresentativeCommand command, 
             CancellationToken ct)
         {
             var user = await _users.GetByPublicIdAsync(
@@ -55,15 +56,10 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
                 process.EntityId,
                 ct);
 
-            var processPatientLegalRepresentative = await _processPatientLegalRepresentatives.GetByProcessIdAsync(
-                process.Id,
+            var processPatientLegalRepresentative = await GetOrCreateProcessPatientLegalRepresentativeAsync(
+                process,
+                command.ProcessPatientLegalRepresentativeId,
                 ct);
-            
-            Assert.Found(processPatientLegalRepresentative);
-            
-            Assert.RowVersion(
-                processPatientLegalRepresentative.RowVersionId,
-                command.ProcessPatientLegalRepresentativeId);
 
             processPatientLegalRepresentative.Name = command.Name;
             processPatientLegalRepresentative.TaxNumber = command.TaxNumber;
@@ -75,9 +71,33 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
             process.RowVersionId = Guid.NewGuid();
             processPatientLegalRepresentative.RowVersionId = Guid.NewGuid();
 
-            return new ProcessCaptureWriteLegalRepresentativeResult(
+            return new ProcessCaptureLegalRepresentativeResult(
                 process.RowVersionId,
                 processPatientLegalRepresentative.RowVersionId);
+        }
+
+        private async Task<ProcessPatientLegalRepresentative> GetOrCreateProcessPatientLegalRepresentativeAsync(
+            Process process,
+            Guid? processPatientLegalRepresentativeRowVersionId,
+            CancellationToken ct)
+        {
+            var processPatientLegalRepresentative = await _processPatientLegalRepresentatives.GetByProcessIdAsync(
+                process.Id,
+                ct);
+
+            if (processPatientLegalRepresentative is null)
+            {
+                return this._processPatientLegalRepresentatives.Add(new ProcessPatientLegalRepresentative()
+                {
+                    Process = process
+                });
+            }
+            
+            Assert.RowVersion(
+                processPatientLegalRepresentative.RowVersionId,
+                processPatientLegalRepresentativeRowVersionId);
+
+            return processPatientLegalRepresentative;
         }
     }
 }

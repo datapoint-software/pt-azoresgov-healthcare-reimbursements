@@ -2,7 +2,7 @@
 
 namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
 {
-    public sealed class ProcessCaptureDeleteLegalRepresentativeCommandValidator : AbstractValidator<ProcessCaptureDeleteLegalRepresentativeCommand>
+    public sealed class ProcessCaptureDeleteLegalRepresentativeCommandValidator : AbstractValidator<ProcessCaptureLegalRepresentativeDeleteCommand>
     {
         public ProcessCaptureDeleteLegalRepresentativeCommandValidator()
         {

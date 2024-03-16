@@ -10,13 +10,16 @@ import { FormGroupComponent } from "../form-group/form-group.component";
     FormGroupComponent,
     ReactiveFormsModule
   ],
-  selector: 'app-process-capture-legal-representative',
+  selector: 'app-process-capture-unemployment',
   standalone: true,
-  templateUrl: './process-capture-legal-representative.component.html'
+  templateUrl: './process-capture-unemployment.component.html'
 })
-export class ProcessCaptureLegalRepresentativeComponent {
+export class ProcessCaptureUnemploymentComponent {
 
   constructor(
-    public readonly processCapture: ProcessCaptureFeature
+    private readonly processCapture: ProcessCaptureFeature
   ) {}
+
+  readonly unemployment = this.processCapture.unemployment;
+
 }

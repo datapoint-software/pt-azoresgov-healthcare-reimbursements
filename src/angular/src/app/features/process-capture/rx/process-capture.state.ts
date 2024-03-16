@@ -1,10 +1,10 @@
-import { ProcessCaptureOptionsConfigurationResultModel, ProcessCaptureOptionsEntityResultModel, ProcessCaptureOptionsPatientResultModel, ProcessCaptureOptionsProcessResultModel } from "../../../clients/process-capture/process-capture.models";
+import { ProcessCaptureOptionsConfigurationResultModel, ProcessCaptureOptionsEntityResultModel, ProcessCaptureOptionsPatientLegalRepresentativeResultModel, ProcessCaptureOptionsPatientResultModel, ProcessCaptureOptionsProcessResultModel } from "../../../clients/process-capture/process-capture.models";
 
 export interface ProcessCaptureState {
-  configuration?: ProcessCaptureOptionsConfigurationResultModel;
+  configuration?: ProcessCaptureOptionsConfigurationResultModel & { writting: boolean };
   entity: ProcessCaptureOptionsEntityResultModel;
+  legalRepresentative?: ProcessCaptureOptionsPatientLegalRepresentativeResultModel & { writting: boolean };
   parentEntity?: ProcessCaptureOptionsEntityResultModel;
-  patient: ProcessCaptureOptionsPatientResultModel;
+  patient: ProcessCaptureOptionsPatientResultModel & { writting: boolean };
   process: ProcessCaptureOptionsProcessResultModel;
-  writting: boolean;
 }

@@ -2,9 +2,9 @@
 
 namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
 {
-    public sealed class ProcessCaptureWriteLegalRepresentativeCommandValidator : AbstractValidator<ProcessCaptureWriteLegalRepresentativeCommand>
+    public sealed class ProcessCaptureLegalRepresentativeCommandValidator : AbstractValidator<ProcessCaptureLegalRepresentativeCommand>
     {
-        public ProcessCaptureWriteLegalRepresentativeCommandValidator()
+        public ProcessCaptureLegalRepresentativeCommandValidator()
         {
             RuleFor(c => c.UserId)
                 .NotEmpty();

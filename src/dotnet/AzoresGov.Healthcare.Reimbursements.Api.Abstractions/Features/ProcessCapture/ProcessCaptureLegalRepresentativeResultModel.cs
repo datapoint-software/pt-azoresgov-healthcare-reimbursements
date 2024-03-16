@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
+namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
 {
-    public sealed class ProcessCaptureWriteLegalRepresentativeResult
+    public sealed class ProcessCaptureLegalRepresentativeResultModel
     {
-        public ProcessCaptureWriteLegalRepresentativeResult(Guid processRowVersionId, Guid processPatientLegalRepresentativeRowVersionId)
+        public ProcessCaptureLegalRepresentativeResultModel(Guid processRowVersionId, Guid processPatientLegalRepresentativeRowVersionId)
         {
             ProcessRowVersionId = processRowVersionId;
             ProcessPatientLegalRepresentativeRowVersionId = processPatientLegalRepresentativeRowVersionId;

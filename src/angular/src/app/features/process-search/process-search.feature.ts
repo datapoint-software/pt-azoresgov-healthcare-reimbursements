@@ -1,23 +1,21 @@
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
-import { APP_SEARCH_DELAY_MS } from "../../app.constants";
-import { dispose, init, search } from "./rx/process-search.actions";
-import { entities, searchResult, state } from "./rx/process-search.selectors";
 import { EnvironmentProviders, Injectable, makeEnvironmentProviders } from "@angular/core";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
+import { provideEffects } from "@ngrx/effects";
+import { Store, provideState } from "@ngrx/store";
+import { debounceTime, distinct, filter, takeUntil } from "rxjs";
+import { APP_SEARCH_DELAY_MS } from "../../app.constants";
+import { ProcessStatus } from "../../enums/process-status.enum";
 import { Feature } from "../feature.abstractions";
 import { FEATURE_NAME } from "./process-search.constants";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { dispose, init, search } from "./rx/process-search.actions";
 import { ProcessSearchEffects } from "./rx/process-search.effects";
-import { ProcessSearchState } from "./rx/process-search.state";
-import { ProcessStatus } from "../../enums/process-status.enum";
-import { provideEffects } from "@ngrx/effects";
 import { reducer } from "./rx/process-search.reducer";
-import { Store, provideState } from "@ngrx/store";
-import { Subject, debounceTime, distinct, filter, takeUntil, tap } from "rxjs";
+import { entities, searchResult, state } from "./rx/process-search.selectors";
+import { ProcessSearchState } from "./rx/process-search.state";
 
 @Injectable()
 export class ProcessSearchFeature extends Feature<ProcessSearchState> {
-
-  private dispose$?: Subject<boolean>;
 
   readonly entities$ = this.of(entities);
 
@@ -30,7 +28,15 @@ export class ProcessSearchFeature extends Feature<ProcessSearchState> {
   });
 
   constructor(store: Store) {
-    super(store, state, dispose, init);
+    super(store, state);
+  }
+
+  protected override dispose$$$() {
+    return dispose();
+  }
+
+  protected override init$$$() {
+    return init();
   }
 
   search() {
@@ -45,7 +51,7 @@ export class ProcessSearchFeature extends Feature<ProcessSearchState> {
 
   public override async init(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot): Promise<void> {
 
-    this.dispose$ = new Subject<boolean>();
+    await super.init(activatedRoute, router);
 
     this.searchFormGroup.setValue({
       entityId: null,
@@ -62,21 +68,6 @@ export class ProcessSearchFeature extends Feature<ProcessSearchState> {
       .subscribe(() => {
         this.search();
       });
-
-    await super.init(activatedRoute, router);
-  }
-
-  public override async dispose(): Promise<void> {
-
-    if (this.dispose$) {
-
-      this.dispose$.next(true);
-      this.dispose$.complete();
-
-      delete this.dispose$;
-    }
-
-    await super.dispose();
   }
 }
 

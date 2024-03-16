@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
 {
-    public sealed class ProcessCaptureDeleteLegalRepresentativeCommandHandler : ICommandHandler<ProcessCaptureDeleteLegalRepresentativeCommand, ProcessCaptureDeleteLegalRepresentativeResult>
+    public sealed class ProcessCaptureDeleteLegalRepresentativeCommandHandler : ICommandHandler<ProcessCaptureLegalRepresentativeDeleteCommand, ProcessCaptureLegalRepresentativeDeleteResult>
     {
         private readonly IProcessPatientLegalRepresentativeRepository _processPatientLegalRepresentatives;
         
@@ -25,7 +25,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
             _users = users;
         }
 
-        public async Task<ProcessCaptureDeleteLegalRepresentativeResult> HandleCommandAsync(ProcessCaptureDeleteLegalRepresentativeCommand command, CancellationToken ct)
+        public async Task<ProcessCaptureLegalRepresentativeDeleteResult> HandleCommandAsync(ProcessCaptureLegalRepresentativeDeleteCommand command, CancellationToken ct)
         {
             var user = await _users.GetByPublicIdOrThrowBusinessExceptionAsync(
                 command.UserId,
@@ -58,7 +58,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
             _processPatientLegalRepresentatives.Remove(
                 processPatientLegalRepresentative);
 
-            return new ProcessCaptureDeleteLegalRepresentativeResult(
+            return new ProcessCaptureLegalRepresentativeDeleteResult(
                 process.RowVersionId);
         }
     }

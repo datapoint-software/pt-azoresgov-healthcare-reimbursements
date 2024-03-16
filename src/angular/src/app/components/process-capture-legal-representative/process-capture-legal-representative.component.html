@@ -1,4 +1,4 @@
-<form [formGroup]="legalRepresentative" (ngSubmit)="onSubmit()" class="card">
+<form [formGroup]="processCapture.legalRepresentative.form" (ngSubmit)="processCapture.legalRepresentative.submit()" class="card">
   <div class="card-header">
     <h4 class="card-header-title">
       Representante legal
@@ -12,15 +12,15 @@
     <div class="row">
       <div class="col-12 col-lg-8">
         <app-form-group
-          #legalRepresentativeName
+          #name
           [name]="'name'"
           [label]="'Nome'"
           class="form-group d-block mb-4">
           <!-- Input -->
           <input
-            [class.is-invalid]="legalRepresentativeName?.invalid"
-            [formControl]="legalRepresentativeName.control"
-            [id]="legalRepresentativeName.name"
+            [class.is-invalid]="name?.invalid"
+            [formControl]="name.control"
+            [id]="name.name"
             class="form-control"
             placeholder="Nome"
             tabindex="1"
@@ -29,16 +29,17 @@
       </div>
       <div class="col-12 col-lg-4">
         <app-form-group
-          #legalRepresentativeTaxNumber
+          #taxNumber
           [name]="'taxNumber'"
           [label]="'Contribuínte'"
           class="form-group d-block mb-4">
           <!-- Input -->
           <input
-            [class.is-invalid]="legalRepresentativeTaxNumber.invalid"
-            [formControl]="legalRepresentativeTaxNumber.control"
-            [id]="legalRepresentativeTaxNumber.name"
+            [class.is-invalid]="taxNumber.invalid"
+            [formControl]="taxNumber.control"
+            [id]="taxNumber.name"
             class="form-control"
+            oninput="this.value = this.value.toUpperCase()"
             placeholder="Contribuínte"
             tabindex="2"
             type="text" />
@@ -46,15 +47,15 @@
       </div>
       <div class="col-12">
         <app-form-group
-          #legalRepresentativeEmailAddress
+          #emailAddress
           [label]="'Correio eletrónico'"
           [name]="'emailAddress'"
           class="form-group d-block mb-4">
           <!-- Input -->
           <input
-            [class.is-invalid]="legalRepresentativeEmailAddress.invalid"
-            [formControl]="legalRepresentativeEmailAddress.control"
-            [id]="legalRepresentativeEmailAddress.name"
+            [class.is-invalid]="emailAddress.invalid"
+            [formControl]="emailAddress.control"
+            [id]="emailAddress.name"
             class="form-control"
             placeholder="Correio eletrónico"
             tabindex="3"
@@ -63,15 +64,15 @@
       </div>
       <div class="col-12 col-lg-4">
         <app-form-group
-          #legalRepresentativeFaxNumber
+          #faxNumber
           [label]="'Fax'"
           [name]="'faxNumber'"
           class="form-group d-block mb-4">
           <!-- Input -->
           <input
-            [class.is-invalid]="legalRepresentativeFaxNumber.invalid"
-            [formControl]="legalRepresentativeFaxNumber.control"
-            [id]="legalRepresentativeFaxNumber.name"
+            [class.is-invalid]="faxNumber.invalid"
+            [formControl]="faxNumber.control"
+            [id]="faxNumber.name"
             class="form-control"
             placeholder="Fax"
             tabindex="4"
@@ -80,15 +81,15 @@
       </div>
       <div class="col-12 col-lg-4">
         <app-form-group
-          #legalRepresentativeMobileNumber
+          #mobileNumber
           [label]="'Telemóvel'"
           [name]="'mobileNumber'"
           class="form-group d-block mb-4">
           <!-- Input -->
           <input
-            [class.is-invalid]="legalRepresentativeMobileNumber.invalid"
-            [formControl]="legalRepresentativeMobileNumber.control"
-            [id]="legalRepresentativeMobileNumber.name"
+            [class.is-invalid]="mobileNumber.invalid"
+            [formControl]="mobileNumber.control"
+            [id]="mobileNumber.name"
             class="form-control"
             placeholder="Telemóvel"
             tabindex="5"
@@ -97,15 +98,15 @@
       </div>
       <div class="col-12 col-lg-4">
         <app-form-group
-          #legalRepresentativePhoneNumber
+          #phoneNumber
           [label]="'Telefone'"
           [name]="'phoneNumber'"
           class="form-group d-block mb-4">
           <!-- Input -->
           <input
-            [class.is-invalid]="legalRepresentativePhoneNumber.invalid"
-            [formControl]="legalRepresentativePhoneNumber.control"
-            [id]="legalRepresentativePhoneNumber.name"
+            [class.is-invalid]="phoneNumber.invalid"
+            [formControl]="phoneNumber.control"
+            [id]="phoneNumber.name"
             class="form-control"
             placeholder="Telefone"
             tabindex="6"

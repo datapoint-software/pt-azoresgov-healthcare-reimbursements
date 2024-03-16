@@ -1,15 +1,15 @@
 import { Client } from "../api.client";
 import { Injectable, makeEnvironmentProviders } from "@angular/core";
-import { ProcessCaptureConfigurationModel, ProcessCaptureConfigurationResultModel, ProcessCaptureDeleteLegalRepresentativeModel, ProcessCaptureDeleteLegalRepresentativeResultModel, ProcessCaptureOptionsResultModel, ProcessCapturePatientModel, ProcessCapturePatientResultModel, ProcessCaptureWriteLegalRepresentativeModel, ProcessCaptureWriteLegalRepresentativeResultModel } from "./process-capture.models";
+import { ProcessCaptureConfigurationModel, ProcessCaptureConfigurationResultModel, ProcessCaptureLegalRepresentativeDeleteModel, ProcessCaptureLegalRepresentativeDeleteResultModel, ProcessCaptureOptionsResultModel, ProcessCapturePatientModel, ProcessCapturePatientResultModel, ProcessCaptureLegalRepresentativeModel, ProcessCaptureLegalRepresentativeResultModel } from "./process-capture.models";
 
 @Injectable()
 export class ProcessCaptureClient extends Client {
 
   protected override baseAddress: string = '/api/features/process-capture';
 
-  readonly deleteLegalRepresentative = (processId: string, model: ProcessCaptureDeleteLegalRepresentativeModel) =>
+  readonly deleteLegalRepresentative = (processId: string, model: ProcessCaptureLegalRepresentativeDeleteModel) =>
 
-    this.post<ProcessCaptureDeleteLegalRepresentativeModel, ProcessCaptureDeleteLegalRepresentativeResultModel>(
+    this.post<ProcessCaptureLegalRepresentativeDeleteModel, ProcessCaptureLegalRepresentativeDeleteResultModel>(
       '/:processId/delete-legal-representative',
       model,
       { path: { processId }}
@@ -26,9 +26,9 @@ export class ProcessCaptureClient extends Client {
       model,
       { path: { processId }});
 
-    readonly writeLegalRepresentative = (processId: string, model: ProcessCaptureWriteLegalRepresentativeModel) =>
+    readonly writeLegalRepresentative = (processId: string, model: ProcessCaptureLegalRepresentativeModel) =>
 
-      this.post<ProcessCaptureWriteLegalRepresentativeModel, ProcessCaptureWriteLegalRepresentativeResultModel>(
+      this.post<ProcessCaptureLegalRepresentativeModel, ProcessCaptureLegalRepresentativeResultModel>(
         '/:processId/write-legal-representative',
         model,
         { path: { processId }});
