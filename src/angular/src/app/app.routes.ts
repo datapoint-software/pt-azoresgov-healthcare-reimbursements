@@ -5,7 +5,6 @@ import { LayoutComponent } from './components/layout/layout.component';
 import { ProcessCaptureConfigurationComponent } from './components/process-capture-configuration/process-capture-configuration.component';
 import { ProcessCaptureLegalRepresentativeComponent } from './components/process-capture-legal-representative/process-capture-legal-representative.component';
 import { ProcessCapturePatientComponent } from './components/process-capture-patient/process-capture-patient.component';
-import { ProcessCaptureUnemploymentComponent } from './components/process-capture-unemployment/process-capture-unemployment.component';
 import { ProcessCaptureComponent } from './components/process-capture/process-capture.component';
 import { ProcessCreationComponent } from './components/process-creation/process-creation.component';
 import { ProcessSearchComponent } from './components/process-search/process-search.component';
@@ -81,10 +80,6 @@ export const routes: Routes = [
                       {
                         path: 'legal-representative',
                         component: ProcessCaptureLegalRepresentativeComponent
-                      },
-                      {
-                        path: 'unemployment',
-                        component: ProcessCaptureUnemploymentComponent
                       }
                     ]
                   }

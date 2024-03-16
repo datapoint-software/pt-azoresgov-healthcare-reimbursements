@@ -22,6 +22,8 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
             RuleFor(c => c.DocumentIssueDateBypassEnabled);
 
             RuleFor(c => c.ReimbursementLimitBypassEnabled);
+
+            RuleFor(c => c.UnemploymentEnabled);
         }
     }
 }

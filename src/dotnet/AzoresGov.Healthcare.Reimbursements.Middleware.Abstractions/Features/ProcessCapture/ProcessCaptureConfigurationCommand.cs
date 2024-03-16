@@ -5,7 +5,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
 {
     public sealed class ProcessCaptureConfigurationCommand : Command<ProcessCaptureConfigurationResult>
     {
-        public ProcessCaptureConfigurationCommand(Guid userId, Guid processId, Guid processRowVersionId, Guid? processConfigurationRowVersionId, bool machadoJosephEnabled, bool documentIssueDateBypassEnabled, bool reimbursementLimitBypassEnabled)
+        public ProcessCaptureConfigurationCommand(Guid userId, Guid processId, Guid processRowVersionId, Guid? processConfigurationRowVersionId, bool machadoJosephEnabled, bool documentIssueDateBypassEnabled, bool reimbursementLimitBypassEnabled, bool unemploymentEnabled)
         {
             UserId = userId;
             ProcessId = processId;
@@ -14,6 +14,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
             MachadoJosephEnabled = machadoJosephEnabled;
             DocumentIssueDateBypassEnabled = documentIssueDateBypassEnabled;
             ReimbursementLimitBypassEnabled = reimbursementLimitBypassEnabled;
+            UnemploymentEnabled = unemploymentEnabled;
         }
 
         public Guid UserId { get; }
@@ -29,5 +30,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
         public bool DocumentIssueDateBypassEnabled { get; }
         
         public bool ReimbursementLimitBypassEnabled { get; }
+        
+        public bool UnemploymentEnabled { get; }
     }
 }

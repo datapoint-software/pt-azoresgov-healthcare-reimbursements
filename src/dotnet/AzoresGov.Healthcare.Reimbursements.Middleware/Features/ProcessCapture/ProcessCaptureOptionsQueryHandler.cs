@@ -96,7 +96,8 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
                         configuration.RowVersionId,
                         configuration.MachadoJosephEnabled,
                         configuration.DocumentIssueDateBypassEnabled,
-                        configuration.ReimbursementLimitBypassEnabled),
+                        configuration.ReimbursementLimitBypassEnabled,
+                        configuration.UnemploymentEnabled),
                 new ProcessCaptureOptionsEntityResult(
                     entity.PublicId,
                     entity.RowVersionId,

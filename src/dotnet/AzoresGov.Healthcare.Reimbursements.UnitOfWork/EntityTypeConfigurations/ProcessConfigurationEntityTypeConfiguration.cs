@@ -25,6 +25,9 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.EntityTypeConfiguration
 
             builder.Property(e => e.DocumentIssueDateBypassEnabled)
                 .IsRequired();
+
+            builder.Property(e => e.UnemploymentEnabled)
+                .IsRequired();
         }
     }
 }

@@ -8,6 +8,7 @@ export interface ProcessCaptureConfigurationModel {
   machadoJosephEnabled: boolean;
   documentIssueDateBypassEnabled: boolean;
   reimbursementLimitBypassEnabled: boolean;
+  unemploymentEnabled: boolean;
 }
 
 export interface ProcessCaptureConfigurationResultModel {
@@ -19,6 +20,7 @@ export interface ProcessCaptureOptionsConfigurationResultModel {
   documentIssueDateBypassEnabled: boolean;
   machadoJosephEnabled: boolean;
   reimbursementLimitBypassEnabled: boolean;
+  unemploymentEnabled: boolean;
   rowVersionId?: string;
   writting: boolean;
 }

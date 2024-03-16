@@ -55,7 +55,8 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
                         result.Configuration.RowVersionId,
                         result.Configuration.MachadoJosephEnabled,
                         result.Configuration.DocumentIssueDateBypassEnabled,
-                        result.Configuration.ReimbursementLimitBypassEnabled),
+                        result.Configuration.ReimbursementLimitBypassEnabled,
+                        result.Configuration.UnemploymentEnabled),
                 new ProcessCaptureOptionsEntityResultModel(
                     result.Entity.Id,
                     result.Entity.RowVersionId,
@@ -118,7 +119,8 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
                     model.ProcessConfigurationRowVersionId,
                     model.MachadoJosephEnabled,
                     model.DocumentIssueDateBypassEnabled,
-                    model.ReimbursementLimitBypassEnabled),
+                    model.ReimbursementLimitBypassEnabled,
+                    model.UnemploymentEnabled),
                 ct);
             
             return new ProcessCaptureConfigurationResultModel(

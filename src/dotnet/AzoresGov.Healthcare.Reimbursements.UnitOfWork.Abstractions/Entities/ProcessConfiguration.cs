@@ -20,5 +20,7 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities
         public bool DocumentIssueDateBypassEnabled { get; set; } = default!;
         
         public bool ReimbursementLimitBypassEnabled { get; set; } = default!;
+
+        public bool UnemploymentEnabled { get; set; } = default!;
     }
 }

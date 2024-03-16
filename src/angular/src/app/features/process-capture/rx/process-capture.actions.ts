@@ -44,6 +44,7 @@ export const writeConfiguration = createAction(
         machadoJosephEnabled: boolean;
         documentIssueDateBypassEnabled: boolean;
         reimbursementLimitBypassEnabled: boolean;
+        unemploymentEnabled: boolean;
       };
     };
   }>()

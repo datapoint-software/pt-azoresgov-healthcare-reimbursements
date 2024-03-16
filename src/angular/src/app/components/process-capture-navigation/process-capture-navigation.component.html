@@ -17,7 +17,11 @@
       <a class="list-group-item pe-4 ps-4 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', id, 'capture', 'configuration']">
         Condições especiais
         <app-process-capture-navigation-icon
-          [enabled]="!!(processCapture.configuration.form.value.documentIssueDateBypassEnabled || processCapture.configuration.form.value.machadoJosephEnabled || processCapture.configuration.form.value.reimbursementLimitBypassEnabled)"
+          [enabled]="!!(
+            processCapture.configuration.form.value.documentIssueDateBypassEnabled ||
+            processCapture.configuration.form.value.machadoJosephEnabled ||
+            processCapture.configuration.form.value.reimbursementLimitBypassEnabled ||
+            processCapture.configuration.form.value.unemploymentEnabled)"
           [invalid]="processCapture.configuration.form.invalid"
           [written]="(processCapture.configuration.written$ | async)!"
           [writting]="(processCapture.configuration.writting$ | async)!"
@@ -31,10 +35,6 @@
           [written]="(processCapture.legalRepresentative.written$ | async)!"
           [writting]="(processCapture.legalRepresentative.writting$ | async)!"
           class="ms-auto" />
-      </a>
-      <a class="list-group-item pe-4 ps-4 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', id, 'capture', 'unemployment']">
-        Situação de desemprego
-        <span class="fe fe-lock ms-auto"></span>
       </a>
       <a class="list-group-item pe-4 ps-4 text-muted d-flex align-items-center justify-content-center">
         Declaração de rendimentos

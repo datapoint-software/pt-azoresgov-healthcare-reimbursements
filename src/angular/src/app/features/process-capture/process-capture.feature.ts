@@ -8,7 +8,6 @@ import { ProcessCaptureFamilyIncomeStatementManager } from "./managers/process-c
 import { ProcessCaptureLegalRepresentativeManager } from "./managers/process-capture-legal-representative.manager";
 import { ProcessCapturePatientManager } from "./managers/process-capture-patient.manager";
 import { ProcessCapturePaymentManager } from "./managers/process-capture-payment.manager";
-import { ProcessCaptureUnemploymentManager } from "./managers/process-capture-unemployment.manager";
 import { FEATURE_NAME } from "./process-capture.constants";
 import { dispose, init } from "./rx/process-capture.actions";
 import { ProcessCaptureEffects } from "./rx/process-capture.effects";
@@ -31,16 +30,14 @@ export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
     readonly familyIncomeStatement: ProcessCaptureFamilyIncomeStatementManager,
     readonly legalRepresentative: ProcessCaptureLegalRepresentativeManager,
     readonly patient: ProcessCapturePatientManager,
-    readonly payment: ProcessCapturePaymentManager,
-    readonly unemployment: ProcessCaptureUnemploymentManager
+    readonly payment: ProcessCapturePaymentManager
   ) {
     super(store, state, [
       configuration,
       familyIncomeStatement,
       legalRepresentative,
       patient,
-      payment,
-      unemployment
+      payment
     ]);
   }
 
@@ -65,8 +62,7 @@ export const provideProcessCaptureFeature = (): Array<EnvironmentProviders> => [
     ProcessCaptureFamilyIncomeStatementManager,
     ProcessCaptureLegalRepresentativeManager,
     ProcessCapturePatientManager,
-    ProcessCapturePaymentManager,
-    ProcessCaptureUnemploymentManager
+    ProcessCapturePaymentManager
   ]),
 
   provideEffects(ProcessCaptureEffects),
