@@ -3,11 +3,11 @@ import { Injectable, ErrorHandler, EnvironmentProviders, makeEnvironmentProvider
 import { Router } from "@angular/router";
 
 @Injectable()
-export class AppErrorHandler implements ErrorHandler{
+export class AppErrorHandler implements ErrorHandler {
 
   constructor(
     private readonly router: Router
-  ) {}
+  ) { }
 
   handleError(error: unknown) {
 
@@ -26,10 +26,10 @@ export class AppErrorHandler implements ErrorHandler{
 
       errorDocumentLocation += `?statusCode=${encodeURIComponent(error.status)}`;
 
-      if ('object' === typeof error.error && error.error.message)
+      if (error.error?.message)
           errorDocumentLocation += `&message=${em(error.error.message)}`;
 
-      else if ([ 503, 504 ].find(sc => sc === error.status))
+      else
         errorDocumentLocation += `&message=${em('Não foi possível estabelecer ligação com os serviços aplicacionais.')}`;
     }
 
@@ -44,8 +44,6 @@ export class AppErrorHandler implements ErrorHandler{
     }
 
     this.router.navigateByUrl(errorDocumentLocation);
-
-    throw error;
   }
 }
 

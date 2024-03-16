@@ -21,7 +21,7 @@ export class ProcessCaptureFamilyIncomeStatementManager extends Manager<ProcessC
 
   public readonly form = new FormGroup({
     enabled: new FormControl(false, []),
-    year: new FormControl((null as number | null), [ Validators.required, Validators.year ]),
+    year: new FormControl((null as number | null), [ Validators.required, Validators.integerBetween(2023, 2024) ]),
     accessCode: new FormControl((null as string | null), [ Validators.maxLength(16) ]),
     familyMemberCount: new FormControl((null as number | null), [ Validators.required, Validators.integer({ unsigned: true }) ]),
     familyIncome: new FormControl((null as number | null), [ Validators.required, Validators.decimal({ unsigned: true, precision: 2}) ])

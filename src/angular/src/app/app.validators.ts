@@ -31,12 +31,12 @@ export class Validators extends CoreValidators {
           : control.value.toString();
 
         if (!pattern.test(valueAsString))
-          return ({ decimal: true, unsigned, precision });
+          return ({ decimal: { unsigned, precision } });
 
         let decimals: string | undefined;
 
         if (precision && precision < (valueAsString.split('.')[1] ?? '').length)
-          return ({ decimal: true, unsigned, precision });
+          return ({ decimal: { unsigned, precision } });
       }
 
       return null;
@@ -53,6 +53,28 @@ export class Validators extends CoreValidators {
 
         if (!pattern.test(control.value))
           return ({ integer: true, unsigned });
+      }
+
+      return null;
+    });
+  }
+
+  static integerBetween(minimum: number, maximum: number): ValidatorFn {
+    return ((control: AbstractControl<string | number | null>) => {
+
+      if (control.value) {
+
+        const valueAsString = 'string' === typeof(control.value)
+          ? control.value
+          : control.value.toString();
+
+        if (!INTEGER_REGEX.test(valueAsString))
+          return ({ between: { minimum, maximum }});
+
+        const valueAsNumber = parseInt(valueAsString);
+
+        if (valueAsNumber < minimum || valueAsNumber > maximum)
+          return ({ between: { minimum, maximum }});
       }
 
       return null;
