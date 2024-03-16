@@ -38,6 +38,24 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
         }
 
         [Authorize("administrative")]
+        [HttpPost("delete-family-income-statement")]
+        public async Task<ProcessCaptureFamilyIncomeStatementDeleteResultModel> DeleteFamilyIncomeStatementAsync(
+            [FromBody] ProcessCaptureFamilyIncomeStatementDeleteModel model,
+            CancellationToken ct)
+        {
+            var result = await _mediator.HandleCommandAsync<ProcessCaptureFamilyIncomeStatementDeleteCommand, ProcessCaptureFamilyIncomeStatementDeleteResult>(
+                new ProcessCaptureFamilyIncomeStatementDeleteCommand(
+                    User.GetId(),
+                    model.ProcessId,
+                    model.ProcessRowVersionId,
+                    model.ProcessPatientFamilyIncomeStatementRowVersionId),
+                ct);
+
+            return new ProcessCaptureFamilyIncomeStatementDeleteResultModel(
+                result.ProcessRowVersionId);
+        }
+
+        [Authorize("administrative")]
         [HttpGet("{processId:guid}")]
         public async Task<ProcessCaptureOptionsResultModel> GetOptionsAsync(
             [FromRoute] Guid processId,
