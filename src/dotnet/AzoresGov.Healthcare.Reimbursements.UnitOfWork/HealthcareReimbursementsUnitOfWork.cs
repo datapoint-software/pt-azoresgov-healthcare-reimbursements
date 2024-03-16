@@ -1,5 +1,4 @@
 ﻿using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities;
-using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories;
 using Datapoint.UnitOfWork.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,6 +33,8 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork
         public DbSet<ProcessPatientLegalRepresentative> ProcessPatientLegalRepresentatives { get; set; } = default!;
 
         public DbSet<ProcessPatient> ProcessPatients { get; set; } = default!;
+
+        public DbSet<ProcessPaymentConfiguration> ProcessPaymentSettings { get; set; } = default!;
 
         public DbSet<ProcessConfiguration> ProcessSettings { get; set; } = default!;
         
