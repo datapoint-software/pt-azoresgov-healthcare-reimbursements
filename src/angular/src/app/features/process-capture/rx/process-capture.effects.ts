@@ -1,5 +1,5 @@
 import { Actions, concatLatestFrom, createEffect, ofType } from "@ngrx/effects";
-import { configure, deleteLegalRepresentative, deleteLegalRepresentativeComplete, dispose, init, writeConfiguration, writeConfigurationComplete, writeFamilyIncomeStatement, writeFamilyIncomeStatementComplete, writeLegalRepresentative, writeLegalRepresentativeComplete, writePatient, writePatientComplete } from "./process-capture.actions";
+import { configure, deleteFamilyIncomeStatement, deleteFamilyIncomeStatementComplete, deleteLegalRepresentative, deleteLegalRepresentativeComplete, dispose, init, writeConfiguration, writeConfigurationComplete, writeFamilyIncomeStatement, writeFamilyIncomeStatementComplete, writeLegalRepresentative, writeLegalRepresentativeComplete, writePatient, writePatientComplete } from "./process-capture.actions";
 import { Injectable } from "@angular/core";
 import { debounce, debounceTime, filter, map, mergeMap, of, switchMap, tap, timer } from "rxjs";
 import { ProcessCaptureClient } from "../../../clients/process-capture/process-capture.client";
@@ -16,6 +16,30 @@ export class ProcessCaptureEffects {
     private readonly processCaptureClient: ProcessCaptureClient,
     private readonly store: Store
   ) {}
+
+  readonly deleteFamilyIncomeStatement$ = createEffect(() => this.actions$.pipe(
+    ofType(deleteFamilyIncomeStatement),
+    concatLatestFrom(() => [
+      this.store.select($$.familyIncomeStatementRowVersionId),
+      this.store.select($$.processId),
+      this.store.select($$.processRowVersionId)
+    ]),
+    filter(([ _, processPatientFamilyIncomeStatementRowVersionId ]) => !!processPatientFamilyIncomeStatementRowVersionId),
+    mergeMap(([
+      _,
+      processPatientFamilyIncomeStatementRowVersionId,
+      processId,
+      processRowVersionId
+    ]) => this.processCaptureClient.deleteFamilyIncomeStatement({
+      processId,
+      processRowVersionId,
+      processPatientFamilyIncomeStatementRowVersionId: processPatientFamilyIncomeStatementRowVersionId!
+    }).pipe(
+      map((response) => deleteFamilyIncomeStatementComplete({
+        payload: { ...response }
+      }))
+    ))
+  ));
 
   readonly deleteLegalRepresentative$ = createEffect(() => this.actions$.pipe(
     ofType(deleteLegalRepresentative),

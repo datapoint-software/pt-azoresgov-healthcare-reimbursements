@@ -9,7 +9,7 @@ import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
 import { setControlsEnabled } from "../../../helpers/reactive-forms.helper";
 import { map, takeUntil } from "rxjs";
 import { Actions, ofType } from "@ngrx/effects";
-import { configure, writeFamilyIncomeStatement } from "../rx/process-capture.actions";
+import { configure, deleteFamilyIncomeStatement, writeFamilyIncomeStatement } from "../rx/process-capture.actions";
 
 @Injectable()
 export class ProcessCaptureFamilyIncomeStatementManager extends Manager<ProcessCaptureState> {
@@ -71,9 +71,7 @@ export class ProcessCaptureFamilyIncomeStatementManager extends Manager<ProcessC
 
     if (!enabled) {
 
-      // TODO <joao.pl.lopes>
-      //
-      // Delete the family income statement.
+      this.dispatch(deleteFamilyIncomeStatement());
 
       this.form.reset({
         enabled: false

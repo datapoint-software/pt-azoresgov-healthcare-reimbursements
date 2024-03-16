@@ -2,6 +2,19 @@ import { createAction, props } from "@ngrx/store";
 import { FEATURE_ACTION_PREFIX } from "../process-capture.constants";
 import { ProcessCaptureState } from "./process-capture.state";
 
+export const deleteFamilyIncomeStatement = createAction(
+  `${FEATURE_ACTION_PREFIX}/delete-family-income-statement`
+);
+
+export const deleteFamilyIncomeStatementComplete = createAction(
+  `${FEATURE_ACTION_PREFIX}/delete-family-income-statement-complete`,
+  props<{
+    payload: {
+      processRowVersionId: string;
+    };
+  }>()
+);
+
 export const deleteLegalRepresentative = createAction(
   `${FEATURE_ACTION_PREFIX}/delete-legal-representative`
 );

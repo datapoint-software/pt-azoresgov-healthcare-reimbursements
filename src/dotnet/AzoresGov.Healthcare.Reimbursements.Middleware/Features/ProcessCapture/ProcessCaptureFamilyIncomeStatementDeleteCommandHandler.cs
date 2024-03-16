@@ -17,6 +17,14 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
 
         private readonly IUserRepository _users;
 
+        public ProcessCaptureFamilyIncomeStatementDeleteCommandHandler(IProcessPatientFamilyIncomeStatementRepository processPatientFamilyIncomeStatements, IProcessRepository processes, IUserEntityRepository userEntities, IUserRepository users)
+        {
+            _processPatientFamilyIncomeStatements = processPatientFamilyIncomeStatements;
+            _processes = processes;
+            _userEntities = userEntities;
+            _users = users;
+        }
+
         public async Task<ProcessCaptureFamilyIncomeStatementDeleteResult> HandleCommandAsync(
             ProcessCaptureFamilyIncomeStatementDeleteCommand command, 
             CancellationToken ct)

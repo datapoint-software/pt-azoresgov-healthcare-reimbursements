@@ -1,19 +1,24 @@
 import { Client } from "../api.client";
 import { Injectable, makeEnvironmentProviders } from "@angular/core";
-import { ProcessCaptureConfigurationModel, ProcessCaptureConfigurationResultModel, ProcessCaptureLegalRepresentativeDeleteModel, ProcessCaptureLegalRepresentativeDeleteResultModel, ProcessCaptureOptionsResultModel, ProcessCapturePatientModel, ProcessCapturePatientResultModel, ProcessCaptureLegalRepresentativeModel, ProcessCaptureLegalRepresentativeResultModel, ProcessCaptureFamilyIncomeStatementModel, ProcessCaptureFamilyIncomeStatementResultModel } from "./process-capture.models";
+import { ProcessCaptureConfigurationModel, ProcessCaptureConfigurationResultModel, ProcessCaptureLegalRepresentativeDeleteModel, ProcessCaptureLegalRepresentativeDeleteResultModel, ProcessCaptureOptionsResultModel, ProcessCapturePatientModel, ProcessCapturePatientResultModel, ProcessCaptureLegalRepresentativeModel, ProcessCaptureLegalRepresentativeResultModel, ProcessCaptureFamilyIncomeStatementModel, ProcessCaptureFamilyIncomeStatementResultModel, ProcessCaptureFamilyIncomeStatementDeleteModel, ProcessCaptureFamilyIncomeStatementDeleteResultModel } from "./process-capture.models";
 
 @Injectable()
 export class ProcessCaptureClient extends Client {
 
   protected override baseAddress: string = '/api/features/process-capture';
 
+  readonly deleteFamilyIncomeStatement = (model: ProcessCaptureFamilyIncomeStatementDeleteModel) =>
+
+    this.post<ProcessCaptureFamilyIncomeStatementDeleteModel, ProcessCaptureFamilyIncomeStatementDeleteResultModel>(
+      '/delete-family-income-statement',
+      model);
+
   readonly deleteLegalRepresentative = (processId: string, model: ProcessCaptureLegalRepresentativeDeleteModel) =>
 
     this.post<ProcessCaptureLegalRepresentativeDeleteModel, ProcessCaptureLegalRepresentativeDeleteResultModel>(
       '/:processId/delete-legal-representative',
       model,
-      { path: { processId }}
-    );
+      { path: { processId }});
 
   readonly getOptions = (processId: string) =>
 

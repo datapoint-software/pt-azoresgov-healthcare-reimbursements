@@ -16,6 +16,16 @@ export interface ProcessCaptureConfigurationResultModel {
   processConfigurationRowVersionId: string;
 }
 
+export interface ProcessCaptureFamilyIncomeStatementDeleteModel {
+  processId: string;
+  processRowVersionId: string;
+  processPatientFamilyIncomeStatementRowVersionId: string;
+}
+
+export interface ProcessCaptureFamilyIncomeStatementDeleteResultModel {
+  processRowVersionId: string;
+}
+
 export interface ProcessCaptureFamilyIncomeStatementModel {
   processId: string;
   processRowVersionId: string;

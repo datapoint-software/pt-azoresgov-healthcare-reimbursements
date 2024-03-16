@@ -1,6 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { ProcessCaptureState } from "./process-capture.state";
-import { configure, deleteLegalRepresentativeComplete, dispose, init, writeConfiguration, writeConfigurationComplete, writeFamilyIncomeStatement, writeFamilyIncomeStatementComplete, writeLegalRepresentative, writeLegalRepresentativeComplete, writePatient, writePatientComplete } from "./process-capture.actions";
+import { configure, deleteFamilyIncomeStatement, deleteFamilyIncomeStatementComplete, deleteLegalRepresentative, deleteLegalRepresentativeComplete, dispose, init, writeConfiguration, writeConfigurationComplete, writeFamilyIncomeStatement, writeFamilyIncomeStatementComplete, writeLegalRepresentative, writeLegalRepresentativeComplete, writePatient, writePatientComplete } from "./process-capture.actions";
 
 export const reducer = createReducer(
 
@@ -10,6 +10,31 @@ export const reducer = createReducer(
   on(init, () => (undefined as unknown as ProcessCaptureState)),
 
   on(configure, (_, { payload }) => ({ ...payload })),
+
+  on(deleteFamilyIncomeStatement, (state) => ({
+    ...state,
+    familyIncomeStatement: state.familyIncomeStatement && {
+      ...state.familyIncomeStatement,
+      writting: true
+    }
+  })),
+
+  on(deleteFamilyIncomeStatementComplete, (state, { payload }) => ({
+    ...state,
+    familyIncomeStatement: undefined,
+    process: {
+      ...state.process,
+      rowVersionId: payload.processRowVersionId
+    }
+  })),
+
+  on(deleteLegalRepresentative, (state) => ({
+    ...state,
+    legalRepresentative: state.legalRepresentative && {
+      ...state.legalRepresentative,
+      writting: true
+    }
+  })),
 
   on(deleteLegalRepresentativeComplete, (state, { payload }) => ({
     ...state,
