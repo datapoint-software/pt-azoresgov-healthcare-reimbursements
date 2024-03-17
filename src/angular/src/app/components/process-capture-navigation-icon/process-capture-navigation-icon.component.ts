@@ -18,6 +18,9 @@ export class ProcessCaptureNavigationIconComponent {
   @Input({ required: true })
   public invalid: boolean = undefined!;
 
+  @Input({ required: false })
+  public locked: boolean = false;
+
   @Input({ required: true })
   public written: boolean = undefined!;
 

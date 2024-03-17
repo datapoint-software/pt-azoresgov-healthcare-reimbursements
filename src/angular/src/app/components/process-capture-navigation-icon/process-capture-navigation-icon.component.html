@@ -1,4 +1,7 @@
-@if (writting) {
+@if (locked) {
+  <span class="fe fe-lock text-muted ms-auto"></span>
+}
+@else if (writting) {
   <app-loading-spinner class="ms-auto"/>
 }
 @else if (invalid) {

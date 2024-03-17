@@ -6,16 +6,16 @@
       </h4>
     </div>
     <div class="list-group list-group-flush">
-      <a class="list-group-item pe-4 ps-4 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', id, 'capture', 'patient']">
-        Utente
+      <a class="list-group-item pe-4 ps-4 py-0 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', id, 'capture', 'patient']">
+        <span class="py-3">Utente</span>
         <app-process-capture-navigation-icon
           [invalid]="processCapture.patient.form.invalid"
           [written]="(processCapture.patient.written$ | async)!"
           [writting]="(processCapture.patient.writting$ | async)!"
           class="ms-auto" />
       </a>
-      <a class="list-group-item pe-4 ps-4 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', id, 'capture', 'configuration']">
-        Condições especiais
+      <a class="list-group-item pe-4 ps-4 py-0 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', id, 'capture', 'configuration']">
+        <span class="py-3">Condições especiais</span>
         <app-process-capture-navigation-icon
           [enabled]="!!(
             processCapture.configuration.form.value.documentIssueDateBypassEnabled ||
@@ -27,8 +27,8 @@
           [writting]="(processCapture.configuration.writting$ | async)!"
           class="ms-auto" />
       </a>
-      <a class="list-group-item pe-4 ps-4 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', id, 'capture', 'legal-representative']">
-        Representante legal
+      <a class="list-group-item pe-4 ps-4 py-0 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', id, 'capture', 'legal-representative']">
+        <span class="py-3">Representante legal</span>
         <app-process-capture-navigation-icon
           [enabled]="processCapture.legalRepresentative.form.value.enabled === true"
           [invalid]="processCapture.legalRepresentative.form.invalid"
@@ -36,8 +36,8 @@
           [writting]="(processCapture.legalRepresentative.writting$ | async)!"
           class="ms-auto" />
       </a>
-      <a class="list-group-item pe-4 ps-4 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', id, 'capture', 'family-income-statement']">
-        Declaração de rendimentos
+      <a class="list-group-item pe-4 ps-4 py-0 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', id, 'capture', 'family-income-statement']">
+        <span class="py-3">Declaração de rendimentos</span>
         <app-process-capture-navigation-icon
           [enabled]="processCapture.familyIncomeStatement.form.value.enabled === true"
           [invalid]="processCapture.familyIncomeStatement.form.invalid"
@@ -45,22 +45,41 @@
           [writting]="(processCapture.familyIncomeStatement.writting$ | async)!"
           class="ms-auto" />
       </a>
-      <a class="list-group-item pe-4 ps-4 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', id, 'capture', 'payment']">
-        Pagamento
+      <a class="list-group-item pe-4 ps-4 py-0 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', id, 'capture', 'payment']">
+        <span class="py-3">Pagamento</span>
         <app-process-capture-navigation-icon
           [invalid]="processCapture.payment.form.invalid"
           [written]="(processCapture.payment.written$ | async)!"
           [writting]="(processCapture.payment.writting$ | async)!"
           class="ms-auto" />
       </a>
-      <a class="list-group-item pe-4 ps-4 text-muted d-flex align-items-center justify-content-center">
-        Documentos
+      <a class="list-group-item pe-4 ps-4 py-0 text-muted d-flex align-items-center justify-content-center">
+        <span class="py-3">Documentos</span>
         <span class="fe fe-lock ms-auto"></span>
       </a>
-      <a class="list-group-item pe-4 ps-4 text-muted d-flex align-items-center justify-content-center">
-        Simulação
-        <span class="fe fe-lock ms-auto"></span>
-      </a>
+      @if(
+        processCapture.patient.form.invalid ||
+        processCapture.configuration.form.invalid ||
+        processCapture.familyIncomeStatement.form.invalid ||
+        processCapture.legalRepresentative.form.invalid ||
+        processCapture.payment.form.invalid) {
+        <a class="list-group-item pe-4 ps-4 py-0 text-muted d-flex align-items-center justify-content-center">
+          <span class="py-3">Simulação</span>
+          <span class="fe fe-lock ms-auto"></span>
+        </a>
+      }
+
+      @else {
+        <a class="list-group-item pe-4 ps-4 py-0 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', id, 'capture', 'simulation']">
+          <span class="py-3">Simulação</span>
+          <app-process-capture-navigation-icon
+            [invalid]="false"
+            [written]="true"
+            [writting]="false"
+            class="ms-auto" />
+        </a>
+      }
+
     </div>
   </div>
 </ng-container>
