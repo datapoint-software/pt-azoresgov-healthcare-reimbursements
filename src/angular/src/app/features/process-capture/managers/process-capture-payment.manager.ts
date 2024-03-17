@@ -2,12 +2,12 @@ import { Injectable } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { Manager } from "../../feature.abstractions";
-import { paymentConfigurationRowVersionId, paymentWritting, state } from "../rx/process-capture.selectors";
+import { bankName, paymentConfigurationRowVersionId, paymentWritting, state } from "../rx/process-capture.selectors";
 import { ProcessCaptureState } from "../rx/process-capture.state";
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
 import { Actions, ofType } from "@ngrx/effects";
 import { map, takeUntil } from "rxjs";
-import { configure, writePayment } from "../rx/process-capture.actions";
+import { configure, searchBank, searchBankComplete, writePayment } from "../rx/process-capture.actions";
 import { ProcessCaptureOptionsPaymentResultModel } from "../../../clients/process-capture/process-capture.models";
 import { PaymentReceiver } from "../../../enums/payment-receiver.enum";
 import { PaymentMethod } from "../../../enums/payment-method.enum";
@@ -17,6 +17,8 @@ import { Validators } from "../../../app.validators";
 
 @Injectable()
 export class ProcessCapturePaymentManager extends Manager<ProcessCaptureState> {
+
+  public readonly bankName$ = this.of(bankName);
 
   public readonly written$ = this.of(paymentConfigurationRowVersionId)
     .pipe(map((paymentConfigurationRowVersionId) => !!paymentConfigurationRowVersionId));
@@ -44,12 +46,22 @@ export class ProcessCapturePaymentManager extends Manager<ProcessCaptureState> {
 
     this.form.reset({
       method,
-      receiver: payment?.receiver || PaymentReceiver.Patient
+      receiver: payment?.receiver || PaymentReceiver.Patient,
+      iban: payment?.iban || null,
+      swift: payment?.swift || null
     }, {
       emitEvent: false
     });
 
     this.methodChanges(method);
+  }
+
+  private configureSwiftControl(swift: string) {
+
+    this.form.controls.swift.reset(swift, { emitEvent: false });
+
+    if (this.form.valid)
+      this.write(true, this.form.value);
   }
 
   private legalRepresentativeEnabledChanges(enabled: boolean) {
@@ -68,9 +80,18 @@ export class ProcessCapturePaymentManager extends Manager<ProcessCaptureState> {
       .pipe(ofType(configure))
       .subscribe(({ payload }) => this.configure(payload.payment));
 
+    this.actions$
+      .pipe(takeUntil(this.dispose$))
+      .pipe(ofType(searchBankComplete))
+      .subscribe(({ payload }) => this.configureSwiftControl(payload.swiftCode));
+
     this.form.valueChanges
       .pipe(takeUntil(this.dispose$))
       .subscribe((payment) => this.formChanges(payment));
+
+    this.form.controls.iban.valueChanges
+      .pipe(takeUntil(this.dispose$))
+      .subscribe((iban) => this.ibanChanges(iban!));
 
     this.form.controls.method.valueChanges
       .pipe(takeUntil(this.dispose$))
@@ -92,6 +113,18 @@ export class ProcessCapturePaymentManager extends Manager<ProcessCaptureState> {
       return;
 
     this.write(true, this.form.value);
+  }
+
+  private ibanChanges(iban: string) {
+
+    if (!this.form.controls.iban.valid)
+      return;
+
+    this.dispatch(searchBank({
+      payload: {
+        iban
+      }
+    }));
   }
 
   private methodChanges(method: PaymentMethod) {

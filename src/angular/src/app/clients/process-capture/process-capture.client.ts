@@ -1,11 +1,15 @@
 import { Client } from "../api.client";
 import { Injectable, makeEnvironmentProviders } from "@angular/core";
-import { ProcessCaptureConfigurationModel, ProcessCaptureConfigurationResultModel, ProcessCaptureLegalRepresentativeDeleteModel, ProcessCaptureLegalRepresentativeDeleteResultModel, ProcessCaptureOptionsResultModel, ProcessCapturePatientModel, ProcessCapturePatientResultModel, ProcessCaptureLegalRepresentativeModel, ProcessCaptureLegalRepresentativeResultModel, ProcessCaptureFamilyIncomeStatementModel, ProcessCaptureFamilyIncomeStatementResultModel, ProcessCaptureFamilyIncomeStatementDeleteModel, ProcessCaptureFamilyIncomeStatementDeleteResultModel, ProcessCapturePaymentDeleteModel, ProcessCapturePaymentDeleteResultModel, ProcessCapturePaymentModel, ProcessCapturePaymentResultModel } from "./process-capture.models";
+import { ProcessCaptureConfigurationModel, ProcessCaptureConfigurationResultModel, ProcessCaptureLegalRepresentativeDeleteModel, ProcessCaptureLegalRepresentativeDeleteResultModel, ProcessCaptureOptionsResultModel, ProcessCapturePatientModel, ProcessCapturePatientResultModel, ProcessCaptureLegalRepresentativeModel, ProcessCaptureLegalRepresentativeResultModel, ProcessCaptureFamilyIncomeStatementModel, ProcessCaptureFamilyIncomeStatementResultModel, ProcessCaptureFamilyIncomeStatementDeleteModel, ProcessCaptureFamilyIncomeStatementDeleteResultModel, ProcessCapturePaymentDeleteModel, ProcessCapturePaymentDeleteResultModel, ProcessCapturePaymentModel, ProcessCapturePaymentResultModel, ProcessCaptureBankResultModel } from "./process-capture.models";
 
 @Injectable()
 export class ProcessCaptureClient extends Client {
 
   protected override baseAddress: string = '/api/features/process-capture';
+
+  readonly getBank = (iban: string) =>
+
+    this.get<ProcessCaptureBankResultModel>('/bank', { params: { iban }});
 
   readonly deleteFamilyIncomeStatement = (model: ProcessCaptureFamilyIncomeStatementDeleteModel) =>
 

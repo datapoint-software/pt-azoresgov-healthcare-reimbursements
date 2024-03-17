@@ -1,7 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
+import { clearBankResult, configure, deleteFamilyIncomeStatement, deleteFamilyIncomeStatementComplete, deleteLegalRepresentative, deleteLegalRepresentativeComplete, dispose, init, searchBankComplete, writeConfiguration, writeConfigurationComplete, writeFamilyIncomeStatement, writeFamilyIncomeStatementComplete, writeLegalRepresentative, writeLegalRepresentativeComplete, writePatient, writePatientComplete, writePayment, writePaymentComplete } from "./process-capture.actions";
 import { ProcessCaptureState } from "./process-capture.state";
-import { configure, deleteFamilyIncomeStatement, deleteFamilyIncomeStatementComplete, deleteLegalRepresentative, deleteLegalRepresentativeComplete, dispose, init, writeConfiguration, writeConfigurationComplete, writeFamilyIncomeStatement, writeFamilyIncomeStatementComplete, writeLegalRepresentative, writeLegalRepresentativeComplete, writePatient, writePatientComplete, writePayment, writePaymentComplete } from "./process-capture.actions";
-import { writting } from "./process-capture.selectors";
 
 export const reducer = createReducer(
 
@@ -11,6 +10,18 @@ export const reducer = createReducer(
   on(init, () => (undefined as unknown as ProcessCaptureState)),
 
   on(configure, (_, { payload }) => ({ ...payload })),
+
+  on(clearBankResult, (state) => ({
+    ...state,
+    bank: undefined
+  })),
+
+  on(searchBankComplete, (state, { payload }) => ({
+    ...state,
+    bank: {
+      ...payload
+    }
+  })),
 
   on(deleteFamilyIncomeStatement, (state) => ({
     ...state,

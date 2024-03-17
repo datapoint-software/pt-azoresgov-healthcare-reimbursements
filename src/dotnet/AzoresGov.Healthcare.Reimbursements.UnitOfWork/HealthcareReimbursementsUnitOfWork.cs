@@ -10,6 +10,8 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork
         {
         }
 
+        public DbSet<Bank> Banks { get; set; } = default!;
+
         public DbSet<Entity> Entities { get; set; } = default!;
         
         public DbSet<EntityParentEntity> EntityParentEntities { get; set; } = default!;

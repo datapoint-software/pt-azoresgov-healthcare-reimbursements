@@ -19,6 +19,22 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
         }
 
         [Authorize("administrative")]
+        [HttpGet("bank")]
+        public async Task<ProcessCaptureBankResultModel> GetBankAsync(
+            [FromQuery] string iban,
+            CancellationToken ct)
+        {
+            var result = await _mediator.HandleQueryAsync<ProcessCaptureBankQuery, ProcessCaptureBankResult>(
+                new ProcessCaptureBankQuery(
+                    iban),
+                ct);
+
+            return new ProcessCaptureBankResultModel(
+                result.Name,
+                result.SwiftCode);
+        }
+
+        [Authorize("administrative")]
         [HttpPost("delete-legal-representative")]
         public async Task<ProcessCaptureLegalRepresentativeDeleteResultModel> DeleteLegalRepresentativeAsync(
             [FromBody] ProcessCaptureLegalRepresentativeDeleteModel model,

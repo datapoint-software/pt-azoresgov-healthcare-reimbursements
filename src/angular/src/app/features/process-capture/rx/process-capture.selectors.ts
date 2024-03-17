@@ -4,6 +4,12 @@ import { ProcessCaptureState } from "./process-capture.state";
 
 export const state = createFeatureSelector<ProcessCaptureState>(FEATURE_NAME);
 
+export const bank = createSelector(state, state => state.bank);
+
+export const bankName = createSelector(bank, bank => bank?.name);
+
+export const bankSwiftCode = createSelector(bank, bank => bank?.swiftCode);
+
 export const configuration = createSelector(state, state => state.configuration);
 
 export const configurationRowVersionId = createSelector(configuration, configuration => configuration?.rowVersionId);

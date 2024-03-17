@@ -1,12 +1,13 @@
-import { Actions, concatLatestFrom, createEffect, ofType } from "@ngrx/effects";
-import { configure, deleteFamilyIncomeStatement, deleteFamilyIncomeStatementComplete, deleteLegalRepresentative, deleteLegalRepresentativeComplete, dispose, init, writeConfiguration, writeConfigurationComplete, writeFamilyIncomeStatement, writeFamilyIncomeStatementComplete, writeLegalRepresentative, writeLegalRepresentativeComplete, writePatient, writePatientComplete, writePayment, writePaymentComplete } from "./process-capture.actions";
 import { Injectable } from "@angular/core";
-import { debounce, debounceTime, filter, map, mergeMap, of, switchMap, tap, timer } from "rxjs";
-import { ProcessCaptureClient } from "../../../clients/process-capture/process-capture.client";
+import { Actions, concatLatestFrom, createEffect, ofType } from "@ngrx/effects";
 import { Store } from "@ngrx/store";
+import { debounce, filter, map, mergeMap, of, tap, timer } from "rxjs";
+import { APP_AUTOSAVE_DELAY_MS, APP_AUTOSAVE_QUICK_DELAY_MS } from "../../../app.constants";
+import { ProcessCaptureClient } from "../../../clients/process-capture/process-capture.client";
+import { catchConflict } from "../../feature-rx.helpers";
+import { clearBankResult, configure, deleteFamilyIncomeStatement, deleteFamilyIncomeStatementComplete, deleteLegalRepresentative, deleteLegalRepresentativeComplete, init, searchBank, searchBankComplete, writeConfiguration, writeConfigurationComplete, writeFamilyIncomeStatement, writeFamilyIncomeStatementComplete, writeLegalRepresentative, writeLegalRepresentativeComplete, writePatient, writePatientComplete, writePayment, writePaymentComplete } from "./process-capture.actions";
 
 import * as $$ from "./process-capture.selectors";
-import { APP_AUTOSAVE_DELAY_MS, APP_AUTOSAVE_QUICK_DELAY_MS } from "../../../app.constants";
 
 @Injectable()
 export class ProcessCaptureEffects {
@@ -93,6 +94,14 @@ export class ProcessCaptureEffects {
           }
         }
       }))
+    ))
+  ));
+
+  readonly searchBank$ = createEffect(() => this.actions$.pipe(
+    ofType(searchBank),
+    mergeMap(({ payload }) => this.processCaptureClient.getBank(payload.iban).pipe(
+      map((bank) => searchBankComplete({ payload: bank })),
+      catchConflict(() => of(clearBankResult()))
     ))
   ));
 

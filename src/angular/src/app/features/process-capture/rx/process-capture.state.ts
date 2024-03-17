@@ -1,6 +1,7 @@
-import { ProcessCaptureOptionsConfigurationResultModel, ProcessCaptureOptionsEntityResultModel, ProcessCaptureOptionsFamilyIncomeStatementResultModel, ProcessCaptureOptionsPatientLegalRepresentativeResultModel, ProcessCaptureOptionsPatientResultModel, ProcessCaptureOptionsPaymentResultModel, ProcessCaptureOptionsProcessResultModel } from "../../../clients/process-capture/process-capture.models";
+import { ProcessCaptureBankResultModel, ProcessCaptureOptionsConfigurationResultModel, ProcessCaptureOptionsEntityResultModel, ProcessCaptureOptionsFamilyIncomeStatementResultModel, ProcessCaptureOptionsPatientLegalRepresentativeResultModel, ProcessCaptureOptionsPatientResultModel, ProcessCaptureOptionsPaymentResultModel, ProcessCaptureOptionsProcessResultModel } from "../../../clients/process-capture/process-capture.models";
 
 export interface ProcessCaptureState {
+  bank?: ProcessCaptureBankResultModel;
   configuration?: ProcessCaptureOptionsConfigurationResultModel & { writting: boolean };
   entity: ProcessCaptureOptionsEntityResultModel;
   familyIncomeStatement?: ProcessCaptureOptionsFamilyIncomeStatementResultModel & { writting: boolean; };

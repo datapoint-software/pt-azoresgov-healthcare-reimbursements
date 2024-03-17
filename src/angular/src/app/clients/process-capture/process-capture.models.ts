@@ -4,6 +4,11 @@ import { PaymentMethod } from "../../enums/payment-method.enum";
 import { PaymentReceiver } from "../../enums/payment-receiver.enum";
 import { ProcessStatus } from "../../enums/process-status.enum";
 
+export interface ProcessCaptureBankResultModel {
+  name: string;
+  swiftCode: string;
+}
+
 export interface ProcessCaptureConfigurationModel {
   processId: string;
   processRowVersionId: string;

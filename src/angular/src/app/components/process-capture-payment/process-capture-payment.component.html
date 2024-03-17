@@ -64,8 +64,12 @@
               [id]="iban.name"
               [placeholder]="iban.label"
               class="form-control"
+              oninput="this.value = this.value.toUpperCase()"
               tabindex="3"
               type="text" />
+            @if(processCapture.payment.bankName$ | async; as bankName) {
+              <div class="form-text text-uppercase mt-1">{{bankName}}</div>
+            }
           </app-form-group>
         </div>
         <div class="col-12 col-lg-4">
@@ -81,6 +85,7 @@
               [id]="swift.name"
               [placeholder]="swift.label"
               class="form-control"
+              oninput="this.value = this.value.toUpperCase()"
               tabindex="4"
               type="text" />
           </app-form-group>

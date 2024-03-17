@@ -18,7 +18,16 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
         private readonly IUserEntityRepository _userEntities;
 
         private readonly IUserRepository _users;
-        
+
+        public ProcessCapturePaymentDeleteCommandHandler(IProcessPaymentConfigurationRepository processPaymentSettings, IProcessPaymentWireTransferConfigurationRepository processPaymentWireTransferSettings, IProcessRepository processes, IUserEntityRepository userEntities, IUserRepository users)
+        {
+            _processPaymentSettings = processPaymentSettings;
+            _processPaymentWireTransferSettings = processPaymentWireTransferSettings;
+            _processes = processes;
+            _userEntities = userEntities;
+            _users = users;
+        }
+
         public async Task<ProcessCapturePaymentDeleteResult> HandleCommandAsync(
             ProcessCapturePaymentDeleteCommand command,
             CancellationToken ct)

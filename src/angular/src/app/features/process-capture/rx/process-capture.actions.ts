@@ -4,6 +4,10 @@ import { ProcessCaptureState } from "./process-capture.state";
 import { PaymentMethod } from "../../../enums/payment-method.enum";
 import { PaymentReceiver } from "../../../enums/payment-receiver.enum";
 
+export const clearBankResult = createAction(
+  `${FEATURE_ACTION_PREFIX}/clear-bank`
+);
+
 export const deleteFamilyIncomeStatement = createAction(
   `${FEATURE_ACTION_PREFIX}/delete-family-income-statement`
 );
@@ -48,6 +52,25 @@ export const configure = createAction(
 
 export const dispose = createAction(
   `${FEATURE_ACTION_PREFIX}/dispose`
+);
+
+export const searchBank = createAction(
+  `${FEATURE_ACTION_PREFIX}/search-bank`,
+  props<{
+    payload: {
+      iban: string;
+    };
+  }>()
+);
+
+export const searchBankComplete = createAction(
+  `${FEATURE_ACTION_PREFIX}/search-bank-complete`,
+  props<{
+    payload: {
+      name: string;
+      swiftCode: string;
+    }
+  }>()
 );
 
 export const writeConfiguration = createAction(
