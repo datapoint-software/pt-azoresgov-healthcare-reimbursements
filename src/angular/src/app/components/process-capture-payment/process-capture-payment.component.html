@@ -84,6 +84,7 @@
               [formControl]="swift.control"
               [id]="swift.name"
               [placeholder]="swift.label"
+              [readOnly]="(processCapture.payment.bankName$ | async)"
               class="form-control"
               oninput="this.value = this.value.toUpperCase()"
               tabindex="4"

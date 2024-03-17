@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
 import { Actions, concatLatestFrom, createEffect, ofType } from "@ngrx/effects";
 import { Store } from "@ngrx/store";
-import { debounce, filter, map, mergeMap, of, tap, timer } from "rxjs";
+import { NEVER, debounce, filter, map, mergeMap, of, tap, timer } from "rxjs";
 import { APP_AUTOSAVE_DELAY_MS, APP_AUTOSAVE_QUICK_DELAY_MS } from "../../../app.constants";
 import { ProcessCaptureClient } from "../../../clients/process-capture/process-capture.client";
-import { catchConflict } from "../../feature-rx.helpers";
+import { catchBadRequest, catchConflict } from "../../feature-rx.helpers";
 import { clearBankResult, configure, deleteFamilyIncomeStatement, deleteFamilyIncomeStatementComplete, deleteLegalRepresentative, deleteLegalRepresentativeComplete, init, searchBank, searchBankComplete, writeConfiguration, writeConfigurationComplete, writeFamilyIncomeStatement, writeFamilyIncomeStatementComplete, writeLegalRepresentative, writeLegalRepresentativeComplete, writePatient, writePatientComplete, writePayment, writePaymentComplete } from "./process-capture.actions";
 
 import * as $$ from "./process-capture.selectors";
@@ -69,31 +69,40 @@ export class ProcessCaptureEffects {
   readonly init$ = createEffect(() => this.actions$.pipe(
     ofType(init),
     mergeMap(({ payload }) => this.processCaptureClient.getOptions(payload.processId).pipe(
-      map((response) => configure({
-        payload: {
-          ...response,
-          configuration: response.configuration && {
-            ...response.configuration,
-            writting: false
-          },
-          familyIncomeStatement: response.familyIncomeStatement && {
-            ...response.familyIncomeStatement,
-            writting: false
-          },
-          patient: {
-            ...response.patient,
-            writting: false
-          },
-          legalRepresentative: response.patientLegalRepresentative && {
-            ...response.patientLegalRepresentative,
-            writting: false
-          },
-          payment: response.payment && {
-            ...response.payment,
-            writting: false
+      mergeMap((response) => [
+        configure({
+          payload: {
+            ...response,
+            configuration: response.configuration && {
+              ...response.configuration,
+              writting: false
+            },
+            familyIncomeStatement: response.familyIncomeStatement && {
+              ...response.familyIncomeStatement,
+              writting: false
+            },
+            patient: {
+              ...response.patient,
+              writting: false
+            },
+            legalRepresentative: response.patientLegalRepresentative && {
+              ...response.patientLegalRepresentative,
+              writting: false
+            },
+            payment: response.payment && {
+              ...response.payment,
+              writting: false
+            }
           }
-        }
-      }))
+        }),
+        ...(response.payment?.iban ? [
+          searchBank({
+            payload: {
+              iban: response.payment.iban
+            }
+          })
+        ] : [])
+      ])
     ))
   ));
 
@@ -101,7 +110,8 @@ export class ProcessCaptureEffects {
     ofType(searchBank),
     mergeMap(({ payload }) => this.processCaptureClient.getBank(payload.iban).pipe(
       map((bank) => searchBankComplete({ payload: bank })),
-      catchConflict(() => of(clearBankResult()))
+      catchBadRequest(() => NEVER),
+      catchConflict(() => NEVER)
     ))
   ));
 

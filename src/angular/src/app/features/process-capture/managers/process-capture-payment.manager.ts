@@ -2,12 +2,12 @@ import { Injectable } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { Manager } from "../../feature.abstractions";
-import { bankName, paymentConfigurationRowVersionId, paymentWritting, state } from "../rx/process-capture.selectors";
+import { bankName, bankSwiftCode, paymentConfigurationRowVersionId, paymentWritting, state } from "../rx/process-capture.selectors";
 import { ProcessCaptureState } from "../rx/process-capture.state";
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
 import { Actions, ofType } from "@ngrx/effects";
-import { map, takeUntil } from "rxjs";
-import { configure, searchBank, searchBankComplete, writePayment } from "../rx/process-capture.actions";
+import { map, switchMap, take, takeUntil } from "rxjs";
+import { clearBankResult, configure, searchBank, searchBankComplete, writePayment } from "../rx/process-capture.actions";
 import { ProcessCaptureOptionsPaymentResultModel } from "../../../clients/process-capture/process-capture.models";
 import { PaymentReceiver } from "../../../enums/payment-receiver.enum";
 import { PaymentMethod } from "../../../enums/payment-method.enum";
@@ -19,6 +19,8 @@ import { Validators } from "../../../app.validators";
 export class ProcessCapturePaymentManager extends Manager<ProcessCaptureState> {
 
   public readonly bankName$ = this.of(bankName);
+
+  public readonly bankSwiftCode$ = this.of(bankSwiftCode);
 
   public readonly written$ = this.of(paymentConfigurationRowVersionId)
     .pipe(map((paymentConfigurationRowVersionId) => !!paymentConfigurationRowVersionId));
@@ -56,19 +58,36 @@ export class ProcessCapturePaymentManager extends Manager<ProcessCaptureState> {
     this.methodChanges(method);
   }
 
-  private configureSwiftControl(swift: string) {
+  private configureSwiftControl(swiftCode: string) {
 
-    this.form.controls.swift.reset(swift, { emitEvent: false });
+    const swiftCodeControl = this.form.controls.swift;
 
-    if (this.form.valid)
-      this.write(true, this.form.value);
+    if (swiftCode === swiftCodeControl.value)
+      return;
+
+    swiftCodeControl.setValue(swiftCode, { emitEvent: true });
   }
 
   private legalRepresentativeEnabledChanges(enabled: boolean) {
 
     if (this.form.controls.receiver.value === PaymentReceiver.LegalRepresentative && !enabled) {
-      this.form.controls.receiver.setValue(PaymentReceiver.Patient);
+      this.form.controls.receiver.reset(PaymentReceiver.Patient, { emitEvent: true });
     }
+  }
+
+  private ibanChanges(iban: string) {
+
+    if (!this.form.controls.iban.valid) {
+      this.form.controls.swift.reset(null, { emitEvent: false });
+      this.dispatch(clearBankResult());
+      return;
+    }
+
+    this.dispatch(searchBank({
+      payload: {
+        iban
+      }
+    }));
   }
 
   public override async init(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot) {
@@ -115,18 +134,6 @@ export class ProcessCapturePaymentManager extends Manager<ProcessCaptureState> {
     this.write(true, this.form.value);
   }
 
-  private ibanChanges(iban: string) {
-
-    if (!this.form.controls.iban.valid)
-      return;
-
-    this.dispatch(searchBank({
-      payload: {
-        iban
-      }
-    }));
-  }
-
   private methodChanges(method: PaymentMethod) {
 
     const enabled = method === PaymentMethod.WireTransfer;
@@ -139,8 +146,11 @@ export class ProcessCapturePaymentManager extends Manager<ProcessCaptureState> {
     ]);
 
     if (!enabled) {
+
       for (const c of [ iban, swift ])
         c.reset(null, { emitEvent: false });
+
+      this.dispatch(clearBankResult());
     }
   }
 

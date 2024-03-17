@@ -8,9 +8,11 @@ export const invalid = (control: FormControl) =>
 
 export const setControlsEnabled = (enabled: boolean, controls: Array<FormControl>) => {
 
+  const co = { emitEvent: false };
+
   const fn = (enabled) ?
-    ((c: FormControl) => c.enable()) :
-    ((c: FormControl) => c.disable());
+    ((c: FormControl) => c.enable(co)) :
+    ((c: FormControl) => c.disable(co));
 
   for (let control of controls)
     fn(control);

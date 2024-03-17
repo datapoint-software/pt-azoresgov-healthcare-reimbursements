@@ -13,6 +13,11 @@ export const catchStatus = <T, O extends ObservableInput<any>>(
       : throwError(() => e)
   );
 
+export const catchBadRequest = <T, O extends ObservableInput<any>>(
+  selector: (error: ErrorResponseModel, response: HttpErrorResponse, caught: Observable<unknown>) => O | Observable<never>
+) : OperatorFunction<T, T | ObservedValueOf<O>> =>
+
+  catchStatus(400, selector);
 
 export const catchConflict = <T, O extends ObservableInput<any>>(
   selector: (error: ErrorResponseModel, response: HttpErrorResponse, caught: Observable<unknown>) => O | Observable<never>

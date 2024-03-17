@@ -7,50 +7,45 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Helpers
 {
     internal static class FluentValidationHelper
     {
-        private static readonly Regex IbanRegex = new Regex(@"^[A-Z]{2}\d{2}[A-Z0-9]+$", RegexOptions.Compiled);
+        private static readonly Regex IbanRegex = new Regex(@"^[A-Z]{2}\d{2}[A-Z0-9]{4,}$", RegexOptions.Compiled);
         
         internal static IRuleBuilderOptions<T, string> Iban<T>(this IRuleBuilder<T, string> ruleBuilder) =>
 
-            (IRuleBuilderOptions<T, string>) ruleBuilder.Custom((iban, context) =>
+            ruleBuilder.Must((iban) =>
             {
                 if (string.IsNullOrEmpty(iban))
-                    return;
+                    return true;
 
-                if (iban.Length > 4 && IbanRegex.IsMatch(iban))
+                if (iban.Length < 8 || !IbanRegex.IsMatch(iban))
+                    return false;
+
+                iban = iban.ToUpper();
+
+                var inverse = iban[4..] + iban[0..4];
+
+                var strb = new StringBuilder();
+
+                foreach (var chr in inverse)
                 {
-                    iban = iban.ToUpper();
+                    var cv = char.IsLetter(chr)
+                        ? ((int) chr) - 55
+                        : int.Parse(chr.ToString());
 
-                    var inverse = iban[4..] + iban[0..4];
-
-                    var strb = new StringBuilder();
-
-                    foreach (var chr in inverse)
-                    {
-                        var cv = char.IsLetter(chr)
-                            ? ((int) chr) - 55
-                            : int.Parse(chr.ToString());
-
-                        strb.Append(cv);
-                    }
-
-                    var str = strb.ToString();
-                    var cm = int.Parse(str[..1]);
-
-                    for (var i = 1; i < str.Length; ++i)
-                    {
-                        cm *= 10;
-                        cm += int.Parse(str.Substring(i, 1));
-                        cm %= 97;
-                    }
-
-                    if (cm == 1)
-                        return;
+                    strb.Append(cv);
                 }
-                
-                context.AddFailure(new ValidationFailure(
-                    context.PropertyPath,
-                    "Este campo requere um número de identificação bancário válido.",
-                    iban));
-            });
+
+                var str = strb.ToString();
+                var cm = int.Parse(str[..1]);
+
+                for (var i = 1; i < str.Length; ++i)
+                {
+                    cm *= 10;
+                    cm += int.Parse(str.Substring(i, 1));
+                    cm %= 97;
+                }
+
+                return cm == 1;
+            })
+            .WithMessage("Este campo requere um número de identificação bancário válido.");
     }
 }
