@@ -4,14 +4,14 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
 {
     public sealed class ProcessCaptureSimulationResult
     {
-        public ProcessCaptureSimulationResult(IReadOnlyCollection<ProcessCaptureSimulationLineResult> lines, decimal percentage)
+        public ProcessCaptureSimulationResult(IReadOnlyCollection<ProcessCaptureSimulationLineResult> lines, decimal multiplier)
         {
             Lines = lines;
-            Percentage = percentage;
+            Multiplier = multiplier;
         }
 
         public IReadOnlyCollection<ProcessCaptureSimulationLineResult> Lines { get; }
 
-        public decimal Percentage { get; set; }
+        public decimal Multiplier { get; set; }
     }
 }
