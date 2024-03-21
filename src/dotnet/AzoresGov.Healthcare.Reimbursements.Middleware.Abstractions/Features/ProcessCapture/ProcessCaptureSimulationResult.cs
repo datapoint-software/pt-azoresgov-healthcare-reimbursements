@@ -12,6 +12,6 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
 
         public IReadOnlyCollection<ProcessCaptureSimulationLineResult> Lines { get; }
 
-        public decimal Multiplier { get; set; }
+        public decimal Multiplier { get; }
     }
 }
