@@ -102,7 +102,7 @@ export class ProcessCaptureSimulationManager extends Manager<ProcessCaptureState
       const ias = iasConfiguration.amount;
       const iasStr = ias.toLocaleString(APP_LOCALE) + ' €';
 
-      const raaf = familyIncomeStatement.familyIncome!;
+      const raaf = parseFloat(familyIncomeStatement.familyIncome!.toString());
       const raafStr = raaf.toLocaleString(APP_LOCALE) + ' €';
 
       const ag = familyIncomeStatement.familyMemberCount!;
