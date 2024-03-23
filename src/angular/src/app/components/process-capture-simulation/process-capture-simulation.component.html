@@ -1,36 +1,64 @@
-<div class="card">
-  <div class="card-header">
-    <h4 class="card-header-title">
-      Simulação
-    </h4>
-  </div>
-  @if ((simulation.result$ | async); as result) {
-    <div class="card-body">
-      <table class="table">
-        <thead>
-          <tr>
-            <th colspan="2">Simulação</th>
-          </tr>
-        </thead>
-        @if(result.lines.length) {
-          <tbody>
-            @for(line of result.lines; track $index) {
-              <tr [class.text-muted]="!line.factor">
-                <td [attr.colspan]="line.factor ? 1 : 2">{{ line.description }}</td>
-                @if (line.factor) {
-                  <td class="text-end">{{ line.factor }}</td>
-                }
-              </tr>
-            }
-          </tbody>
-        }
-        <tfoot>
-          <tr>
-            <td class="fw-bold">Percentagem atribuída</td>
-            <td class="fw-bold text-end">{{ result.multiplier * 100 }}%</td>
-          </tr>
-        </tfoot>
-      </table>
+
+@if ((processCapture.simulation.result$ | async); as result) {
+  <div class="card">
+    <div class="card-header">
+      <h4 class="card-header-title">
+        Simulação
+      </h4>
     </div>
-  }
+      <div class="card-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th colspan="2">Simulação</th>
+            </tr>
+          </thead>
+          @if(result.lines.length) {
+            <tbody>
+              @for(line of result.lines; track $index) {
+                <tr [class.text-muted]="!line.factor">
+                  <td [attr.colspan]="line.factor ? 1 : 2">{{ line.description }}</td>
+                  @if (line.factor) {
+                    <td class="text-end">{{ line.factor }}</td>
+                  }
+                </tr>
+              }
+            </tbody>
+          }
+          <tfoot>
+            <tr>
+              <td class="fw-bold">Percentagem atribuída</td>
+              <td class="fw-bold text-end">{{ result.multiplier * 100 }}%</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+  </div>
+  <div class="text-end">
+    @if (processCapture.writting$ | async) {
+      <button class="btn btn-light" disabled>A guardar as alterações...</button>
+    }
+    @else {
+      <button class="btn btn-primary" (click)="confirmation.open()">Continuar</button>
+    }
+  </div>
+}
+
+<div class="modal-backdrop fade show" *ngIf="confirmation.visible"></div>
+<div #confirmation="modal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Carregamento de documentos</h5>
+      </div>
+      <div class="modal-body">
+        <p class="my-2">O processo de reembolso será transferido para a fase de
+          <strong class="text-nowrap">{{ (ProcessStatus.DocumentUpload | processStatus).toLowerCase() }}</strong>.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="confirmation.close()">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="processCapture.complete()">Confirmar</button>
+      </div>
+    </div>
+  </div>
 </div>

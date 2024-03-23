@@ -44,6 +44,10 @@ export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
     ]);
   }
 
+  public complete() {
+
+  }
+
   protected override dispose$$$() {
     return dispose();
   }

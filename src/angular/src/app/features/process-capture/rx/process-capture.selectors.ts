@@ -64,6 +64,15 @@ export const processNumber = createSelector(process, process => process.number);
 
 export const writting = createSelector(
   configurationWritting,
+  familyIncomeStatementWritting,
+  legalRepresentativeWritting,
   patientWritting,
-  (configuration, patient) => configuration || patient
+  paymentWritting,
+  (configuration, familyIncomeStatement, legalRepresentative, patient, payment) => (
+    configuration ||
+    familyIncomeStatement ||
+    legalRepresentative ||
+    patient ||
+    payment
+  )
 );

@@ -1,10 +1,15 @@
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
-import { ProcessCaptureSimulationManager } from "../../features/process-capture/managers/process-capture-simulation.manager";
+import { ModalDirective } from "../../directives/modal.directive";
+import { ProcessCaptureFeature } from "../../features/process-capture/process-capture.feature";
+import { ProcessStatusPipe } from "../../pipes/process-status.pipe";
+import { ProcessStatus } from "../../enums/process-status.enum";
 
 @Component({
   imports: [
-    CommonModule
+    CommonModule,
+    ModalDirective,
+    ProcessStatusPipe
   ],
   selector: 'app-process-capture-simulation',
   standalone: true,
@@ -12,7 +17,15 @@ import { ProcessCaptureSimulationManager } from "../../features/process-capture/
 })
 export class ProcessCaptureSimulationComponent {
 
+  public readonly ProcessStatus = ProcessStatus;
+
+  public showConfirmationModal = false;
+
   constructor(
-    public readonly simulation: ProcessCaptureSimulationManager
+    public readonly processCapture: ProcessCaptureFeature
   ) {}
+
+  continueClick() {
+    this.showConfirmationModal = true;
+  }
 }
