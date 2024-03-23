@@ -1,11 +1,17 @@
 import { Client } from "../api.client";
 import { Injectable, makeEnvironmentProviders } from "@angular/core";
-import { ProcessCaptureConfigurationModel, ProcessCaptureConfigurationResultModel, ProcessCaptureLegalRepresentativeDeleteModel, ProcessCaptureLegalRepresentativeDeleteResultModel, ProcessCaptureOptionsResultModel, ProcessCapturePatientModel, ProcessCapturePatientResultModel, ProcessCaptureLegalRepresentativeModel, ProcessCaptureLegalRepresentativeResultModel, ProcessCaptureFamilyIncomeStatementModel, ProcessCaptureFamilyIncomeStatementResultModel, ProcessCaptureFamilyIncomeStatementDeleteModel, ProcessCaptureFamilyIncomeStatementDeleteResultModel, ProcessCapturePaymentDeleteModel, ProcessCapturePaymentDeleteResultModel, ProcessCapturePaymentModel, ProcessCapturePaymentResultModel, ProcessCaptureBankResultModel } from "./process-capture.models";
+import { ProcessCaptureConfigurationModel, ProcessCaptureConfigurationResultModel, ProcessCaptureLegalRepresentativeDeleteModel, ProcessCaptureLegalRepresentativeDeleteResultModel, ProcessCaptureOptionsResultModel, ProcessCapturePatientModel, ProcessCapturePatientResultModel, ProcessCaptureLegalRepresentativeModel, ProcessCaptureLegalRepresentativeResultModel, ProcessCaptureFamilyIncomeStatementModel, ProcessCaptureFamilyIncomeStatementResultModel, ProcessCaptureFamilyIncomeStatementDeleteModel, ProcessCaptureFamilyIncomeStatementDeleteResultModel, ProcessCapturePaymentDeleteModel, ProcessCapturePaymentDeleteResultModel, ProcessCapturePaymentModel, ProcessCapturePaymentResultModel, ProcessCaptureBankResultModel, ProcessCaptureCompleteModel, ProcessCaptureCompleteResultModel } from "./process-capture.models";
 
 @Injectable()
 export class ProcessCaptureClient extends Client {
 
   protected override baseAddress: string = '/api/features/process-capture';
+
+  readonly complete = (model: ProcessCaptureCompleteModel) =>
+
+    this.post<ProcessCaptureCompleteModel, ProcessCaptureCompleteResultModel>(
+      '/complete',
+      model);
 
   readonly getBank = (iban: string) =>
 

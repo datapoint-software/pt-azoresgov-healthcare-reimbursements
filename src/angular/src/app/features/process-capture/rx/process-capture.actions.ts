@@ -43,6 +43,10 @@ export const init = createAction(
   }>()
 );
 
+export const complete = createAction(
+  `${FEATURE_ACTION_PREFIX}/complete`
+);
+
 export const configure = createAction(
   `${FEATURE_ACTION_PREFIX}/configure`,
   props<{
@@ -71,6 +75,10 @@ export const searchBankComplete = createAction(
       swiftCode: string;
     }
   }>()
+);
+
+export const showRedirectDialog = createAction(
+  `${FEATURE_ACTION_PREFIX}/show-redirect-dialog`
 );
 
 export const writeConfiguration = createAction(

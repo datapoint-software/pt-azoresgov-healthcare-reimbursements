@@ -9,14 +9,16 @@ import { ProcessCaptureLegalRepresentativeManager } from "./process-capture-lega
 import { ProcessCapturePatientManager } from "./process-capture-patient.manager";
 import { ProcessCapturePaymentManager } from "./process-capture-payment.manager";
 import { combineLatest, filter, map, mergeMap, of, startWith, takeUntil, tap } from "rxjs";
-import { concatLatestFrom } from "@ngrx/effects";
+import { Actions, concatLatestFrom, ofType } from "@ngrx/effects";
 import { APP_LOCALE } from "../../../app.constants";
+import { complete, showRedirectDialog } from "../rx/process-capture.actions";
 
 @Injectable()
 export class ProcessCaptureSimulationManager extends Manager<ProcessCaptureState> {
 
   constructor(
     store: Store,
+    private readonly actions$: Actions,
     private readonly configuration: ProcessCaptureConfigurationManager,
     private readonly familyIncomeStatement: ProcessCaptureFamilyIncomeStatementManager,
     private readonly legalRepresentative: ProcessCaptureLegalRepresentativeManager,
@@ -124,7 +126,15 @@ export class ProcessCaptureSimulationManager extends Manager<ProcessCaptureState
         )
       });
     }),
-  )
+  );
+
+  public readonly showRedirectDialog$ = this.actions$
+    .pipe(ofType(showRedirectDialog))
+    .pipe(map(() => true));
+
+  public complete() {
+    this.dispatch(complete());
+  }
 }
 
 interface SimulationResult {

@@ -35,6 +35,24 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCapture
         }
 
         [Authorize("administrative")]
+        [HttpPost("complete")]
+        public async Task<ProcessCaptureCompleteResultModel> CompleteAsync(
+            [FromBody] ProcessCaptureCompleteModel model,
+            CancellationToken ct)
+        {
+            var result = await _mediator.HandleCommandAsync<ProcessCaptureCompleteCommand, ProcessCaptureCompleteResult>(
+                new ProcessCaptureCompleteCommand(
+                    User.GetId(),
+                    model.ProcessId,
+                    model.ProcessRowVersionId),
+                ct);
+
+            return new ProcessCaptureCompleteResultModel(
+                result.ProcessRowVersionId,
+                result.Status);
+        }
+
+        [Authorize("administrative")]
         [HttpPost("delete-legal-representative")]
         public async Task<ProcessCaptureLegalRepresentativeDeleteResultModel> DeleteLegalRepresentativeAsync(
             [FromBody] ProcessCaptureLegalRepresentativeDeleteModel model,

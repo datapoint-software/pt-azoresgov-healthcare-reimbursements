@@ -8,13 +8,13 @@ import { ProcessCaptureFamilyIncomeStatementManager } from "./managers/process-c
 import { ProcessCaptureLegalRepresentativeManager } from "./managers/process-capture-legal-representative.manager";
 import { ProcessCapturePatientManager } from "./managers/process-capture-patient.manager";
 import { ProcessCapturePaymentManager } from "./managers/process-capture-payment.manager";
+import { ProcessCaptureSimulationManager } from "./managers/process-capture-simulation.manager";
 import { FEATURE_NAME } from "./process-capture.constants";
 import { dispose, init } from "./rx/process-capture.actions";
 import { ProcessCaptureEffects } from "./rx/process-capture.effects";
 import { reducer } from "./rx/process-capture.reducer";
 import { processId, processNumber, state, writting } from "./rx/process-capture.selectors";
 import { ProcessCaptureState } from "./rx/process-capture.state";
-import { ProcessCaptureSimulationManager } from "./managers/process-capture-simulation.manager";
 
 @Injectable()
 export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
@@ -27,12 +27,12 @@ export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
 
   constructor(
     store: Store,
-    readonly configuration: ProcessCaptureConfigurationManager,
-    readonly familyIncomeStatement: ProcessCaptureFamilyIncomeStatementManager,
-    readonly legalRepresentative: ProcessCaptureLegalRepresentativeManager,
-    readonly patient: ProcessCapturePatientManager,
-    readonly payment: ProcessCapturePaymentManager,
-    readonly simulation: ProcessCaptureSimulationManager
+    public readonly configuration: ProcessCaptureConfigurationManager,
+    public readonly familyIncomeStatement: ProcessCaptureFamilyIncomeStatementManager,
+    public readonly legalRepresentative: ProcessCaptureLegalRepresentativeManager,
+    public readonly patient: ProcessCapturePatientManager,
+    public readonly payment: ProcessCapturePaymentManager,
+    public readonly simulation: ProcessCaptureSimulationManager
   ) {
     super(store, state, [
       configuration,
@@ -42,10 +42,6 @@ export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
       payment,
       simulation
     ]);
-  }
-
-  public complete() {
-
   }
 
   protected override dispose$$$() {

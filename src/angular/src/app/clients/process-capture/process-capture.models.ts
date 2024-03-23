@@ -9,6 +9,16 @@ export interface ProcessCaptureBankResultModel {
   swiftCode: string;
 }
 
+export interface ProcessCaptureCompleteModel {
+  processId: string;
+  processRowVersionId: string;
+}
+
+export interface ProcessCaptureCompleteResultModel {
+  processRowVersionId: string;
+  status: ProcessStatus;
+}
+
 export interface ProcessCaptureConfigurationModel {
   processId: string;
   processRowVersionId: string;

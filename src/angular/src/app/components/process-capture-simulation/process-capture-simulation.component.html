@@ -52,13 +52,36 @@
         <h5 class="modal-title">Carregamento de documentos</h5>
       </div>
       <div class="modal-body">
-        <p class="my-2">O processo de reembolso será transferido para a fase de
+        <p class="my-3">O processo de reembolso será transferido para a fase de
           <strong class="text-nowrap">{{ (ProcessStatus.DocumentUpload | processStatus).toLowerCase() }}</strong>.</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-light" (click)="confirmation.close()">Cancelar</button>
-        <button type="button" class="btn btn-primary" (click)="processCapture.complete()">Confirmar</button>
+        <button type="button" class="btn btn-primary" (click)="processCapture.simulation.complete()">Confirmar</button>
       </div>
     </div>
   </div>
 </div>
+
+<div #redirect="modal" [open$]="processCapture.simulation.showRedirectDialog$" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Carregamento de documentos</h5>
+      </div>
+      <div class="modal-body">
+        <p class="my-3">O processo de reembolso foi transferido para a fase de
+          <strong class="text-nowrap">{{ (ProcessStatus.DocumentUpload | processStatus).toLowerCase() }}</strong> com sucesso.</p>
+        <p>Pode voltar à <strong class="text-nowrap">pesquisa de processos de reembolso</strong> ou iniciar o
+        <strong class="text-nowrap">carregamento de documentos</strong>.</p>
+      </div>
+      <div class="modal-footer">
+        <a type="button" class="btn btn-light" [routerLink]="[ '/processes' ]">Pesquisa</a>
+        @if (processCapture.id$ | async; as id) {
+        <a type="button" class="btn btn-primary" [routerLink]="[ '/processes', id, 'document-upload' ]">Carregamento de Documentos</a>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
