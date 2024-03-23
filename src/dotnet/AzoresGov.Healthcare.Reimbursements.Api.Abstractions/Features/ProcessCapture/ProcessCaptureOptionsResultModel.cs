@@ -2,11 +2,12 @@
 {
     public sealed class ProcessCaptureOptionsResultModel
     {
-        public ProcessCaptureOptionsResultModel(ProcessCaptureOptionsConfigurationResultModel? configuration, ProcessCaptureOptionsEntityResultModel entity, ProcessCaptureOptionsFamilyIncomeStatementResultModel? familyIncomeStatement, ProcessCaptureOptionsEntityResultModel? parentEntity, ProcessCaptureOptionsPatientResultModel patient, ProcessCaptureOptionsPatientLegalRepresentativeResultModel? patientLegalRepresentative, ProcessCaptureOptionsPaymentResultModel? payment, ProcessCaptureOptionsProcessResultModel process)
+        public ProcessCaptureOptionsResultModel(ProcessCaptureOptionsConfigurationResultModel? configuration, ProcessCaptureOptionsEntityResultModel entity, ProcessCaptureOptionsFamilyIncomeStatementResultModel? familyIncomeStatement, ProcessCaptureOptionsIasConfigurationResultModel iasConfiguration, ProcessCaptureOptionsEntityResultModel? parentEntity, ProcessCaptureOptionsPatientResultModel patient, ProcessCaptureOptionsPatientLegalRepresentativeResultModel? patientLegalRepresentative, ProcessCaptureOptionsPaymentResultModel? payment, ProcessCaptureOptionsProcessResultModel process)
         {
             Configuration = configuration;
             Entity = entity;
             FamilyIncomeStatement = familyIncomeStatement;
+            IasConfiguration = iasConfiguration;
             ParentEntity = parentEntity;
             Patient = patient;
             PatientLegalRepresentative = patientLegalRepresentative;
@@ -19,7 +20,9 @@
         public ProcessCaptureOptionsEntityResultModel Entity { get; } 
         
         public ProcessCaptureOptionsFamilyIncomeStatementResultModel? FamilyIncomeStatement { get; }
-        
+
+        public ProcessCaptureOptionsIasConfigurationResultModel IasConfiguration { get; }
+
         public ProcessCaptureOptionsEntityResultModel? ParentEntity { get; }
         
         public ProcessCaptureOptionsPatientResultModel Patient { get; }

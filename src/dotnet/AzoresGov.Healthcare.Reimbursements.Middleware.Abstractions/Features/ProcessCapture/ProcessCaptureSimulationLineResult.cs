@@ -2,14 +2,14 @@
 {
     public sealed class ProcessCaptureSimulationLineResult
     {
-        public ProcessCaptureSimulationLineResult(string description, string? value)
+        public ProcessCaptureSimulationLineResult(string description, decimal? amount)
         {
             Description = description;
-            Value = value;
+            Amount = amount;
         }
 
         public string Description { get; }
 
-        public string? Value { get; }
+        public decimal? Amount { get; }
     }
 }

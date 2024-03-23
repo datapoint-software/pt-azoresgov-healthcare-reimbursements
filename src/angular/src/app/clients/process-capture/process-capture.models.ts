@@ -75,6 +75,11 @@ export interface ProcessCaptureOptionsFamilyIncomeStatementResultModel {
   familyIncome: number;
 }
 
+export interface ProcessCaptureOptionsIasConfigurationResultModel {
+  year: number;
+  amount: number;
+}
+
 export interface ProcessCaptureOptionsPatientLegalRepresentativeResultModel {
   rowVersionId?: string;
   name: string;
@@ -124,6 +129,7 @@ export interface ProcessCaptureOptionsResultModel {
   configuration?: ProcessCaptureOptionsConfigurationResultModel;
   entity: ProcessCaptureOptionsEntityResultModel;
   familyIncomeStatement?: ProcessCaptureOptionsFamilyIncomeStatementResultModel;
+  iasConfiguration: ProcessCaptureOptionsIasConfigurationResultModel;
   parentEntity?: ProcessCaptureOptionsEntityResultModel;
   patient: ProcessCaptureOptionsPatientResultModel;
   patientLegalRepresentative?: ProcessCaptureOptionsPatientLegalRepresentativeResultModel;

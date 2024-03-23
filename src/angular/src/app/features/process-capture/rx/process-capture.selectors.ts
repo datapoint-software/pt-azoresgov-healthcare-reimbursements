@@ -24,6 +24,8 @@ export const familyIncomeStatementRowVersionId = createSelector(familyIncomeStat
 
 export const familyIncomeStatementWritting = createSelector(familyIncomeStatement, familyIncomeStatement => familyIncomeStatement?.writting);
 
+export const iasConfiguration = createSelector(state, state => state.iasConfiguration);
+
 export const legalRepresentative = createSelector(state, state => state.legalRepresentative);
 
 export const legalRepresentativeRowVersionId = createSelector(legalRepresentative, patientLegalRepresentative => patientLegalRepresentative?.rowVersionId);

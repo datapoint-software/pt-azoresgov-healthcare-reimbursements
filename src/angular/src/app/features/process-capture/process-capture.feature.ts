@@ -14,6 +14,7 @@ import { ProcessCaptureEffects } from "./rx/process-capture.effects";
 import { reducer } from "./rx/process-capture.reducer";
 import { processId, processNumber, state, writting } from "./rx/process-capture.selectors";
 import { ProcessCaptureState } from "./rx/process-capture.state";
+import { ProcessCaptureSimulationManager } from "./managers/process-capture-simulation.manager";
 
 @Injectable()
 export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
@@ -30,14 +31,16 @@ export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
     readonly familyIncomeStatement: ProcessCaptureFamilyIncomeStatementManager,
     readonly legalRepresentative: ProcessCaptureLegalRepresentativeManager,
     readonly patient: ProcessCapturePatientManager,
-    readonly payment: ProcessCapturePaymentManager
+    readonly payment: ProcessCapturePaymentManager,
+    readonly simulation: ProcessCaptureSimulationManager
   ) {
     super(store, state, [
       configuration,
       familyIncomeStatement,
       legalRepresentative,
       patient,
-      payment
+      payment,
+      simulation
     ]);
   }
 
@@ -62,7 +65,8 @@ export const provideProcessCaptureFeature = (): Array<EnvironmentProviders> => [
     ProcessCaptureFamilyIncomeStatementManager,
     ProcessCaptureLegalRepresentativeManager,
     ProcessCapturePatientManager,
-    ProcessCapturePaymentManager
+    ProcessCapturePaymentManager,
+    ProcessCaptureSimulationManager
   ]),
 
   provideEffects(ProcessCaptureEffects),

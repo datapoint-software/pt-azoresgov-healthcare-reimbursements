@@ -10,6 +10,8 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
 {
     public sealed class ProcessCaptureOptionsQueryHandler : IQueryHandler<ProcessCaptureOptionsQuery, ProcessCaptureOptionsResult>
     {
+        private readonly IIasConfigurationRepository _iasSettings;
+
         private readonly IEntityRepository _entities;
 
         private readonly IPatientRepository _patients;
@@ -36,8 +38,9 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
         
         private readonly IUserRepository _users;
 
-        public ProcessCaptureOptionsQueryHandler(IEntityRepository entities, IPatientRepository patients, IPatientFamilyIncomeStatementRepository patientFamilyIncomeStatements, IPatientLegalRepresentativeRepository patientLegalRepresentatives, IProcessRepository processes, IProcessPatientFamilyIncomeStatementRepository processPatientFamilyIncomeStatements, IProcessPatientLegalRepresentativeRepository processPatientLegalRepresentatives, IProcessPatientRepository processPatients, IProcessPaymentConfigurationRepository processPaymentSettings, IProcessPaymentWireTransferConfigurationRepository processPaymentWireTransferSettings, IProcessConfigurationRepository processSettings, IUserEntityRepository userEntities, IUserRepository users)
+        public ProcessCaptureOptionsQueryHandler(IIasConfigurationRepository iasSettings, IEntityRepository entities, IPatientRepository patients, IPatientFamilyIncomeStatementRepository patientFamilyIncomeStatements, IPatientLegalRepresentativeRepository patientLegalRepresentatives, IProcessRepository processes, IProcessPatientFamilyIncomeStatementRepository processPatientFamilyIncomeStatements, IProcessPatientLegalRepresentativeRepository processPatientLegalRepresentatives, IProcessPatientRepository processPatients, IProcessPaymentConfigurationRepository processPaymentSettings, IProcessPaymentWireTransferConfigurationRepository processPaymentWireTransferSettings, IProcessConfigurationRepository processSettings, IUserEntityRepository userEntities, IUserRepository users)
         {
+            _iasSettings = iasSettings;
             _entities = entities;
             _patients = patients;
             _patientFamilyIncomeStatements = patientFamilyIncomeStatements;
@@ -72,6 +75,12 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
                 user.Id,
                 process.EntityId,
                 ct);
+
+            var iasConfiguration = await _iasSettings.GetByYearAsync(
+                query.Creation.Year,
+                ct);
+
+            Assert.Found(iasConfiguration);
 
             var configuration = await _processSettings.GetByProcessIdAsync(
                 process.Id,
@@ -152,6 +161,9 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
                             patientFamilyIncomeStatement.FamilyMemberCount,
                             patientFamilyIncomeStatement.FamilyIncome) :
                         null,
+                new ProcessCaptureOptionsIasConfigurationResult(
+                    iasConfiguration.Year,
+                    iasConfiguration.Amount),
                 parentEntity is null
                     ? null
                     : new ProcessCaptureOptionsEntityResult(

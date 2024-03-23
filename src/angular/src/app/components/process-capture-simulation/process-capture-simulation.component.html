@@ -1,1 +1,36 @@
-Simulation
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      Simulação
+    </h4>
+  </div>
+  @if ((simulation.result$ | async); as result) {
+    <div class="card-body">
+      <table class="table">
+        <thead>
+          <tr>
+            <th colspan="2">Simulação</th>
+          </tr>
+        </thead>
+        @if(result.lines.length) {
+          <tbody>
+            @for(line of result.lines; track $index) {
+              <tr [class.text-muted]="!line.factor">
+                <td [attr.colspan]="line.factor ? 1 : 2">{{ line.description }}</td>
+                @if (line.factor) {
+                  <td class="text-end">{{ line.factor }}</td>
+                }
+              </tr>
+            }
+          </tbody>
+        }
+        <tfoot>
+          <tr>
+            <td class="fw-bold">Percentagem atribuída</td>
+            <td class="fw-bold text-end">{{ result.multiplier * 100 }}%</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  }
+</div>
