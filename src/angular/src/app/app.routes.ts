@@ -19,6 +19,7 @@ import { canActivateSignIn } from './guards/sign-in/sign-in.guards';
 import { ProcessCaptureFamilyIncomeStatementComponent } from './components/process-capture-family-income-statement/process-capture-family-income-statement.component';
 import { ProcessCapturePaymentComponent } from './components/process-capture-payment/process-capture-payment.component';
 import { ProcessCaptureSimulationComponent } from './components/process-capture-simulation/process-capture-simulation.component';
+import { ProcessCaptureDocumentsComponent } from './components/process-capture-documents/process-capture-documents.component';
 
 export const routes: Routes = [
   {
@@ -79,6 +80,10 @@ export const routes: Routes = [
                       {
                         path: 'configuration',
                         component: ProcessCaptureConfigurationComponent
+                      },
+                      {
+                        path: 'documents',
+                        component: ProcessCaptureDocumentsComponent
                       },
                       {
                         path: 'legal-representative',

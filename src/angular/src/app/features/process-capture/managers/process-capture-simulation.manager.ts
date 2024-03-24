@@ -12,6 +12,7 @@ import { combineLatest, filter, map, mergeMap, of, startWith, takeUntil, tap } f
 import { Actions, concatLatestFrom, ofType } from "@ngrx/effects";
 import { APP_LOCALE } from "../../../app.constants";
 import { complete, showRedirectDialog } from "../rx/process-capture.actions";
+import { ProcessCaptureDocumentManager } from "./process-capture-document.manager";
 
 @Injectable()
 export class ProcessCaptureSimulationManager extends Manager<ProcessCaptureState> {
@@ -20,6 +21,7 @@ export class ProcessCaptureSimulationManager extends Manager<ProcessCaptureState
     store: Store,
     private readonly actions$: Actions,
     private readonly configuration: ProcessCaptureConfigurationManager,
+    private readonly documents: ProcessCaptureDocumentManager,
     private readonly familyIncomeStatement: ProcessCaptureFamilyIncomeStatementManager,
     private readonly legalRepresentative: ProcessCaptureLegalRepresentativeManager,
     private readonly patient: ProcessCapturePatientManager,
@@ -33,6 +35,9 @@ export class ProcessCaptureSimulationManager extends Manager<ProcessCaptureState
 
       this.configuration.form.valueChanges
         .pipe(startWith(this.configuration.form.value)),
+
+      this.documents.form.valueChanges
+        .pipe(startWith(this.documents.form.value)),
 
       this.familyIncomeStatement.form.valueChanges
         .pipe(startWith(this.familyIncomeStatement.form.value)),
@@ -50,6 +55,7 @@ export class ProcessCaptureSimulationManager extends Manager<ProcessCaptureState
     ])),
     map(([
       configuration,
+      documents,
       familyIncomeStatement,
       legalRepresentative,
       patient,
@@ -57,12 +63,14 @@ export class ProcessCaptureSimulationManager extends Manager<ProcessCaptureState
       paymentConfigurationRowVersionId
     ]) => ({
       configuration,
+      documents,
       familyIncomeStatement,
       legalRepresentative,
       patient,
       payment,
       complete: (
         this.configuration.form.valid &&
+        this.documents.form.valid &&
         this.familyIncomeStatement.form.valid &&
         this.legalRepresentative.form.valid &&
         this.patient.form.valid &&

@@ -1,0 +1,254 @@
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      Faturas
+    </h4>
+  </div>
+  <div class="card-body p-0">
+    <div class="px-4 my-4" *ngIf="documents.form.errors?.['fg:dn:invoice']">
+      <div class="alert alert-danger text-white m-0">
+        O registo da <strong class="text-nowrap">Fatura</strong> é obrigatório para todos os processos de reembolso.
+      </div>
+    </div>
+    @if (invoiceControls.length) {
+      <div class="list-group list-group-flush">
+        @for (invoice of invoiceControls; track $index) {
+          <div [class.bg-light]="($index % 2) !== 0" [formGroup]="invoice" class="list-group-item px-4">
+            <div class="row">
+              <div class="col">
+                <div class="row">
+                  <div class="col-12 col-lg-4">
+                    <app-form-group
+                      #supplierTaxNumber
+                      [label]="'Contribuínte'"
+                      [name]="'supplierTaxNumber'"
+                      class="form-group d-block mb-4">
+                      <!-- Input -->
+                      <input
+                        [class.is-invalid]="supplierTaxNumber.invalid"
+                        [formControl]="supplierTaxNumber.control"
+                        [id]="supplierTaxNumber.name"
+                        [placeholder]="supplierTaxNumber.label"
+                        [tabindex]="1 + ($index * 3)"
+                        class="form-control"
+                        type="text" />
+                    </app-form-group>
+                  </div>
+                  <div class="col-12 col-lg-4">
+                    <app-form-group
+                      #number
+                      [label]="'Documento'"
+                      [name]="'number'"
+                      class="form-group d-block mb-4">
+                      <!-- Input -->
+                      <input
+                        [class.is-invalid]="number.invalid"
+                        [formControl]="number.control"
+                        [id]="number.name"
+                        [placeholder]="number.label"
+                        [tabindex]="2 + ($index * 3)"
+                        class="form-control"
+                        type="text" />
+                    </app-form-group>
+                  </div>
+                  <div class="col-12 col-lg-4">
+                    <app-form-group
+                      #issue
+                      [label]="'Emissão'"
+                      [name]="'issue'"
+                      class="form-group d-block mb-4">
+                      <!-- Input -->
+                      <input
+                        [class.is-invalid]="issue.invalid"
+                        [formControl]="issue.control"
+                        [id]="issue.name"
+                        [placeholder]="issue.label"
+                        [tabindex]="3 + ($index * 3)"
+                        class="form-control"
+                        type="date" />
+                    </app-form-group>
+                  </div>
+                </div>
+              </div>
+              <div class="col-auto d-flex flex-column align-items-center justify-content-center">
+                <button class="btn btn-danger btn-sm" (click)="documents.removeInvoice($index)">
+                  <span class="fe fe-file-minus"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+    @else {
+      <div class="px-4 my-4">
+        <div class="alert bg-light text-muted my-0">
+          Não foram registadas faturas para este processo de reembolso.
+        </div>
+      </div>
+    }
+  </div>
+  <div class="card-footer text-end">
+    <button (click)="confirmClearInvoiceDocuments.open()" [disabled]="invoiceControls.length === 0" class="btn btn-light me-3">
+      Remover todos os documentos
+    </button>
+    <button (click)="documents.addInvoice()" class="btn btn-primary">
+      <span class="fe fe-plus"></span> Adicionar fatura
+    </button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      Outros documentos
+    </h4>
+  </div>
+  <div class="card-body p-0">
+    <div class="px-4 my-4" *ngIf="documents.form.errors?.['fg:dn:treatment:machadojoseph']">
+      <div class="alert alert-danger text-white m-0">
+        O registo da <strong class="text-nowrap">{{ DocumentNature.TreatementCertificate | documentNature }}</strong> é obrigatório para processos de reembolso
+        de utentes diagnosticados com <strong class="text-nowrap">Machado-Joseph</strong>.
+      </div>
+    </div>
+    <div class="px-4 my-4" *ngIf="documents.form.errors?.['fg:dn:permit']">
+      <div class="alert alert-danger text-white m-0">
+        O registo da <strong class="text-nowrap">{{ DocumentNature.Permit | documentNature }}</strong> é obrigatório para processos de reembolso
+        que permitem o carregamento de <strong class="text-nowrap">documentos além da data limite</strong> ou <strong class="text-nowrap">reembolso completo</strong>.
+      </div>
+    </div>
+    <div class="px-4 my-4" *ngIf="documents.form.errors?.['fg:dn:unemployment']">
+      <div class="alert alert-danger text-white m-0">
+        O registo da <strong class="text-nowrap">{{ DocumentNature.UnemploymentCertificate | documentNature }}</strong> é obrigatório para processos de reembolso
+        a utentes em <strong class="text-nowrap">situação de desemprego</strong>.
+      </div>
+    </div>
+    <div class="px-4 my-4" *ngIf="documents.form.errors?.['fg:dn:letterofattorney']">
+      <div class="alert alert-danger text-white m-0">
+        O registo da <strong class="text-nowrap">{{ DocumentNature.LetterOfAttorney | documentNature }}</strong> é obrigatório para processos de reembolso
+        a utentes com <strong class="text-nowrap">representante legal</strong>.
+      </div>
+    </div>
+    <div class="px-4 my-4" *ngIf="documents.form.errors?.['fg:dn:incomecertificate']">
+      <div class="alert alert-danger text-white m-0">
+        O registo da <strong class="text-nowrap">{{ DocumentNature.IncomeCertificate | documentNature }}</strong> é obrigatório para processos de reembolso
+        a utentes com <strong class="text-nowrap">declaração de rendimentos</strong>.
+      </div>
+    </div>
+    <div class="px-4 my-4" *ngIf="documents.form.errors?.['fg:dn:ibancertificate']">
+      <div class="alert alert-danger text-white m-0">
+        O registo da <strong class="text-nowrap">{{ DocumentNature.IbanCertificate | documentNature }}</strong> é obrigatório para processos de reembolso
+        com pagamento por <strong class="text-nowrap">transferência bancária</strong>.
+      </div>
+    </div>
+    @if (otherDocumentControls.length) {
+      <div class="list-group list-group-flush">
+        @for (otherDocument of otherDocumentControls; track $index) {
+          <div [class.bg-light]="($index % 2) !== 0" [formGroup]="otherDocument" class="list-group-item px-4">
+            <div class="row">
+              <div class="col">
+                <div class="row">
+                  <div class="col-12 col-lg-8">
+                    <app-form-group
+                      #nature
+                      [label]="'Documento'"
+                      [name]="'nature'"
+                      class="form-group d-block mb-4">
+                      <!-- Input -->
+                      <select
+                        [class.is-invalid]="nature?.invalid"
+                        [formControl]="nature.control"
+                        [id]="nature.name"
+                        [tabindex]="1 + ($index * 2) + (invoiceControls.length * 3)"
+                        class="form-select">
+                        <option [ngValue]="null" disabled></option>
+                        @for(option of otherDocumentNatureOptions; track option.value) {
+                          <option [ngValue]="option.value">{{ option.label }}</option>
+                        }
+                      </select>
+                    </app-form-group>
+                  </div>
+                  <div class="col-12 col-lg-4">
+                    <app-form-group
+                      #issue
+                      [label]="'Emissão'"
+                      [name]="'issue'"
+                      class="form-group d-block mb-4">
+                      <!-- Input -->
+                      <input
+                        [class.is-invalid]="issue.invalid"
+                        [formControl]="issue.control"
+                        [id]="issue.name"
+                        [placeholder]="issue.label"
+                        [tabindex]="2 + ($index * 2) + (invoiceControls.length * 3)"
+                        class="form-control"
+                        type="date" />
+                    </app-form-group>
+                  </div>
+                </div>
+              </div>
+              <div class="col-auto d-flex flex-column align-items-center justify-content-center">
+                <button class="btn btn-danger btn-sm" (click)="documents.removeOtherDocument($index)">
+                  <span class="fe fe-file-minus"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+    @else {
+      <div class="px-4 my-4">
+        <div class="alert bg-light text-muted my-0">
+          Não foram registados documentos para este processo de reembolso.
+        </div>
+      </div>
+    }
+  </div>
+  <div class="card-footer text-end">
+    <button (click)="confirmClearOtherDocuments.open()" [disabled]="otherDocumentControls.length === 0" class="btn btn-light me-3">
+      Remover todos os documentos
+    </button>
+    <button (click)="documents.addOtherDocument()" class="btn btn-primary">
+      <span class="fe fe-plus"></span> Adicionar documento
+    </button>
+  </div>
+</div>
+
+<div class="modal-backdrop fade show" *ngIf="confirmClearInvoiceDocuments.visible"></div>
+<div #confirmClearInvoiceDocuments="modal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirmação</h5>
+      </div>
+      <div class="modal-body">
+        <p class="my-3">Esta operação é irreversível e vai remover todas as faturas associadas
+          a este processo de reembolso.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="confirmClearInvoiceDocuments.close()">Cancelar</button>
+        <button type="button" class="btn btn-danger" (click)="documents.removeAllInvoices(); confirmClearInvoiceDocuments.close()">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop fade show" *ngIf="confirmClearOtherDocuments.visible"></div>
+<div #confirmClearOtherDocuments="modal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirmação</h5>
+      </div>
+      <div class="modal-body">
+        <p class="my-3">Esta operação é irreversível e vai remover todos os documentos associados
+          a este processo de reembolso.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="confirmClearOtherDocuments.close()">Cancelar</button>
+        <button type="button" class="btn btn-danger" (click)="documents.removeAllOtherDocuments(); confirmClearOtherDocuments.close()">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>

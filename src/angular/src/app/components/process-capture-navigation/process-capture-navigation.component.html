@@ -53,9 +53,13 @@
           [writting]="(processCapture.payment.writting$ | async)!"
           class="ms-auto" />
       </a>
-      <a class="list-group-item pe-4 ps-4 py-0 text-muted d-flex align-items-center justify-content-center">
+      <a class="list-group-item pe-4 ps-4 py-0 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', id, 'capture', 'documents']">
         <span class="py-3">Documentos</span>
-        <span class="fe fe-lock ms-auto"></span>
+        <app-process-capture-navigation-icon
+          [invalid]="processCapture.documents.form.invalid"
+          [written]="false"
+          [writting]="false"
+          class="ms-auto" />
       </a>
       @if(processCapture.simulation.available$ | async) {
         <a class="list-group-item pe-4 ps-4 py-0 text-primary d-flex align-items-center justify-content-center" [routerLink]="[ '/processes', id, 'capture', 'simulation']">

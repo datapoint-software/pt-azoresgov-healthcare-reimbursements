@@ -1,9 +1,10 @@
 import { EnvironmentProviders, Injectable, makeEnvironmentProviders } from "@angular/core";
-import { ActivatedRouteSnapshot } from "@angular/router";
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
 import { provideEffects } from "@ngrx/effects";
 import { Store, provideState } from "@ngrx/store";
 import { Feature } from "../feature.abstractions";
 import { ProcessCaptureConfigurationManager } from "./managers/process-capture-configuration.manager";
+import { ProcessCaptureDocumentManager } from "./managers/process-capture-document.manager";
 import { ProcessCaptureFamilyIncomeStatementManager } from "./managers/process-capture-family-income-statement.manager";
 import { ProcessCaptureLegalRepresentativeManager } from "./managers/process-capture-legal-representative.manager";
 import { ProcessCapturePatientManager } from "./managers/process-capture-patient.manager";
@@ -28,6 +29,7 @@ export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
   constructor(
     store: Store,
     public readonly configuration: ProcessCaptureConfigurationManager,
+    public readonly documents: ProcessCaptureDocumentManager,
     public readonly familyIncomeStatement: ProcessCaptureFamilyIncomeStatementManager,
     public readonly legalRepresentative: ProcessCaptureLegalRepresentativeManager,
     public readonly patient: ProcessCapturePatientManager,
@@ -36,12 +38,20 @@ export class ProcessCaptureFeature extends Feature<ProcessCaptureState> {
   ) {
     super(store, state, [
       configuration,
+      documents,
       familyIncomeStatement,
       legalRepresentative,
       patient,
       payment,
       simulation
     ]);
+  }
+
+  public override async init(activatedRoute: ActivatedRouteSnapshot, router: RouterStateSnapshot) {
+
+    await super.init(activatedRoute, router);
+
+    this.documents.form.updateValueAndValidity();
   }
 
   protected override dispose$$$() {
@@ -62,6 +72,7 @@ export const provideProcessCaptureFeature = (): Array<EnvironmentProviders> => [
   makeEnvironmentProviders([
     ProcessCaptureFeature,
     ProcessCaptureConfigurationManager,
+    ProcessCaptureDocumentManager,
     ProcessCaptureFamilyIncomeStatementManager,
     ProcessCaptureLegalRepresentativeManager,
     ProcessCapturePatientManager,

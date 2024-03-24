@@ -77,6 +77,10 @@ export const searchBankComplete = createAction(
   }>()
 );
 
+export const showRedirectDialog = createAction(
+  `${FEATURE_ACTION_PREFIX}/show-redirect-dialog`
+);
+
 export const watchPayment = createAction(
   `${FEATURE_ACTION_PREFIX}/watch-payment`,
   props<{
@@ -87,10 +91,6 @@ export const watchPayment = createAction(
       swift?: string;
     };
   }>()
-);
-
-export const showRedirectDialog = createAction(
-  `${FEATURE_ACTION_PREFIX}/show-redirect-dialog`
 );
 
 export const writeConfiguration = createAction(
