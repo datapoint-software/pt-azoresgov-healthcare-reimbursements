@@ -26,13 +26,19 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
 
         private readonly IProcessRepository _processes;
 
+        private readonly IProcessPatientLegalRepresentativeRepository _processPatientLegalRepresentatives;
+
+        private readonly IProcessPatientRepository _processPatients;
+
+        private readonly IProcessConfigurationRepository _processSettings;
+
         private readonly ISequenceRepository _sequences;
 
         private readonly IUserEntityRepository _userEntities;
         
         private readonly IUserRepository _users;
 
-        public ProcessCreationCommandHandler(IParameterManager parameterManager, IEntityRepository entities, IPatientEntityRepository patientEntities, IPatientLegalRepresentativeRepository patientLegalRepresentatives, IPatientRepository patients, IProcessRepository processes, ISequenceRepository sequences, IUserEntityRepository userEntities, IUserRepository users)
+        public ProcessCreationCommandHandler(IParameterManager parameterManager, IEntityRepository entities, IPatientEntityRepository patientEntities, IPatientLegalRepresentativeRepository patientLegalRepresentatives, IPatientRepository patients, IProcessRepository processes, IProcessPatientLegalRepresentativeRepository processPatientLegalRepresentatives, IProcessPatientRepository processPatients, IProcessConfigurationRepository processSettings, ISequenceRepository sequences, IUserEntityRepository userEntities, IUserRepository users)
         {
             _parameterManager = parameterManager;
             _entities = entities;
@@ -40,6 +46,9 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
             _patientLegalRepresentatives = patientLegalRepresentatives;
             _patients = patients;
             _processes = processes;
+            _processPatientLegalRepresentatives = processPatientLegalRepresentatives;
+            _processPatients = processPatients;
+            _processSettings = processSettings;
             _sequences = sequences;
             _userEntities = userEntities;
             _users = users;
@@ -69,9 +78,11 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
                 entity.Id,
                 ct);
 
-            var patient = await _patients.GetByPublicIdOrThrowBusinessExceptionAsync(
+            var patient = await _patients.GetByPublicIdAsync(
                 command.PatientId,
                 ct);
+
+            Assert.Found(patient);
             
             Assert.RowVersion(
                 patient.RowVersionId,
@@ -90,7 +101,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
             var processExpirationInDays = await _parameterManager.GetProcessExpirationInDaysAsync(
                 ct);
 
-            var processNumber = await GetEntityProcessNumberAsync(
+            var processNumber = await GenerateProcessNumberAsync(
                 command,
                 entity,
                 ct);
@@ -109,13 +120,66 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
                 Touch = command.Creation
             });
 
+            CreateProcessConfiguration(process);
+
+            CreateProcessPatient(process, patient);
+
+            if (patientLegalRepresentative is not null)
+                CreateProcessPatientLegalRepresentative(process, patientLegalRepresentative);
+
             return new ProcessCreationResult(
                 process.PublicId,
                 process.RowVersionId,
                 process.Number);
         }
 
-        private async Task<string> GetEntityProcessNumberAsync(ProcessCreationCommand command, Entity entity, CancellationToken ct)
+        private ProcessConfiguration CreateProcessConfiguration(Process process) =>
+
+             _processSettings.Add(new ProcessConfiguration()
+             {
+                 Process = process,
+                 DocumentIssueDateBypassEnabled = false,
+                 MachadoJosephEnabled = false,
+                 ReimbursementLimitBypassEnabled = false,
+                 UnemploymentEnabled = false
+             });
+
+        private void CreateProcessPatient(Process process, Patient patient) => 
+            
+            _processPatients.Add(new ProcessPatient()
+            {
+                Process = process,
+                Name = patient.Name,
+                Birth = patient.Birth,
+                Gender = patient.Gender,
+                HealthNumber = patient.HealthNumber,
+                TaxNumber = patient.TaxNumber,
+                AddressLine1 = patient.AddressLine1,
+                AddressLine2 = patient.AddressLine2,
+                AddressLine3 = patient.AddressLine3,
+                PostalCode = patient.PostalCode,
+                PostalCodeArea = patient.PostalCodeArea,
+                EmailAddress = patient.EmailAddress,
+                FaxNumber = patient.FaxNumber,
+                MobileNumber = patient.MobileNumber,
+                PhoneNumber = patient.PhoneNumber,
+                Death = patient.Death
+            });
+
+        private void CreateProcessPatientLegalRepresentative(Process process, PatientLegalRepresentative patientLegalRepresentative) =>
+
+            _processPatientLegalRepresentatives.Add(new ProcessPatientLegalRepresentative()
+            {
+                Process = process,
+                Name = patientLegalRepresentative.Name,
+                TaxNumber = patientLegalRepresentative.TaxNumber,
+                EmailAddress = patientLegalRepresentative.EmailAddress,
+                FaxNumber = patientLegalRepresentative.FaxNumber,
+                MobileNumber = patientLegalRepresentative.MobileNumber,
+                PhoneNumber = patientLegalRepresentative.PhoneNumber
+            });
+
+        private async Task<string> GenerateProcessNumberAsync(ProcessCreationCommand command, Entity entity, CancellationToken ct)
         {
             var processNumberSequenceNameTokens = await _entities.GetAllParentEntityCodeByEntityIdAsync(
                 entity.Id, 

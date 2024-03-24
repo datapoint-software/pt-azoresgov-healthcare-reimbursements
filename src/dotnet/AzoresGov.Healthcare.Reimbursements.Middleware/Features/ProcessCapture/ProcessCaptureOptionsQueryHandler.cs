@@ -1,7 +1,5 @@
 ﻿using AzoresGov.Healthcare.Reimbursements.Enumerations;
-using AzoresGov.Healthcare.Reimbursements.Middleware.Helpers;
 using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories;
-using Datapoint;
 using Datapoint.Mediator;
 using System.Threading;
 using System.Threading.Tasks;
@@ -58,13 +56,17 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
 
         public async Task<ProcessCaptureOptionsResult> HandleQueryAsync(ProcessCaptureOptionsQuery query, CancellationToken ct)
         {
-            var user = await _users.GetByPublicIdOrThrowBusinessExceptionAsync(
+            var user = await _users.GetByPublicIdAsync(
                 query.UserId,
                 ct);
 
-            var process = await _processes.GetByPublicIdOrThrowBusinessExceptionAsync(
+            Assert.Found(user);
+
+            var process = await _processes.GetByPublicIdAsync(
                 query.ProcessId,
                 ct);
+
+            Assert.Found(process);
 
             Assert.ProcessStatus(
                 ProcessStatus.Capture,
@@ -82,34 +84,28 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
 
             Assert.Found(iasConfiguration);
 
-            var configuration = await _processSettings.GetByProcessIdAsync(
-                process.Id,
-                ct);
-
-            var entity = await _entities.GetByIdOrThrowExceptionAsync(
+            var entity = await _entities.GetByIdAsync(
                 process.EntityId,
                 ct);
+
+            Assert.Found(entity);
 
             var parentEntity = await _entities.GetParentEntityByEntityIdAsync(
                 process.EntityId,
                 0,
                 ct);
 
-            var patient = await _patients.GetByIdOrThrowExceptionAsync(
-                process.PatientId,
+            var processConfiguration = await _processSettings.GetByProcessIdAsync(
+                process.Id,
                 ct);
 
-            var patientFamilyIncomeStatement = await _patientFamilyIncomeStatements.GetByPatientIdAsync(
-                patient.Id,
-                ct);
-
-            var patientLegalRepresentative = await _patientLegalRepresentatives.GetByPatientIdAsync(
-                patient.Id,
-                ct);
+            Assert.Found(processConfiguration);
 
             var processPatient = await _processPatients.GetByProcessIdAsync(
                 process.Id,
                 ct);
+
+            Assert.Found(processPatient);
 
             var processPatientFamilyIncomeStatement = await _processPatientFamilyIncomeStatements.GetByProcessIdAsync(
                 process.Id,
@@ -119,13 +115,13 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
                 process.Id,
                 ct);
 
-            var processPaymentSettings = await _processPaymentSettings.GetByProcessIdAsync(
+            var processPaymentConfiguration = await _processPaymentSettings.GetByProcessIdAsync(
                 process.Id,
                 ct);
             
             var processPaymentWireTransferSettings = (
-                processPaymentSettings is null || 
-                processPaymentSettings.Method is not PaymentMethod.WireTransfer)
+                processPaymentConfiguration is null || 
+                processPaymentConfiguration.Method is not PaymentMethod.WireTransfer)
                 
                 ? null 
                 : await _processPaymentWireTransferSettings.GetByProcessIdAsync(
@@ -133,90 +129,73 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
                     ct);
 
             return new ProcessCaptureOptionsResult(
-                configuration is null ? null :
-                    new ProcessCaptureOptionsConfigurationResult(
-                        configuration.RowVersionId,
-                        configuration.MachadoJosephEnabled,
-                        configuration.DocumentIssueDateBypassEnabled,
-                        configuration.ReimbursementLimitBypassEnabled,
-                        configuration.UnemploymentEnabled),
+                new ProcessCaptureOptionsConfigurationResult(
+                    processConfiguration.RowVersionId,
+                    processConfiguration.MachadoJosephEnabled,
+                    processConfiguration.DocumentIssueDateBypassEnabled,
+                    processConfiguration.ReimbursementLimitBypassEnabled,
+                    processConfiguration.UnemploymentEnabled),
                 new ProcessCaptureOptionsEntityResult(
                     entity.PublicId,
                     entity.RowVersionId,
                     entity.Code,
                     entity.Name,
                     entity.Nature),
-                processPatientFamilyIncomeStatement is not null ?
-                    new ProcessCaptureOptionsFamilyIncomeStatementResult(
+                processPatientFamilyIncomeStatement is not null
+                    ? new ProcessCaptureOptionsFamilyIncomeStatementResult(
                         processPatientFamilyIncomeStatement.RowVersionId,
                         processPatientFamilyIncomeStatement.Year,
                         processPatientFamilyIncomeStatement.AccessCode,
                         processPatientFamilyIncomeStatement.FamilyMemberCount,
-                        processPatientFamilyIncomeStatement.FamilyIncome) :
-                    patientFamilyIncomeStatement is not null ?
-                        new ProcessCaptureOptionsFamilyIncomeStatementResult(
-                            null,
-                            patientFamilyIncomeStatement.Year,
-                            patientFamilyIncomeStatement.AccessCode,
-                            patientFamilyIncomeStatement.FamilyMemberCount,
-                            patientFamilyIncomeStatement.FamilyIncome) :
-                        null,
+                        processPatientFamilyIncomeStatement.FamilyIncome)
+                    : null,
                 new ProcessCaptureOptionsIasConfigurationResult(
                     iasConfiguration.Year,
                     iasConfiguration.Amount),
-                parentEntity is null
-                    ? null
-                    : new ProcessCaptureOptionsEntityResult(
+                parentEntity is not null 
+                    ? new ProcessCaptureOptionsEntityResult(
                         parentEntity.PublicId,
                         parentEntity.RowVersionId,
                         parentEntity.Code,
                         parentEntity.Name,
-                        parentEntity.Nature),
+                        parentEntity.Nature)
+                    : null,
                 new ProcessCaptureOptionsPatientResult(
-                    processPatient?.RowVersionId,
-                    processPatient?.Name ?? patient.Name,
-                    processPatient?.Birth ?? patient.Birth,
-                    processPatient?.Gender ?? patient.Gender,
-                    processPatient?.HealthNumber ?? patient.HealthNumber,
-                    processPatient?.TaxNumber ?? patient.TaxNumber,
-                    processPatient?.AddressLine1 ?? patient.AddressLine1,
-                    processPatient?.AddressLine2 ?? patient.AddressLine2,
-                    processPatient?.AddressLine3 ?? patient.AddressLine3,
-                    processPatient?.PostalCode ?? patient.PostalCode,
-                    processPatient?.PostalCodeArea ?? patient.PostalCodeArea,
-                    processPatient?.EmailAddress ?? patient.EmailAddress,
-                    processPatient?.FaxNumber ?? patient.FaxNumber,
-                    processPatient?.MobileNumber ?? patient.MobileNumber,
-                    processPatient?.PhoneNumber ?? patient.PhoneNumber,
-                    processPatient?.Death ?? patient.Death),
-                processPatientLegalRepresentative is not null ? 
-                    new ProcessCaptureOptionsPatientLegalRepresentativeResult(
+                    processPatient.RowVersionId,
+                    processPatient.Name,
+                    processPatient.Birth,
+                    processPatient.Gender,
+                    processPatient.HealthNumber,
+                    processPatient.TaxNumber,
+                    processPatient.AddressLine1,
+                    processPatient.AddressLine2,
+                    processPatient.AddressLine3,
+                    processPatient.PostalCode,
+                    processPatient.PostalCodeArea,
+                    processPatient.EmailAddress,
+                    processPatient.FaxNumber,
+                    processPatient.MobileNumber,
+                    processPatient.PhoneNumber,
+                    processPatient.Death),
+                processPatientLegalRepresentative is not null
+                    ? new ProcessCaptureOptionsPatientLegalRepresentativeResult(
                         processPatientLegalRepresentative.RowVersionId,
                         processPatientLegalRepresentative.Name,
                         processPatientLegalRepresentative.TaxNumber,
                         processPatientLegalRepresentative.EmailAddress,
                         processPatientLegalRepresentative.FaxNumber,
                         processPatientLegalRepresentative.MobileNumber,
-                        processPatientLegalRepresentative.PhoneNumber) :
-                    patientLegalRepresentative is not null ?
-                        new ProcessCaptureOptionsPatientLegalRepresentativeResult(
-                            null,
-                            patientLegalRepresentative.Name,
-                            patientLegalRepresentative.TaxNumber,
-                            patientLegalRepresentative.EmailAddress,
-                            patientLegalRepresentative.FaxNumber,
-                            patientLegalRepresentative.MobileNumber,
-                            patientLegalRepresentative.PhoneNumber) :
-                        null,
-                processPaymentSettings is not null ?
-                    new ProcessCaptureOptionsPaymentResult(
-                        processPaymentSettings.RowVersionId,
+                        processPatientLegalRepresentative.PhoneNumber)
+                    : null,
+                processPaymentConfiguration is not null 
+                    ? new ProcessCaptureOptionsPaymentResult(
+                        processPaymentConfiguration.RowVersionId,
                         processPaymentWireTransferSettings?.RowVersionId,
-                        processPaymentSettings.Method,
-                        processPaymentSettings.Receiver,
+                        processPaymentConfiguration.Method,
+                        processPaymentConfiguration.Receiver,
                         processPaymentWireTransferSettings?.Iban,
-                        processPaymentWireTransferSettings?.Swift) :
-                    null,
+                        processPaymentWireTransferSettings?.Swift)
+                    : null,
                 new ProcessCaptureOptionsProcessResult(
                     process.PublicId,
                     process.RowVersionId,
