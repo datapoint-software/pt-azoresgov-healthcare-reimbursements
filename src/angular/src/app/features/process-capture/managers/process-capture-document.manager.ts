@@ -9,7 +9,7 @@ import { DocumentNature } from "../../../enums/document-nature.enum";
 import { ProcessCapturePaymentManager } from "./process-capture-payment.manager";
 import { PaymentMethod } from "../../../enums/payment-method.enum";
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
-import { filter, takeUntil } from "rxjs";
+import { takeUntil } from "rxjs";
 import { ProcessCaptureLegalRepresentativeManager } from "./process-capture-legal-representative.manager";
 import { ProcessCaptureConfigurationManager } from "./process-capture-configuration.manager";
 import { ProcessCaptureFamilyIncomeStatementManager } from "./process-capture-family-income-statement.manager";
