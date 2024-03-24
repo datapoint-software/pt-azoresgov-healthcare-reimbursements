@@ -12,13 +12,16 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
     {
         private readonly IProcessRepository _processes;
 
+        private readonly IProcessPaymentConfigurationRepository _processPaymentConfiguration;
+
         private readonly IUserEntityRepository _userEntities;
 
         private readonly IUserRepository _users;
 
-        public ProcessCaptureCompleteCommandHandler(IProcessRepository processes, IUserEntityRepository userEntities, IUserRepository users)
+        public ProcessCaptureCompleteCommandHandler(IProcessRepository processes, IProcessPaymentConfigurationRepository processPaymentConfiguration, IUserEntityRepository userEntities, IUserRepository users)
         {
             _processes = processes;
+            _processPaymentConfiguration = processPaymentConfiguration;
             _userEntities = userEntities;
             _users = users;
         }
@@ -47,7 +50,14 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCapture
                 process.EntityId,
                 ct);
 
+            var processPaymentConfiguration = await _processPaymentConfiguration.GetByProcessIdAsync(
+                process.Id,
+                ct);
+
+            Assert.Found(processPaymentConfiguration);
+
             process.Status = ProcessStatus.DocumentUpload;
+
             process.RowVersionId = Guid.NewGuid();
 
             return new ProcessCaptureCompleteResult(
