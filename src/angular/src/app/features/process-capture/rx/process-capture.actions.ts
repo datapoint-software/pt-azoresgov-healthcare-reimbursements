@@ -77,6 +77,18 @@ export const searchBankComplete = createAction(
   }>()
 );
 
+export const watchPayment = createAction(
+  `${FEATURE_ACTION_PREFIX}/watch-payment`,
+  props<{
+    payload: {
+      method: PaymentMethod;
+      receiver: PaymentReceiver;
+      iban?: string;
+      swift?: string;
+    };
+  }>()
+);
+
 export const showRedirectDialog = createAction(
   `${FEATURE_ACTION_PREFIX}/show-redirect-dialog`
 );

@@ -5,7 +5,7 @@ import { NEVER, debounce, filter, map, mergeMap, of, tap, timer } from "rxjs";
 import { APP_AUTOSAVE_DELAY_MS, APP_AUTOSAVE_QUICK_DELAY_MS } from "../../../app.constants";
 import { ProcessCaptureClient } from "../../../clients/process-capture/process-capture.client";
 import { catchBadRequest, catchConflict } from "../../feature-rx.helpers";
-import { clearBankResult, complete, configure, deleteFamilyIncomeStatement, deleteFamilyIncomeStatementComplete, deleteLegalRepresentative, deleteLegalRepresentativeComplete, init, searchBank, searchBankComplete, showRedirectDialog, writeConfiguration, writeConfigurationComplete, writeFamilyIncomeStatement, writeFamilyIncomeStatementComplete, writeLegalRepresentative, writeLegalRepresentativeComplete, writePatient, writePatientComplete, writePayment, writePaymentComplete } from "./process-capture.actions";
+import { clearBankResult, complete, configure, deleteFamilyIncomeStatement, deleteFamilyIncomeStatementComplete, deleteLegalRepresentative, deleteLegalRepresentativeComplete, init, searchBank, searchBankComplete, showRedirectDialog, watchPayment, writeConfiguration, writeConfigurationComplete, writeFamilyIncomeStatement, writeFamilyIncomeStatementComplete, writeLegalRepresentative, writeLegalRepresentativeComplete, writePatient, writePatientComplete, writePayment, writePaymentComplete } from "./process-capture.actions";
 
 import * as $$ from "./process-capture.selectors";
 import { mergeLoadingOverlay } from "../../loading-overlay/rx/loading-overlay.operators";
@@ -132,6 +132,22 @@ export class ProcessCaptureEffects {
       catchBadRequest(() => NEVER),
       catchConflict(() => NEVER)
     ))
+  ));
+
+  readonly watchPayment$ = createEffect(() => this.actions$.pipe(
+    ofType(watchPayment),
+    concatLatestFrom(() => [
+      this.store.select($$.paymentConfigurationRowVersionId)
+    ]),
+    filter(([ _, paymentConfigurationRowVersionId ]) => !paymentConfigurationRowVersionId),
+    map(([ { payload  }]) => writePayment({
+      payload: {
+        debounce: true,
+        payment: {
+          ...payload
+        }
+      }
+    }))
   ));
 
   readonly writeConfiguration$ = createEffect(() => this.actions$.pipe(

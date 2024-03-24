@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Manager } from "../../feature.abstractions";
 import { ProcessCaptureState } from "../rx/process-capture.state";
 import { Store } from "@ngrx/store";
-import { iasConfiguration, state } from "../rx/process-capture.selectors";
+import { iasConfiguration, paymentConfigurationRowVersionId, state } from "../rx/process-capture.selectors";
 import { ProcessCaptureConfigurationManager } from "./process-capture-configuration.manager";
 import { ProcessCaptureFamilyIncomeStatementManager } from "./process-capture-family-income-statement.manager";
 import { ProcessCaptureLegalRepresentativeManager } from "./process-capture-legal-representative.manager";
@@ -30,23 +30,31 @@ export class ProcessCaptureSimulationManager extends Manager<ProcessCaptureState
 
   private readonly formChanges$ = of(true).pipe(
     mergeMap(() => combineLatest([
+
       this.configuration.form.valueChanges
         .pipe(startWith(this.configuration.form.value)),
+
       this.familyIncomeStatement.form.valueChanges
         .pipe(startWith(this.familyIncomeStatement.form.value)),
+
       this.legalRepresentative.form.valueChanges
         .pipe(startWith(this.legalRepresentative.form.value)),
+
       this.patient.form.valueChanges
         .pipe(startWith(this.patient.form.value)),
+
       this.payment.form.valueChanges
-        .pipe(startWith(this.payment.form.value))
+        .pipe(startWith(this.payment.form.value)),
+
+      this.of(paymentConfigurationRowVersionId)
     ])),
     map(([
       configuration,
       familyIncomeStatement,
       legalRepresentative,
       patient,
-      payment
+      payment,
+      paymentConfigurationRowVersionId
     ]) => ({
       configuration,
       familyIncomeStatement,
@@ -58,7 +66,8 @@ export class ProcessCaptureSimulationManager extends Manager<ProcessCaptureState
         this.familyIncomeStatement.form.valid &&
         this.legalRepresentative.form.valid &&
         this.patient.form.valid &&
-        this.payment.form.valid
+        this.payment.form.valid &&
+        !!paymentConfigurationRowVersionId
       )
     }))
   );

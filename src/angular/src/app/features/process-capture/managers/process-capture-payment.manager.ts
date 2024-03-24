@@ -6,8 +6,8 @@ import { bankName, bankSwiftCode, paymentConfigurationRowVersionId, paymentWritt
 import { ProcessCaptureState } from "../rx/process-capture.state";
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
 import { Actions, ofType } from "@ngrx/effects";
-import { map, switchMap, take, takeUntil } from "rxjs";
-import { clearBankResult, configure, searchBank, searchBankComplete, writePayment } from "../rx/process-capture.actions";
+import { combineLatest, filter, map, switchMap, take, takeUntil, withLatestFrom } from "rxjs";
+import { clearBankResult, configure, searchBank, searchBankComplete, watchPayment, writePayment } from "../rx/process-capture.actions";
 import { ProcessCaptureOptionsPaymentResultModel } from "../../../clients/process-capture/process-capture.models";
 import { PaymentReceiver } from "../../../enums/payment-receiver.enum";
 import { PaymentMethod } from "../../../enums/payment-method.enum";
@@ -44,7 +44,7 @@ export class ProcessCapturePaymentManager extends Manager<ProcessCaptureState> {
 
   private configure(payment: ProcessCaptureOptionsPaymentResultModel | undefined) {
 
-    const method = payment?.method || PaymentMethod.WireTransfer;
+    const method = payment?.method || PaymentMethod.Cash;
 
     this.form.reset({
       method,
@@ -152,6 +152,23 @@ export class ProcessCapturePaymentManager extends Manager<ProcessCaptureState> {
 
       this.dispatch(clearBankResult());
     }
+  }
+
+  public watch() {
+
+    if (!this.form.valid)
+      return;
+
+    const payment = this.form.value;
+
+    this.dispatch(watchPayment({
+      payload: {
+        method: payment.method!,
+        receiver: payment.receiver!,
+        iban: payment.iban || undefined,
+        swift: payment.swift || undefined
+      }
+    }));
   }
 
   public submit() {

@@ -1,10 +1,10 @@
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
-import { FormGroupComponent } from "../form-group/form-group.component";
+import { Component, OnInit } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
-import { ProcessCaptureFeature } from "../../features/process-capture/process-capture.feature";
 import { PaymentMethod } from "../../enums/payment-method.enum";
 import { PaymentReceiver } from "../../enums/payment-receiver.enum";
+import { ProcessCaptureFeature } from "../../features/process-capture/process-capture.feature";
+import { FormGroupComponent } from "../form-group/form-group.component";
 
 @Component({
   imports: [
@@ -16,7 +16,7 @@ import { PaymentReceiver } from "../../enums/payment-receiver.enum";
   standalone: true,
   templateUrl: './process-capture-payment.component.html'
 })
-export class ProcessCapturePaymentComponent {
+export class ProcessCapturePaymentComponent implements OnInit {
 
   public readonly PaymentMethod = PaymentMethod;
 
@@ -26,5 +26,7 @@ export class ProcessCapturePaymentComponent {
     public readonly processCapture: ProcessCaptureFeature
   ) {}
 
-
+  public ngOnInit() {
+    this.processCapture.payment.watch();
+  }
 }
