@@ -14,8 +14,4 @@
 		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Enumerations\AzoresGov.Healthcare.Reimbursements.Enumerations.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Compile Remove="Features\ProcessCreation\ProcessCreationEntitySearchEntityParentEntityResult.cs" />
-	</ItemGroup>
-
 </Project>
