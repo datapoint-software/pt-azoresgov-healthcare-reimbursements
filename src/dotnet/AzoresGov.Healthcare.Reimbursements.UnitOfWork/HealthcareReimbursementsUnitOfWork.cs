@@ -1,4 +1,5 @@
-﻿using Datapoint.UnitOfWork.EntityFrameworkCore;
+﻿using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities;
+using Datapoint.UnitOfWork.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork
@@ -8,6 +9,8 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork
         public HealthcareReimbursementsUnitOfWork(DbContextOptions options) : base(options)
         {
         }
+
+        public DbSet<Parameter> Parameters => Set<Parameter>();
 
         /// <inheritdoc />
         protected override void OnModelCreating(ModelBuilder model) =>
