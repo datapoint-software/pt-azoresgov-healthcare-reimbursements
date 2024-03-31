@@ -1,0 +1,89 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34408.163
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2124A056-0C47-41F1-B756-F704928222F2}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		AzoresGov.Healthcare.Reimbursements.xml = AzoresGov.Healthcare.Reimbursements.xml
+		dotnet-tools.json = dotnet-tools.json
+		NuGet.config = NuGet.config
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzoresGov.Healthcare.Reimbursements", "AzoresGov.Healthcare.Reimbursements\AzoresGov.Healthcare.Reimbursements.csproj", "{4E46B76D-7BD7-47CB-BCB8-AD7B17B95894}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzoresGov.Healthcare.Reimbursements.Api", "AzoresGov.Healthcare.Reimbursements.Api\AzoresGov.Healthcare.Reimbursements.Api.csproj", "{EEA71D58-A269-4B77-B7A3-65211A92286A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzoresGov.Healthcare.Reimbursements.Api.Abstractions", "AzoresGov.Healthcare.Reimbursements.Api.Abstractions\AzoresGov.Healthcare.Reimbursements.Api.Abstractions.csproj", "{0329961C-AE4C-417C-A30F-3D0C33A09141}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzoresGov.Healthcare.Reimbursements.Enumerations", "AzoresGov.Healthcare.Reimbursements.Enumerations\AzoresGov.Healthcare.Reimbursements.Enumerations.csproj", "{08F415FF-4104-4602-BAA2-A374F414E687}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzoresGov.Healthcare.Reimbursements.Middleware", "AzoresGov.Healthcare.Reimbursements.Middleware\AzoresGov.Healthcare.Reimbursements.Middleware.csproj", "{A28780A0-4CD4-49A0-A7BE-3DD0C7D3BC27}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzoresGov.Healthcare.Reimbursements.Middleware.Abstractions", "AzoresGov.Healthcare.Reimbursements.Middleware.Abstractions\AzoresGov.Healthcare.Reimbursements.Middleware.Abstractions.csproj", "{623647EE-13F2-48D9-B272-026F7EB2F013}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzoresGov.Healthcare.Reimbursements.UnitOfWork", "AzoresGov.Healthcare.Reimbursements.UnitOfWork\AzoresGov.Healthcare.Reimbursements.UnitOfWork.csproj", "{2193DF1C-0B23-4636-A388-230A1D41EA1B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzoresGov.Healthcare.Reimbursements.UnitOfWork.Abstractions", "AzoresGov.Healthcare.Reimbursements.UnitOfWork.Abstractions\AzoresGov.Healthcare.Reimbursements.UnitOfWork.Abstractions.csproj", "{44C6ACE3-D89C-4F3B-B890-F01320D2CFAD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzoresGov.Healthcare.Reimbursements.Management.Abstractions", "AzoresGov.Healthcare.Reimbursements.Management.Abstractions\AzoresGov.Healthcare.Reimbursements.Management.Abstractions.csproj", "{4AA5A328-5BC0-484F-9144-FF72F8E5C5EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzoresGov.Healthcare.Reimbursements.Management", "AzoresGov.Healthcare.Reimbursements.Management\AzoresGov.Healthcare.Reimbursements.Management.csproj", "{70E3E702-69A7-435D-BC44-1B2413EA9948}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4E46B76D-7BD7-47CB-BCB8-AD7B17B95894}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E46B76D-7BD7-47CB-BCB8-AD7B17B95894}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E46B76D-7BD7-47CB-BCB8-AD7B17B95894}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E46B76D-7BD7-47CB-BCB8-AD7B17B95894}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEA71D58-A269-4B77-B7A3-65211A92286A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEA71D58-A269-4B77-B7A3-65211A92286A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEA71D58-A269-4B77-B7A3-65211A92286A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEA71D58-A269-4B77-B7A3-65211A92286A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0329961C-AE4C-417C-A30F-3D0C33A09141}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0329961C-AE4C-417C-A30F-3D0C33A09141}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0329961C-AE4C-417C-A30F-3D0C33A09141}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0329961C-AE4C-417C-A30F-3D0C33A09141}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08F415FF-4104-4602-BAA2-A374F414E687}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08F415FF-4104-4602-BAA2-A374F414E687}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08F415FF-4104-4602-BAA2-A374F414E687}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08F415FF-4104-4602-BAA2-A374F414E687}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A28780A0-4CD4-49A0-A7BE-3DD0C7D3BC27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A28780A0-4CD4-49A0-A7BE-3DD0C7D3BC27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A28780A0-4CD4-49A0-A7BE-3DD0C7D3BC27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A28780A0-4CD4-49A0-A7BE-3DD0C7D3BC27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{623647EE-13F2-48D9-B272-026F7EB2F013}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{623647EE-13F2-48D9-B272-026F7EB2F013}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{623647EE-13F2-48D9-B272-026F7EB2F013}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{623647EE-13F2-48D9-B272-026F7EB2F013}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2193DF1C-0B23-4636-A388-230A1D41EA1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2193DF1C-0B23-4636-A388-230A1D41EA1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2193DF1C-0B23-4636-A388-230A1D41EA1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2193DF1C-0B23-4636-A388-230A1D41EA1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44C6ACE3-D89C-4F3B-B890-F01320D2CFAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44C6ACE3-D89C-4F3B-B890-F01320D2CFAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44C6ACE3-D89C-4F3B-B890-F01320D2CFAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44C6ACE3-D89C-4F3B-B890-F01320D2CFAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AA5A328-5BC0-484F-9144-FF72F8E5C5EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AA5A328-5BC0-484F-9144-FF72F8E5C5EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AA5A328-5BC0-484F-9144-FF72F8E5C5EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AA5A328-5BC0-484F-9144-FF72F8E5C5EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70E3E702-69A7-435D-BC44-1B2413EA9948}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70E3E702-69A7-435D-BC44-1B2413EA9948}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70E3E702-69A7-435D-BC44-1B2413EA9948}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70E3E702-69A7-435D-BC44-1B2413EA9948}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B5AEABE6-0A20-4600-A96A-1263F66B45F1}
+	EndGlobalSection
+EndGlobal

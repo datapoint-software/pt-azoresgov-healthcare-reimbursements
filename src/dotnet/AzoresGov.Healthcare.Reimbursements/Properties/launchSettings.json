@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "AzoresGov.Healthcare.Reimbursements": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "applicationUrl": "http://localhost:12080",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

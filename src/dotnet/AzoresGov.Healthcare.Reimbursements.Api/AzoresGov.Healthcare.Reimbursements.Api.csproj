@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<Import Project="../AzoresGov.Healthcare.Reimbursements.xml" />
+
+	<PropertyGroup>
+		<IsPackable>false</IsPackable>
+		<RootNamespace>AzoresGov.Healthcare.Reimbursements.Api</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" Version="8.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Api.Abstractions\AzoresGov.Healthcare.Reimbursements.Api.Abstractions.csproj" />
+		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Middleware.Abstractions\AzoresGov.Healthcare.Reimbursements.Middleware.Abstractions.csproj" />
+	</ItemGroup>
+
+</Project>

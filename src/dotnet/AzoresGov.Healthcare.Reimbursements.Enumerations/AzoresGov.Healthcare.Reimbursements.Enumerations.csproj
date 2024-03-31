@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<Import Project="../AzoresGov.Healthcare.Reimbursements.xml" />
+
+	<PropertyGroup>
+		<RootNamespace>AzoresGov.Healthcare.Reimbursements.Enumerations</RootNamespace>
+	</PropertyGroup>
+
+</Project>

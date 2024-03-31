@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<Import Project="../AzoresGov.Healthcare.Reimbursements.xml" />
+
+	<PropertyGroup>
+		<RootNamespace>AzoresGov.Healthcare.Reimbursements.UnitOfWork</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Datapoint.UnitOfWork.Abstractions" Version="8.0.0-a.41" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Enumerations\AzoresGov.Healthcare.Reimbursements.Enumerations.csproj" />
+	</ItemGroup>
+
+</Project>

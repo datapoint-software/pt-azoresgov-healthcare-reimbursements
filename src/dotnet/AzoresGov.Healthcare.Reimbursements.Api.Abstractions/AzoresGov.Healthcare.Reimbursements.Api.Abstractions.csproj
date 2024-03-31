@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<Import Project="../AzoresGov.Healthcare.Reimbursements.xml" />
+
+	<PropertyGroup>
+		<RootNamespace>AzoresGov.Healthcare.Reimbursements.Api</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Enumerations\AzoresGov.Healthcare.Reimbursements.Enumerations.csproj" />
+	</ItemGroup>
+
+</Project>

@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<Import Project="../AzoresGov.Healthcare.Reimbursements.xml" />
+
+	<PropertyGroup>
+		<RootNamespace>AzoresGov.Healthcare.Reimbursements.Middleware</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Datapoint.Mediator.Abstractions" Version="8.0.0-a.41" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\AzoresGov.Healthcare.Reimbursements.Enumerations\AzoresGov.Healthcare.Reimbursements.Enumerations.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Remove="Features\ProcessCreation\ProcessCreationEntitySearchEntityParentEntityResult.cs" />
+	</ItemGroup>
+
+</Project>
