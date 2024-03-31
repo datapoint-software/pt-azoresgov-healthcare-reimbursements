@@ -1,0 +1,123 @@
+<div class="position-absolute d-flex align-items-center h-100 w-100">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-12 col-md-6 offset-xl-2 offset-md-1 order-md-2 mb-5 mb-md-0">
+        <!-- Image -->
+        <div class="text-center">
+          <img src="assets/dashkit/img/illustrations/happiness.svg" alt="..." class="img-fluid">
+        </div>
+      </div>
+      <div class="col-12 col-md-5 col-xl-4 order-md-1 my-5">
+        <!-- Heading -->
+        <h1 class="display-4 text-center mb-3">
+          Iniciar sessão
+        </h1>
+        <!-- Subheading -->
+        <p class="text-muted text-center mb-5">
+          Inicie sessão através do seu endereço de correio eletrónico para aceder ao <span class="text-nowrap">Sistema de Gestão de Reembolsos</span>.
+        </p>
+
+        @if (error) {
+          <p class="alert alert-danger">
+            {{ error.message }}
+          </p>
+        }
+
+        <!-- Form -->
+        <form [formGroup]="form" (ngSubmit)="submit()" autocomplete="off">
+          <!-- Email address -->
+          <div class="form-group">
+            <!-- Label -->
+            <label
+              [class.is-invalid]="(form.controls.emailAddress.dirty || form.controls.emailAddress.touched) && form.controls.emailAddress.invalid"
+              class="form-label"
+              for="emailAddress">
+              Correio eletrónico
+            </label>
+            <!-- Input -->
+            <input
+              [class.is-invalid]="(form.controls.emailAddress.dirty || form.controls.emailAddress.touched) && form.controls.emailAddress.invalid"
+              [formControlName]="'emailAddress'"
+              autocomplete="off"
+              class="form-control"
+              id="emailAddress"
+              placeholder="exemplo@azores.gov.pt"
+              required
+              tabindex="1"
+              type="email" />
+          </div>
+          <!-- Password -->
+          <div class="form-group">
+            <div class="row">
+              <div class="col">
+                <!-- Label -->
+                <label
+                  [class.is-invalid]="(form.controls.password.dirty || form.controls.password.touched) && form.controls.password.invalid"
+                  class="form-label"
+                  for="password">
+                  Palavra-passe
+                </label>
+              </div>
+              <div class="col-auto">
+                <!-- Help text -->
+                <a href="mailto:support@datapoint.software?subject=Acesso+Sistema+Gestão+Reembolsos" class="form-text small text-muted">
+                  Esqueceu-se da palavra-passe?
+                </a>
+              </div>
+            </div> <!-- / .row -->
+            <!-- Input group -->
+            <div
+              [class.is-invalid]="(form.controls.password.dirty || form.controls.password.touched) && form.controls.password.invalid"
+              class="input-group input-group-merge">
+              <!-- Input -->
+              <input
+                [class.is-invalid]="(form.controls.password.dirty || form.controls.password.touched) && form.controls.password.invalid"
+                [formControlName]="'password'"
+                [type]="passwordVisible ? 'text' : 'password'"
+                autocomplete="off"
+                class="form-control"
+                id="password"
+                placeholder="Palavra-passe"
+                required
+                tabindex="2" />
+              <!-- Icon -->
+              <button class="input-group-text" type="button" (click)="togglePasswordVisible()">
+                <i [class]="passwordVisible ? 'fe-shield' : 'fe-shield-off'" class="fe"></i>
+              </button>
+            </div>
+          </div>
+          @if (form.controls.persistent.enabled) {
+            <!-- Input group -->
+            <div class="form-group">
+              <div class="form-check">
+                <input
+                  [class.is-invalid]="(form.controls.persistent.dirty || form.controls.persistent.touched) && form.controls.persistent.invalid"
+                  [formControlName]="'persistent'"
+                  [value]="true"
+                  class="form-check-input"
+                  id="persistent"
+                  type="checkbox">
+                <label class="form-check-label" for="persistent">
+                  Manter a sessão iniciada
+                </label>
+              </div>
+            </div>
+          }
+          <!-- Submit -->
+          <button
+            [disabled]="form.invalid"
+            class="btn btn-lg w-100 btn-primary mb-3"
+            tabindex="3">
+            Iniciar sessão
+          </button>
+          <!-- Link -->
+          <div class="text-center">
+            <small class="text-muted text-center">
+              Não tem acesso? Deixe-nos uma <a href="mailto:support@datapoint.software?subject=Acesso+Sistema+Gestão+Reembolsos">mensagem</a>.
+            </small>
+          </div>
+        </form>
+      </div>
+    </div> <!-- / .row -->
+  </div>
+</div>
