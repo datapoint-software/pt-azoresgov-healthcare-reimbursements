@@ -2,9 +2,11 @@ import { Component } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { SignInError, SignInForm } from "../../features/sign-in/sign-in-feature.abstractions";
 import { SignInFeature } from "../../features/sign-in/sign-in.feature";
+import { FormGroupComponent } from "../form-group/form-group.component";
 
 @Component({
   imports: [
+    FormGroupComponent,
     ReactiveFormsModule
   ],
   selector: 'app-sign-in',

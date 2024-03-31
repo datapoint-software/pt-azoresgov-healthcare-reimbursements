@@ -26,35 +26,37 @@
         <!-- Form -->
         <form [formGroup]="form" (ngSubmit)="submit()" autocomplete="off">
           <!-- Email address -->
-          <div class="form-group">
+          <app-form-group #emailAddress [name]="'emailAddress'" class="form-group d-block">
             <!-- Label -->
             <label
-              [class.is-invalid]="(form.controls.emailAddress.dirty || form.controls.emailAddress.touched) && form.controls.emailAddress.invalid"
-              class="form-label"
-              for="emailAddress">
+              [class.is-invalid]="emailAddress.invalid"
+              [class.is-required]="emailAddress.required"
+              [for]="emailAddress.name"
+              class="form-label">
               Correio eletrónico
             </label>
             <!-- Input -->
             <input
-              [class.is-invalid]="(form.controls.emailAddress.dirty || form.controls.emailAddress.touched) && form.controls.emailAddress.invalid"
-              [formControlName]="'emailAddress'"
+              [class.is-invalid]="emailAddress.invalid"
+              [class.is-required]="emailAddress.required"
+              [formControl]="emailAddress.control"
+              [id]="emailAddress.name"
               autocomplete="off"
               class="form-control"
-              id="emailAddress"
-              placeholder="exemplo@azores.gov.pt"
-              required
+              placeholder="meu.nome@azores.gov.pt"
               tabindex="1"
               type="email" />
-          </div>
+          </app-form-group>
           <!-- Password -->
-          <div class="form-group">
+          <app-form-group #password [name]="'password'" class="form-group d-block">
             <div class="row">
               <div class="col">
                 <!-- Label -->
                 <label
-                  [class.is-invalid]="(form.controls.password.dirty || form.controls.password.touched) && form.controls.password.invalid"
-                  class="form-label"
-                  for="password">
+                  [class.is-invalid]="password.invalid"
+                  [class.is-required]="password.required"
+                  [for]="password.name"
+                  class="form-label">
                   Palavra-passe
                 </label>
               </div>
@@ -67,47 +69,49 @@
             </div> <!-- / .row -->
             <!-- Input group -->
             <div
-              [class.is-invalid]="(form.controls.password.dirty || form.controls.password.touched) && form.controls.password.invalid"
+              [class.is-invalid]="password.invalid"
+              [class.is-required]="password.required"
               class="input-group input-group-merge">
               <!-- Input -->
               <input
-                [class.is-invalid]="(form.controls.password.dirty || form.controls.password.touched) && form.controls.password.invalid"
-                [formControlName]="'password'"
+                [class.is-invalid]="password.invalid"
+                [class.is-required]="password.required"
+                [formControl]="password.control"
+                [id]="password.name"
                 [type]="passwordVisible ? 'text' : 'password'"
                 autocomplete="off"
                 class="form-control"
-                id="password"
                 placeholder="Palavra-passe"
-                required
-                tabindex="2" />
+                tabindex="2"/>
               <!-- Icon -->
               <button class="input-group-text" type="button" (click)="togglePasswordVisible()">
                 <i [class]="passwordVisible ? 'fe-shield' : 'fe-shield-off'" class="fe"></i>
               </button>
             </div>
-          </div>
+          </app-form-group>
           @if (form.controls.persistent.enabled) {
             <!-- Input group -->
-            <div class="form-group">
+            <app-form-group #persistent [name]="'persistent'" class="form-group">
               <div class="form-check">
                 <input
-                  [class.is-invalid]="(form.controls.persistent.dirty || form.controls.persistent.touched) && form.controls.persistent.invalid"
-                  [formControlName]="'persistent'"
+                  [class.is-invalid]="persistent.invalid"
+                  [class.is-required]="persistent.required"
+                  [formControl]="persistent.control"
+                  [id]="persistent.name"
                   [value]="true"
                   class="form-check-input"
-                  id="persistent"
-                  type="checkbox">
-                <label class="form-check-label" for="persistent">
+                  type="checkbox" />
+                <label [for]="persistent.name" class="form-check-label">
                   Manter a sessão iniciada
                 </label>
               </div>
-            </div>
+            </app-form-group>
           }
           <!-- Submit -->
           <button
             [disabled]="form.invalid"
             class="btn btn-lg w-100 btn-primary mb-3"
-            tabindex="3">
+            tabindex="4">
             Iniciar sessão
           </button>
           <!-- Link -->

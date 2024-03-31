@@ -1,0 +1,55 @@
+<ng-content />
+
+@if (control.errors?.['required']) {
+  <div class="invalid-feedback mt-1">
+    Preenchimento obrigatório.
+  </div>
+}
+
+@if (control.errors?.['between']) {
+  <div class="invalid-feedback mt-1">
+    Entre {{control.errors?.['between']?.['minimum']}} e {{control.errors?.['between']?.['maximum']}} caractéres.
+  </div>
+}
+
+@if (control.errors?.['decimal']) {
+  <div class="invalid-feedback mt-1">
+    Número décimal inválido.
+  </div>
+}
+
+@if (control.errors?.['email']) {
+  <div class="invalid-feedback mt-1">
+    Endereço de correio eletrónico inválido.
+  </div>
+}
+
+@if (control.errors?.['iban']) {
+  <div class="invalid-feedback mt-1">
+    Número de identificação bancário inválido.
+  </div>
+}
+
+@if (control.errors?.['minlength']) {
+  <div class="invalid-feedback mt-1">
+    Demasiado curto.
+  </div>
+}
+
+@if (control.errors?.['maxlength']) {
+  <div class="invalid-feedback mt-1">
+    Demasiado longo.
+  </div>
+}
+
+@if (control.errors?.['phonenumber']) {
+  <div class="invalid-feedback mt-1">
+    Número telefónico inválido.
+  </div>
+}
+
+@if (control.errors?.['taxnumber']) {
+  <div class="invalid-feedback mt-1">
+    Número de identificação fiscal inválido.
+  </div>
+}
