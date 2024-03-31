@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { Feature } from "../feature.abstract";
 import { SignInError, SignInForm } from "./sign-in-feature.abstractions";
+import { SignInFeatureClient } from "../../api/features/sign-in/sign-in-feature.client";
 
 @Injectable()
 export class SignInFeature implements Feature {
@@ -42,6 +43,8 @@ export class SignInFeature implements Feature {
 
   public async init(redirectUrl: string | null): Promise<void> {
 
+    const options = await this._client.getOptions();
+
     this._error = null;
 
     this._form = this._fb.group({
@@ -50,7 +53,7 @@ export class SignInFeature implements Feature {
       persistent: this._fb.control(false, [ ])
     });
 
-    this._persistentSessionsEnabled = false;
+    this._persistentSessionsEnabled = options.persistentSessionsEnabled;
 
     this._redirectUrl = redirectUrl ?? '/';
 
@@ -65,6 +68,7 @@ export class SignInFeature implements Feature {
   // #endregion
 
   constructor(
-    private readonly _fb: FormBuilder
+    private readonly _fb: FormBuilder,
+    private readonly _client: SignInFeatureClient
   ) {}
 }
