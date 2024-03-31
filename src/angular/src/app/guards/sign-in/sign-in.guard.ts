@@ -1,6 +1,7 @@
 import { Provider, inject } from "@angular/core";
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { SignInFeature } from "../../features/sign-in/sign-in.feature";
+import { SignInFeatureClient } from "../../api/features/sign-in/sign-in-feature.client";
 
 export class SignInGuard {
 
@@ -17,7 +18,8 @@ export class SignInGuard {
 
   public static get providers(): Provider[] {
     return [
-      SignInFeature
+      SignInFeature,
+      SignInFeatureClient
     ];
   }
 
