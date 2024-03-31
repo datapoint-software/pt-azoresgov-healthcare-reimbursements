@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
 {
-    public sealed class SignInOptionsQueryHandler : IQueryHandler<SignInFeatureOptionsQuery, SignInFeatureOptions>
+    public sealed class SignInFeatureOptionsQueryHandler : IQueryHandler<SignInFeatureOptionsQuery, SignInFeatureOptions>
     {
         private readonly IParameterManager _parameters;
 
-        public SignInOptionsQueryHandler(IParameterManager parameters)
+        public SignInFeatureOptionsQueryHandler(IParameterManager parameters)
         {
             _parameters = parameters;
         }
