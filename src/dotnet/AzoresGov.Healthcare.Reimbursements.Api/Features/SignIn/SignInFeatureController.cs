@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn;
+using Datapoint.Mediator;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading;
@@ -9,11 +11,23 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.SignIn
     [Route("/api/features/sign-in")]
     public sealed class SignInFeatureController : Controller
     {
+        private readonly IMediator _mediator;
+
+        public SignInFeatureController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
+
         [AllowAnonymous]
         [HttpGet]
-        public Task<SignInFeatureOptionsModel> GetOptionsAsync(CancellationToken ct)
+        public async Task<SignInFeatureOptionsModel> GetOptionsAsync(CancellationToken ct)
         {
-            throw new NotImplementedException();
+            var result = await _mediator.HandleQueryAsync<SignInFeatureOptionsQuery, SignInFeatureOptions>(
+                new SignInFeatureOptionsQuery(),
+                ct);
+
+            return new SignInFeatureOptionsModel(
+                result.PersistentSessionsEnabled);
         }
     }
 }
