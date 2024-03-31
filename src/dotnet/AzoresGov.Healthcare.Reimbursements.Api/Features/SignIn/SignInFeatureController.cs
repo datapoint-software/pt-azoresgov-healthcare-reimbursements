@@ -29,5 +29,14 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.SignIn
             return new SignInFeatureOptionsModel(
                 result.PersistentSessionsEnabled);
         }
+
+        [AllowAnonymous]
+        [HttpPost("sign-in")]
+        public Task<SignInFeatureSignInResultModel> SignInAsync(
+            [FromBody] SignInFeatureSignInModel model,
+            CancellationToken ct)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
