@@ -1,3 +1,10 @@
+export enum EntityNature {
+  Administrative = 65,
+  HealthCenter = 67,
+  Hospital = 72,
+  Office = 79
+}
+
 export enum UserRoleNature {
   Administrative = 65,
   Administrator = 83,
