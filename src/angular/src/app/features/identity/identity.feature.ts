@@ -1,6 +1,8 @@
 import { Injectable } from "@angular/core";
 import { Feature } from "../feature.abstract";
 import { IdentityFeatureClaims } from "./identity-feature.abstractions";
+import { IdentityFeatureClient } from "../../api/features/identity/identity-feature.client";
+import { conflict, forbidden, unauthorized } from "../../api/api.helpers";
 
 @Injectable()
 export class IdentityFeature implements Feature {
@@ -57,5 +59,21 @@ export class IdentityFeature implements Feature {
     this._claims = claims;
   }
 
+  public async refresh(): Promise<void> {
+
+    const claims = await this._client.refresh()
+      .catch(conflict((_) => null))
+      .catch(unauthorized((_) => null));
+
+    this._claims = claims && ({
+      ...claims,
+      expiration: (claims.expiration && new Date(claims.expiration)) || null
+    });
+  }
+
   // #endregion
+
+  constructor(
+    private _client: IdentityFeatureClient
+  ) {}
 }
