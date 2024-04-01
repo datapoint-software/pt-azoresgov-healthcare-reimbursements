@@ -7,6 +7,7 @@ import { IdentityFeature } from "../identity/identity.feature";
 import { NEVER } from "rxjs";
 import { conflict } from "../../api/api.helpers";
 import { Router } from "@angular/router";
+import { LoadingOverlayFeature } from "../loading-overlay/loading-overlay.feature";
 
 @Injectable()
 export class SignInFeature implements Feature {
@@ -67,12 +68,15 @@ export class SignInFeature implements Feature {
 
   public async submit(): Promise<boolean> {
 
+    this._loadingOverlayFeature.enqueue(SignInFeature.name);
+
     const claims = await this._client.signIn({
       emailAddress: this._form.value.emailAddress!,
       password: this._form.value.password!,
       persistent: this._form.value.persistent ?? false
     }).catch(conflict(({ message }) => {
       this._error = ({ message });
+      this._loadingOverlayFeature.dequeue(SignInFeature.name);
     }));
 
     if (!claims)
@@ -86,6 +90,8 @@ export class SignInFeature implements Feature {
     if (!await this._router.navigateByUrl(this._redirectUrl))
       await this._router.navigateByUrl('/');
 
+    this._loadingOverlayFeature.dequeue(SignInFeature.name);
+
     return true;
   }
 
@@ -95,6 +101,7 @@ export class SignInFeature implements Feature {
     private readonly _fb: FormBuilder,
     private readonly _client: SignInFeatureClient,
     private readonly _identityFeature: IdentityFeature,
+    private readonly _loadingOverlayFeature: LoadingOverlayFeature,
     private readonly _router: Router
   ) {}
 }
