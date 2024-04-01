@@ -16,6 +16,7 @@ using System;
 using System.Security.Claims;
 using System.Text.Json;
 using AzoresGov.Healthcare.Reimbursements.Management;
+using AzoresGov.Healthcare.Reimbursements.Enumerations;
 
 namespace AzoresGov.Healthcare.Reimbursements
 {
@@ -99,7 +100,10 @@ namespace AzoresGov.Healthcare.Reimbursements
                     .RequireAuthenticatedUser())
 
                 .AddFallbackPolicy("Fallback", (policy) => policy
-                    .RequireAssertion((_) => false));
+                    .RequireAssertion((_) => false))
+                
+                .AddPolicy("Administrative", (policy) => policy
+                    .RequireRole(UserRoleNature.Administrative.ToString()));
 
             services.AddControllers()
 
