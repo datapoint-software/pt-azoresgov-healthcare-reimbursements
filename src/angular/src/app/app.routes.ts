@@ -8,6 +8,7 @@ import { ProcessCreationComponent } from './components/process-creation/process-
 import { ProcessCreationPatientComponent } from './components/process-creation-patient/process-creation-patient.component';
 import { ProcessCreationEntityComponent } from './components/process-creation-entity/process-creation-entity.component';
 import { ProcessCreationConfirmationComponent } from './components/process-creation-confirmation/process-creation-confirmation.component';
+import { ProcessCreationGuard } from './guards/process-creation/process-creation.guard';
 
 export const routes: Routes = [
   {
@@ -31,6 +32,7 @@ export const routes: Routes = [
         path: 'processes',
         children: [
           {
+            canActivate: [ ProcessCreationGuard.canActivate ],
             component: ProcessCreationComponent,
             path: '_',
             children: [
