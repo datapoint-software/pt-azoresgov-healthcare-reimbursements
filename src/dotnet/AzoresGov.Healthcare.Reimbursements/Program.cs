@@ -96,11 +96,10 @@ namespace AzoresGov.Healthcare.Reimbursements
             services.AddAuthorizationBuilder()
 
                 .AddDefaultPolicy("Default", (policy) => policy
-                    .RequireAssertion((_) => false))
+                    .RequireAuthenticatedUser())
 
-                .AddFallbackPolicy("User", (policy) => policy
-                    .RequireAuthenticatedUser()
-                    .RequireClaim(ClaimTypes.Sid));
+                .AddFallbackPolicy("Fallback", (policy) => policy
+                    .RequireAssertion((_) => false));
 
             services.AddControllers()
 
