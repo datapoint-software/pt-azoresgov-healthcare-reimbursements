@@ -3,6 +3,7 @@ import { SignInComponent } from './components/sign-in/sign-in.component';
 import { SignInGuard } from './guards/sign-in/sign-in.guard';
 import { LayoutComponent } from './components/layout/layout.component';
 import { HomeComponent } from './components/home/home.component';
+import { LayoutGuard } from './guards/layout/layout.guard';
 
 export const routes: Routes = [
   {
@@ -12,6 +13,7 @@ export const routes: Routes = [
     providers: SignInGuard.providers
   },
   {
+    canActivate: [ LayoutGuard.canActivate ],
     component: LayoutComponent,
     path: '',
     pathMatch: 'prefix',
