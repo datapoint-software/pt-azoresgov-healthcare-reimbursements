@@ -3,6 +3,7 @@ using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories;
 using Datapoint;
 using Datapoint.Mediator;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,13 +13,16 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.Identity
     {
         private readonly IParameterManager _parameters;
 
+        private readonly IUserRoleRepository _userRoles;
+
         private readonly IUserRepository _users;
 
         private readonly IUserSessionRepository _userSessions;
 
-        public IdentityFeatureRefreshCommandHandler(IParameterManager parameters, IUserRepository users, IUserSessionRepository userSessions)
+        public IdentityFeatureRefreshCommandHandler(IParameterManager parameters, IUserRoleRepository userRoles, IUserRepository users, IUserSessionRepository userSessions)
         {
             _parameters = parameters;
+            _userRoles = userRoles;
             _users = users;
             _userSessions = userSessions;
         }
@@ -49,6 +53,10 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.Identity
                     await _parameters.GetUserSessionExpirationInSecondsAsync(ct));
             }
 
+            var userRoles = await _userRoles.GetAllByUserIdAsync(
+                user.Id,
+                ct);
+
             userSession.RowVersionId = Guid.NewGuid();
             userSession.LastSeen = command.Creation;
 
@@ -61,7 +69,13 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.Identity
                 new IdentityFeatureRefreshResultUserSession(
                     userSession.PublicId,
                     userSession.RowVersionId,
-                    userSession.Expiration));
+                    userSession.Expiration),
+                userRoles
+                    .Select(e => new IdentityFeatureRefreshResultUserRole(
+                        e.PublicId,
+                        e.RowVersionId,
+                        e.Nature))
+                    .ToArray());
         }
     }
 }
