@@ -8,6 +8,7 @@ using System;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace AzoresGov.Healthcare.Reimbursements.Api.Features.SignIn
 {
@@ -72,7 +73,8 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.SignIn
                 result.User.RowVersionId,
                 result.User.Name,
                 result.User.EmailAddress,
-                result.UserSession.Expiration);
+                result.UserSession.Expiration,
+                result.UserRoles.Select(e => e.Nature).ToArray());
         }
     }
 }
