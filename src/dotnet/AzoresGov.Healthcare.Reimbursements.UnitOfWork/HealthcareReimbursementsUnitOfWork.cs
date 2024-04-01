@@ -16,6 +16,8 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork
 
         public DbSet<User> Users => Set<User>();
 
+        public DbSet<UserSession> UserSessions => Set<UserSession>();
+
         /// <inheritdoc />
         protected override void OnModelCreating(ModelBuilder model) =>
 
