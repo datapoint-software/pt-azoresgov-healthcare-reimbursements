@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
+import { conflict, unauthorized } from "../../api/api.helpers";
+import { IdentityFeatureClient } from "../../api/features/identity/identity-feature.client";
+import { APP_IDENTITY_REFRESH_TIMEOUT_BUFFER } from "../../app.constants";
 import { Feature } from "../feature.abstract";
 import { IdentityFeatureClaims } from "./identity-feature.abstractions";
-import { IdentityFeatureClient } from "../../api/features/identity/identity-feature.client";
-import { conflict, forbidden, unauthorized } from "../../api/api.helpers";
 
 @Injectable()
 export class IdentityFeature implements Feature {
@@ -10,6 +11,8 @@ export class IdentityFeature implements Feature {
   // #region State
 
   private _claims: IdentityFeatureClaims | null = null;
+
+  private _refreshTimeoutId: ReturnType<typeof setTimeout> | null = null;
 
   // #endregion
 
@@ -61,6 +64,9 @@ export class IdentityFeature implements Feature {
 
   public async refresh(): Promise<void> {
 
+    if (this._refreshTimeoutId)
+      clearTimeout(this._refreshTimeoutId);
+
     const claims = await this._client.refresh()
       .catch(conflict((_) => null))
       .catch(unauthorized((_) => null));
@@ -69,6 +75,13 @@ export class IdentityFeature implements Feature {
       ...claims,
       expiration: (claims.expiration && new Date(claims.expiration)) || null
     });
+
+    if (this._claims?.expiration) {
+      this._refreshTimeoutId = setTimeout(
+        () => this.refresh(),
+        ((this._claims.expiration.getTime() - new Date().getTime()) - APP_IDENTITY_REFRESH_TIMEOUT_BUFFER)
+      );
+    }
   }
 
   // #endregion
