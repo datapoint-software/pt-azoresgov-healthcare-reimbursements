@@ -5,6 +5,7 @@ import { LayoutComponent } from './components/layout/layout.component';
 import { HomeComponent } from './components/home/home.component';
 import { LayoutGuard } from './guards/layout/layout.guard';
 import { ProcessCreationComponent } from './components/process-creation/process-creation.component';
+import { ProcessCreationPatientComponent } from './components/process-creation-patient/process-creation-patient.component';
 
 export const routes: Routes = [
   {
@@ -30,6 +31,12 @@ export const routes: Routes = [
           {
             component: ProcessCreationComponent,
             path: '_',
+            children: [
+              {
+                component: ProcessCreationPatientComponent,
+                path: 'patient'
+              }
+            ]
           }
         ]
       }
