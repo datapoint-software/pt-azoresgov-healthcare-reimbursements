@@ -12,8 +12,8 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.EntityTypeConfiguration
             builder.Entity();
 
             builder.HasOne(e => e.User)
-                .WithOne()
-                .HasForeignKey<UserSession>(e => e.UserId)
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 

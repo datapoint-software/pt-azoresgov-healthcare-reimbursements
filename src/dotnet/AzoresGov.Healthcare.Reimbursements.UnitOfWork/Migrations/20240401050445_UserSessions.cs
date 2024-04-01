@@ -43,8 +43,7 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_UserSessions_UserId",
                 table: "UserSessions",
-                column: "UserId",
-                unique: true);
+                column: "UserId");
         }
 
         /// <inheritdoc />

@@ -154,8 +154,7 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
 
                     b.HasAlternateKey("PublicId");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("UserSessions");
                 });
@@ -174,8 +173,8 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
             modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.UserSession", b =>
                 {
                     b.HasOne("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.User", "User")
-                        .WithOne()
-                        .HasForeignKey("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.UserSession", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
