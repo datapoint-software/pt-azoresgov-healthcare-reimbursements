@@ -22,6 +22,10 @@ namespace AzoresGov.Healthcare.Reimbursements.Management
 
             (await GetValueOrDefaultByNameAsync<bool?>("PersistentSessionsEnabled", ct)) ?? false;
 
+        public async Task<int> GetSignInDelayInMillisecondsAsync(CancellationToken ct) =>
+
+            (await GetValueOrDefaultByNameAsync<int?>("SignInDelayInMilliseconds", ct)) ?? 5000;
+
         public async Task<int> GetUserSessionExpirationInSecondsAsync(CancellationToken ct) =>
 
             (await GetValueOrDefaultByNameAsync<int?>("UserSessionExpirationInSeconds", ct)) ?? 900;
