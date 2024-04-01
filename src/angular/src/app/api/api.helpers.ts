@@ -1,11 +1,12 @@
-import { HttpErrorResponse } from "@angular/common/http";
+import { HttpErrorResponse, HttpStatusCode } from "@angular/common/http";
 import { ErrorResponseModel } from "./api.abstractions";
 
-export const conflict = <T>(
+const status = <T>(
+  status: number,
   fn: (model: ErrorResponseModel, response: HttpErrorResponse) => Promise<T> | T
 ): ((error: unknown) => Promise<T>) => async (error) => {
 
-  if (error instanceof HttpErrorResponse && error.status === 409) {
+  if (error instanceof HttpErrorResponse && error.status === status) {
     const r = fn(error.error, error);
     if (r) await r;
     return r;
@@ -13,3 +14,21 @@ export const conflict = <T>(
 
   throw error;
 }
+
+export const conflict = <T>(
+  fn: (model: ErrorResponseModel, response: HttpErrorResponse) => Promise<T> | T
+): ((error: unknown) => Promise<T>) =>
+
+  status(HttpStatusCode.Conflict, fn);
+
+export const forbidden = <T>(
+  fn: (model: ErrorResponseModel, response: HttpErrorResponse) => Promise<T> | T
+): ((error: unknown) => Promise<T>) =>
+
+  status(HttpStatusCode.Forbidden, fn);
+
+export const unauthorized = <T>(
+  fn: (model: ErrorResponseModel, response: HttpErrorResponse) => Promise<T> | T
+): ((error: unknown) => Promise<T>) =>
+
+  status(HttpStatusCode.Unauthorized, fn);
