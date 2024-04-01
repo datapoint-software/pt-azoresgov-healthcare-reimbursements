@@ -30,9 +30,17 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
             _userSessions = userSessions;
         }
 
-        public async Task<SignInFeatureSignInResult> HandleCommandAsync(
-            SignInFeatureSignInCommand command, 
-            CancellationToken ct)
+        public async Task<SignInFeatureSignInResult> HandleCommandAsync(SignInFeatureSignInCommand command, CancellationToken ct)
+        {
+            var delay = Task.Delay(await _parameters.GetSignInDelayInMillisecondsAsync(ct));
+            var authentication = AuthenticateAsync(command, ct);
+
+            await Task.WhenAll(delay, authentication);
+
+            return authentication.Result;
+        }
+
+        private async Task<SignInFeatureSignInResult> AuthenticateAsync(SignInFeatureSignInCommand command, CancellationToken ct)
         {
             var user = await _users.GetByEmailAddressAsync(
                 command.EmailAddress,
