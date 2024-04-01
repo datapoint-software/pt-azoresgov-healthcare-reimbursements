@@ -4,6 +4,7 @@ import { IdentityFeatureClient } from "../../api/features/identity/identity-feat
 import { APP_IDENTITY_REFRESH_TIMEOUT_BUFFER } from "../../app.constants";
 import { Feature } from "../feature.abstract";
 import { IdentityFeatureClaims } from "./identity-feature.abstractions";
+import { UserRoleNature } from "../../app.enums";
 
 @Injectable()
 export class IdentityFeature implements Feature {
@@ -17,6 +18,10 @@ export class IdentityFeature implements Feature {
   // #endregion
 
   // #region State accessors
+
+  public get administrative(): boolean {
+    return -1 < (this._claims?.roles.indexOf(UserRoleNature.Administrative) ?? -1);
+  }
 
   public get anonymous(): boolean {
     return this._claims === null;
