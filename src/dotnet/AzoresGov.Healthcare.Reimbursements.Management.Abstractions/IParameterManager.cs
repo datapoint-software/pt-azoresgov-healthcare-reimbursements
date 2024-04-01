@@ -6,5 +6,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Management
     public interface IParameterManager
     {
         Task<bool> GetPersistentSessionsEnabledAsync(CancellationToken ct);
+
+        Task<int> GetUserPasswordHashWorkFactorAsync(CancellationToken ct);
     }
 }

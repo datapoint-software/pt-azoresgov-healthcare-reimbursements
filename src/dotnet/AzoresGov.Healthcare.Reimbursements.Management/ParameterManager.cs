@@ -14,6 +14,10 @@ namespace AzoresGov.Healthcare.Reimbursements.Management
             _parameters = parameters;
         }
 
+        public async Task<int> GetUserPasswordHashWorkFactorAsync(CancellationToken ct) =>
+
+            (await GetValueOrDefaultByNameAsync<int?>("UserPasswordHashWorkFactor", ct)) ?? 14;
+
         public async Task<bool> GetPersistentSessionsEnabledAsync(CancellationToken ct) =>
 
             (await GetValueOrDefaultByNameAsync<bool?>("PersistentSessionsEnabled", ct)) ?? false;
