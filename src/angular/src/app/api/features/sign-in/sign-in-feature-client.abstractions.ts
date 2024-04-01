@@ -1,3 +1,5 @@
+import { UserRoleNature } from "../../../app.enums";
+
 export interface SignInFeatureOptionsModel {
   persistentSessionsEnabled: boolean;
 }
@@ -14,4 +16,5 @@ export interface SignInFeatureSignInResultModel {
   name: string;
   emailAddress: string;
   expiration?: string;
+  roles: UserRoleNature[];
 }
