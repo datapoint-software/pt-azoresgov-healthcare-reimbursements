@@ -77,6 +77,7 @@ export class SignInFeature implements Feature {
     }).catch(conflict(({ message }) => {
       this._error = ({ message });
       this._loadingOverlayFeature.dequeue(SignInFeature.name);
+      return null;
     }));
 
     if (!claims)
