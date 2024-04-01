@@ -36,18 +36,13 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.Identity
 
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(
-                    new ClaimsIdentity(
-                        new Claim[]
-                        {
-                            new (ClaimTypes.Sid, result.UserSession.Id.ToString()),
-                            new (ClaimTypes.NameIdentifier, result.User.Id.ToString()),
-                            new (ClaimTypes.Name, result.User.Name),
-                            new (ClaimTypes.Email, result.User.EmailAddress)
-                        },
-                        "Basic",
-                        ClaimTypes.Name,
-                        ClaimTypes.Role)),
+                ClaimsPrincipalHelper.CreateUserClaimsPrincipal(
+                    "Basic",
+                    result.User.Id,
+                    result.UserSession.Id,
+                    result.User.Name,
+                    result.User.EmailAddress,
+                    result.UserRoles.Select(ur => ur.Nature).ToArray()),
                 new AuthenticationProperties()
                 {
                     ExpiresUtc = result.UserSession.Expiration
