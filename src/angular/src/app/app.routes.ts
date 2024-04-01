@@ -4,6 +4,7 @@ import { SignInGuard } from './guards/sign-in/sign-in.guard';
 import { LayoutComponent } from './components/layout/layout.component';
 import { HomeComponent } from './components/home/home.component';
 import { LayoutGuard } from './guards/layout/layout.guard';
+import { ProcessCreationComponent } from './components/process-creation/process-creation.component';
 
 export const routes: Routes = [
   {
@@ -22,6 +23,15 @@ export const routes: Routes = [
         component: HomeComponent,
         path: '',
         pathMatch: 'full'
+      },
+      {
+        path: 'processes',
+        children: [
+          {
+            component: ProcessCreationComponent,
+            path: '_',
+          }
+        ]
       }
     ]
   }
