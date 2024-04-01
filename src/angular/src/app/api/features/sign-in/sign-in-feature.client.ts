@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { firstValueFrom } from "rxjs";
-import { SignInFeatureOptionsModel } from "./sign-in-feature-client.abstractions";
+import { SignInFeatureOptionsModel, SignInFeatureSignInModel, SignInFeatureSignInResultModel } from "./sign-in-feature-client.abstractions";
 
 const baseAddress = "/api/features/sign-in";
 
@@ -12,6 +12,15 @@ export class SignInFeatureClient {
     return await firstValueFrom(
       this._httpClient.get<SignInFeatureOptionsModel>(
         baseAddress
+      )
+    );
+  }
+
+  public async signIn(model: SignInFeatureSignInModel): Promise<SignInFeatureSignInResultModel> {
+    return await firstValueFrom(
+      this._httpClient.post<SignInFeatureSignInResultModel>(
+        `${baseAddress}/sign-in`,
+        model
       )
     );
   }
