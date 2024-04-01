@@ -8,5 +8,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Management
         Task<bool> GetPersistentSessionsEnabledAsync(CancellationToken ct);
 
         Task<int> GetUserPasswordHashWorkFactorAsync(CancellationToken ct);
+
+        Task<int> GetUserSessionExpirationInSecondsAsync(CancellationToken ct);
     }
 }

@@ -22,6 +22,10 @@ namespace AzoresGov.Healthcare.Reimbursements.Management
 
             (await GetValueOrDefaultByNameAsync<bool?>("PersistentSessionsEnabled", ct)) ?? false;
 
+        public async Task<int> GetUserSessionExpirationInSecondsAsync(CancellationToken ct) =>
+
+            (await GetValueOrDefaultByNameAsync<int?>("UserSessionExpirationInSeconds", ct)) ?? 900;
+
         private async Task<T?> GetValueOrDefaultByNameAsync<T>(string name, CancellationToken ct)
         {
             var parameter = await _parameters.GetByNameAsync(name, ct);
