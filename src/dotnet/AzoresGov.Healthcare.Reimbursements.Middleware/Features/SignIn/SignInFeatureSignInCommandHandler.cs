@@ -5,6 +5,7 @@ using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories;
 using Datapoint;
 using Datapoint.Mediator;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,14 +19,17 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
 
         private readonly IUserPasswordRepository _userPasswords;
 
+        private readonly IUserRoleRepository _userRoles;
+
         private readonly IUserRepository _users;
 
         private readonly IUserSessionRepository _userSessions;
 
-        public SignInFeatureSignInCommandHandler(IParameterManager parameters, IUserPasswordRepository userPasswords, IUserRepository users, IUserSessionRepository userSessions)
+        public SignInFeatureSignInCommandHandler(IParameterManager parameters, IUserPasswordRepository userPasswords, IUserRoleRepository userRoles, IUserRepository users, IUserSessionRepository userSessions)
         {
             _parameters = parameters;
             _userPasswords = userPasswords;
+            _userRoles = userRoles;
             _users = users;
             _userSessions = userSessions;
         }
@@ -68,6 +72,10 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
                     .WithErrorMessage(GenericErrorMessage);
             }
 
+            var userRoles = await _userRoles.GetAllByUserIdAsync(
+                user.Id,
+                ct);
+
             var userPasswordHashWorkFactor = await _parameters.GetUserPasswordHashWorkFactorAsync(ct);
 
             if (!UserPasswordHelper.VerifyPasswordHash(userPassword.Hash, userPasswordHashWorkFactor))
@@ -98,7 +106,13 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.SignIn
                 new SignInFeatureSignInResultUserSession(
                     userSession.PublicId,
                     userSession.RowVersionId,
-                    userSession.Expiration));
+                    userSession.Expiration),
+                userRoles
+                    .Select(e => new SignInFeatureSignInResultUserRole(
+                        e.PublicId,
+                        e.RowVersionId,
+                        e.Nature))
+                    .ToArray());
         }
 
         private async Task<DateTimeOffset?> GetUserSessionExpirationAsync(SignInFeatureSignInCommand command, CancellationToken ct)
