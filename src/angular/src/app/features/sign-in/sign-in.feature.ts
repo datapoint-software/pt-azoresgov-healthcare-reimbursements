@@ -3,6 +3,10 @@ import { FormBuilder, Validators } from "@angular/forms";
 import { Feature } from "../feature.abstract";
 import { SignInError, SignInForm } from "./sign-in-feature.abstractions";
 import { SignInFeatureClient } from "../../api/features/sign-in/sign-in-feature.client";
+import { IdentityFeature } from "../identity/identity.feature";
+import { NEVER } from "rxjs";
+import { conflict } from "../../api/api.helpers";
+import { Router } from "@angular/router";
 
 @Injectable()
 export class SignInFeature implements Feature {
@@ -62,13 +66,35 @@ export class SignInFeature implements Feature {
   }
 
   public async submit(): Promise<boolean> {
-    return false;
+
+    const claims = await this._client.signIn({
+      emailAddress: this._form.value.emailAddress!,
+      password: this._form.value.password!,
+      persistent: this._form.value.persistent ?? false
+    }).catch(conflict(({ message }) => {
+      this._error = ({ message });
+    }));
+
+    if (!claims)
+      return false;
+
+    this._identityFeature.authenticate({
+      ...claims,
+      expiration: (claims.expiration && new Date(claims.expiration)) || null
+    });
+
+    if (!await this._router.navigateByUrl(this._redirectUrl))
+      await this._router.navigateByUrl('/');
+
+    return true;
   }
 
   // #endregion
 
   constructor(
     private readonly _fb: FormBuilder,
-    private readonly _client: SignInFeatureClient
+    private readonly _client: SignInFeatureClient,
+    private readonly _identityFeature: IdentityFeature,
+    private readonly _router: Router
   ) {}
 }
