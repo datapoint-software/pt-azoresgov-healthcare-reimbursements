@@ -14,6 +14,8 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork
 
         public DbSet<Parameter> Parameters => Set<Parameter>();
 
+        public DbSet<UserEntity> UserEntities => Set<UserEntity>();
+
         public DbSet<UserPassword> UserPasswords => Set<UserPassword>();
 
         public DbSet<UserRole> UserRoles => Set<UserRole>();
