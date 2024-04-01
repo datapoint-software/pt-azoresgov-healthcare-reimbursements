@@ -7,6 +7,7 @@ import { LayoutGuard } from './guards/layout/layout.guard';
 import { ProcessCreationComponent } from './components/process-creation/process-creation.component';
 import { ProcessCreationPatientComponent } from './components/process-creation-patient/process-creation-patient.component';
 import { ProcessCreationEntityComponent } from './components/process-creation-entity/process-creation-entity.component';
+import { ProcessCreationConfirmationComponent } from './components/process-creation-confirmation/process-creation-confirmation.component';
 
 export const routes: Routes = [
   {
@@ -33,6 +34,10 @@ export const routes: Routes = [
             component: ProcessCreationComponent,
             path: '_',
             children: [
+              {
+                path: 'confirmation',
+                component: ProcessCreationConfirmationComponent
+              },
               {
                 component: ProcessCreationEntityComponent,
                 path: 'entity'
