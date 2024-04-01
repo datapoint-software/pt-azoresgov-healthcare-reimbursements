@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from "@angular/router";
 import { Subscription, filter, map } from "rxjs";
+import { BootstrapToggleCollapseDirective } from "../../directives/bootstrap/data-bs-toggle-collapse.directive";
 
 @Component({
-  imports: [ RouterLink, RouterOutlet ],
+  imports: [ BootstrapToggleCollapseDirective, RouterLink, RouterOutlet ],
   selector: 'app-layout',
   standalone: true,
   templateUrl: './layout.component.html'
