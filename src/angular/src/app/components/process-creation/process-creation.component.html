@@ -1,33 +1,99 @@
-<div class="header">
-  <div class="container-fluid">
-    <!-- Body -->
-    <div class="header-body">
-      <div class="row align-items-end">
-        <div class="col">
+<div class="container-lg">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10 col-xl-8 py-6">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8 col-xl-6 text-center">
 
           <!-- Pretitle -->
-          <h6 class="header-pretitle">
-            Processos
+          <h6 class="mb-4 text-uppercase text-muted">
+            Passo {{stepNumber}} de {{stepCount}}
           </h6>
 
-          <!-- Title -->
-          <h1 class="header-title">
-            Novo
-          </h1>
+          @if (confirmationStep) {
+
+            <!-- Title -->
+            <h1 class="mb-3">
+              Confirmação
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="mb-5 text-muted">
+              Confirme os detalhes para o registo do <strong class="text-nowrap">Processo de Reembolso</strong>.
+            </p>
+
+          }
+
+          @else if (entitySelectionStep) {
+
+            <!-- Title -->
+            <h1 class="mb-3">
+              Entidade
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="mb-5 text-muted">
+              Escolha o <strong class="text-nowrap">Centro de Saúde</strong> ou <strong class="text-nowrap">Loja do Cidadão</strong>
+              para associar ao <strong class="text-nowrap">Processo de Reembolso</strong>.
+            </p>
+
+          }
+
+          @else if (patientSelectionStep) {
+
+            <!-- Title -->
+            <h1 class="mb-3">
+              Utente
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="mb-5 text-muted">
+              Escolha o <strong class="text-nowrap">Utente</strong> para associar ao
+              <strong class="text-nowrap">Processo de Reembolso</strong>.
+            </p>
+
+          }
 
         </div>
-      </div> <!-- / .row -->
-    </div> <!-- / .header-body -->
-  </div>
-</div>
+      </div>
 
-<div class="container-fluid ms-0 pb-4">
-  <div class="row">
-    <div class="col col-12 col-lg-9 order-2 order-lg-1">
-      <router-outlet></router-outlet>
-    </div>
-    <div class="col col-12 col-lg-3 order-1 order-lg-2">
-      <app-process-creation-navigation />
+      <div style="height: 240px; background: black" class="mb-6"></div>
+
+      <hr class="my-5">
+
+      <div class="nav row align-items-center" role="tablist">
+        <div class="col-auto">
+
+          <!-- Button -->
+          <button
+            (click)="previous()"
+            [class.invisible]="firstStep"
+            class="btn btn-lg btn-white"
+            type="button">
+            Anterior
+          </button>
+
+        </div>
+        <div class="col text-center">
+
+          <!-- Step -->
+          <h6 class="text-uppercase text-muted mb-0">Passo {{stepNumber}} de {{stepCount}}</h6>
+
+        </div>
+        <div class="col-auto">
+
+          <!-- Button -->
+          <button
+            (click)="next()"
+            [class.invisible]="incomplete"
+            class="btn btn-lg btn-primary"
+            type="button">
+            Próximo
+          </button>
+
+        </div>
+      </div>
     </div>
   </div>
+
+
 </div>
