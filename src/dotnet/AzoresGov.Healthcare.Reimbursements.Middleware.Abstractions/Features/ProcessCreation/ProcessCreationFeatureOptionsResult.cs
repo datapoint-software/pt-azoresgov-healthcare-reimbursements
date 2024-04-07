@@ -5,6 +5,13 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
 {
     public sealed class ProcessCreationFeatureOptionsResult
     {
+        public ProcessCreationFeatureOptionsResult(bool entitySelectionEnabled, IReadOnlyCollection<ProcessCreationFeatureOptionsResultEntity>? entities, Guid? entityId)
+        {
+            EntitySelectionEnabled = entitySelectionEnabled;
+            Entities = entities;
+            EntityId = entityId;
+        }
+
         public bool EntitySelectionEnabled { get; }
 
         public IReadOnlyCollection<ProcessCreationFeatureOptionsResultEntity>? Entities { get; }
