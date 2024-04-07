@@ -15,6 +15,17 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
         {
         }
 
+        Task<Entity?> GetByUserIdAndEntityNaturesAsync(
+            long userId,
+            IReadOnlyCollection<EntityNature> entityNatures,
+            CancellationToken ct) =>
+
+            UnitOfWork.UserEntities
+                .Where(ue => ue.UserId == userId)
+                .Where(ue => entityNatures.Contains(ue.Entity.Nature))
+                .Select(ue => ue.Entity)
+                .FirstOrDefaultAsync(ct);
+
         public Task<int> GetCountByUserIdAndEntityNatureAsync(
             long userId,
             IReadOnlyCollection<EntityNature> entityNatures,
