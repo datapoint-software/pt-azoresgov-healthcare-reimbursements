@@ -10,6 +10,7 @@ import { LayoutGuard } from './guards/layout/layout.guard';
 import { ProcessCreationEntitySelectionGuard } from './guards/process-creation-entity-selection/process-creation-entity-selection.guard';
 import { ProcessCreationGuard } from './guards/process-creation/process-creation.guard';
 import { SignInGuard } from './guards/sign-in/sign-in.guard';
+import { ProcessCreationPatientSelectionGuard } from './guards/process-creation-patient-selection/process-creation-patient-selection.guard';
 
 export const routes: Routes = [
   {
@@ -53,6 +54,7 @@ export const routes: Routes = [
                 path: 'entity'
               },
               {
+                canActivate: [ ProcessCreationPatientSelectionGuard.canActivate ],
                 component: ProcessCreationPatientComponent,
                 path: 'patient'
               }
