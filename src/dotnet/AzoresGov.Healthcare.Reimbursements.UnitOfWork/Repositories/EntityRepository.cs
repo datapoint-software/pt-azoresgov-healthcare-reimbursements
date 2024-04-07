@@ -35,5 +35,16 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
                 .Where(ue => ue.UserId == userId)
                 .Where(ue => entityNatures.Contains(ue.Entity.Nature))
                 .CountAsync(ct);
+
+        public Task<Entity?> GetParentEntityByEntityIdAndParentEntityNatureAsync(
+            long entityId,
+            EntityNature parentEntityNature,
+            CancellationToken ct) =>
+
+            UnitOfWork.EntityParentEntities
+                .Where(epe => epe.EntityId == entityId)
+                .Where(epe => epe.ParentEntity.Nature == parentEntityNature)
+                .Select(epe => epe.ParentEntity)
+                .FirstOrDefaultAsync(ct);
     }
 }
