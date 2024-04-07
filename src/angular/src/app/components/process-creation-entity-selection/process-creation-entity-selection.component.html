@@ -1,1 +1,33 @@
-<h1>Entidade</h1>
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <app-form-group #filter [name]="'filter'" class="form-group d-block">
+    <!-- Label -->
+    <label
+      [class.is-invalid]="filter.invalid"
+      [class.is-required]="filter.required"
+      [for]="filter.name"
+      class="form-label">
+      Entidades
+    </label>
+    <!-- Input group -->
+    <div
+      [class.is-invalid]="filter.invalid"
+      [class.is-required]="filter.required"
+      class="input-group input-group-merge">
+      <!-- Input -->
+      <input
+        [class.is-invalid]="filter.invalid"
+        [class.is-required]="filter.required"
+        [formControl]="filter.control"
+        [id]="filter.name"
+        autocomplete="off"
+        class="form-control"
+        placeholder="Pesquise por código ou nome da entidade..."
+        tabindex="1"
+        type="text" />
+      <!-- Icon -->
+      <div class="input-group-text">
+        <span class="fe fe-search"></span>
+      </div>
+    </div>
+  </app-form-group>
+</form>
