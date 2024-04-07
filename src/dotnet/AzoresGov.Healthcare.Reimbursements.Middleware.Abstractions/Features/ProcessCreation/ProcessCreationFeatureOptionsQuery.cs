@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Datapoint.Mediator;
+using System;
 
 namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreation
 {
-    public sealed class ProcessCreationFeatureOptionsQuery
+    public sealed class ProcessCreationFeatureOptionsQuery : Query<ProcessCreationFeatureOptionsResult>
     {
         public ProcessCreationFeatureOptionsQuery(Guid userId)
         {
