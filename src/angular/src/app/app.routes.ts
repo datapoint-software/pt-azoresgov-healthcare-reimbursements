@@ -7,6 +7,7 @@ import { ProcessCreationPatientComponent } from './components/process-creation-p
 import { ProcessCreationComponent } from './components/process-creation/process-creation.component';
 import { SignInComponent } from './components/sign-in/sign-in.component';
 import { LayoutGuard } from './guards/layout/layout.guard';
+import { ProcessCreationEntitySelectionGuard } from './guards/process-creation-entity-selection/process-creation-entity-selection.guard';
 import { ProcessCreationGuard } from './guards/process-creation/process-creation.guard';
 import { SignInGuard } from './guards/sign-in/sign-in.guard';
 
@@ -47,6 +48,7 @@ export const routes: Routes = [
                 component: ProcessCreationConfirmationComponent
               },
               {
+                canActivate: [ ProcessCreationEntitySelectionGuard.canActivate ],
                 component: ProcessCreationEntitySelectionComponent,
                 path: 'entity'
               },
