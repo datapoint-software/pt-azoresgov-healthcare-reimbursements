@@ -1,10 +1,7 @@
 ﻿using AzoresGov.Healthcare.Reimbursements.Enumerations;
 using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories;
 using Datapoint.Mediator;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -51,15 +48,30 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
 
                 Assert.Found(entity);
 
+                var parentEntity = await _entities.GetParentEntityByEntityIdAndParentEntityNatureAsync(
+                    entity.Id,
+                    EntityNature.Administrative,
+                    ct);
+
+                Assert.Found(parentEntity);
+
                 return new ProcessCreationFeatureOptionsResult(
                     false,
                     [
                         new ProcessCreationFeatureOptionsResultEntity(
                             entity.PublicId,
                             entity.RowVersionId,
+                            parentEntity.PublicId,
                             entity.Code,
                             entity.Name,
-                            entity.Nature)
+                            entity.Nature),
+                        new ProcessCreationFeatureOptionsResultEntity(
+                            parentEntity.PublicId,
+                            parentEntity.RowVersionId,
+                            null,
+                            parentEntity.Code,
+                            parentEntity.Name,
+                            parentEntity.Nature)
                     ],
                     entity.PublicId);
             }
