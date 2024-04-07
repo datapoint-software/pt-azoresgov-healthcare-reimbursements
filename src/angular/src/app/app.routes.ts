@@ -38,6 +38,11 @@ export const routes: Routes = [
             providers: ProcessCreationGuard.providers,
             children: [
               {
+                path: '',
+                pathMatch: 'full',
+                redirectTo: 'entity'
+              },
+              {
                 path: 'confirmation',
                 component: ProcessCreationConfirmationComponent
               },

@@ -17,6 +17,10 @@ export class ProcessCreationEntitySelectionFeature implements Feature {
 
   // #region State accessors
 
+  public get complete(): boolean {
+    return !!this._entityId;
+  }
+
   public get enabled(): boolean {
     return this._enabled;
   }

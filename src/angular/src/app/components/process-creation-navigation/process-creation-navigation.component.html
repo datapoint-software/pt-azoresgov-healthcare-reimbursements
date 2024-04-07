@@ -5,10 +5,17 @@
     </h4>
   </div>
   <div class="list-group list-group-flush">
-    <a [routerLink]="[ '/processes', '_', 'entity' ]" class="list-group-item pe-4 ps-4 py-0 text-muted d-flex align-items-center justify-content-center">
-      <span class="py-3">Entidade</span>
-      <span class="fe fe-lock ms-auto"></span>
-    </a>
+    @if (entitySelectionEnabled) {
+      <a [routerLink]="[ '/processes', '_', 'entity' ]" class="list-group-item pe-4 ps-4 py-0 d-flex align-items-center justify-content-center">
+        <span class="py-3">Entidade</span>
+        @if (entitySelectionComplete) {
+          <span class="fe fe-check text-success ms-auto"></span>
+        }
+        @else {
+          <span class="fe fe-edit ms-auto"></span>
+        }
+      </a>
+    }
     <a [routerLink]="[ '/processes', '_', 'patient' ]" class="list-group-item pe-4 ps-4 py-0 text-muted d-flex align-items-center justify-content-center">
       <span class="py-3">Utente</span>
       <span class="fe fe-lock ms-auto"></span>
