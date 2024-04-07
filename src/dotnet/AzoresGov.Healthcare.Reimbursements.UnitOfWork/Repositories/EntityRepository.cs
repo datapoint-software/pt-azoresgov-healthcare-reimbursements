@@ -15,7 +15,7 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
         {
         }
 
-        Task<Entity?> GetByUserIdAndEntityNaturesAsync(
+        public Task<Entity?> GetByUserIdAndEntityNaturesAsync(
             long userId,
             IReadOnlyCollection<EntityNature> entityNatures,
             CancellationToken ct) =>
