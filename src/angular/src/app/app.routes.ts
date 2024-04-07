@@ -1,14 +1,14 @@
 import { Routes } from '@angular/router';
-import { SignInComponent } from './components/sign-in/sign-in.component';
-import { SignInGuard } from './guards/sign-in/sign-in.guard';
-import { LayoutComponent } from './components/layout/layout.component';
 import { HomeComponent } from './components/home/home.component';
-import { LayoutGuard } from './guards/layout/layout.guard';
-import { ProcessCreationComponent } from './components/process-creation/process-creation.component';
-import { ProcessCreationPatientComponent } from './components/process-creation-patient/process-creation-patient.component';
-import { ProcessCreationEntityComponent } from './components/process-creation-entity/process-creation-entity.component';
+import { LayoutComponent } from './components/layout/layout.component';
 import { ProcessCreationConfirmationComponent } from './components/process-creation-confirmation/process-creation-confirmation.component';
+import { ProcessCreationEntitySelectionComponent } from './components/process-creation-entity-selection/process-creation-entity-selection.component';
+import { ProcessCreationPatientComponent } from './components/process-creation-patient/process-creation-patient.component';
+import { ProcessCreationComponent } from './components/process-creation/process-creation.component';
+import { SignInComponent } from './components/sign-in/sign-in.component';
+import { LayoutGuard } from './guards/layout/layout.guard';
 import { ProcessCreationGuard } from './guards/process-creation/process-creation.guard';
+import { SignInGuard } from './guards/sign-in/sign-in.guard';
 
 export const routes: Routes = [
   {
@@ -47,7 +47,7 @@ export const routes: Routes = [
                 component: ProcessCreationConfirmationComponent
               },
               {
-                component: ProcessCreationEntityComponent,
+                component: ProcessCreationEntitySelectionComponent,
                 path: 'entity'
               },
               {
