@@ -11,6 +11,7 @@ import { ProcessCreationEntitySelectionGuard } from './guards/process-creation-e
 import { ProcessCreationGuard } from './guards/process-creation/process-creation.guard';
 import { SignInGuard } from './guards/sign-in/sign-in.guard';
 import { ProcessCreationPatientSelectionGuard } from './guards/process-creation-patient-selection/process-creation-patient-selection.guard';
+import { ProcessCreationConfirmationGuard } from './guards/process-creation-confirmation/process-creation-confirmation.guard';
 
 export const routes: Routes = [
   {
@@ -45,6 +46,7 @@ export const routes: Routes = [
                 redirectTo: 'entity'
               },
               {
+                canActivate: [ ProcessCreationConfirmationGuard.canActivate ],
                 path: 'confirmation',
                 component: ProcessCreationConfirmationComponent
               },

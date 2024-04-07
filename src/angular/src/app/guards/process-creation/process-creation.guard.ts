@@ -1,8 +1,9 @@
 import { Provider, inject } from "@angular/core";
-import { IdentityFeature } from "../../features/identity/identity.feature";
-import { ProcessCreationFeature } from "../../features/process-creation/process-creation.feature";
 import { ProcessCreationFeatureClient } from "../../api/features/process-creation/process-creation-feature.client";
+import { IdentityFeature } from "../../features/identity/identity.feature";
 import { ProcessCreationEntitySelectionFeature } from "../../features/process-creation-entity-selection/process-creation-entity-selection.feature";
+import { ProcessCreationPatientSelectionFeature } from "../../features/process-creation-patient-selection/process-creation-patient-selection.feature";
+import { ProcessCreationFeature } from "../../features/process-creation/process-creation.feature";
 
 export class ProcessCreationGuard {
 
@@ -23,7 +24,8 @@ export class ProcessCreationGuard {
     return [
       ProcessCreationFeature,
       ProcessCreationFeatureClient,
-      ProcessCreationEntitySelectionFeature
+      ProcessCreationEntitySelectionFeature,
+      ProcessCreationPatientSelectionFeature
     ];
   }
 }
