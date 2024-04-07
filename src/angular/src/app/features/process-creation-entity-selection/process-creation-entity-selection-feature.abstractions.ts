@@ -1,3 +1,4 @@
+import { FormControl, FormGroup } from "@angular/forms";
 import { EntityNature } from "../../app.enums";
 
 export type ProcessCreationEntitySelectionFeatureEntity = {
@@ -8,6 +9,10 @@ export type ProcessCreationEntitySelectionFeatureEntity = {
   name: string;
   nature: EntityNature;
 };
+
+export type ProcessCreationEntitySelectionFeatureForm = FormGroup<{
+  filter: FormControl<string | null>;
+}>;
 
 export type ProcessCreationEntitySelectionFeatureOptions = {
   enabled: boolean;
