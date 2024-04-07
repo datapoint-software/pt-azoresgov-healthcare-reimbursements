@@ -35,6 +35,7 @@ export const routes: Routes = [
             canActivate: [ ProcessCreationGuard.canActivate ],
             component: ProcessCreationComponent,
             path: '_',
+            providers: ProcessCreationGuard.providers,
             children: [
               {
                 path: 'confirmation',
