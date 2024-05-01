@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { Feature } from "../feature.abstract";
-import { SignInError, SignInForm } from "./sign-in-feature.abstractions";
+import { SignInFeatureError, SignInFeatureForm } from "./sign-in-feature.abstractions";
 import { SignInFeatureClient } from "../../api/features/sign-in/sign-in-feature.client";
 import { IdentityFeature } from "../identity/identity.feature";
 import { NEVER } from "rxjs";
@@ -14,9 +14,9 @@ export class SignInFeature implements Feature {
 
   // #region State
 
-  private _error: SignInError | null = undefined!;
+  private _error: SignInFeatureError | null = undefined!;
 
-  private _form: SignInForm = undefined!;
+  private _form: SignInFeatureForm = undefined!;
 
   private _persistentSessionsEnabled: boolean = undefined!;
 
@@ -26,11 +26,11 @@ export class SignInFeature implements Feature {
 
   // #region State accessors
 
-  public get error(): SignInError | null {
+  public get error(): SignInFeatureError | null {
     return this._error;
   }
 
-  public get form(): SignInForm {
+  public get form(): SignInFeatureForm {
     return this._form;
   }
 
