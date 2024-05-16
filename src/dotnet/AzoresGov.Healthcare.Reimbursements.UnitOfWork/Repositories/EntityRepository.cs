@@ -15,6 +15,36 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
         {
         }
 
+        public async Task<IReadOnlyCollection<Entity>> GetAllByIdAsync(
+            IReadOnlyCollection<long> entityId,
+            CancellationToken ct) =>
+
+            await Entities
+                .Where(e => entityId.Contains(e.Id))
+                .ToListAsync(ct);
+
+        public async Task<IReadOnlyCollection<Entity>> GetAllBySearchCriteriaAsync(
+            long userId, 
+            string? filter, 
+            IReadOnlyCollection<EntityNature>? entityNatures, 
+            int? skip, 
+            int? take, 
+            CancellationToken ct)
+        {
+            var queryable = CreateQueryableBySearchCriteria(
+                userId,
+                filter,
+                entityNatures);
+
+            if (skip.HasValue)
+                queryable = queryable.Skip(skip.Value);
+
+            if (take.HasValue)
+                queryable = queryable.Take(take.Value);
+
+            return await queryable.ToListAsync(ct);
+        }
+
         public Task<Entity?> GetByUserIdAndEntityNaturesAsync(
             long userId,
             IReadOnlyCollection<EntityNature> entityNatures,
@@ -25,7 +55,18 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
                 .Where(ue => entityNatures.Contains(ue.Entity.Nature))
                 .Select(ue => ue.Entity)
                 .FirstOrDefaultAsync(ct);
+        public Task<int> GetCountBySearchCriteriaAsync(
+            long userId, 
+            string? filter, 
+            IReadOnlyCollection<EntityNature>? entityNatures, 
+            CancellationToken ct) =>
 
+            CreateQueryableBySearchCriteria(
+                userId, 
+                filter, 
+                entityNatures)
+                .CountAsync(ct);
+        
         public Task<int> GetCountByUserIdAndEntityNatureAsync(
             long userId,
             IReadOnlyCollection<EntityNature> entityNatures,
@@ -46,5 +87,28 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
                 .Where(epe => epe.ParentEntity.Nature == parentEntityNature)
                 .Select(epe => epe.ParentEntity)
                 .FirstOrDefaultAsync(ct);
+
+        private IQueryable<Entity> CreateQueryableBySearchCriteria(
+            long userId,
+            string? filter,
+            IReadOnlyCollection<EntityNature>? entityNatures)
+        {
+            var queryable = UnitOfWork.UserEntities
+                .Where(ue => ue.UserId == userId);
+
+            if (!string.IsNullOrEmpty(filter))
+            {
+                var pattern = $"%{filter.Replace(' ', '%')}%";
+
+                queryable = queryable.Where(ue =>
+                    EF.Functions.Like(ue.Entity.Code, pattern) ||
+                    EF.Functions.Like(ue.Entity.Name, pattern));
+            }
+
+            if (entityNatures is not null && entityNatures.Count > 0)
+                queryable = queryable.Where(ue => entityNatures.Contains(ue.Entity.Nature));
+
+            return queryable.Select(ue => ue.Entity);
+        }
     }
 }
