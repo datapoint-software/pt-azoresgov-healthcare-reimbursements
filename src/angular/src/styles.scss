@@ -1,1 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
+
+$default-transition-speed: 175ms;
+$default-transition-timing-function: ease-in;
+
+.search-result-card {
+
+  cursor: pointer;
+  transition: all $default-transition-speed $default-transition-timing-function;
+
+  &:hover,
+  &.selected {
+    border-color: var(--bs-primary);
+  }
+}

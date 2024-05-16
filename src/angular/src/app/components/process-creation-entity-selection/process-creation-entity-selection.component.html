@@ -31,3 +31,55 @@
     <div class="form-text mt-2 mb-0">Pesquise por código ou nome da entidade.</div>
   </app-form-group>
 </form>
+
+@if (searchResult) {
+
+  @if (searchResult.totalMatchCount > 0) {
+
+    @for (searchResultEntity of searchResultEntities; track searchResultEntity.id) {
+      <div
+        (click)="select(searchResultEntity.id)"
+        [class.selected]="entity?.id === searchResultEntity.id"
+        class="card search-result-card">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-auto">
+
+              <!-- Avatar -->
+              <a href="profile-posts.html" class="avatar avatar-lg d-flex align-items-center justify-content-center">
+                <span class="fe fe-activity"></span>
+              </a>
+
+            </div>
+            <div class="col ms-n2">
+
+              <!-- Title -->
+              <h4 class="mb-1">
+                {{searchResultEntity.name}}
+              </h4>
+
+              <!-- Text -->
+              @if (searchResultEntity.parentEntity) {
+                <p class="small text-muted mb-1">
+                  {{searchResultEntity.parentEntity.name}}
+                </p>
+              }
+
+            </div>
+
+            @if (entity?.id !== searchResultEntity.id) {
+              <div class="col-auto">
+
+                <!-- Button -->
+                <button class="btn btn-primary d-none d-md-inline-block" (click)="select(searchResultEntity.id)">
+                  Continuar <span class="fe fe-arrow-right"></span>
+                </button>
+
+              </div>
+            }
+          </div> <!-- / .row -->
+        </div> <!-- / .card-body -->
+      </div>
+    }
+  }
+}

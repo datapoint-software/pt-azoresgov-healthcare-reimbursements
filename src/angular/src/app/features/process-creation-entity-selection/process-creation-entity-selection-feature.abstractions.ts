@@ -19,3 +19,8 @@ export type ProcessCreationEntitySelectionFeatureOptions = {
   entities: ProcessCreationEntitySelectionFeatureEntity[];
   entityId: string | null;
 };
+
+export type ProcessCreationEntitySelectionFeatureSearchResult = {
+  entityIds: string[];
+  totalMatchCount: number;
+};
