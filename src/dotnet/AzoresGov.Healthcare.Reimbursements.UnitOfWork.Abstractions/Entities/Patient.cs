@@ -23,9 +23,9 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities
 
         public string? FaxNumber { get; set; } = default!;
 
-        public string? PhoneNumber { get; set; } = default!;
-
         public string? MobileNumber { get; set; } = default!;
+
+        public string? PhoneNumber { get; set; } = default!;
 
         public string? EmailAddress { get; set; } = default!;
 
