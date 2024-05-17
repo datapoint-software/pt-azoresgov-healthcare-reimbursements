@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreationEntitySelection
+namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreation.EntitySelection
 {
     public sealed class ProcessCreationEntitySelectionSearchQueryValidator : AbstractValidator<ProcessCreationEntitySelectionSearchQuery>
     {

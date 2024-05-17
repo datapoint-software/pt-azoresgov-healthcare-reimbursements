@@ -1,6 +1,6 @@
 import { inject } from "@angular/core";
 import { Router, UrlTree } from "@angular/router";
-import { ProcessCreationEntitySelectionFeature } from "../../features/process-creation-entity-selection/process-creation-entity-selection.feature";
+import { ProcessCreationEntitySelectionFeature } from "../../features/process-creation/entity-selection/process-creation-entity-selection.feature";
 import { ProcessCreationFeatureStep } from "../../features/process-creation/process-creation-feature.abstractions";
 import { ProcessCreationFeature } from "../../features/process-creation/process-creation.feature";
 

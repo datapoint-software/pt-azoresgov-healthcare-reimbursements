@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { LayoutComponent } from './components/layout/layout.component';
-import { ProcessCreationConfirmationComponent } from './components/process-creation-confirmation/process-creation-confirmation.component';
-import { ProcessCreationEntitySelectionComponent } from './components/process-creation-entity-selection/process-creation-entity-selection.component';
-import { ProcessCreationPatientComponent } from './components/process-creation-patient/process-creation-patient.component';
+import { ProcessCreationConfirmationComponent } from './components/process-creation/confirmation/process-creation-confirmation.component';
+import { ProcessCreationEntitySelectionComponent } from './components/process-creation/entity-selection/process-creation-entity-selection.component';
+import { ProcessCreationPatientSelectionComponent } from './components/process-creation/patient-selection/process-creation-patient-selection.component';
 import { ProcessCreationComponent } from './components/process-creation/process-creation.component';
 import { SignInComponent } from './components/sign-in/sign-in.component';
 import { LayoutGuard } from './guards/layout/layout.guard';
@@ -57,7 +57,7 @@ export const routes: Routes = [
               },
               {
                 canActivate: [ ProcessCreationPatientSelectionGuard.canActivate ],
-                component: ProcessCreationPatientComponent,
+                component: ProcessCreationPatientSelectionComponent,
                 path: 'patient'
               }
             ]

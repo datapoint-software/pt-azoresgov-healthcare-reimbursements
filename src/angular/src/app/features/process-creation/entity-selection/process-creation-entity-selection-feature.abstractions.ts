@@ -1,5 +1,5 @@
 import { FormControl, FormGroup } from "@angular/forms";
-import { EntityNature } from "../../app.enums";
+import { EntityNature } from "../../../app.enums";
 
 export type ProcessCreationEntitySelectionFeatureEntity = {
   id: string;

@@ -1,15 +1,15 @@
 ﻿using AzoresGov.Healthcare.Reimbursements.Api.Attributes;
 using AzoresGov.Healthcare.Reimbursements.Api.Helpers;
-using AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreationEntitySelection;
+using AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreation.EntitySelection;
 using Datapoint.Mediator;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCreationEntitySelection
+namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCreation.EntitySelection
 {
-    [Route("/api/features/process-creation-entity-selection")]
+    [Route("/api/features/process-creation/entity-selection")]
     public sealed class ProcessCreationEntitySelectionFeatureController : Controller
     {
         private readonly IMediator _mediator;

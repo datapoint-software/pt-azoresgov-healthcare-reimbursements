@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreationEntitySelection
+namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreation.EntitySelection
 {
     public sealed class ProcessCreationEntitySelectionSearchResult
     {

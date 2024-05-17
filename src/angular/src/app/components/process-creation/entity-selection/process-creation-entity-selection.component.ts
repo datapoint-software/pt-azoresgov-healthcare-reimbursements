@@ -1,8 +1,8 @@
 import { Component } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
-import { ProcessCreationEntitySelectionFeatureEntity, ProcessCreationEntitySelectionFeatureForm, ProcessCreationEntitySelectionFeatureSearchResult } from "../../features/process-creation-entity-selection/process-creation-entity-selection-feature.abstractions";
-import { ProcessCreationEntitySelectionFeature } from "../../features/process-creation-entity-selection/process-creation-entity-selection.feature";
-import { FormGroupComponent } from "../form-group/form-group.component";
+import { ProcessCreationEntitySelectionFeatureEntity, ProcessCreationEntitySelectionFeatureForm, ProcessCreationEntitySelectionFeatureSearchResult } from "../../../features/process-creation/entity-selection/process-creation-entity-selection-feature.abstractions";
+import { ProcessCreationEntitySelectionFeature } from "../../../features/process-creation/entity-selection/process-creation-entity-selection.feature";
+import { FormGroupComponent } from "../../form-group/form-group.component";
 import { ProcessCreationEntitySelectionComponentSearchResultEntity } from "./process-creation-entity-selection-component.abstractions";
 import { Router } from "@angular/router";
 

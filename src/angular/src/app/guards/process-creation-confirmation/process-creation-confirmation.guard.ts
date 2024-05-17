@@ -1,6 +1,6 @@
 import { inject } from "@angular/core";
 import { Router, UrlTree } from "@angular/router";
-import { ProcessCreationPatientSelectionFeature } from "../../features/process-creation-patient-selection/process-creation-patient-selection.feature";
+import { ProcessCreationPatientSelectionFeature } from "../../features/process-creation/patient-selection/process-creation-patient-selection.feature";
 import { ProcessCreationFeatureStep } from "../../features/process-creation/process-creation-feature.abstractions";
 import { ProcessCreationFeature } from "../../features/process-creation/process-creation.feature";
 

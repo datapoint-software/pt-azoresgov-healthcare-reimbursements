@@ -3,7 +3,7 @@ import { ProcessCreationEntitySelectionSearchModel, ProcessCreationEntitySelecti
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
-const baseAddress = "/api/features/process-creation-entity-selection";
+const baseAddress = "/api/features/process-creation/entity-selection";
 
 @Injectable()
 export class ProcessCreationEntitySelectionFeatureClient {

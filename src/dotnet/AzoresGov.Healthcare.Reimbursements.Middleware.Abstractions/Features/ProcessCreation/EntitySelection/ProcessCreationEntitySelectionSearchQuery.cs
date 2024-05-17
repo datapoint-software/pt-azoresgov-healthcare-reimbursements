@@ -1,7 +1,7 @@
 ﻿using Datapoint.Mediator;
 using System;
 
-namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreationEntitySelection
+namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreation.EntitySelection
 {
     public sealed class ProcessCreationEntitySelectionSearchQuery : Query<ProcessCreationEntitySelectionSearchResult>
     {

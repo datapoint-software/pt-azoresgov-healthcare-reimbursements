@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreationEntitySelection
+namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreation.EntitySelection
 {
     public sealed class ProcessCreationEntitySelectionSearchQueryHandler : IQueryHandler<ProcessCreationEntitySelectionSearchQuery, ProcessCreationEntitySelectionSearchResult>
     {
@@ -71,7 +71,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
                     .Select(e => new ProcessCreationEntitySelectionSearchResultEntity(
                         e.PublicId,
                         e.RowVersionId,
-                        entityParentEntities.TryGetValue(e.Id, out var entityParentEntity) && parentEntities.TryGetValue(entityParentEntity.ParentEntityId, out var parentEntity) 
+                        entityParentEntities.TryGetValue(e.Id, out var entityParentEntity) && parentEntities.TryGetValue(entityParentEntity.ParentEntityId, out var parentEntity)
                             ? parentEntity.PublicId
                             : null,
                         e.Code,
@@ -85,7 +85,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.ProcessCreatio
                         e.Name,
                         e.Nature)))
                     .ToArray());
-                    
+
         }
     }
 }

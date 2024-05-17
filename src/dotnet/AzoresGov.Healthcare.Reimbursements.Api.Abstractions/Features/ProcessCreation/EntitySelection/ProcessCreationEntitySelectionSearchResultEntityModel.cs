@@ -1,7 +1,7 @@
 ﻿using AzoresGov.Healthcare.Reimbursements.Enumerations;
 using System;
 
-namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCreationEntitySelection
+namespace AzoresGov.Healthcare.Reimbursements.Api.Features.ProcessCreation.EntitySelection
 {
     public sealed class ProcessCreationEntitySelectionSearchResultEntityModel
     {

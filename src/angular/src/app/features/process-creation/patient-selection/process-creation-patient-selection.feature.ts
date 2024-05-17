@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Feature } from "../feature.abstract";
+import { Feature } from "../../feature.abstract";
 
 @Injectable()
 export class ProcessCreationPatientSelectionFeature implements Feature {

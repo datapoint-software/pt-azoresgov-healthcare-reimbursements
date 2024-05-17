@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ProcessCreationFeatureClient } from "../../api/features/process-creation/process-creation-feature.client";
-import { ProcessCreationEntitySelectionFeature } from "../process-creation-entity-selection/process-creation-entity-selection.feature";
+import { ProcessCreationEntitySelectionFeature } from "./entity-selection/process-creation-entity-selection.feature";
 import { ProcessCreationFeatureOptions, ProcessCreationFeatureStep } from "./process-creation-feature.abstractions";
 
 @Injectable()

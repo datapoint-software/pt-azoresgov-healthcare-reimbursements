@@ -2,9 +2,9 @@ import { Component } from "@angular/core";
 import { Router, RouterOutlet } from "@angular/router";
 import { ProcessCreationFeatureStep } from "../../features/process-creation/process-creation-feature.abstractions";
 import { ProcessCreationFeature } from "../../features/process-creation/process-creation.feature";
-import { ProcessCreationNavigationComponent } from "../process-creation-navigation/process-creation-navigation.component";
-import { ProcessCreationEntitySelectionFeature } from "../../features/process-creation-entity-selection/process-creation-entity-selection.feature";
-import { ProcessCreationPatientSelectionFeature } from "../../features/process-creation-patient-selection/process-creation-patient-selection.feature";
+import { ProcessCreationNavigationComponent } from "./navigation/process-creation-navigation.component";
+import { ProcessCreationEntitySelectionFeature } from "../../features/process-creation/entity-selection/process-creation-entity-selection.feature";
+import { ProcessCreationPatientSelectionFeature } from "../../features/process-creation/patient-selection/process-creation-patient-selection.feature";
 
 @Component({
   imports: [ ProcessCreationNavigationComponent, RouterOutlet ],

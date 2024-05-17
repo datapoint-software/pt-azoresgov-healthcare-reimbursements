@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
-import { Feature } from "../feature.abstract";
+import { Feature } from "../../feature.abstract";
 import { ProcessCreationEntitySelectionFeatureEntity, ProcessCreationEntitySelectionFeatureForm, ProcessCreationEntitySelectionFeatureOptions, ProcessCreationEntitySelectionFeatureSearchResult } from "./process-creation-entity-selection-feature.abstractions";
 import { FormBuilder, Validators } from "@angular/forms";
-import { ProcessCreationEntitySelectionFeatureClient } from "../../api/features/process-creation-entity-selection/process-creation-entity-selection-feature.client";
-import { LoadingOverlayFeature } from "../loading-overlay/loading-overlay.feature";
+import { ProcessCreationEntitySelectionFeatureClient } from "../../../api/features/process-creation/entity-selection/process-creation-entity-selection-feature.client";
+import { LoadingOverlayFeature } from "../../loading-overlay/loading-overlay.feature";
 
 @Injectable()
 export class ProcessCreationEntitySelectionFeature implements Feature {

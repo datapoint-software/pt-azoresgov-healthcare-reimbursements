@@ -1,4 +1,4 @@
-import { EntityNature } from "../../../app.enums";
+import { EntityNature } from "../../../../app.enums";
 
 export type ProcessCreationEntitySelectionSearchModel = {
   filter: string;

@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { RouterLink } from "@angular/router";
-import { ProcessCreationEntitySelectionFeature } from "../../features/process-creation-entity-selection/process-creation-entity-selection.feature";
+import { ProcessCreationEntitySelectionFeature } from "../../../features/process-creation/entity-selection/process-creation-entity-selection.feature";
 
 @Component({
   imports: [ RouterLink ],
