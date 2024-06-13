@@ -1,1 +1,157 @@
-<h1>Utente</h1>
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <app-sui-form-group #filter [name]="'filter'" class="form-group d-block mb-4">
+    <!-- Label -->
+    <label
+      [class.is-invalid]="filter.invalid"
+      [class.is-required]="filter.required"
+      [for]="filter.name"
+      class="form-label">
+      Utentes
+    </label>
+    <!-- Input group -->
+    <div
+      [class.is-invalid]="filter.invalid"
+      [class.is-required]="filter.required"
+      class="input-group input-group-merge">
+      <!-- Input -->
+      <input
+        [class.is-invalid]="filter.invalid"
+        [class.is-required]="filter.required"
+        [formControl]="filter.control"
+        [id]="filter.name"
+        autocomplete="off"
+        class="form-control"
+        tabindex="1"
+        type="text" />
+      <!-- Icon -->
+      <div class="input-group-text">
+        <span class="fe fe-search"></span>
+      </div>
+    </div>
+    @if (fullSearch) {
+      <div class="form-text mt-2 mb-0">
+        Pesquise por nome, contactos, número de identificação fiscal ou número de utente.
+      </div>
+    }
+    @else {
+      <div class="form-text mt-2 mb-0">
+        Pesquise por número do utente.
+      </div>
+    }
+  </app-sui-form-group>
+  <app-sui-form-group #full [name]="'full'" class="form-group d-block">
+    <div class="form-check">
+      <input
+        [class.is-invalid]="full.invalid"
+        [class.is-required]="full.required"
+        [formControl]="full.control"
+        [id]="full.name"
+        [value]="true"
+        class="form-check-input"
+        type="checkbox" />
+      <label [for]="full.name" class="form-check-label">
+        Usar a pesquisa avançada por nome e/ou contactos do utente.
+      </label>
+    </div>
+  </app-sui-form-group>
+</form>
+
+@if (searchResult) {
+
+  @if (searchResult.totalMatchCount > 0) {
+
+    @for (searchResultPatient of searchResultPatients; track searchResultPatient.id) {
+      <div
+        (click)="select(searchResultPatient.id)"
+        [class.selected]="patient?.id === searchResultPatient.id"
+        class="card search-result-card">
+        <div class="card-body">
+          <div class="row align-items-center flex-nowrap">
+            <div class="col-auto">
+
+              <!-- Avatar -->
+              <a href="profile-posts.html" class="avatar avatar-lg d-flex align-items-center justify-content-center">
+                <span class="fe fe-user"></span>
+              </a>
+
+            </div>
+            <div class="col ms-n2">
+
+              <!-- Title -->
+              <h4 class="mb-1">
+                {{searchResultPatient.name}}
+              </h4>
+
+              <div class="d-flex align-items-center flex-wrap">
+
+                <div class="badge bg-dark-soft d-flex align-items-center p-2 my-2 me-2">
+                  <strong class="me-2">NNU</strong>  {{ searchResultPatient.number }}
+                </div>
+
+                @if (searchResultPatient.taxNumber) {
+                  <span class="badge bg-dark-soft d-flex align-items-center p-2 my-2 me-2">
+                    <strong class="me-2">NIF</strong> {{ searchResultPatient.taxNumber }}
+                  </span>
+                }
+
+                @if (searchResultPatient.emailAddress) {
+                  <span class="badge bg-info-soft d-flex align-items-center p-2 my-2 me-2">
+                    <span class="fe fe-mail me-2"></span> {{ searchResultPatient.emailAddress }}
+                  </span>
+                }
+
+                @if (searchResultPatient.faxNumber) {
+                  <span class="badge bg-info-soft d-flex align-items-center p-2 my-2 me-2">
+                    <span class="fe fe-printer me-2"></span> {{ searchResultPatient.faxNumber }}
+                  </span>
+                }
+
+                @if (searchResultPatient.phoneNumber) {
+                  <span class="badge bg-info-soft d-flex align-items-center p-2 my-2 me-2">
+                    <span class="fe fe-phone me-2"></span> {{ searchResultPatient.phoneNumber }}
+                  </span>
+                }
+
+                @if (searchResultPatient.mobileNumber) {
+                  <span class="badge bg-info-soft d-flex align-items-center p-2 my-2 me-2">
+                    <span class="fe fe-smartphone me-2"></span> {{ searchResultPatient.mobileNumber }}
+                  </span>
+                }
+
+                @if (searchResultPatient.death) {
+                  <span class="badge bg-danger-soft d-flex align-items-center p-2 my-2 me-2">
+                    <span class="fe fe-x-octagon me-2"></span> {{ searchResultPatient.death | date:'dd/MM/yyyy' }}
+                  </span>
+                }
+
+                @if (searchResultPatient.external) {
+                  <span class="badge bg-danger-soft d-flex align-items-center p-2 my-2 me-2">
+                    <strong>Externo</strong>
+                  </span>
+                }
+              </div>
+
+            </div>
+
+            @if (patient?.id !== searchResultPatient.id && !searchResultPatient.external) {
+              <div class="col-auto">
+
+                <!-- Button -->
+                <button class="btn btn-primary d-none d-md-inline-block" (click)="select(searchResultPatient.id)">
+                  Continuar <span class="fe fe-arrow-right"></span>
+                </button>
+
+              </div>
+            }
+          </div> <!-- / .row -->
+        </div> <!-- / .card-body -->
+      </div>
+    }
+  }
+
+  @else {
+    <div class="alert alert-warning">
+      Não foram encontrados utentes correspondentes a estes termos de pesquisa.
+    </div>
+  }
+}

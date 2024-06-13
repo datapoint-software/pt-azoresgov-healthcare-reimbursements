@@ -5,7 +5,8 @@ import { APP_INPUT_DEBOUNCE_TIME } from "@app/constants";
 import { CoreLoadingOverlayFeature } from "@app/features/core-loading-overlay/core-loading-overlay.feature";
 import { Feature } from "@app/features/feature.abstractions";
 import { MainProcessCreationEntitySelectionFeatureEntity, MainProcessCreationEntitySelectionFeatureForm, MainProcessCreationEntitySelectionFeatureOptions, MainProcessCreationEntitySelectionFeatureSearchResult } from "@app/features/main-process-creation-entity-selection/main-process-creation-entity-selection-feature.abstractions";
-import { debounceTime } from "rxjs";
+import { MainProcessCreationPatientSelectionFeature } from "@app/features/main-process-creation-patient-selection/main-process-creation-patient-selection.feature";
+import { Observable, Subject, debounceTime } from "rxjs";
 
 @Injectable()
 export class MainProcessCreationEntitySelectionFeature implements Feature {
@@ -15,6 +16,8 @@ export class MainProcessCreationEntitySelectionFeature implements Feature {
   private _enabled: boolean = undefined!;
 
   private _entities: Map<string, MainProcessCreationEntitySelectionFeatureEntity> = undefined!;
+
+  private _entityChanges: Subject<MainProcessCreationEntitySelectionFeatureEntity | null> = undefined!;
 
   private _entityId: string | null = undefined!;
 
@@ -42,6 +45,10 @@ export class MainProcessCreationEntitySelectionFeature implements Feature {
     return (this._entityId && this._entities.get(this._entityId)) || null;
   }
 
+  public get entityChanges(): Observable<MainProcessCreationEntitySelectionFeatureEntity | null> {
+    return this._entityChanges;
+  }
+
   public get form(): MainProcessCreationEntitySelectionFeatureForm {
     return this._form;
   }
@@ -58,6 +65,7 @@ export class MainProcessCreationEntitySelectionFeature implements Feature {
 
     this._enabled = options.enabled;
     this._entities = new Map<string, MainProcessCreationEntitySelectionFeatureEntity>(options.entities.map(e => [ e.id, e ]));
+    this._entityChanges = new Subject<MainProcessCreationEntitySelectionFeatureEntity | null>();
     this._entityId = options.entityId;
     this._searchResult = null;
 
@@ -86,6 +94,7 @@ export class MainProcessCreationEntitySelectionFeature implements Feature {
 
   public select(entityId: string): void {
     this._entityId = entityId;
+    this._entityChanges.next(this._entities.get(entityId)!);
   }
 
   // #endregion

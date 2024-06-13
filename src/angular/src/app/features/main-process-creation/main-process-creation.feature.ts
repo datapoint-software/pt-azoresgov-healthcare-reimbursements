@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { MainProcessCreationFeatureClient } from "@app/api/main-process-creation-feature/main-process-creation-feature.client";
 import { MainProcessCreationEntitySelectionFeature } from "@app/features/main-process-creation-entity-selection/main-process-creation-entity-selection.feature";
+import { MainProcessCreationPatientSelectionFeature } from "@app/features/main-process-creation-patient-selection/main-process-creation-patient-selection.feature";
 import { MainProcessCreationFeatureOptions, MainProcessCreationFeatureStep } from "@app/features/main-process-creation/main-process-creation-feature.abstractions";
 
 @Injectable()
@@ -65,6 +66,8 @@ export class MainProcessCreationFeature {
       entityId: options.entityId ?? null
     });
 
+    this._processCreationPatientSelectionFeature.configure();
+
     this._index = 0;
 
     this._steps = [
@@ -80,6 +83,7 @@ export class MainProcessCreationFeature {
 
   constructor(
     private readonly _processCreationEntitySelectionFeature: MainProcessCreationEntitySelectionFeature,
+    private readonly _processCreationPatientSelectionFeature: MainProcessCreationPatientSelectionFeature,
     private readonly _processCreationFeatureClient: MainProcessCreationFeatureClient
   ) {}
 }

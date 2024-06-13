@@ -1,5 +1,5 @@
 <form [formGroup]="form" (ngSubmit)="submit()">
-  <app-sui-form-group #filter [name]="'filter'" class="form-group d-block">
+  <app-sui-form-group #filter [name]="'filter'" class="form-group d-block mb-4">
     <!-- Label -->
     <label
       [class.is-invalid]="filter.invalid"
@@ -81,5 +81,11 @@
         </div> <!-- / .card-body -->
       </div>
     }
+  }
+
+  @else {
+    <div class="alert alert-warning">
+      Não foram encontradas entidades correspondentes a estes termos de pesquisa.
+    </div>
   }
 }

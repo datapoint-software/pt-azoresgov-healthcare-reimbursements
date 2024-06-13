@@ -1,7 +1,11 @@
-﻿using Datapoint;
+﻿using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities;
+using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories;
+using Datapoint;
 using Datapoint.UnitOfWork;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AzoresGov.Healthcare.Reimbursements.Middleware
 {
@@ -25,11 +29,25 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware
             if (rowVersionId is null)
                 throw new ConcurrencyException("Row version identifier is missing.");
 
-            if (!entity.PublicId.Equals(rowVersionId))
+            if (!entity.RowVersionId.Equals(rowVersionId))
             {
                 throw new ConcurrencyException("Row version identifier mismatch.")
                     .WithErrorMessage("A informação foi alterada entretanto.");
             }
+        }
+
+        internal static async Task UserEntityAccessAsync(IUserEntityRepository userEntities, User user, Entity entity, CancellationToken ct)
+        {
+            var found = await userEntities.AnyByUserIdAndEntityIdAsync(
+                user.Id,
+                entity.Id,
+                ct);
+
+            if (found)
+                return;
+
+            throw new AuthorizationException("User does not have access to this entity.")
+                .WithErrorMessage("O utilizador não está autorizado a aceder aos registos da entidade pretendida.");
         }
     }
 }
