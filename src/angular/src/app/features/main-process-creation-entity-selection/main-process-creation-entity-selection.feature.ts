@@ -67,7 +67,7 @@ export class MainProcessCreationEntitySelectionFeature implements Feature {
 
     this._form.valueChanges
       .pipe(debounceTime(APP_INPUT_DEBOUNCE_TIME))
-      .subscribe((value) => this.formValueChanges(value));
+      .subscribe((value) => this._formValueChanges(value));
   }
 
   public async search(): Promise<void> {
@@ -90,7 +90,7 @@ export class MainProcessCreationEntitySelectionFeature implements Feature {
 
   // #endregion
 
-  private async formValueChanges(value: Partial<{
+  private async _formValueChanges(value: Partial<{
     filter: string | null;
   }>): Promise<void> {
 
