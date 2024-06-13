@@ -34,8 +34,8 @@
         </li>
         <li class="nav-item">
           <a
-            [attr.aria-expanded]="url.startsWith('/processes') ? 'true' : 'false'"
-            [class.collapsed]="!url.startsWith('/processes')"
+            [attr.aria-expanded]="path.startsWith('/processes') ? 'true' : 'false'"
+            [class.collapsed]="!path.startsWith('/processes')"
             aria-controls="reimbursements-nav"
             class="nav-link"
             data-bs-toggle="collapse"
@@ -44,13 +44,13 @@
             <i class="fe fe-database"></i> Processos
           </a>
           <div
-            [class.show]="url.startsWith('/processes')"
+            [class.show]="path.startsWith('/processes')"
             class="collapse"
             id="reimbursements-nav">
             <ul class="nav nav-sm flex-column">
               <li class="nav-item">
                 <a
-                  [class.active]="url.startsWith('/processes/_')"
+                  [class.active]="path.startsWith('/processes/_')"
                   [routerLink]="[ '/processes/_' ]"
                   class="nav-link">
                   Novo
@@ -58,7 +58,7 @@
               </li>
               <li class="nav-item">
                 <a
-                  [class.active]="url.startsWith('/processes')"
+                  [class.active]="path === '/processes'"
                   [routerLink]="[ '/processes' ]"
                   class="nav-link">
                   Pesquisa
