@@ -5,6 +5,7 @@ import { MainProcessCreationPatientSelectionFeatureClient } from "@app/api/main-
 import { APP_INPUT_DEBOUNCE_TIME } from "@app/constants";
 import { CoreLoadingOverlayFeature } from "@app/features/core-loading-overlay/core-loading-overlay.feature";
 import { Feature } from "@app/features/feature.abstractions";
+import { MainProcessCreationEntitySelectionFeatureEntity } from "@app/features/main-process-creation-entity-selection/main-process-creation-entity-selection-feature.abstractions";
 import { MainProcessCreationEntitySelectionFeature } from "@app/features/main-process-creation-entity-selection/main-process-creation-entity-selection.feature";
 import { MainProcessCreationPatientSelectionFeatureForm, MainProcessCreationPatientSelectionFeaturePatient, MainProcessCreationPatientSelectionFeatureSearchResult } from "@app/features/main-process-creation-patient-selection/main-process-creation-patient-selection-feature.abstractions";
 import { debounceTime } from "rxjs";
@@ -69,7 +70,7 @@ export class MainProcessCreationPatientSelectionFeature implements Feature {
     this._searchResult = null;
 
     this._processCreationEntitySelectionFeature.entityChanges
-      .subscribe(() => this.reset());
+      .subscribe((entity) => this._entityChanges(entity));
   }
 
   public async search(): Promise<void> {
@@ -90,13 +91,6 @@ export class MainProcessCreationPatientSelectionFeature implements Feature {
     this._patientId = patientId;
   }
 
-  public reset(): void {
-    this._form.reset({ filter: '', full: false }, { emitEvent: false });
-    this._patientId = null;
-    this._patients.clear();
-    this._searchResult = null;
-  }
-
   // #endregion
 
   constructor(
@@ -105,6 +99,13 @@ export class MainProcessCreationPatientSelectionFeature implements Feature {
     private readonly _processCreationEntitySelectionFeature: MainProcessCreationEntitySelectionFeature,
     private readonly _processCreationPatientSelectionFeatureClient: MainProcessCreationPatientSelectionFeatureClient
   ) {}
+
+  private _entityChanges(entity: MainProcessCreationEntitySelectionFeatureEntity | null) {
+    this._form.reset({ filter: '', full: false }, { emitEvent: false });
+    this._patientId = null;
+    this._patients.clear();
+    this._searchResult = null;
+  }
 
   private async _formValueChanges(values: Partial<{
     filter: string | null;

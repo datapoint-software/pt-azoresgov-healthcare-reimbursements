@@ -93,8 +93,13 @@ export class MainProcessCreationEntitySelectionFeature implements Feature {
   }
 
   public select(entityId: string): void {
+
+    const hasChanges = this._entityId !== entityId;
+
     this._entityId = entityId;
-    this._entityChanges.next(this._entities.get(entityId)!);
+
+    if (hasChanges)
+      this._entityChanges.next(this._entities.get(entityId)!);
   }
 
   // #endregion

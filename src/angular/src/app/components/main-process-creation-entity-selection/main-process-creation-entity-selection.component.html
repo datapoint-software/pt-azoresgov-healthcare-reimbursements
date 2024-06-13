@@ -67,16 +67,14 @@
 
             </div>
 
-            @if (entity?.id !== searchResultEntity.id) {
-              <div class="col-auto">
+            <div class="col-auto">
 
-                <!-- Button -->
-                <button class="btn btn-primary d-none d-md-inline-block" (click)="select(searchResultEntity.id)">
-                  Continuar <span class="fe fe-arrow-right"></span>
-                </button>
+              <!-- Button -->
+              <button class="btn btn-primary d-none d-md-inline-block" (click)="select(searchResultEntity.id)">
+                Continuar <span class="fe fe-arrow-right"></span>
+              </button>
 
-              </div>
-            }
+            </div>
           </div> <!-- / .row -->
         </div> <!-- / .card-body -->
       </div>
