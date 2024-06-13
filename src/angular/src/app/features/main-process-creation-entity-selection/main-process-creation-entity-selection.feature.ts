@@ -1,9 +1,11 @@
 import { Injectable } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { MainProcessCreationEntitySelectionFeatureClient } from "@app/api/main-process-creation-entity-selection-feature/main-process-creation-entity-selection-feature.client";
+import { APP_INPUT_DEBOUNCE_TIME } from "@app/constants";
 import { CoreLoadingOverlayFeature } from "@app/features/core-loading-overlay/core-loading-overlay.feature";
 import { Feature } from "@app/features/feature.abstractions";
 import { MainProcessCreationEntitySelectionFeatureEntity, MainProcessCreationEntitySelectionFeatureForm, MainProcessCreationEntitySelectionFeatureOptions, MainProcessCreationEntitySelectionFeatureSearchResult } from "@app/features/main-process-creation-entity-selection/main-process-creation-entity-selection-feature.abstractions";
+import { debounceTime } from "rxjs";
 
 @Injectable()
 export class MainProcessCreationEntitySelectionFeature implements Feature {
@@ -62,6 +64,10 @@ export class MainProcessCreationEntitySelectionFeature implements Feature {
     this._form = this._fb.group({
       filter: this._fb.control('', [ Validators.required, Validators.minLength(3), Validators.maxLength(128) ])
     });
+
+    this._form.valueChanges
+      .pipe(debounceTime(APP_INPUT_DEBOUNCE_TIME))
+      .subscribe((value) => this.formValueChanges(value));
   }
 
   public async search(): Promise<void> {
@@ -73,8 +79,30 @@ export class MainProcessCreationEntitySelectionFeature implements Feature {
 
     this._loadingOverlay.enqueue(loadingOverlayId);
 
+    await this._search(this._form.value.filter!);
+
+    this._loadingOverlay.dequeue(loadingOverlayId);
+  }
+
+  public select(entityId: string): void {
+    this._entityId = entityId;
+  }
+
+  // #endregion
+
+  private async formValueChanges(value: Partial<{
+    filter: string | null;
+  }>): Promise<void> {
+
+    if (this._form.invalid)
+      return;
+
+    return this._search(this._form.value.filter!);
+  }
+
+  private async _search(filter: string): Promise<void> {
     const response = await this._client.search({
-      filter: this._form.value.filter!,
+      filter,
       skip: 0,
       take: 5
     });
@@ -94,15 +122,7 @@ export class MainProcessCreationEntitySelectionFeature implements Feature {
       entityIds: response.entityIds,
       totalMatchCount: response.totalMatchCount
     };
-
-    this._loadingOverlay.dequeue(loadingOverlayId);
   }
-
-  public select(entityId: string): void {
-    this._entityId = entityId;
-  }
-
-  // #endregion
 
   constructor(
     private readonly _client: MainProcessCreationEntitySelectionFeatureClient,
