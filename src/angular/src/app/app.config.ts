@@ -1,11 +1,11 @@
-import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideHttpClient } from '@angular/common/http';
 import { ApplicationConfig } from '@angular/core';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
-import { IdentityFeatureClient } from './api/features/identity/identity-feature.client';
-import { routes } from './app.routes';
-import { IdentityFeature } from './features/identity/identity.feature';
-import { LoadingOverlayFeature } from './features/loading-overlay/loading-overlay.feature';
+import { CoreIdentityFeatureClient } from '@app/api/core-identity-feature/core-identity-feature.client';
+import { CoreIdentityFeature } from '@app/features/core-identity/core-identity.feature';
+import { CoreLoadingOverlayFeature } from '@app/features/core-loading-overlay/core-loading-overlay.feature';
+import { routes } from '@app/routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,9 +16,8 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
 
     // Core features
-    IdentityFeature,
-    IdentityFeatureClient,
-    LoadingOverlayFeature
-
+    CoreIdentityFeature,
+    CoreIdentityFeatureClient,
+    CoreLoadingOverlayFeature
   ]
 };

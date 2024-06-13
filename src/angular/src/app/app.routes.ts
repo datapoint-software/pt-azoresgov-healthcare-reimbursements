@@ -1,33 +1,33 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './components/home/home.component';
-import { LayoutComponent } from './components/layout/layout.component';
-import { ProcessCreationConfirmationComponent } from './components/process-creation/confirmation/process-creation-confirmation.component';
-import { ProcessCreationEntitySelectionComponent } from './components/process-creation/entity-selection/process-creation-entity-selection.component';
-import { ProcessCreationPatientSelectionComponent } from './components/process-creation/patient-selection/process-creation-patient-selection.component';
-import { ProcessCreationComponent } from './components/process-creation/process-creation.component';
-import { SignInComponent } from './components/sign-in/sign-in.component';
-import { LayoutGuard } from './guards/layout/layout.guard';
-import { ProcessCreationEntitySelectionGuard } from './guards/process-creation-entity-selection/process-creation-entity-selection.guard';
-import { ProcessCreationGuard } from './guards/process-creation/process-creation.guard';
-import { SignInGuard } from './guards/sign-in/sign-in.guard';
-import { ProcessCreationPatientSelectionGuard } from './guards/process-creation-patient-selection/process-creation-patient-selection.guard';
-import { ProcessCreationConfirmationGuard } from './guards/process-creation-confirmation/process-creation-confirmation.guard';
+import { GenericSignInComponent } from '@app/components/generic-sign-in/generic-sign-in.component';
+import { MainHomeComponent } from '@app/components/main-home/main-home.component';
+import { MainProcessCreationConfirmationComponent } from '@app/components/main-process-creation-confirmation/main-process-creation-confirmation.component';
+import { MainProcessCreationEntitySelectionComponent } from '@app/components/main-process-creation-entity-selection/main-process-creation-entity-selection.component';
+import { MainProcessCreationPatientSelectionComponent } from '@app/components/main-process-creation-patient-selection/main-process-creation-patient-selection.component';
+import { MainProcessCreationComponent } from '@app/components/main-process-creation/main-process-creation.component';
+import { MainComponent } from '@app/components/main/main.component';
+import { GenericSignInGuard } from '@app/guards/generic-sign-in/generic-sign-in.guard';
+import { MainProcessCreationConfirmationGuard } from '@app/guards/main-process-creation-confirmation/main-process-creation-confirmation.guard';
+import { MainProcessCreationEntitySelectionGuard } from '@app/guards/main-process-creation-entity-selection/main-process-creation-entity-selection.guard';
+import { MainProcessCreationPatientSelectionGuard } from '@app/guards/main-process-creation-patient-selection/main-process-creation-patient-selection.guard';
+import { MainProcessCreationGuard } from '@app/guards/main-process-creation/main-process-creation.guard';
+import { MainGuard } from '@app/guards/main/main.guard';
 
 export const routes: Routes = [
   {
-    canActivate: [ SignInGuard.canActivate ],
-    component: SignInComponent,
+    canActivate: [ GenericSignInGuard.canActivate ],
+    component: GenericSignInComponent,
     path: 'sign-in',
-    providers: SignInGuard.providers
+    providers: GenericSignInGuard.providers
   },
   {
-    canActivate: [ LayoutGuard.canActivate ],
-    component: LayoutComponent,
+    canActivate: [ MainGuard.canActivate ],
+    component: MainComponent,
     path: '',
     pathMatch: 'prefix',
     children: [
       {
-        component: HomeComponent,
+        component: MainHomeComponent,
         path: '',
         pathMatch: 'full'
       },
@@ -35,10 +35,10 @@ export const routes: Routes = [
         path: 'processes',
         children: [
           {
-            canActivate: [ ProcessCreationGuard.canActivate ],
-            component: ProcessCreationComponent,
+            canActivate: [ MainProcessCreationGuard.canActivate ],
+            component: MainProcessCreationComponent,
             path: '_',
-            providers: ProcessCreationGuard.providers,
+            providers: MainProcessCreationGuard.providers,
             children: [
               {
                 path: '',
@@ -46,18 +46,18 @@ export const routes: Routes = [
                 redirectTo: 'entity'
               },
               {
-                canActivate: [ ProcessCreationConfirmationGuard.canActivate ],
+                canActivate: [ MainProcessCreationConfirmationGuard.canActivate ],
                 path: 'confirmation',
-                component: ProcessCreationConfirmationComponent
+                component: MainProcessCreationConfirmationComponent
               },
               {
-                canActivate: [ ProcessCreationEntitySelectionGuard.canActivate ],
-                component: ProcessCreationEntitySelectionComponent,
+                canActivate: [ MainProcessCreationEntitySelectionGuard.canActivate ],
+                component: MainProcessCreationEntitySelectionComponent,
                 path: 'entity'
               },
               {
-                canActivate: [ ProcessCreationPatientSelectionGuard.canActivate ],
-                component: ProcessCreationPatientSelectionComponent,
+                canActivate: [ MainProcessCreationPatientSelectionGuard.canActivate ],
+                component: MainProcessCreationPatientSelectionComponent,
                 path: 'patient'
               }
             ]

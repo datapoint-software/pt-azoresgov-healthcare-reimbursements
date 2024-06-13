@@ -1,4 +1,4 @@
-export interface ErrorResponseModel {
+export type ErrorResponseModel = {
   id?: string;
   correlationId?: string;
   code?: string;
@@ -7,12 +7,12 @@ export interface ErrorResponseModel {
   exception?: ExceptionModel;
 };
 
-export interface ErrorModel {
+export type ErrorModel = {
   code?: string;
   message: string;
 };
 
-export interface ExceptionModel {
+export type ExceptionModel = {
   name: string;
   fullName?: string;
   message: string;

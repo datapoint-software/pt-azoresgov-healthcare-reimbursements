@@ -1,5 +1,5 @@
 import { HttpErrorResponse, HttpStatusCode } from "@angular/common/http";
-import { ErrorResponseModel } from "./api.abstractions";
+import { ErrorResponseModel } from "@app/api/api.abstractions";
 
 const status = <T>(
   status: number,
