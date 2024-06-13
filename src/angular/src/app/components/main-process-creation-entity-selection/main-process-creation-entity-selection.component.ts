@@ -64,10 +64,8 @@ export class MainProcessCreationEntitySelectionComponent {
   // #region Actions
 
   public select(entityId: string): void {
-    console.log('entityId: ', entityId);
     this._processCreationEntitySelection.select(entityId);
     this._router.navigate([ '/processes', '_', 'patient' ]);
-    console.log('entityId: ', entityId);
   }
 
   public submit(): void {
