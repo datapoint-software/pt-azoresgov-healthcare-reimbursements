@@ -10,8 +10,9 @@ export class GenericSignInFeatureClient {
 
   public async getOptions(): Promise<GenericSignInFeatureOptionsModel> {
     return await firstValueFrom(
-      this._httpClient.get<GenericSignInFeatureOptionsModel>(
-        baseAddress
+      this._httpClient.post<GenericSignInFeatureOptionsModel>(
+        `${baseAddress}/get-options`,
+        null
       )
     );
   }

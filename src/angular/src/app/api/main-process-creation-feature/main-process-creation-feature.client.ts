@@ -10,8 +10,9 @@ export class MainProcessCreationFeatureClient {
 
   public async getOptions(): Promise<MainProcessCreationFeatureOptionsResultModel> {
     return await firstValueFrom(
-      this._httpClient.get<MainProcessCreationFeatureOptionsResultModel>(
-        baseAddress
+      this._httpClient.post<MainProcessCreationFeatureOptionsResultModel>(
+        `${baseAddress}/get-options`,
+        null
       )
     );
   }

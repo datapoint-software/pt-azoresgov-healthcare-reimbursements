@@ -20,7 +20,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.MainProcessCreation
         }
 
         [Administrative]
-        [HttpGet]
+        [HttpPost("get-options")]
         public async Task<MainProcessCreationFeatureOptionsResultModel> GetOptionsAsync(CancellationToken ct)
         {
             var result = await _mediator.HandleQueryAsync<MainProcessCreationFeatureOptionsQuery, MainProcessCreationFeatureOptionsResult>(

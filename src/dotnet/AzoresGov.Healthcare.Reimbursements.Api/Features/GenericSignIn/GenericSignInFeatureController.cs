@@ -22,7 +22,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.GenericSignIn
         }
 
         [AllowAnonymous]
-        [HttpGet]
+        [HttpPost("get-options")]
         public async Task<GenericSignInFeatureOptionsModel> GetOptionsAsync(CancellationToken ct)
         {
             var result = await _mediator.HandleQueryAsync<GenericSignInFeatureOptionsQuery, GenericSignInFeatureOptions>(
