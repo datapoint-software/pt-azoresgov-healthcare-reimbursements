@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 import { Router, RouterOutlet } from "@angular/router";
 import { MainProcessCreationNavigationComponent } from "@app/components/main-process-creation-navigation/main-process-creation-navigation.component";
+import { MainProcessCreationEntitySelectionFeatureEntity } from "@app/features/main-process-creation-entity-selection/main-process-creation-entity-selection-feature.abstractions";
 import { MainProcessCreationEntitySelectionFeature } from "@app/features/main-process-creation-entity-selection/main-process-creation-entity-selection.feature";
 import { MainProcessCreationPatientSelectionFeature } from "@app/features/main-process-creation-patient-selection/main-process-creation-patient-selection.feature";
 import { MainProcessCreationFeatureStep } from "@app/features/main-process-creation/main-process-creation-feature.abstractions";
@@ -18,6 +19,10 @@ export class MainProcessCreationComponent {
 
   public get confirmationStep(): boolean {
     return this._processCreation.step === MainProcessCreationFeatureStep.Confirmation;
+  }
+
+  public get entity(): MainProcessCreationEntitySelectionFeatureEntity | null {
+    return this._processCreationEntitySelection.entity;
   }
 
   public get entitySelectionStep(): boolean {
