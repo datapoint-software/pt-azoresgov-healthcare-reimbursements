@@ -137,6 +137,12 @@
                 }
               </div>
 
+              @if (searchResultPatient.external) {
+                <div class="text-danger fs-5">
+                  Este utente não tem inscrição primária com esta entidade.
+                </div>
+              }
+
             </div>
 
             @if (isPatientSelectionEnabled(searchResultPatient)) {
