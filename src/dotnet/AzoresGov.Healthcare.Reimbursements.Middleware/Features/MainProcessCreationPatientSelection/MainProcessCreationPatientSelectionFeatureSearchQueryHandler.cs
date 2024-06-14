@@ -53,20 +53,6 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.MainProcessCre
                 entity,
                 ct);
 
-            // We know for a fact all patient numbers are a numeric
-            // string with 9 characters of length and if the filter does not
-            // match that expectation we can safely skip the database queries.
-            if (query.Mode is MainProcessCreationPatientSelectionFeatureSearchMode.PatientNumber)
-            {
-                if (query.Filter.Length != 9 || !long.TryParse(query.Filter, out var _))
-                {
-                    return new MainProcessCreationPatientSelectionFeatureSearchResult(
-                        0,
-                        Array.Empty<Guid>(),
-                        Array.Empty<MainProcessCreationPatientSelectionFeatureSearchResultPatient>());
-                }
-            }
-
             var skip = query.Skip ?? 0;
             var take = query.Take ?? 25;
 

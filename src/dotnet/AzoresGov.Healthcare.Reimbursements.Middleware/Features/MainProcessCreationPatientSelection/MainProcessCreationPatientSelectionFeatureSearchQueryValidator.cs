@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using AzoresGov.Healthcare.Reimbursements.Middleware.Helpers;
+using FluentValidation;
 
 namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.MainProcessCreationPatientSelection
 {
@@ -19,6 +20,10 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.MainProcessCre
                 .MinimumLength(3)
                 .MaximumLength(256)
                 .NotEmpty();
+
+            RuleFor(q => q.Filter)
+                .PatientNumber()
+                .When(q => q.Mode is MainProcessCreationPatientSelectionFeatureSearchMode.PatientNumber);
 
             RuleFor(q => q.Mode)
                 .IsInEnum()
