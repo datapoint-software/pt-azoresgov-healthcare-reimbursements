@@ -16,6 +16,10 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
         {
         }
 
+        public Task<bool> AnyByPatientIdAndEntityIdAsync(long patientId, long entityId, CancellationToken ct) => 
+
+            Entities.AnyAsync(e => e.PatientId == patientId && e.EntityId == entityId, ct);
+
         public async Task<IReadOnlyCollection<PatientEntity>> GetAllByPatientIdAndEntityIdAsync(IReadOnlyCollection<long> patientId, IReadOnlyCollection<long> entityId, CancellationToken ct)
         {
             return await Entities

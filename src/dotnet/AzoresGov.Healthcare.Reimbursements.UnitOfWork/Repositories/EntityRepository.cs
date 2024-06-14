@@ -15,6 +15,17 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
         {
         }
 
+        public async Task<IReadOnlyCollection<string>> GetAllParentEntityCodesByEntityIdWithOrderByLevelAsync(
+            long entityId,
+            CancellationToken ct)
+        {
+            return await UnitOfWork.EntityParentEntities
+                .Where(epe => epe.EntityId == entityId)
+                .OrderBy(epe => epe.Level)
+                .Select(epe => epe.Entity.Code)
+                .ToListAsync(ct);
+        }
+
         public async Task<IReadOnlyCollection<Entity>> GetAllByIdAsync(
             IReadOnlyCollection<long> entityId,
             CancellationToken ct) =>
