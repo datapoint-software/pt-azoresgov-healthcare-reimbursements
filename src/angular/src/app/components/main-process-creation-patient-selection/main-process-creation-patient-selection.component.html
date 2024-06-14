@@ -53,6 +53,11 @@
         Usar a pesquisa avançada por nome e/ou contactos do utente.
       </label>
     </div>
+    <div class="form-text mt-2 mb-0">
+      Esta funcionalidade só deverá ser usada nos casos em que o utente
+      esteja impossibilitado de apresentar o seu documento de identificação pessoal
+      e o uso é monitorizado pelo administrador do sistema de informação.
+    </div>
   </app-sui-form-group>
 </form>
 
@@ -63,6 +68,7 @@
     @for (searchResultPatient of searchResultPatients; track searchResultPatient.id) {
       <div
         (click)="select(searchResultPatient.id)"
+        [class.disabled]="isPatientSelectionDisabled(searchResultPatient)"
         [class.selected]="patient?.id === searchResultPatient.id"
         class="card search-result-card">
         <div class="card-body">
@@ -133,7 +139,7 @@
 
             </div>
 
-            @if (patient?.id !== searchResultPatient.id && !searchResultPatient.external) {
+            @if (isPatientSelectionEnabled(searchResultPatient)) {
               <div class="col-auto">
 
                 <!-- Button -->

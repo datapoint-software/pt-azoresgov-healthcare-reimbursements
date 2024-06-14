@@ -45,6 +45,14 @@ export class MainProcessCreationPatientSelectionComponent {
 
   // #region Actions
 
+  public isPatientSelectionDisabled(patient: MainProcessCreationPatientSelectionFeaturePatient): boolean {
+    return !this._processCreationPatientSelection.isPatientSelectionEnabled(patient);
+  }
+
+  public isPatientSelectionEnabled(patient: MainProcessCreationPatientSelectionFeaturePatient): boolean {
+    return this._processCreationPatientSelection.isPatientSelectionEnabled(patient);
+  }
+
   public select(patientId: string): void {
     this._processCreationPatientSelection.select(patientId);
     this._router.navigate([ '/processes', '_', 'confirmation' ]);

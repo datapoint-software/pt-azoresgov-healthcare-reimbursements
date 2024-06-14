@@ -73,6 +73,17 @@ export class MainProcessCreationPatientSelectionFeature implements Feature {
       .subscribe((entity) => this._entityChanges(entity));
   }
 
+  public isPatientSelectionEnabled(patient: MainProcessCreationPatientSelectionFeaturePatient): boolean {
+
+    if (patient.death)
+      return false;
+
+    if (patient.external)
+      return false;
+
+    return true;
+  }
+
   public async search(): Promise<void> {
 
     if (this._form.invalid)
@@ -88,6 +99,10 @@ export class MainProcessCreationPatientSelectionFeature implements Feature {
   }
 
   public select(patientId: string): void {
+
+    if (!this.isPatientSelectionEnabled(this._patients.get(patientId)!))
+      throw new Error("Patient selection is not enabled.");
+
     this._patientId = patientId;
   }
 
