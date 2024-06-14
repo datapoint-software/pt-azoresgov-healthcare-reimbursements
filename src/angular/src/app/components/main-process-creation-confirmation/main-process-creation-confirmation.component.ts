@@ -25,6 +25,14 @@ export class MainProcessCreationConfirmationComponent {
 
   // #endregion
 
+  // #region Actions
+
+  public async confirm(): Promise<void> {
+    await this._processCreationConfirmationFeature.confirm();
+  }
+
+  // #endregion
+
   constructor(
     private readonly _processCreationConfirmationFeature: MainProcessCreationConfirmationFeature
   ) {}

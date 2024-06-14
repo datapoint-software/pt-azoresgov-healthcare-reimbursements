@@ -22,7 +22,7 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
             return await UnitOfWork.EntityParentEntities
                 .Where(epe => epe.EntityId == entityId)
                 .OrderBy(epe => epe.Level)
-                .Select(epe => epe.Entity.Code)
+                .Select(epe => epe.ParentEntity.Code)
                 .ToListAsync(ct);
         }
 

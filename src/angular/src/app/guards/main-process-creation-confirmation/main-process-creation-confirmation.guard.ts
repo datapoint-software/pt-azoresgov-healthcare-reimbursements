@@ -1,5 +1,6 @@
 import { Provider, inject } from "@angular/core";
 import { Router, UrlTree } from "@angular/router";
+import { MainProcessCreationConfirmationFeatureClient } from "@app/api/main-process-creation-confirmation-feature/main-process-creation-confirmation-feature.client";
 import { MainProcessCreationConfirmationFeature } from "@app/features/main-process-creation-confirmation/main-process-creation-confirmation.feature";
 import { MainProcessCreationEntitySelectionFeature } from "@app/features/main-process-creation-entity-selection/main-process-creation-entity-selection.feature";
 import { MainProcessCreationPatientSelectionFeature } from "@app/features/main-process-creation-patient-selection/main-process-creation-patient-selection.feature";
@@ -50,7 +51,8 @@ export class MainProcessCreationConfirmationGuard {
 
   public static get providers(): Provider[] {
     return [
-      MainProcessCreationConfirmationFeature
+      MainProcessCreationConfirmationFeature,
+      MainProcessCreationConfirmationFeatureClient
     ]
   };
 

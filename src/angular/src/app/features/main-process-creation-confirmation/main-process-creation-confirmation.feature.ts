@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { MainProcessCreationConfirmationFeatureClient } from "@app/api/main-process-creation-confirmation-feature/main-process-creation-confirmation-feature.client";
 import { MainProcessCreationConfirmationFeatureOptions, MainProcessCreationConfirmationFeatureEntity, MainProcessCreationConfirmationFeaturePatient } from "@app/features/main-process-creation-confirmation/main-process-creation-confirmation-feature.abstractions";
 
 @Injectable()
@@ -31,5 +32,18 @@ export class MainProcessCreationConfirmationFeature {
     this._patient = options.patient;
   }
 
+  public async confirm(): Promise<void> {
+    this._processCreationConfirmationFeatureClient.confirm({
+      entityId: this._entity.id,
+      entityRowVersionId: this._entity.rowVersionId,
+      patientId: this._patient.id,
+      patientRowVersionId: this._patient.rowVersionId
+    });
+  }
+
   // #endregion
+
+  constructor(
+    private readonly _processCreationConfirmationFeatureClient: MainProcessCreationConfirmationFeatureClient
+  ) {}
 }
