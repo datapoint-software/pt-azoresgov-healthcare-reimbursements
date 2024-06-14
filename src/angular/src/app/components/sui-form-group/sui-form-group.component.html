@@ -48,6 +48,12 @@
   </div>
 }
 
+@if (control.errors?.['patientnumber']) {
+  <div class="invalid-feedback mt-1">
+    Número nacional do utente inválido.
+  </div>
+}
+
 @if (control.errors?.['taxnumber']) {
   <div class="invalid-feedback mt-1">
     Número de identificação fiscal inválido.

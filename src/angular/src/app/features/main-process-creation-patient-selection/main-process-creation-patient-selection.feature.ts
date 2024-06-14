@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { FormBuilder, Validators } from "@angular/forms";
+import { AbstractControl, FormBuilder, ValidationErrors, Validators } from "@angular/forms";
 import { MainProcessCreationPatientSelectionFeatureSearchModeModel } from "@app/api/main-process-creation-patient-selection-feature/main-process-creation-patient-selection-feature-client.abstractions";
 import { MainProcessCreationPatientSelectionFeatureClient } from "@app/api/main-process-creation-patient-selection-feature/main-process-creation-patient-selection-feature.client";
 import { APP_INPUT_DEBOUNCE_TIME } from "@app/constants";
@@ -8,7 +8,8 @@ import { Feature } from "@app/features/feature.abstractions";
 import { MainProcessCreationEntitySelectionFeatureEntity } from "@app/features/main-process-creation-entity-selection/main-process-creation-entity-selection-feature.abstractions";
 import { MainProcessCreationEntitySelectionFeature } from "@app/features/main-process-creation-entity-selection/main-process-creation-entity-selection.feature";
 import { MainProcessCreationPatientSelectionFeatureForm, MainProcessCreationPatientSelectionFeaturePatient, MainProcessCreationPatientSelectionFeatureSearchResult } from "@app/features/main-process-creation-patient-selection/main-process-creation-patient-selection-feature.abstractions";
-import { debounceTime } from "rxjs";
+import { AppValidators } from "@app/validators";
+import { debounceTime, filter } from "rxjs";
 
 @Injectable()
 export class MainProcessCreationPatientSelectionFeature implements Feature {
@@ -58,9 +59,12 @@ export class MainProcessCreationPatientSelectionFeature implements Feature {
   public configure(): void {
 
     this._form = this._fb.group({
-      filter: this._fb.control('', [ Validators.required, Validators.minLength(3), Validators.maxLength(128) ]),
+      filter: this._fb.control('', [ Validators.required, AppValidators.patientNumber ]),
       full: this._fb.control(false, [ Validators.required ])
     });
+
+    this._form.controls.full.valueChanges
+      .subscribe((full) => this._formFullValueChanges(full));
 
     this._form.valueChanges
       .pipe(debounceTime(APP_INPUT_DEBOUNCE_TIME))
@@ -130,6 +134,23 @@ export class MainProcessCreationPatientSelectionFeature implements Feature {
     return this._search(values);
   }
 
+  private _formFullValueChanges(full: boolean | null): void {
+
+    this._form.controls.filter.clearValidators();
+
+    this._form.controls.filter.addValidators(full ? [
+      Validators.minLength(3),
+      Validators.maxLength(128)
+    ] : [
+      AppValidators.patientNumber
+    ]);
+
+    this._form.controls.filter.updateValueAndValidity();
+
+    this._patientId = null;
+    this._searchResult = null;
+  }
+
   private async _search(values: Partial<{
     filter: string | null;
     full: boolean | null;
@@ -168,5 +189,16 @@ export class MainProcessCreationPatientSelectionFeature implements Feature {
       patientIds: result.patientIds,
       totalMatchCount: result.totalMatchCount
     };
+  }
+
+  private _validate(): ValidationErrors | null {
+
+    if (this._form.invalid || this._form.value.full!)
+      return null;
+
+    if (this._form.value.filter!.length === 9)
+      return null;
+
+    return ({ patientnumber: true });
   }
 }

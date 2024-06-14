@@ -1,6 +1,5 @@
 import { Component } from "@angular/core";
 import { Router, RouterOutlet } from "@angular/router";
-import { MainProcessCreationNavigationComponent } from "@app/components/main-process-creation-navigation/main-process-creation-navigation.component";
 import { MainProcessCreationEntitySelectionFeatureEntity } from "@app/features/main-process-creation-entity-selection/main-process-creation-entity-selection-feature.abstractions";
 import { MainProcessCreationEntitySelectionFeature } from "@app/features/main-process-creation-entity-selection/main-process-creation-entity-selection.feature";
 import { MainProcessCreationPatientSelectionFeature } from "@app/features/main-process-creation-patient-selection/main-process-creation-patient-selection.feature";
@@ -8,7 +7,7 @@ import { MainProcessCreationFeatureStep } from "@app/features/main-process-creat
 import { MainProcessCreationFeature } from "@app/features/main-process-creation/main-process-creation.feature";
 
 @Component({
-  imports: [ MainProcessCreationNavigationComponent, RouterOutlet ],
+  imports: [ RouterOutlet ],
   selector: 'app-main-process-creation',
   standalone: true,
   templateUrl: 'main-process-creation.component.html'
