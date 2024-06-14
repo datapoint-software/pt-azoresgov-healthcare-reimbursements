@@ -1,7 +1,10 @@
-﻿using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories;
+﻿using AzoresGov.Healthcare.Reimbursements.Middleware.Helpers;
+using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories;
 using Datapoint.Mediator;
 using System;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -74,6 +77,10 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.MainProcessCre
                     ct))
                 .GroupBy(e => e.PatientId);
 
+            var patternExpression = query.Mode is MainProcessCreationPatientSelectionFeatureSearchMode.Full
+                ? RegexHelper.CreateFromLikePatternExpression(StringHelper.CreateLikePatternExpression(query.Filter))
+                : null;
+
             return new MainProcessCreationPatientSelectionFeatureSearchResult(
                 patientCount,
                 patients
@@ -84,26 +91,43 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.MainProcessCre
                         id: p.PublicId,
                         rowVersionId: p.RowVersionId,
                         number: p.Number,
-                        taxNumber: IfFull(query.Mode, p.TaxNumber),
+                        taxNumber: IfFullMatch(query.Mode, patternExpression, p.TaxNumber),
                         name: p.Name,
                         birth: IfFull(query.Mode, p.Birth),
                         death: p.Death,
                         external: patientEntities.Any(g => g.Key == p.Id) is false,
-                        faxNumber: IfFull(query.Mode, p.FaxNumber),
-                        mobileNumber: IfFull(query.Mode, p.MobileNumber),
-                        phoneNumber: IfFull(query.Mode, p.PhoneNumber),
-                        emailAddress: IfFull(query.Mode, p.EmailAddress),
-                        postalAddressArea: IfFull(query.Mode, p.PostalAddressArea),
-                        postalAddressAreaCode: IfFull(query.Mode, p.PostalAddressAreaCode),
-                        postalAddressLine1: IfFull(query.Mode, p.PostalAddressLine1),
-                        postalAddressLine2: IfFull(query.Mode, p.PostalAddressLine2),
-                        postalAddressLine3: IfFull(query.Mode, p.PostalAddressLine3)))
+                        faxNumber: IfFullMatch(query.Mode, patternExpression, p.FaxNumber),
+                        mobileNumber: IfFullMatch(query.Mode, patternExpression, p.MobileNumber),
+                        phoneNumber: IfFullMatch(query.Mode, patternExpression, p.PhoneNumber),
+                        emailAddress: IfFullMatch(query.Mode, patternExpression, p.EmailAddress),
+                        postalAddressArea: IfFullMatch(query.Mode, patternExpression, p.PostalAddressArea),
+                        postalAddressAreaCode: IfFullMatch(query.Mode, patternExpression, p.PostalAddressAreaCode),
+                        postalAddressLine1: IfFullMatch(query.Mode, patternExpression, p.PostalAddressLine1),
+                        postalAddressLine2: IfFullMatch(query.Mode, patternExpression, p.PostalAddressLine2),
+                        postalAddressLine3: IfFullMatch(query.Mode, patternExpression, p.PostalAddressLine3)))
                     .ToArray());
         }
 
         private static TProperty? IfFull<TProperty>(MainProcessCreationPatientSelectionFeatureSearchMode mode, TProperty? value)
         {
             if (mode is not MainProcessCreationPatientSelectionFeatureSearchMode.Full)
+                return default;
+
+            return value;
+        }
+
+        private static string? IfFullMatch(MainProcessCreationPatientSelectionFeatureSearchMode mode, Regex? patternExpression, string? value)
+        {
+            if (mode is not MainProcessCreationPatientSelectionFeatureSearchMode.Full)
+                return default;
+
+            if (string.IsNullOrEmpty(value))
+                return default;
+
+            if (patternExpression is null)
+                return default;
+
+            if (!patternExpression.IsMatch(StringHelper.CreateLikePatternExpression(value)))
                 return default;
 
             return value;
