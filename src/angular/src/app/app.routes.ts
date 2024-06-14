@@ -54,7 +54,8 @@ export const routes: Routes = [
               {
                 canActivate: [ MainProcessCreationConfirmationGuard.canActivate ],
                 path: 'confirmation',
-                component: MainProcessCreationConfirmationComponent
+                component: MainProcessCreationConfirmationComponent,
+                providers: MainProcessCreationConfirmationGuard.providers
               },
               {
                 canActivate: [ MainProcessCreationEntitySelectionGuard.canActivate ],

@@ -41,7 +41,7 @@ export class MainProcessCreationEntitySelectionFeature implements Feature {
     return this._entities;
   }
 
-  public get entity(): MainProcessCreationEntitySelectionFeatureEntity | null {
+  public get entity(): Readonly<MainProcessCreationEntitySelectionFeatureEntity> | null {
     return (this._entityId && this._entities.get(this._entityId)) || null;
   }
 

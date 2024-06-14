@@ -1,1 +1,86 @@
-<h1>Confirmação</h1>
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-sm table-nowrap card-table">
+      <thead>
+        <tr>
+          <th class="text-center" colspan="2">Utente</th>
+        </tr>
+      </thead>
+      <tbody class="fs-base">
+        <tr>
+          <td class="fw-bold text-muted">Número</td>
+          <td class="text-end">{{ patient.number | numeric }}</td>
+        </tr>
+        <tr>
+          <td class="fw-bold text-muted">Nome</td>
+          <td class="text-end">{{ patient.name }}</td>
+        </tr>
+        @if (patient.taxNumber) {
+          <tr>
+            <td class="fw-bold text-muted">Número de identificação fiscal</td>
+            <td class="text-end">{{ patient.taxNumber | numeric }}</td>
+          </tr>
+        }
+        @if (patient.birth) {
+          <tr>
+            <td class="fw-bold text-muted">Data de nascimento</td>
+            <td class="text-end">{{ patient.birth | date:'dd/MM/yyyy' }}</td>
+          </tr>
+        }
+        @if (patient.death) {
+          <tr class="bg-warning-soft">
+            <td class="fw-bold text-muted">Data de óbito</td>
+            <td class="text-end">{{ patient.death | date:'dd/MM/yyyy' }}</td>
+          </tr>
+        }
+        @if (patient.emailAddress) {
+          <tr>
+            <td class="fw-bold text-muted">Correio eletrónico</td>
+            <td class="text-end">{{ patient.emailAddress }}</td>
+          </tr>
+        }
+        @if (patient.faxNumber) {
+          <tr>
+            <td class="fw-bold text-muted">Fax</td>
+            <td class="text-end">{{ patient.faxNumber }}</td>
+          </tr>
+        }
+        @if (patient.mobileNumber) {
+          <tr>
+            <td class="fw-bold text-muted">Telemóvel</td>
+            <td class="text-end">{{ patient.mobileNumber }}</td>
+          </tr>
+        }
+        @if (patient.phoneNumber) {
+          <tr>
+            <td class="fw-bold text-muted">Telefone</td>
+            <td class="text-end">{{ patient.phoneNumber }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-sm table-nowrap card-table">
+      <thead>
+        <tr>
+          <th class="text-center" colspan="2">Entidades</th>
+        </tr>
+      </thead>
+      <tbody class="fs-base">
+        @if (entity.parentEntity) {
+          <tr>
+            <td class="fw-bold text-muted">{{ entity.parentEntity.nature | entityNatureLabel }}</td>
+            <td class="text-end">{{ entity.parentEntity.name }}</td>
+          </tr>
+        }
+        <tr>
+          <td class="fw-bold text-muted">{{ entity.nature | entityNatureLabel }}</td>
+          <td class="text-end">{{ entity.name }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

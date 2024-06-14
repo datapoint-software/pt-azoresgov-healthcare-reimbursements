@@ -75,9 +75,6 @@ export class MainProcessCreationPatientSelectionFeature implements Feature {
 
   public isPatientSelectionEnabled(patient: MainProcessCreationPatientSelectionFeaturePatient): boolean {
 
-    if (patient.death)
-      return false;
-
     if (patient.external)
       return false;
 
