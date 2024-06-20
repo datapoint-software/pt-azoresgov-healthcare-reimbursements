@@ -1,13 +1,15 @@
 import { Component } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { SuiFormGroupComponent } from "@app/components/sui-form-group/sui-form-group.component";
+import { SuiProductVersionComponent } from "@app/components/sui-product-version/sui-product-version.component";
 import { GenericSignInFeatureError, GenericSignInFeatureForm } from "@app/features/generic-sign-in/generic-sign-in-feature.abstractions";
 import { GenericSignInFeature } from "@app/features/generic-sign-in/generic-sign-in.feature";
 
 @Component({
   imports: [
+    ReactiveFormsModule,
     SuiFormGroupComponent,
-    ReactiveFormsModule
+    SuiProductVersionComponent
   ],
   selector: 'app-generic-sign-in',
   standalone: true,
