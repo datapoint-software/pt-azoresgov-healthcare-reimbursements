@@ -116,7 +116,7 @@ export class MainProcessSearchFeature {
       filter: filter ?? undefined,
       useFullSearchCriteria: this._processSearchForm.value.useFullSearchCriteria || false,
       skip: this._processSearchResult?.processIds.size ?? 0,
-      take: 10
+      take: 25
     });
 
     for (const entity of response.entities) {
