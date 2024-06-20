@@ -8,7 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Datapoint.AspNetCore.ErrorResponses" Version="8.0.0-a.44" />
+		<PackageReference Include="Datapoint.AspNetCore.ErrorResponses" Version="8.0.0-a.46" />
 	</ItemGroup>
 
 	<ItemGroup>

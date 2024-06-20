@@ -1,0 +1,52 @@
+<div class="d-flex align-items-center bg-auth vh-100">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-12 col-md-6 offset-xl-2 offset-md-1 order-md-2 mb-5 mb-md-0">
+
+        <!-- Image -->
+        <div class="text-center">
+          <img src="assets/dashkit/img/illustrations/lost.svg" alt="..." class="img-fluid">
+        </div>
+
+      </div>
+      <div class="col-12 col-md-5 col-xl-4 order-md-1 my-5">
+
+        <div class="text-left">
+
+          @if (error?.status) {
+            <!-- Preheading -->
+            <h6 class="text-uppercase text-muted mb-4">
+              {{ error!.status!.code }} {{ error!.status!.message }}
+            </h6>
+          }
+
+
+          <!-- Heading -->
+          <h1 class="display-4 mb-4">
+            Wow, um erro! 😭
+          </h1>
+
+          <!-- Subheading -->
+          <p class="text-muted mb-4">
+            Detectámos um erro inesperado durante o processamento da última operação e equipa da
+            <a href="https://datapoint.software/" target="_blank">datapoint.software</a> já
+            foi alertada para analisar a situação assim que possível.
+          </p>
+
+          @if (error?.message) {
+            <p class="alert alert-danger my-4">
+              {{ error!.message }}
+            </p>
+          }
+
+          <!-- Button -->
+          <p class="text-muted mb-4">
+            Lamentamos a inconveniência e pedimos que regresse para a <a [routerLink]="[ '/' ]">página inicial</a>.
+          </p>
+
+        </div>
+
+      </div>
+    </div> <!-- / .row -->
+  </div>
+</div>

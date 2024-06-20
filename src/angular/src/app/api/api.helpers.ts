@@ -6,7 +6,7 @@ const status = <T>(
   fn: (model: ErrorResponseModel, response: HttpErrorResponse) => Promise<T> | T
 ): ((error: unknown) => Promise<T>) => async (error) => {
 
-  if (error instanceof HttpErrorResponse && error.status === status) {
+  if (error instanceof HttpErrorResponse && error.status === status && error.error?.source === "app") {
     const r = fn(error.error, error);
     if (r) await r;
     return r;

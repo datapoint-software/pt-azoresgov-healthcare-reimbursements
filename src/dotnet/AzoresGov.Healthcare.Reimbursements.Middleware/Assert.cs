@@ -23,7 +23,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware
             if (entity is null)
             {
                 throw new InvalidOperationException("Entity was not found.")
-                    .WithErrorMessage("A informação necessária não foi encontrada.");
+                    .WithErrorMessage("Os registos associados a esta operação não foram encontrados.");
             }
 
             if (rowVersionId is null)
@@ -32,7 +32,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware
             if (!entity.RowVersionId.Equals(rowVersionId))
             {
                 throw new ConcurrencyException("Row version identifier mismatch.")
-                    .WithErrorMessage("A informação foi alterada entretanto.");
+                    .WithErrorMessage("Os registos associados a esta operação foram modificados por outro utilizador.");
             }
         }
 

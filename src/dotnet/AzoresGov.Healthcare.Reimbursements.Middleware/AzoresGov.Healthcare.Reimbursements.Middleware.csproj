@@ -8,9 +8,9 @@
 
 	<ItemGroup>
 		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
-		<PackageReference Include="Datapoint.Exceptions" Version="8.0.0-a.44" />
-		<PackageReference Include="Datapoint.Mediator" Version="8.0.0-a.44" />
-		<PackageReference Include="Datapoint.Mediator.FluentValidation" Version="8.0.0-a.44" />
+		<PackageReference Include="Datapoint.Exceptions" Version="8.0.0-a.46" />
+		<PackageReference Include="Datapoint.Mediator" Version="8.0.0-a.46" />
+		<PackageReference Include="Datapoint.Mediator.FluentValidation" Version="8.0.0-a.46" />
 		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="8.0.0" />
 	</ItemGroup>
 

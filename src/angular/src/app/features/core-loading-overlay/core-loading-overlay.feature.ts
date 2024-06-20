@@ -25,6 +25,10 @@ export class CoreLoadingOverlayFeature implements Feature {
 
   // #region Actions
 
+  public clear(): void {
+    this._items.clear();
+  }
+
   public dequeue(id: string): void {
     this._items.delete(id);
   }
