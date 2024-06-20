@@ -9,31 +9,21 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
 {
     public interface IEntityRepository : IRepository<Entity>
     {
-        Task<IReadOnlyCollection<string>> GetAllParentEntityCodesByEntityIdWithOrderByLevelAsync(
-            long entityId,
-            CancellationToken ct);
-
         Task<IReadOnlyCollection<Entity>> GetAllByIdAsync(
-            IReadOnlyCollection<long> entityId,
+            IReadOnlyCollection<long> entityIds, 
             CancellationToken ct);
 
-        Task<IReadOnlyCollection<Entity>> GetAllBySearchCriteriaAsync(
+        Task<IReadOnlyCollection<Entity>> GetAllByUserSearchCriteriaAsync(
             long userId,
-            string? filter,
-            IReadOnlyCollection<EntityNature>? entityNatures,
-            int? skip,
-            int? take,
-            CancellationToken ct);
-
-        Task<Entity?> GetByUserIdAndEntityNaturesAsync(
-            long userId,
+            string filter,
             IReadOnlyCollection<EntityNature> entityNatures,
+            int skip,
+            int take,
             CancellationToken ct);
 
-        Task<int> GetCountBySearchCriteriaAsync(
-            long userId,
-            string? filter,
-            IReadOnlyCollection<EntityNature>? entityNatures,
+        Task<Entity?> GetByUserIdAndEntityNatureAsync(
+            long userId, 
+            IReadOnlyCollection<EntityNature> entityNatures, 
             CancellationToken ct);
 
         Task<int> GetCountByUserIdAndEntityNatureAsync(
@@ -41,9 +31,10 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
             IReadOnlyCollection<EntityNature> entityNatures,
             CancellationToken ct);
 
-        Task<Entity?> GetParentEntityByEntityIdAndParentEntityNatureAsync(
-            long entityId,
-            EntityNature parentEntityNature,
+        Task<int> GetCountByUserSearchCriteriaAsync(
+            long userId,
+            string filter,
+            IReadOnlyCollection<EntityNature> entityNatures,
             CancellationToken ct);
     }
 }

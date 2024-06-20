@@ -26,6 +26,11 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.EntityTypeConfiguration
 
             builder.HasIndex(e => e.PhoneNumber);
 
+            builder.HasOne(e => e.Entity)
+                .WithMany()
+                .HasForeignKey(e => e.EntityId)
+                .IsRequired();
+
             builder.Property(e => e.Number)
                 .HasMaxLength(16)
                 .IsRequired();

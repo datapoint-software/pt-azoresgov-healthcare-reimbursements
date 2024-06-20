@@ -3,11 +3,12 @@ import { Component } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { SuiFormGroupComponent } from "@app/components/sui-form-group/sui-form-group.component";
-import { MainProcessCreationPatientSelectionFeatureForm, MainProcessCreationPatientSelectionFeaturePatient, MainProcessCreationPatientSelectionFeatureSearchResult } from "@app/features/main-process-creation-patient-selection/main-process-creation-patient-selection-feature.abstractions";
-import { MainProcessCreationPatientSelectionFeature } from "@app/features/main-process-creation-patient-selection/main-process-creation-patient-selection.feature";
+import { MainProcessCreationFeature } from "@app/features/main-process-creation/main-process-creation.feature";
+import { MainProcessCreationFeatureEntity, MainProcessCreationFeaturePatient, MainProcessCreationFeaturePatientSearchForm, MainProcessCreationFeaturePatientSearchResult } from "@app/features/main-process-creation/main-process-creation.feature.abstractions";
+import { NumericPipe } from "@app/pipes/numeric/numeric.pipe";
 
 @Component({
-  imports: [ DatePipe, SuiFormGroupComponent, ReactiveFormsModule ],
+  imports: [ DatePipe, NumericPipe, ReactiveFormsModule, SuiFormGroupComponent ],
   selector: 'app-main-process-creation-patient-selection',
   standalone: true,
   templateUrl: 'main-process-creation-patient-selection.component.html'
@@ -16,57 +17,55 @@ export class MainProcessCreationPatientSelectionComponent {
 
   // #region State accessors
 
-  public get patients(): ReadonlyMap<string, Readonly<MainProcessCreationPatientSelectionFeaturePatient>> {
-    return this._processCreationPatientSelection.patients;
+  public get entities(): ReadonlyMap<string, MainProcessCreationFeatureEntity> {
+    return this._processCreationFeature.entities;
   }
 
-  public get patient(): Readonly<MainProcessCreationPatientSelectionFeaturePatient> | null {
-    return this._processCreationPatientSelection.patient;
+  public get entity(): Readonly<MainProcessCreationFeatureEntity> {
+    return this._processCreationFeature.entity!;
   }
 
-  public get form(): MainProcessCreationPatientSelectionFeatureForm {
-    return this._processCreationPatientSelection.form;
+  public get patient(): Readonly<MainProcessCreationFeaturePatient> | null {
+    return this._processCreationFeature.patient;
   }
 
-  public get fullSearch(): boolean {
-    return !!this._processCreationPatientSelection.form.value.full;
+  public get patients(): ReadonlyMap<string, MainProcessCreationFeaturePatient> {
+    return this._processCreationFeature.patients;
   }
 
-  public get searchResult(): Readonly<MainProcessCreationPatientSelectionFeatureSearchResult> | null {
-    return this._processCreationPatientSelection.searchResult;
+  public get patientSearchForm(): MainProcessCreationFeaturePatientSearchForm {
+    return this._processCreationFeature.patientSearchForm;
   }
 
-  public get searchResultPatients(): ReadonlyArray<MainProcessCreationPatientSelectionFeaturePatient> {
-    return (this._processCreationPatientSelection.searchResult?.patientIds ?? [])
-      .map((patientId) => this._processCreationPatientSelection.patients.get(patientId)!);
+  public get patientSearchResult(): Readonly<MainProcessCreationFeaturePatientSearchResult> | null {
+    return this._processCreationFeature.patientSearchResult;
   }
 
   // #endregion
 
   // #region Actions
 
-  public isPatientSelectionDisabled(patient: MainProcessCreationPatientSelectionFeaturePatient): boolean {
-    return !this._processCreationPatientSelection.isPatientSelectionEnabled(patient);
+  public async searchPatients(): Promise<void> {
+    await this._processCreationFeature.searchPatients();
   }
 
-  public isPatientSelectionEnabled(patient: MainProcessCreationPatientSelectionFeaturePatient): boolean {
-    return this._processCreationPatientSelection.isPatientSelectionEnabled(patient);
-  }
-
-  public select(patientId: string): void {
-    this._processCreationPatientSelection.select(patientId);
+  public selectPatient(patientId: string): void {
+    this._processCreationFeature.selectPatient(patientId);
     this._router.navigate([ '/processes', '_', 'confirmation' ]);
   }
 
-  public submit(): void {
-    this._processCreationPatientSelection.search();
+  // #endregion
+
+  // #region State queries
+
+  public isPatientSelectable(patientId: string): boolean {
+    return this._processCreationFeature.isPatientSelectable(patientId);
   }
 
   // #endregion
 
   constructor(
-    private readonly _processCreationPatientSelection: MainProcessCreationPatientSelectionFeature,
+    private readonly _processCreationFeature: MainProcessCreationFeature,
     private readonly _router: Router
   ) {}
-
 }

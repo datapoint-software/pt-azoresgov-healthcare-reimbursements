@@ -1,0 +1,11 @@
+@if (visible) {
+  <div #backdrop class="modal-backdrop fade"></div>
+  <div #main [id]="id" class="modal fade" tabindex="-1" role="dialog" aria-modal="true" style="display: block;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <ng-content></ng-content>
+      </div>
+    </div>
+  </div>
+}
+

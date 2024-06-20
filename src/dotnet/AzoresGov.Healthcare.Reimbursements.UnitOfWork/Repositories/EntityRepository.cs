@@ -1,11 +1,12 @@
 ﻿using AzoresGov.Healthcare.Reimbursements.Enumerations;
 using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities;
 using Datapoint.UnitOfWork.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Threading;
-using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
 {
@@ -15,111 +16,81 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
         {
         }
 
-        public async Task<IReadOnlyCollection<string>> GetAllParentEntityCodesByEntityIdWithOrderByLevelAsync(
-            long entityId,
-            CancellationToken ct)
-        {
-            return await UnitOfWork.EntityParentEntities
-                .Where(epe => epe.EntityId == entityId)
-                .OrderBy(epe => epe.Level)
-                .Select(epe => epe.ParentEntity.Code)
-                .ToListAsync(ct);
-        }
-
         public async Task<IReadOnlyCollection<Entity>> GetAllByIdAsync(
-            IReadOnlyCollection<long> entityId,
-            CancellationToken ct) =>
-
-            await Entities
-                .Where(e => entityId.Contains(e.Id))
-                .ToListAsync(ct);
-
-        public async Task<IReadOnlyCollection<Entity>> GetAllBySearchCriteriaAsync(
-            long userId, 
-            string? filter, 
-            IReadOnlyCollection<EntityNature>? entityNatures, 
-            int? skip, 
-            int? take, 
+            IReadOnlyCollection<long> entityIds,
             CancellationToken ct)
         {
-            var queryable = CreateQueryableBySearchCriteria(
-                userId,
-                filter,
-                entityNatures);
-
-            if (skip.HasValue)
-                queryable = queryable.Skip(skip.Value);
-
-            if (take.HasValue)
-                queryable = queryable.Take(take.Value);
-
-            return await queryable.ToListAsync(ct);
+            return await Entities
+                .Where(e => entityIds.Contains(e.Id))
+                .ToListAsync(ct);
         }
 
-        public Task<Entity?> GetByUserIdAndEntityNaturesAsync(
+        public async Task<IReadOnlyCollection<Entity>> GetAllByUserSearchCriteriaAsync(
+            long userId,
+            string filter,
+            IReadOnlyCollection<EntityNature> entityNatures,
+            int skip,
+            int take,
+            CancellationToken ct)
+        {
+            return await GetUserSearchCriteriaQueryable(userId, filter, entityNatures)
+                .OrderBy(e => e.Name)
+                    .ThenBy(e => e.Code)
+                        .ThenBy(e => e.Id)
+                .Skip(skip)
+                .Take(take)
+                .ToListAsync(ct);
+        }
+
+        public Task<Entity?> GetByUserIdAndEntityNatureAsync(
             long userId,
             IReadOnlyCollection<EntityNature> entityNatures,
-            CancellationToken ct) =>
-
-            UnitOfWork.UserEntities
+            CancellationToken ct)
+        {
+            return UnitOfWork.UserEntities
                 .Where(ue => ue.UserId == userId)
                 .Where(ue => entityNatures.Contains(ue.Entity.Nature))
                 .Select(ue => ue.Entity)
                 .FirstOrDefaultAsync(ct);
-        public Task<int> GetCountBySearchCriteriaAsync(
-            long userId, 
-            string? filter, 
-            IReadOnlyCollection<EntityNature>? entityNatures, 
-            CancellationToken ct) =>
+        }
 
-            CreateQueryableBySearchCriteria(
-                userId, 
-                filter, 
-                entityNatures)
-                .CountAsync(ct);
-        
         public Task<int> GetCountByUserIdAndEntityNatureAsync(
             long userId,
             IReadOnlyCollection<EntityNature> entityNatures,
-            CancellationToken ct) =>
-
-            UnitOfWork.UserEntities
+            CancellationToken ct)
+        {
+            return UnitOfWork.UserEntities
                 .Where(ue => ue.UserId == userId)
                 .Where(ue => entityNatures.Contains(ue.Entity.Nature))
                 .CountAsync(ct);
+        }
 
-        public Task<Entity?> GetParentEntityByEntityIdAndParentEntityNatureAsync(
-            long entityId,
-            EntityNature parentEntityNature,
-            CancellationToken ct) =>
-
-            UnitOfWork.EntityParentEntities
-                .Where(epe => epe.EntityId == entityId)
-                .Where(epe => epe.ParentEntity.Nature == parentEntityNature)
-                .Select(epe => epe.ParentEntity)
-                .FirstOrDefaultAsync(ct);
-
-        private IQueryable<Entity> CreateQueryableBySearchCriteria(
+        public Task<int> GetCountByUserSearchCriteriaAsync(
             long userId,
-            string? filter,
-            IReadOnlyCollection<EntityNature>? entityNatures)
+            string filter,
+            IReadOnlyCollection<EntityNature> entityNatures,
+            CancellationToken ct)
         {
-            var queryable = UnitOfWork.UserEntities
-                .Where(ue => ue.UserId == userId);
+            return GetUserSearchCriteriaQueryable(userId, filter, entityNatures)
+                .CountAsync(ct);
+        }
 
-            if (!string.IsNullOrEmpty(filter))
-            {
-                var pattern = $"%{filter.Replace(' ', '%')}%";
+        private IQueryable<Entity> GetUserSearchCriteriaQueryable(
+            long userId,
+            string filter,
+            IReadOnlyCollection<EntityNature> entityNatures)
+        {
+            var filterExpression = $"%{
+                string.Join('%', filter.Split(' ', StringSplitOptions.RemoveEmptyEntries))
+            }%";
 
-                queryable = queryable.Where(ue =>
-                    EF.Functions.Like(ue.Entity.Code, pattern) ||
-                    EF.Functions.Like(ue.Entity.Name, pattern));
-            }
-
-            if (entityNatures is not null && entityNatures.Count > 0)
-                queryable = queryable.Where(ue => entityNatures.Contains(ue.Entity.Nature));
-
-            return queryable.Select(ue => ue.Entity);
+            return UnitOfWork.UserEntities
+                .Include(ue => ue.Entity)
+                .Where(ue => ue.UserId == userId)
+                .Where(ue => entityNatures.Contains(ue.Entity.Nature))
+                .Where(ue => EF.Functions.Like(ue.Entity.Code, filterExpression) ||
+                    EF.Functions.Like(ue.Entity.Name, filterExpression))
+                .Select(ue => ue.Entity);
         }
     }
 }

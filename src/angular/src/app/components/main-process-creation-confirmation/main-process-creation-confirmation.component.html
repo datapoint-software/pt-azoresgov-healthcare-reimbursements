@@ -15,77 +15,111 @@
           <td class="fw-bold text-muted">Nome</td>
           <td class="text-end">{{ patient.name }}</td>
         </tr>
-        @if (patient.taxNumber) {
-          <tr>
-            <td class="fw-bold text-muted">Número de identificação fiscal</td>
-            <td class="text-end">{{ patient.taxNumber | numeric }}</td>
-          </tr>
-        }
-        @if (patient.birth) {
-          <tr>
-            <td class="fw-bold text-muted">Data de nascimento</td>
-            <td class="text-end">{{ patient.birth | date:'dd/MM/yyyy' }}</td>
-          </tr>
-        }
-        @if (patient.death) {
-          <tr class="bg-warning-soft">
-            <td class="fw-bold text-muted">Data de óbito</td>
-            <td class="text-end">{{ patient.death | date:'dd/MM/yyyy' }}</td>
-          </tr>
-        }
-        @if (patient.emailAddress) {
-          <tr>
-            <td class="fw-bold text-muted">Correio eletrónico</td>
-            <td class="text-end">{{ patient.emailAddress }}</td>
-          </tr>
-        }
-        @if (patient.faxNumber) {
-          <tr>
-            <td class="fw-bold text-muted">Fax</td>
-            <td class="text-end">{{ patient.faxNumber }}</td>
-          </tr>
-        }
-        @if (patient.mobileNumber) {
-          <tr>
-            <td class="fw-bold text-muted">Telemóvel</td>
-            <td class="text-end">{{ patient.mobileNumber }}</td>
-          </tr>
-        }
-        @if (patient.phoneNumber) {
-          <tr>
-            <td class="fw-bold text-muted">Telefone</td>
-            <td class="text-end">{{ patient.phoneNumber }}</td>
-          </tr>
-        }
       </tbody>
     </table>
   </div>
 </div>
+@if (entity.id !== patientEntity.id) {
+  <div class="card">
+    <div class="table-responsive">
+      <table class="table table-sm table-nowrap card-table">
+        <thead>
+          <tr>
+            <th class="text-center" colspan="2">Registo</th>
+          </tr>
+        </thead>
+        <tbody class="fs-base">
+          @if (parentEntity) {
+            <tr>
+              <td class="fw-bold text-muted">{{ parentEntity.nature | entityNatureLabel }}</td>
+              <td class="text-end">{{ parentEntity.name }}</td>
+            </tr>
+          }
+          <tr>
+            <td class="fw-bold text-muted">{{ entity.nature | entityNatureLabel }}</td>
+            <td class="text-end">{{ entity.name }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+}
 <div class="card">
   <div class="table-responsive">
     <table class="table table-sm table-nowrap card-table">
       <thead>
         <tr>
-          <th class="text-center" colspan="2">Entidades</th>
+          <th class="text-center" colspan="2">
+            {{ entity.id === patientEntity.id ? 'Entidade' : 'Processamento' }}
+          </th>
         </tr>
       </thead>
       <tbody class="fs-base">
-        @if (entity.parentEntity) {
+        @if (patientParentEntity) {
           <tr>
-            <td class="fw-bold text-muted">{{ entity.parentEntity.nature | entityNatureLabel }}</td>
-            <td class="text-end">{{ entity.parentEntity.name }}</td>
+            <td class="fw-bold text-muted">{{ patientParentEntity.nature | entityNatureLabel }}</td>
+            <td class="text-end">{{ patientParentEntity.name }}</td>
           </tr>
         }
         <tr>
-          <td class="fw-bold text-muted">{{ entity.nature | entityNatureLabel }}</td>
-          <td class="text-end">{{ entity.name }}</td>
+          <td class="fw-bold text-muted">{{ patientEntity.nature | entityNatureLabel }}</td>
+          <td class="text-end">{{ patientEntity.name }}</td>
         </tr>
       </tbody>
     </table>
   </div>
 </div>
 
-<button (click)="confirm()" class="btn btn-primary btn-lg d-flex align-items-center ms-auto ">
-  Registar processo de reembolso
+<button (click)="confirmation.open()" class="btn btn-primary btn-lg d-flex align-items-center ms-auto" type="button">
+  Criar o processo de reembolso
   <span class="fe fe-arrow-right ms-2"></span>
 </button>
+
+<app-sui-modal #confirmation>
+  <div class="modal-card card">
+    <div class="card-header">
+      <h4 class="card-header-title">
+        Confirmação
+      </h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="confirmation.close()"></button>
+    </div>
+    <div class="card-body">
+      @if (entity.id === patientEntity.id) {
+        <p>
+          Este processo de reembolso será registado e processado por <strong>{{ entity.name }}</strong>.
+        </p>
+      }
+      @else {
+        <p>
+          Este processo de reembolso será registado por <strong>{{ entity.name }}</strong> e
+          processado por <strong>{{ patientEntity.name }}</strong>.
+        </p>
+      }
+    </div>
+    <div class="card-footer text-end">
+      <button (click)="confirmation.close()" class="btn" type="close">Cancelar</button>
+      <button (click)="confirm()" class="btn btn-primary" type="close">Confirmar</button>
+    </div>
+  </div>
+</app-sui-modal>
+
+<app-sui-modal #completion>
+  @if (process) {
+    <div class="modal-card card">
+      <div class="card-header">
+        <h4 class="card-header-title">
+          {{ process.number }}
+        </h4>
+      </div>
+      <div class="card-body">
+        <p>
+          O processo de reembolso encontra-se agora na fase de registo.
+        </p>
+      </div>
+      <div class="card-footer text-end">
+        <a [routerLink]="[ '/' ]" class="btn" type="close">Início</a>
+        <a [routerLink]="[ '/processes', process.id, 'capture' ]" class="btn btn-primary" type="close">Continuar para o registo</a>
+      </div>
+    </div>
+  }
+</app-sui-modal>

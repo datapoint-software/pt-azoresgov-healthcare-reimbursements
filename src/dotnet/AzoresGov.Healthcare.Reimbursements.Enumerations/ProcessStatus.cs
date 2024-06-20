@@ -2,6 +2,6 @@
 {
     public enum ProcessStatus
     {
-        Registration = 'R'
+        Capture = 'C'
     }
 }

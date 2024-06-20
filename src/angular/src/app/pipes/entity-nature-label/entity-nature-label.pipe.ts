@@ -2,10 +2,10 @@ import { Pipe, PipeTransform } from "@angular/core";
 import { EntityNature } from "@app/enums";
 
 const ENTITY_NATURE_LABELS = {
-  [EntityNature.Administrative]: "Unidade de Saúde de Ilha",
+  [EntityNature.Administrative]: "Entidade administrativa",
   [EntityNature.HealthCenter]: "Centro de Saúde",
   [EntityNature.Hospital]: "Hospital",
-  [EntityNature.Office]: "Loja do Cidadão",
+  [EntityNature.Office]: "Gabinete",
 };
 
 @Pipe({

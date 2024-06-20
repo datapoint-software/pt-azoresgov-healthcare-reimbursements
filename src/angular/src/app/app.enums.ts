@@ -3,7 +3,11 @@ export enum EntityNature {
   HealthCenter = 67,
   Hospital = 72,
   Office = 79
-}
+};
+
+export enum ProcessStatus {
+  Capture = 67
+};
 
 export enum UserRoleNature {
   Administrative = 65,
@@ -12,4 +16,4 @@ export enum UserRoleNature {
   Treasurer = 84,
   Validator = 86,
   WireTransferAgent = 87
-}
+};

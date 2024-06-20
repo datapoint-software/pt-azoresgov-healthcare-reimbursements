@@ -36,20 +36,6 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware
             }
         }
 
-        internal static async Task PatientEntityAccessAsync(IPatientEntityRepository patientEntities, Patient patient, Entity entity, CancellationToken ct)
-        {
-            var found = await patientEntities.AnyByPatientIdAndEntityIdAsync(
-                patient.Id,
-                entity.Id,
-                ct);
-
-            if (found)
-                return;
-
-            throw new AuthorizationException("Patient does not have access to this entity.")
-                .WithErrorMessage("O utente não está autorizado a aceder aos registos da entidade pretendida.");
-        }
-
         internal static async Task UserEntityAccessAsync(IUserEntityRepository userEntities, User user, Entity entity, CancellationToken ct)
         {
             var found = await userEntities.AnyByUserIdAndEntityIdAsync(

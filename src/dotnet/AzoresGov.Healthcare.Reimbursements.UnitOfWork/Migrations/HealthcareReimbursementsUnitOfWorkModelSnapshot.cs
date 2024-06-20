@@ -37,6 +37,11 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                     b.Property<int>("Nature")
                         .HasColumnType("int");
 
+                    b.Property<string>("Node")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("varchar(64)");
+
                     b.Property<Guid>("PublicId")
                         .HasColumnType("char(36)");
 
@@ -47,45 +52,11 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                     b.HasKey("Id");
 
                     b.HasAlternateKey("PublicId");
+
+                    b.HasIndex("Code", "Node")
+                        .IsUnique();
 
                     b.ToTable("Entities");
-                });
-
-            modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.EntityParentEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("EntityId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("Level")
-                        .HasColumnType("int");
-
-                    b.Property<long>("ParentEntityId")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("PublicId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("RowVersionId")
-                        .IsConcurrencyToken()
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("Id");
-
-                    b.HasAlternateKey("PublicId");
-
-                    b.HasIndex("ParentEntityId");
-
-                    b.HasIndex("EntityId", "Level")
-                        .IsUnique();
-
-                    b.HasIndex("EntityId", "ParentEntityId")
-                        .IsUnique();
-
-                    b.ToTable("EntityParentEntities");
                 });
 
             modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Parameter", b =>
@@ -135,6 +106,9 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                     b.Property<string>("EmailAddress")
                         .HasMaxLength(256)
                         .HasColumnType("varchar(256)");
+
+                    b.Property<long>("EntityId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("FaxNumber")
                         .HasMaxLength(16)
@@ -199,6 +173,8 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
 
                     b.HasIndex("EmailAddress");
 
+                    b.HasIndex("EntityId");
+
                     b.HasIndex("FaxNumber");
 
                     b.HasIndex("MobileNumber");
@@ -213,37 +189,6 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                     b.HasIndex("TaxNumber");
 
                     b.ToTable("Patients");
-                });
-
-            modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.PatientEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("EntityId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("PatientId")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("PublicId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("RowVersionId")
-                        .IsConcurrencyToken()
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("Id");
-
-                    b.HasAlternateKey("PublicId");
-
-                    b.HasIndex("EntityId");
-
-                    b.HasIndex("PatientId", "EntityId")
-                        .IsUnique();
-
-                    b.ToTable("PatientEntities");
                 });
 
             modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Process", b =>
@@ -487,42 +432,15 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                     b.ToTable("UserSessions");
                 });
 
-            modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.EntityParentEntity", b =>
+            modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Patient", b =>
                 {
                     b.HasOne("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Entity", "Entity")
                         .WithMany()
                         .HasForeignKey("EntityId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Entity", "ParentEntity")
-                        .WithMany()
-                        .HasForeignKey("ParentEntityId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Entity");
-
-                    b.Navigation("ParentEntity");
-                });
-
-            modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.PatientEntity", b =>
-                {
-                    b.HasOne("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Entity", "Entity")
-                        .WithMany()
-                        .HasForeignKey("EntityId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Patient", "Patient")
-                        .WithMany()
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Entity");
-
-                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Process", b =>

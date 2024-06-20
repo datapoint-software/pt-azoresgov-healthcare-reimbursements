@@ -1,4 +1,4 @@
-<form [formGroup]="form" (ngSubmit)="submit()">
+<form [formGroup]="entitySearchForm" (ngSubmit)="searchEntities()">
   <app-sui-form-group #filter [name]="'filter'" class="form-group d-block mb-4">
     <!-- Label -->
     <label
@@ -32,14 +32,14 @@
   </app-sui-form-group>
 </form>
 
-@if (searchResult) {
+@if (entitySearchResult) {
 
-  @if (searchResult.totalMatchCount > 0) {
+  @if (entitySearchResult.totalMatchCount > 0) {
 
-    @for (searchResultEntity of searchResultEntities; track searchResultEntity.id) {
+    @for (entityId of entitySearchResult.entityIds; track entityId) {
       <div
-        (click)="select(searchResultEntity.id)"
-        [class.selected]="entity?.id === searchResultEntity.id"
+        (click)="selectEntity(entityId)"
+        [class.selected]="entity?.id === entityId"
         class="card search-result-card">
         <div class="card-body">
           <div class="row align-items-center">
@@ -55,13 +55,13 @@
 
               <!-- Title -->
               <h4 class="text-primary mb-1">
-                {{searchResultEntity.name}}
+                {{entities.get(entityId)!.name}}
               </h4>
 
               <!-- Text -->
-              @if (searchResultEntity.parentEntity) {
+              @if (entities.get(entityId)!.parentEntityId) {
                 <p class="small text-muted mb-1">
-                  {{searchResultEntity.parentEntity.name}}
+                  {{entities.get(entities.get(entityId)!.parentEntityId!)!.name}}
                 </p>
               }
 
@@ -70,7 +70,7 @@
             <div class="col-auto">
 
               <!-- Button -->
-              <button class="btn btn-primary d-none d-md-inline-block" (click)="select(searchResultEntity.id)">
+              <button class="btn btn-primary d-none d-md-inline-block" (click)="selectEntity(entityId)">
                 Continuar <span class="fe fe-arrow-right"></span>
               </button>
 

@@ -11,6 +11,9 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.EntityTypeConfiguration
         {
             builder.Entity();
 
+            builder.HasIndex(e => new { e.Code, e.Node })
+                .IsUnique();
+
             builder.Property(e => e.Code)
                 .HasMaxLength(16)
                 .IsRequired();
@@ -19,6 +22,10 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.EntityTypeConfiguration
                 .IsRequired();
 
             builder.Property(e => e.Nature)
+                .IsRequired();
+
+            builder.Property(e => e.Node)
+                .HasMaxLength(64)
                 .IsRequired();
         }
     }

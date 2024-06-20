@@ -1,14 +1,11 @@
 import { Component } from "@angular/core";
 import { Router, RouterOutlet } from "@angular/router";
-import { MainProcessCreationEntitySelectionFeatureEntity } from "@app/features/main-process-creation-entity-selection/main-process-creation-entity-selection-feature.abstractions";
-import { MainProcessCreationEntitySelectionFeature } from "@app/features/main-process-creation-entity-selection/main-process-creation-entity-selection.feature";
-import { MainProcessCreationPatientSelectionFeature } from "@app/features/main-process-creation-patient-selection/main-process-creation-patient-selection.feature";
-import { MainProcessCreationFeatureStep } from "@app/features/main-process-creation/main-process-creation-feature.abstractions";
 import { MainProcessCreationFeature } from "@app/features/main-process-creation/main-process-creation.feature";
+import { MainProcessCreationFeatureStep } from "@app/features/main-process-creation/main-process-creation.feature.abstractions";
 
 @Component({
   imports: [ RouterOutlet ],
-  selector: 'app-main-process-creation',
+  selector: 'main-process-creation',
   standalone: true,
   templateUrl: 'main-process-creation.component.html'
 })
@@ -16,47 +13,37 @@ export class MainProcessCreationComponent {
 
   // #region State accessors
 
-  public get confirmationStep(): boolean {
-    return this._processCreation.step === MainProcessCreationFeatureStep.Confirmation;
-  }
-
-  public get entity(): MainProcessCreationEntitySelectionFeatureEntity | null {
-    return this._processCreationEntitySelection.entity;
-  }
-
-  public get entitySelectionStep(): boolean {
-    return this._processCreation.step === MainProcessCreationFeatureStep.EntitySelection;
-  }
-
-  public get firstStep(): boolean {
-    return this._processCreation.stepNumber === 1;
-  }
-
-  public get lastStep(): boolean {
-    return this._processCreation.stepNumber === this._processCreation.stepCount;
-  }
-
-  public get incomplete(): boolean {
-    switch (this._processCreation.step) {
-      case MainProcessCreationFeatureStep.EntitySelection:
-        return !this._processCreationEntitySelection.complete;
-      case MainProcessCreationFeatureStep.PatientSelection:
-        return !this._processCreationPatientSelection.complete;
-      default:
-        return true;
-    }
-  }
-
-  public get patientSelectionStep(): boolean {
-    return this._processCreation.step === MainProcessCreationFeatureStep.PatientSelection;
+  public get step(): MainProcessCreationFeatureStep {
+    return this._processCreationFeature.step;
   }
 
   public get stepCount(): number {
-    return this._processCreation.stepCount;
+    return this._processCreationFeature.stepCount;
   }
 
   public get stepNumber(): number {
-    return this._processCreation.stepNumber;
+    return this._processCreationFeature.stepNumber;
+  }
+
+  // #endregion
+
+  // #region Queries
+
+  public isPending(step: MainProcessCreationFeatureStep): boolean {
+    return step === MainProcessCreationFeatureStep.EntitySelection ? !this._processCreationFeature.entity :
+      true;
+  }
+
+  public isConfirmation(step: MainProcessCreationFeatureStep): boolean {
+    return step === MainProcessCreationFeatureStep.Confirmation;
+  }
+
+  public isEntitySelection(step: MainProcessCreationFeatureStep): boolean {
+    return step === MainProcessCreationFeatureStep.EntitySelection;
+  }
+
+  public isPatientSelection(step: MainProcessCreationFeatureStep): boolean {
+    return step === MainProcessCreationFeatureStep.PatientSelection;
   }
 
   // #endregion
@@ -64,30 +51,36 @@ export class MainProcessCreationComponent {
   // #region Actions
 
   public next(): void {
-    this._navigate(this._processCreation.nextStep!);
+
+    switch (this.step) {
+      case MainProcessCreationFeatureStep.EntitySelection:
+        this._router.navigate([ '/processes', '_', 'patient-selection' ]);
+        return;
+
+      case MainProcessCreationFeatureStep.PatientSelection:
+        this._router.navigate([ '/processes', '_', 'confirmation' ]);
+        return;
+    }
   }
 
   public previous(): void {
-    this._navigate(this._processCreation.previousStep!);
+
+    switch (this.step) {
+
+      case MainProcessCreationFeatureStep.PatientSelection:
+        this._router.navigate([ '/processes', '_', 'entity-selection' ]);
+        return;
+
+      case MainProcessCreationFeatureStep.Confirmation:
+        this._router.navigate([ '/processes', '_', 'patient-selection' ]);
+        return;
+    }
   }
 
   // #endregion
 
-  private _navigate(step: MainProcessCreationFeatureStep): void {
-
-    const token = (
-      step === MainProcessCreationFeatureStep.EntitySelection ? 'entity' :
-      step === MainProcessCreationFeatureStep.PatientSelection ? 'patient' :
-      'confirmation'
-    );
-
-    this._router.navigate([ '/processes', '_', token ]);
-  }
-
   constructor(
-    private readonly _processCreation: MainProcessCreationFeature,
-    private readonly _processCreationEntitySelection: MainProcessCreationEntitySelectionFeature,
-    private readonly _processCreationPatientSelection: MainProcessCreationPatientSelectionFeature,
+    private readonly _processCreationFeature: MainProcessCreationFeature,
     private readonly _router: Router
   ) {}
 }

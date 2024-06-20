@@ -17,5 +17,7 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities
         public string Name { get; set; } = default!;
 
         public EntityNature Nature { get; set; } = default!;
+
+        public string Node { get; set; } = default!;
     }
 }

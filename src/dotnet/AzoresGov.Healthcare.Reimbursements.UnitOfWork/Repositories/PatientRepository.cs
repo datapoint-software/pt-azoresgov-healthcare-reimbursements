@@ -1,7 +1,7 @@
 ﻿using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities;
-using AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations;
 using Datapoint.UnitOfWork.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -15,53 +15,63 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
         {
         }
 
-        public async Task<IReadOnlyCollection<Patient>> GetAllByFullSearchCriteriaAsync(string filter, int skip, int take, CancellationToken ct)
+        public async Task<IReadOnlyCollection<Patient>> GetAllByFullSearchCriteriaAsync(
+            string filter,
+            int skip,
+            int take,
+            CancellationToken ct)
         {
-            return await GetQueryableByFullSearchCriteria(filter)
-                .Skip(skip)
-                .Take(take)
+            return await GetFullSearchCriteriaQueryable(filter)
                 .OrderBy(e => e.Name)
                     .ThenBy(e => e.Birth)
                         .ThenBy(e => e.Id)
                 .ToListAsync(ct);
         }
 
-        public async Task<IReadOnlyCollection<Patient>> GetAllByPatientNumberSearchCriteriaAsync(string filter, int skip, int take, CancellationToken ct)
+        public async Task<IReadOnlyCollection<Patient>> GetAllByPatientNumberCriteriaAsync(
+            string filter,
+            CancellationToken ct)
         {
-            return await GetQueryableByPatientNumberSearchCriteria(filter)
-                .Skip(skip)
-                .Take(take)
+            return await GetPatientNumberCriteriaQueryable(filter)
                 .OrderBy(e => e.Name)
                     .ThenBy(e => e.Birth)
                         .ThenBy(e => e.Id)
                 .ToListAsync(ct);
         }
 
-        public Task<int> GetCountByFullSearchCriteriaAsync(string filter, CancellationToken ct)
+        public Task<int> GetCountByFullSearchCriteriaAsync(
+            string filter,
+            CancellationToken ct)
         {
-            return GetQueryableByFullSearchCriteria(filter).CountAsync(ct);
+            return GetFullSearchCriteriaQueryable(filter)
+                .CountAsync(ct);
         }
 
-        public Task<int> GetCountByPatientNumberSearchCriteriaAsync(string filter, CancellationToken ct)
+        public Task<int> GetCountByPatientNumberCriteriaAsync(
+            string filter,
+            CancellationToken ct)
         {
-            return GetQueryableByPatientNumberSearchCriteria(filter).CountAsync(ct);
+            return GetPatientNumberCriteriaQueryable(filter)
+                .CountAsync(ct);
         }
 
-        private IQueryable<Patient> GetQueryableByFullSearchCriteria(string filter)
+        private IQueryable<Patient> GetFullSearchCriteriaQueryable(string filter)
         {
-            var patternExpression = $"%{filter.Replace(' ', '%')}%";
+            var filterExpression = $"%{string.Join('%', filter.Split(' ', StringSplitOptions.RemoveEmptyEntries))}%";
 
             return Entities.Where(e =>
-                EF.Functions.Like(e.Name, patternExpression) ||
-                EF.Functions.Like(e.Number, patternExpression) ||
-                EF.Functions.Like(e.TaxNumber, patternExpression) ||
-                EF.Functions.Like(e.PhoneNumber, patternExpression) ||
-                EF.Functions.Like(e.MobileNumber, patternExpression) ||
-                EF.Functions.Like(e.EmailAddress, patternExpression));
+                EF.Functions.Like(e.Name, filterExpression) ||
+                EF.Functions.Like(e.Number, filterExpression) ||
+                EF.Functions.Like(e.TaxNumber, filterExpression) ||
+                EF.Functions.Like(e.FaxNumber, filterExpression) ||
+                EF.Functions.Like(e.MobileNumber, filterExpression) ||
+                EF.Functions.Like(e.PhoneNumber, filterExpression) ||
+                EF.Functions.Like(e.EmailAddress, filterExpression));
         }
 
-        private IQueryable<Patient> GetQueryableByPatientNumberSearchCriteria(string filter) =>
-
-            Entities.Where(e => e.Number == filter);
+        private IQueryable<Patient> GetPatientNumberCriteriaQueryable(string filter)
+        {
+            return Entities.Where(e => e.Number == filter);
+        }
     }
 }

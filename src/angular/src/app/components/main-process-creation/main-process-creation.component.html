@@ -9,21 +9,7 @@
             Passo {{stepNumber}} de {{stepCount}}
           </h6>
 
-          @if (confirmationStep) {
-
-            <!-- Title -->
-            <h1 class="mb-3">
-              Confirmação
-            </h1>
-
-            <!-- Subtitle -->
-            <p class="mb-5 text-muted">
-              Confirme os detalhes antes de avançar com o registo do <strong class="text-nowrap">Processo de Reembolso</strong>.
-            </p>
-
-          }
-
-          @else if (entitySelectionStep) {
+          @if (isEntitySelection(step)) {
 
             <!-- Title -->
             <h1 class="mb-3">
@@ -32,13 +18,13 @@
 
             <!-- Subtitle -->
             <p class="mb-5 text-muted">
-              Selecione o <strong class="text-nowrap">Centro de Saúde</strong> ou <strong class="text-nowrap">Loja do Cidadão</strong>
-              em que pretende registar este processo de reembolso.
+              Selecione uma <strong class="text-nowrap">entidade</strong> para
+              avançar com a criação do <strong class="text-nowrap">processo de reembolso</strong>.
             </p>
 
           }
 
-          @else if (patientSelectionStep) {
+          @else if (isPatientSelection(step)) {
 
             <!-- Title -->
             <h1 class="mb-3">
@@ -47,8 +33,22 @@
 
             <!-- Subtitle -->
             <p class="mb-5 text-muted">
-              Selecione um <strong class="text-nowrap">Utente</strong> com registo
-              primário em <strong class="text-info-soft text-nowrap">{{ entity!.name }}</strong>.
+              Selecione um <strong class="text-nowrap">utente</strong> para
+              avançar com a criação do <strong class="text-nowrap">processo de reembolso</strong>.
+            </p>
+
+          }
+
+          @else if (isConfirmation(step)) {
+
+            <!-- Title -->
+            <h1 class="mb-3">
+              Confirmação
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="mb-5 text-muted">
+              Confirme os detalhes para avançar com a criação do <strong class="text-nowrap">processo de reembolso</strong>.
             </p>
 
           }
@@ -61,30 +61,33 @@
       <hr class="my-5">
 
       <div class="nav row align-items-center" role="tablist">
+
         <div class="col-auto">
 
           <!-- Button -->
           <button
             (click)="previous()"
-            [class.invisible]="firstStep"
-            class="btn btn-lg btn-white"
+            [class.invisible]="stepNumber === 1"
+            class="btn btn-lg btn-primary"
             type="button">
             Anterior
           </button>
 
         </div>
+
         <div class="col text-center">
 
           <!-- Step -->
           <h6 class="text-uppercase text-muted mb-0">Passo {{stepNumber}} de {{stepCount}}</h6>
 
         </div>
+
         <div class="col-auto">
 
           <!-- Button -->
           <button
             (click)="next()"
-            [class.invisible]="incomplete"
+            [class.invisible]="isPending(step)"
             class="btn btn-lg btn-primary"
             type="button">
             Próximo

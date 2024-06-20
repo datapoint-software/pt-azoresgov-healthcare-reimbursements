@@ -1,23 +1,19 @@
 import { inject } from "@angular/core";
 import { Router, UrlTree } from "@angular/router";
-import { MainProcessCreationEntitySelectionFeature } from "@app/features/main-process-creation-entity-selection/main-process-creation-entity-selection.feature";
-import { MainProcessCreationFeatureStep } from "@app/features/main-process-creation/main-process-creation-feature.abstractions";
 import { MainProcessCreationFeature } from "@app/features/main-process-creation/main-process-creation.feature";
+import { MainProcessCreationFeatureStep } from "@app/features/main-process-creation/main-process-creation.feature.abstractions";
 
 export class MainProcessCreationEntitySelectionGuard {
 
-  public static canActivate(): UrlTree | boolean {
+  public static canActivate(): boolean | UrlTree {
 
     const processCreation = inject(MainProcessCreationFeature);
-    const processCreationEntitySelection = inject(MainProcessCreationEntitySelectionFeature);
     const router = inject(Router);
 
-    if (!processCreationEntitySelection.enabled)
-      return router.createUrlTree([ '/processes', '_', 'patient' ]);
+    if (processCreation.entitySearchForm.disabled)
+      return router.createUrlTree([ '/processes', '_', 'patient-selection' ]);
 
-    processCreation.configure({
-      step: MainProcessCreationFeatureStep.EntitySelection
-    });
+    processCreation.step = MainProcessCreationFeatureStep.EntitySelection;
 
     return true;
   }

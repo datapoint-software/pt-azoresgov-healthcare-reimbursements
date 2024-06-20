@@ -1,21 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.MainProcessCreation
+﻿namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.MainProcessCreation
 {
     public sealed class MainProcessCreationFeatureOptionsResult
     {
-        public MainProcessCreationFeatureOptionsResult(bool entitySelectionEnabled, IReadOnlyCollection<MainProcessCreationFeatureOptionsResultEntity>? entities, Guid? entityId)
+        public MainProcessCreationFeatureOptionsResult(MainProcessCreationFeatureOptionsResultEntitySelection? entitySelection)
         {
-            EntitySelectionEnabled = entitySelectionEnabled;
-            Entities = entities;
-            EntityId = entityId;
+            EntitySelection = entitySelection;
         }
 
-        public bool EntitySelectionEnabled { get; }
-
-        public IReadOnlyCollection<MainProcessCreationFeatureOptionsResultEntity>? Entities { get; }
-
-        public Guid? EntityId { get; }
+        public MainProcessCreationFeatureOptionsResultEntitySelection? EntitySelection { get; }
     }
 }

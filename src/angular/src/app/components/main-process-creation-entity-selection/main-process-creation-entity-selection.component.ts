@@ -1,13 +1,12 @@
 import { Component } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
-import { ProcessCreationEntitySelectionComponentSearchResultEntity } from "@app/components/main-process-creation-entity-selection/main-process-creation-entity-selection-component.abstractions";
 import { SuiFormGroupComponent } from "@app/components/sui-form-group/sui-form-group.component";
-import { MainProcessCreationEntitySelectionFeatureEntity, MainProcessCreationEntitySelectionFeatureForm, MainProcessCreationEntitySelectionFeatureSearchResult } from "@app/features/main-process-creation-entity-selection/main-process-creation-entity-selection-feature.abstractions";
-import { MainProcessCreationEntitySelectionFeature } from "@app/features/main-process-creation-entity-selection/main-process-creation-entity-selection.feature";
+import { MainProcessCreationFeature } from "@app/features/main-process-creation/main-process-creation.feature";
+import { MainProcessCreationFeatureEntity, MainProcessCreationFeatureEntitySearchForm, MainProcessCreationFeatureEntitySearchResult } from "@app/features/main-process-creation/main-process-creation.feature.abstractions";
 
 @Component({
-  imports: [ SuiFormGroupComponent, ReactiveFormsModule ],
+  imports: [ ReactiveFormsModule, SuiFormGroupComponent ],
   selector: 'app-main-process-creation-entity-selection',
   standalone: true,
   templateUrl: 'main-process-creation-entity-selection.component.html'
@@ -16,66 +15,40 @@ export class MainProcessCreationEntitySelectionComponent {
 
   // #region State accessors
 
-  public get entities(): ReadonlyMap<string, Readonly<MainProcessCreationEntitySelectionFeatureEntity>> {
-    return this._processCreationEntitySelection.entities;
+  public get entities(): ReadonlyMap<string, MainProcessCreationFeatureEntity> {
+    return this._processCreation.entities;
   }
 
-  public get entity(): MainProcessCreationEntitySelectionFeatureEntity | null {
-    return this._processCreationEntitySelection.entity;
+  public get entity(): Readonly<MainProcessCreationFeatureEntity> | null {
+    return this._processCreation.entity;
   }
 
-  public get form(): MainProcessCreationEntitySelectionFeatureForm {
-    return this._processCreationEntitySelection.form;
+  public get entitySearchForm(): MainProcessCreationFeatureEntitySearchForm {
+    return this._processCreation.entitySearchForm;
   }
 
-  public get searchResult(): MainProcessCreationEntitySelectionFeatureSearchResult | null {
-    return this._processCreationEntitySelection.searchResult;
-  }
-
-  public get searchResultEntities(): ReadonlyArray<Readonly<ProcessCreationEntitySelectionComponentSearchResultEntity>> {
-    return this._processCreationEntitySelection
-      .searchResult?.entityIds
-      .map((id) => {
-        const entity = this._processCreationEntitySelection.entities.get(id)!;
-        const parentEntity = (entity.parentEntityId && this._processCreationEntitySelection.entities.get(entity.parentEntityId)) || null;
-
-        return ({
-          id: entity.id,
-          rowVersionId: entity.rowVersionId,
-          parentEntity: parentEntity && ({
-            id: parentEntity.id,
-            rowVersionId: parentEntity.rowVersionId,
-            parentEntity: null,
-            code: parentEntity.code,
-            name: parentEntity.name,
-            nature: parentEntity.nature
-          }),
-          code: entity.code,
-          name: entity.name,
-          nature: entity.nature
-        })
-      })
-
-      ?? [];
+  public get entitySearchResult(): MainProcessCreationFeatureEntitySearchResult | null {
+    return this._processCreation.entitySearchResult;
   }
 
   // #endregion
 
   // #region Actions
 
-  public select(entityId: string): void {
-    this._processCreationEntitySelection.select(entityId);
-    this._router.navigate([ '/processes', '_', 'patient' ]);
+  public searchEntities(): Promise<void> {
+    return this._processCreation.searchEntities();
   }
 
-  public submit(): void {
-    this._processCreationEntitySelection.search();
+  public selectEntity(entityId: string): void {
+    this._processCreation.selectEntity(entityId);
+    this._router.navigate([ '/processes', '_', 'patient-selection' ]);
   }
 
   // #endregion
 
   constructor(
-    private readonly _processCreationEntitySelection: MainProcessCreationEntitySelectionFeature,
+    private readonly _processCreation: MainProcessCreationFeature,
     private readonly _router: Router
   ) {}
+
 }

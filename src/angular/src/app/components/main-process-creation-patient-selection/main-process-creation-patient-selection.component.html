@@ -1,4 +1,4 @@
-<form [formGroup]="form" (ngSubmit)="submit()">
+<form [formGroup]="patientSearchForm" (ngSubmit)="searchPatients()">
   <app-sui-form-group #filter [name]="'filter'" class="form-group d-block mb-4">
     <!-- Label -->
     <label
@@ -28,7 +28,7 @@
         <span class="fe fe-search"></span>
       </div>
     </div>
-    @if (fullSearch) {
+    @if (patientSearchForm.controls.useFullSearchCriteria.value) {
       <div class="form-text mt-2 mb-0">
         Pesquise por nome, contactos, número de identificação fiscal ou número de utente.
       </div>
@@ -39,17 +39,17 @@
       </div>
     }
   </app-sui-form-group>
-  <app-sui-form-group #full [name]="'full'" class="form-group d-block">
+  <app-sui-form-group #useFullSearchCriteria [name]="'useFullSearchCriteria'" class="form-group d-block">
     <div class="form-check">
       <input
-        [class.is-invalid]="full.invalid"
-        [class.is-required]="full.required"
-        [formControl]="full.control"
-        [id]="full.name"
+        [class.is-invalid]="useFullSearchCriteria.invalid"
+        [class.is-required]="useFullSearchCriteria.required"
+        [formControl]="useFullSearchCriteria.control"
+        [id]="useFullSearchCriteria.name"
         [value]="true"
         class="form-check-input"
         type="checkbox" />
-      <label [for]="full.name" class="form-check-label">
+      <label [for]="useFullSearchCriteria.name" class="form-check-label">
         Usar a pesquisa avançada por nome e/ou contactos do utente.
       </label>
     </div>
@@ -61,15 +61,15 @@
   </app-sui-form-group>
 </form>
 
-@if (searchResult) {
+@if (patientSearchResult) {
 
-  @if (searchResult.totalMatchCount > 0) {
+  @if (patientSearchResult.totalMatchCount > 0) {
 
-    @for (searchResultPatient of searchResultPatients; track searchResultPatient.id) {
+    @for (patientId of patientSearchResult.patientIds; track patientId) {
       <div
-        (click)="select(searchResultPatient.id)"
-        [class.disabled]="isPatientSelectionDisabled(searchResultPatient)"
-        [class.selected]="patient?.id === searchResultPatient.id"
+        (click)="selectPatient(patientId)"
+        [class.disabled]="!isPatientSelectable(patientId)"
+        [class.selected]="patient?.id === patientId"
         class="card search-result-card">
         <div class="card-body">
           <div class="row align-items-center flex-nowrap">
@@ -85,71 +85,76 @@
 
               <!-- Title -->
               <h4 class="text-primary mb-2">
-                {{searchResultPatient.name}}
+                {{patients.get(patientId)!.name}}
               </h4>
+
+              <div class="text-muted my-2 fs-5">
+                {{entities.get(patients.get(patientId)!.entityId)!.name}}
+              </div>
 
               <div class="d-flex align-items-center flex-wrap">
 
                 <div class="badge bg-dark-soft d-flex align-items-center p-2 my-2 me-2">
-                  <strong class="me-2">NNU</strong>  {{ searchResultPatient.number }}
+                  <strong class="me-2">NNU</strong>  {{ patients.get(patientId)!.number }}
                 </div>
 
-                @if (searchResultPatient.taxNumber) {
+                @if (patients.get(patientId)!.taxNumber) {
                   <span class="badge bg-dark-soft d-flex align-items-center p-2 my-2 me-2">
-                    <strong class="me-2">NIF</strong> {{ searchResultPatient.taxNumber }}
+                    <strong class="me-2">NIF</strong> {{ patients.get(patientId)!.taxNumber }}
                   </span>
                 }
 
-                @if (searchResultPatient.emailAddress) {
+                @if (patients.get(patientId)!.emailAddress) {
                   <span class="badge bg-info-soft d-flex align-items-center p-2 my-2 me-2">
-                    <span class="fe fe-mail me-2"></span> {{ searchResultPatient.emailAddress }}
+                    <span class="fe fe-mail me-2"></span> {{ patients.get(patientId)!.emailAddress }}
                   </span>
                 }
 
-                @if (searchResultPatient.faxNumber) {
+                @if (patients.get(patientId)!.faxNumber) {
                   <span class="badge bg-info-soft d-flex align-items-center p-2 my-2 me-2">
-                    <span class="fe fe-printer me-2"></span> {{ searchResultPatient.faxNumber }}
+                    <span class="fe fe-printer me-2"></span> {{ patients.get(patientId)!.faxNumber }}
                   </span>
                 }
 
-                @if (searchResultPatient.phoneNumber) {
+                @if (patients.get(patientId)!.phoneNumber) {
                   <span class="badge bg-info-soft d-flex align-items-center p-2 my-2 me-2">
-                    <span class="fe fe-phone me-2"></span> {{ searchResultPatient.phoneNumber }}
+                    <span class="fe fe-phone me-2"></span> {{ patients.get(patientId)!.phoneNumber }}
                   </span>
                 }
 
-                @if (searchResultPatient.mobileNumber) {
+                @if (patients.get(patientId)!.mobileNumber) {
                   <span class="badge bg-info-soft d-flex align-items-center p-2 my-2 me-2">
-                    <span class="fe fe-smartphone me-2"></span> {{ searchResultPatient.mobileNumber }}
+                    <span class="fe fe-smartphone me-2"></span> {{ patients.get(patientId)!.mobileNumber }}
                   </span>
                 }
 
-                @if (searchResultPatient.death) {
+                @if (patients.get(patientId)!.death) {
                   <span class="badge bg-danger-soft d-flex align-items-center p-2 my-2 me-2">
-                    <span class="fe fe-x-octagon me-2"></span> {{ searchResultPatient.death | date:'dd/MM/yyyy' }}
+                    <span class="fe fe-x-octagon me-2"></span> {{ patients.get(patientId)!.death | date:'dd/MM/yyyy' }}
                   </span>
                 }
 
-                @if (searchResultPatient.external) {
+                @if (patients.get(patientId)!.external) {
                   <span class="badge bg-danger-soft d-flex align-items-center p-2 my-2 me-2">
                     <strong>Externo</strong>
                   </span>
                 }
               </div>
 
-              @if (searchResultPatient.external) {
-                <div class="text-danger fs-5">
-                  Este utente não tem inscrição primária com esta entidade.
+              @if (patients.get(patientId)!.external) {
+                <div class="text-danger fs-5 my-4">
+                  Não tem permissões para registar processos na entidade em que este utente tem
+                  a sua inscrição primária.
                 </div>
               }
 
             </div>
 
-            @if (isPatientSelectionEnabled(searchResultPatient)) {
+            @if (isPatientSelectable(patientId)) {
               <div class="col-auto">
 
                 <!-- Button -->
-                <button class="btn btn-primary d-none d-md-inline-block" (click)="select(searchResultPatient.id)">
+                <button class="btn btn-primary d-none d-md-inline-block" (click)="selectPatient(patientId)">
                   Continuar <span class="fe fe-arrow-right"></span>
                 </button>
 

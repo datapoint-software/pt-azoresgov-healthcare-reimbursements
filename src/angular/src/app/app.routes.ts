@@ -49,23 +49,22 @@ export const routes: Routes = [
               {
                 path: '',
                 pathMatch: 'full',
-                redirectTo: 'entity'
+                redirectTo: 'confirmation'
               },
               {
-                canActivate: [ MainProcessCreationConfirmationGuard.canActivate ],
+                path: 'entity-selection',
+                component: MainProcessCreationEntitySelectionComponent,
+                canActivate: [ MainProcessCreationEntitySelectionGuard.canActivate ]
+              },
+              {
+                path: 'patient-selection',
+                component: MainProcessCreationPatientSelectionComponent,
+                canActivate: [ MainProcessCreationPatientSelectionGuard.canActivate ]
+              },
+              {
                 path: 'confirmation',
                 component: MainProcessCreationConfirmationComponent,
-                providers: MainProcessCreationConfirmationGuard.providers
-              },
-              {
-                canActivate: [ MainProcessCreationEntitySelectionGuard.canActivate ],
-                component: MainProcessCreationEntitySelectionComponent,
-                path: 'entity'
-              },
-              {
-                canActivate: [ MainProcessCreationPatientSelectionGuard.canActivate ],
-                component: MainProcessCreationPatientSelectionComponent,
-                path: 'patient'
+                canActivate: [ MainProcessCreationConfirmationGuard.canActivate ]
               }
             ]
           }
