@@ -1,38 +1,53 @@
 import { AnimationBuilder, animate, style } from "@angular/animations";
-import { Directive, ElementRef, HostListener, Input } from "@angular/core";
+import { Directive, ElementRef, HostListener, Input, OnDestroy, OnInit } from "@angular/core";
 
 @Directive({
   selector: '[data-bs-toggle="collapse"]',
   standalone: true
 })
-export class DataBsToggleCollapseDirective {
+export class DataBsToggleCollapseDirective implements OnInit, OnDestroy {
+
+  // #region State
+
+  private _documentClickFn: (e: MouseEvent) => void = undefined!;
 
   @Input('href')
-  public href?: string;
+  public _href?: string;
 
   @Input('data-bs-target')
-  public target?: string;
+  public _target?: string;
 
   @Input('data-bs-duration')
-  public duration: number = 250;
+  public _duration: number = 250;
+
+  // #endregion
 
   constructor(
-    private readonly animationBuilder: AnimationBuilder,
-    private readonly elementRef: ElementRef
+    private readonly _animationBuilder: AnimationBuilder,
+    private readonly _elementRef: ElementRef
   ) {}
 
+  public ngOnDestroy(): void {
+    document.removeEventListener('click', this._documentClickFn);
+  }
+
+  public ngOnInit(): void {
+    this._documentClickFn = (e) => this._documentClick(e);
+    document.addEventListener('click', this._documentClickFn);
+  }
+
   @HostListener('click', [ '$event' ])
-  public onClick(e: PointerEvent) {
+  private _click(e: PointerEvent) {
 
     e.preventDefault();
     e.stopPropagation();
 
-    const source = this.elementRef.nativeElement;
+    const source = this._elementRef.nativeElement;
 
     if (!(source instanceof HTMLElement))
       return;
 
-    const target = document.querySelector(`${this.target || this.href}.collapse`);
+    const target = document.querySelector(`${this._target || this._href}.collapse`);
 
     if (!(target instanceof HTMLElement))
       return;
@@ -40,12 +55,12 @@ export class DataBsToggleCollapseDirective {
     const collapsed = source.classList.contains('collapsed');
 
     if (collapsed)
-      this.expand(source, target);
+      this._expand(source, target);
     else
-      this.collapse(source, target);
+      this._collapse(source, target);
   }
 
-  private collapse(source: HTMLElement, target: HTMLElement) {
+  private _collapse(source: HTMLElement, target: HTMLElement) {
 
     source.setAttribute('aria-expanded', 'false');
     source.classList.add('collapsed');
@@ -53,9 +68,9 @@ export class DataBsToggleCollapseDirective {
     target.classList.remove('collapse');
     target.classList.add('collapsing');
 
-    this.animationBuilder.build([
+    this._animationBuilder.build([
       style({ height: target.scrollHeight }),
-      animate(this.duration, style({ height: 0 }))
+      animate(this._duration, style({ height: 0 }))
     ])
       .create(target)
       .play();
@@ -64,10 +79,32 @@ export class DataBsToggleCollapseDirective {
       target.classList.remove('collapsing');
       target.classList.add('collapse');
       target.classList.remove('show');
-    }, this.duration);
+    }, this._duration);
   }
 
-  private expand(source: HTMLElement, target: HTMLElement) {
+  private _documentClick(e: MouseEvent): void {
+
+    // We want to ensure we don't collapse the menus
+    // for desktop users.
+    if (window.innerWidth > 1199)
+      return;
+
+    const source = this._elementRef.nativeElement;
+
+    if (!(source instanceof HTMLElement))
+      return;
+
+    const target = document.querySelector(`${this._target || this._href}.collapse`);
+
+    if (!(target instanceof HTMLElement))
+      return;
+
+    const collapsed = source.classList.contains('collapsed');
+
+    collapsed || this._collapse(source, target);
+  }
+
+  private _expand(source: HTMLElement, target: HTMLElement) {
 
     source.setAttribute('aria-expanded', 'true');
     source.classList.remove('collapsed');
@@ -75,9 +112,9 @@ export class DataBsToggleCollapseDirective {
     target.classList.remove('collapse');
     target.classList.add('collapsing');
 
-    this.animationBuilder.build([
+    this._animationBuilder.build([
       style({ height: 0 }),
-      animate(this.duration, style({ height: target.scrollHeight })),
+      animate(this._duration, style({ height: target.scrollHeight })),
       style({ height: 'unset' })
     ])
       .create(target)
@@ -87,6 +124,6 @@ export class DataBsToggleCollapseDirective {
       target.classList.remove('collapsing');
       target.classList.add('collapse');
       target.classList.add('show');
-    }, this.duration);
+    }, this._duration);
   }
 }
