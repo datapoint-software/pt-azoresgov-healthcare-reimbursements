@@ -61,7 +61,6 @@ export class MainProcessCreationConfirmationComponent {
 
     this._confirmation.close();
     this._completion.open();
-
   }
 
   // #endregion
