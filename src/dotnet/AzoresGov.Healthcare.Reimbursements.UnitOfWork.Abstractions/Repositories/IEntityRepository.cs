@@ -13,6 +13,10 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Repositories
             IReadOnlyCollection<long> entityIds, 
             CancellationToken ct);
 
+        Task<IReadOnlyCollection<Entity>> GetAllByUserIdAsync(
+            long userId,
+            CancellationToken ct);
+
         Task<IReadOnlyCollection<Entity>> GetAllByUserSearchCriteriaAsync(
             long userId,
             string filter,

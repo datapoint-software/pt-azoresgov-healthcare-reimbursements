@@ -1,3 +1,171 @@
-<div class="container-fluid">
-  /processes
+<div class="header">
+  <div class="container-fluid">
+
+    <!-- Body -->
+    <div class="header-body">
+      <div class="row align-items-end">
+        <div class="col">
+
+          <!-- Pretitle -->
+          <h6 class="header-pretitle">
+            Processos
+          </h6>
+
+          <!-- Title -->
+          <h1 class="header-title">
+            Pesquisa
+          </h1>
+
+        </div>
+      </div> <!-- / .row -->
+    </div> <!-- / .header-body -->
+
+  </div>
 </div>
+
+<div class="container-fluid">
+  <form [formGroup]="processSearchForm" (ngSubmit)="searchProcesses()">
+    <app-sui-form-group #filter [name]="'filter'" class="form-group d-block mb-4">
+      <!-- Label -->
+      <label
+        [class.is-invalid]="filter.invalid"
+        [class.is-required]="filter.required"
+        [for]="filter.name"
+        class="form-label">
+        Processos
+      </label>
+      <!-- Input group -->
+      <div
+        [class.is-invalid]="filter.invalid"
+        [class.is-required]="filter.required"
+        class="input-group input-group-merge">
+        <!-- Input -->
+        <input
+          [class.is-invalid]="filter.invalid"
+          [class.is-required]="filter.required"
+          [formControl]="filter.control"
+          [id]="filter.name"
+          autocomplete="off"
+          class="form-control"
+          tabindex="1"
+          type="text" />
+        <!-- Icon -->
+        <div class="input-group-text">
+          <span class="fe fe-search"></span>
+        </div>
+      </div>
+      @if (processSearchForm.controls.useFullSearchCriteria.value) {
+        <div class="form-text mt-2 mb-0">
+          Pesquise por processos ou nome, contactos, número de identificação fiscal ou número de utente.
+        </div>
+      }
+      @else {
+        <div class="form-text mt-2 mb-0">
+          Pesquise por processos ou número nacional ou identificação fiscal do utente.
+        </div>
+      }
+    </app-sui-form-group>
+    <app-sui-form-group #useFullSearchCriteria [name]="'useFullSearchCriteria'" class="form-group d-block">
+      <div class="form-check">
+        <input
+          [class.is-invalid]="useFullSearchCriteria.invalid"
+          [class.is-required]="useFullSearchCriteria.required"
+          [formControl]="useFullSearchCriteria.control"
+          [id]="useFullSearchCriteria.name"
+          [value]="true"
+          class="form-check-input"
+          type="checkbox" />
+        <label [for]="useFullSearchCriteria.name" class="form-check-label">
+          Usar a pesquisa avançada por nome e/ou contactos do utente.
+        </label>
+      </div>
+      <div class="form-text mt-2 mb-0">
+        Esta funcionalidade é monitorizada pelo administrador do sistema de informação.
+      </div>
+    </app-sui-form-group>
+  </form>
+
+</div>
+
+@if (processSearchForm.valid) {
+  <div class="container-fluid">
+    @if (processSearchResult) {
+      @for (processId of processSearchResult.processIds; track processId) {
+        <div class="card search-result-card" (click)="navigate(processId)">
+          <div class="card-body">
+            <div class="row align-items-center flex-nowrap">
+              <div class="col-auto">
+
+                <!-- Avatar -->
+                <div class="avatar avatar-lg d-flex align-items-center justify-content-center text-primary">
+                  <span class="fe fe-file-text"></span>
+                </div>
+
+              </div>
+              <div class="col ms-n2">
+
+                <!-- Title -->
+                <div class="fw-bold text-primary fs-4 mb-1">
+                  {{ patients.get(processes.get(processId)!.patientId)!.name }}
+                </div>
+
+                <div class="text-muted mb-2 fs-5">
+                  {{ entities.get(processes.get(processId)!.entityId)!.name }}
+                </div>
+
+                <div class="d-flex align-items-center flex-wrap">
+
+                  <div class="badge bg-dark-soft d-flex align-items-center p-2 my-2 me-2">
+                    <span class="fe fe-hash me-1"></span>
+                    {{ processes.get(processId)!.number }}
+                  </div>
+
+                  <div class="badge bg-dark-soft d-flex align-items-center p-2 my-2 me-2">
+                    <strong class="me-2">NNU</strong> {{ patients.get(processes.get(processId)!.patientId)!.number | numeric }}
+                  </div>
+
+                  <div class="badge bg-success-soft d-flex align-items-center p-2 my-2 me-2">
+                    Em registo
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-auto text-center">
+
+                <!-- Button -->
+                <button class="btn btn-primary d-none d-md-inline-block" (click)="navigate(processId)">
+                  Registo <span class="fe fe-arrow-right"></span>
+                </button>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      @empty {
+        <div class="alert alert-warning">
+          Não foram encontrados utentes correspondentes a estes termos de pesquisa.
+        </div>
+      }
+
+      @if (processSearchResultLeftoverMatchCount) {
+        <button (click)="searchProcesses()" class="btn btn-light btn-sm" href="#" type="button">
+          Existem mais <strong>{{ processSearchResultLeftoverMatchCount }} resultados que não foram apresentados</strong>.
+          <span class="fe fe-arrow-down ms-2"></span>
+        </button>
+      }
+    }
+
+    @else {
+      <div class="card">
+        <div class="card-body">
+          <span class="placeholder bg-light col-6"></span>
+          <span class="placeholder bg-light w-75"></span>
+          <span class="placeholder bg-light" style="width: 25%;"></span>
+        </div>
+      </div>
+    }
+  </div>
+}

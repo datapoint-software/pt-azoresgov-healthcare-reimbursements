@@ -14,6 +14,7 @@ import { MainProcessCreationConfirmationGuard } from "@app/guards/main-process-c
 import { MainProcessCreationEntitySelectionGuard } from "@app/guards/main-process-creation-entity-selection/main-process-creation-entity-selection.guard";
 import { MainProcessCreationPatientSelectionGuard } from "@app/guards/main-process-creation-patient-selection/main-process-creation-patient-selection.guard";
 import { MainProcessCreationGuard } from "@app/guards/main-process-creation/main-process-creation.guard";
+import { MainProcessSearchGuard } from "@app/guards/main-process-search/main-process-search.guard";
 import { MainGuard } from "@app/guards/main/main.guard";
 
 export const routes: Routes = [
@@ -45,7 +46,9 @@ export const routes: Routes = [
           {
             path: "",
             pathMatch: "full",
-            component: MainProcessSearchComponent
+            component: MainProcessSearchComponent,
+            canActivate: [ MainProcessSearchGuard.canActivate ],
+            providers: MainProcessSearchGuard.providers
           },
           {
             path: "_",
