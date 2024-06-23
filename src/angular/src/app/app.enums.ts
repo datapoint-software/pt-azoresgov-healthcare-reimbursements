@@ -5,6 +5,19 @@ export enum EntityNature {
   Office = 79
 };
 
+// TODO <joao.pl.lopes> enum options
+export enum ProcessPaymentMethod {
+  Cash,
+  Cheque,
+  WireTransfer
+};
+
+// TODO <joao.pl.lopes> enum options
+export enum ProcessPaymentRecipient {
+  LegalRepresentative,
+  Patient
+}
+
 export enum ProcessStatus {
   Capture = 67
 };

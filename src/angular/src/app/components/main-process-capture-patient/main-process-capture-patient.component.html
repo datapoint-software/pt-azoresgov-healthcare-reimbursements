@@ -1,0 +1,300 @@
+<section [formGroup]="form.controls.patient">
+
+  <div [formGroup]="form.controls.patient.controls.identity" class="card">
+    <div class="card-header">
+      <div class="card-header-title">Utente</div>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-lg-3">
+          <app-sui-form-group #number [name]="'number'" class="form-group d-block">
+            <!-- Label -->
+            <label
+              [class.is-invalid]="number.invalid"
+              [class.is-required]="number.required"
+              [for]="number.name"
+              class="form-label"
+              title="Número de utente">
+              Número
+            </label>
+            <!-- Input -->
+            <input
+              [class.is-invalid]="number.invalid"
+              [class.is-required]="number.required"
+              [formControl]="number.control"
+              [id]="number.name"
+              autocomplete="off"
+              class="form-control"
+              tabindex="1"
+              type="text" />
+          </app-sui-form-group>
+        </div>
+        <div class="col-lg-3">
+          <app-sui-form-group #taxNumber [name]="'taxNumber'" class="form-group d-block">
+            <!-- Label -->
+            <label
+              [class.is-invalid]="taxNumber.invalid"
+              [class.is-required]="taxNumber.required"
+              [for]="taxNumber.name"
+              class="form-label"
+              title="Número de identificação fiscal">
+              NIF
+            </label>
+            <!-- Input -->
+            <input
+              [class.is-invalid]="taxNumber.invalid"
+              [class.is-required]="taxNumber.required"
+              [formControl]="taxNumber.control"
+              [id]="taxNumber.name"
+              autocomplete="off"
+              class="form-control"
+              tabindex="1"
+              type="text" />
+          </app-sui-form-group>
+        </div>
+        <div class="col-lg-12">
+          <app-sui-form-group #name [name]="'name'" class="form-group d-block">
+            <!-- Label -->
+            <label
+              [class.is-invalid]="name.invalid"
+              [class.is-required]="name.required"
+              [for]="name.name"
+              class="form-label">
+              Nome
+            </label>
+            <!-- Input -->
+            <input
+              [class.is-invalid]="name.invalid"
+              [class.is-required]="name.required"
+              [formControl]="name.control"
+              [id]="name.name"
+              autocomplete="off"
+              class="form-control"
+              tabindex="1"
+              type="text" />
+          </app-sui-form-group>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div [formGroup]="form.controls.patient.controls.postalAddress" class="card">
+    <div class="card-header">
+      <div class="card-header-title">Morada</div>
+    </div>
+    <div class="card-body">
+      <div class="row mb-4">
+        <div class="col-lg-3">
+          <app-sui-form-group #postalAddressAreaCode [name]="'postalAddressAreaCode'" class="form-group d-block">
+            <!-- Label -->
+            <label
+              [class.is-invalid]="postalAddressAreaCode.invalid"
+              [class.is-required]="postalAddressAreaCode.required"
+              [for]="postalAddressAreaCode.name"
+              class="form-label">
+              Código postal
+            </label>
+            <!-- Input -->
+            <input
+              [class.is-invalid]="postalAddressAreaCode.invalid"
+              [class.is-required]="postalAddressAreaCode.required"
+              [formControl]="postalAddressAreaCode.control"
+              [id]="postalAddressAreaCode.name"
+              autocomplete="off"
+              class="form-control"
+              tabindex="1"
+              type="text" />
+          </app-sui-form-group>
+        </div>
+        <div class="col-lg-3">
+          <app-sui-form-group #postalAddressArea [name]="'postalAddressArea'" class="form-group d-block">
+            <!-- Label -->
+            <label
+              [class.is-invalid]="postalAddressArea.invalid"
+              [class.is-required]="postalAddressArea.required"
+              [for]="postalAddressArea.name"
+              class="form-label">
+              Designação postal
+            </label>
+            <!-- Input -->
+            <input
+              [class.is-invalid]="postalAddressArea.invalid"
+              [class.is-required]="postalAddressArea.required"
+              [formControl]="postalAddressArea.control"
+              [id]="postalAddressArea.name"
+              autocomplete="off"
+              class="form-control"
+              tabindex="1"
+              type="text" />
+          </app-sui-form-group>
+        </div>
+        <div class="col-lg-12">
+          <app-sui-form-group #postalAddressLine1 [name]="'postalAddressLine1'" class="form-group d-block">
+            <!-- Label -->
+            <label
+              [class.is-invalid]="postalAddressLine1.invalid"
+              [class.is-required]="postalAddressLine1.required"
+              [for]="postalAddressLine1.name"
+              class="form-label">
+              Designação postal
+            </label>
+            <!-- Input -->
+            <input
+              [class.is-invalid]="postalAddressLine1.invalid"
+              [class.is-required]="postalAddressLine1.required"
+              [formControl]="postalAddressLine1.control"
+              [id]="postalAddressLine1.name"
+              autocomplete="off"
+              class="form-control"
+              tabindex="1"
+              type="text" />
+          </app-sui-form-group>
+        </div>
+        <div class="col-lg-12">
+          <app-sui-form-group #postalAddressLine2 [name]="'postalAddressLine2'" class="form-group d-block">
+            <!-- Label -->
+            <label
+              [class.is-invalid]="postalAddressLine2.invalid"
+              [class.is-required]="postalAddressLine2.required"
+              [for]="postalAddressLine2.name"
+              class="form-label">
+              Designação postal
+            </label>
+            <!-- Input -->
+            <input
+              [class.is-invalid]="postalAddressLine2.invalid"
+              [class.is-required]="postalAddressLine2.required"
+              [formControl]="postalAddressLine2.control"
+              [id]="postalAddressLine2.name"
+              autocomplete="off"
+              class="form-control"
+              tabindex="1"
+              type="text" />
+          </app-sui-form-group>
+        </div>
+        @if (form.controls.patient.controls.postalAddress.controls.postalAddressLine3.value || postalAddressLine2.control.value) {
+          <div class="col-lg-12">
+            <app-sui-form-group #postalAddressLine3 [name]="'postalAddressLine3'" class="form-group d-block">
+              <!-- Label -->
+              <label
+                [class.is-invalid]="postalAddressLine3.invalid"
+                [class.is-required]="postalAddressLine3.required"
+                [for]="postalAddressLine3.name"
+                class="form-label">
+                Designação postal
+              </label>
+              <!-- Input -->
+              <input
+                [class.is-invalid]="postalAddressLine3.invalid"
+                [class.is-required]="postalAddressLine3.required"
+                [formControl]="postalAddressLine3.control"
+                [id]="postalAddressLine3.name"
+                autocomplete="off"
+                class="form-control"
+                tabindex="1"
+                type="text" />
+            </app-sui-form-group>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div [formGroup]="form.controls.patient.controls.contacts" class="card">
+    <div class="card-header">
+      <div class="card-header-title">Contactos</div>
+    </div>
+    <div class="card-body">
+      <div class="row mb-4">
+        <div class="col-lg-12">
+          <app-sui-form-group #emailAddress [name]="'emailAddress'" class="form-group d-block">
+            <!-- Label -->
+            <label
+              [class.is-invalid]="emailAddress.invalid"
+              [class.is-required]="emailAddress.required"
+              [for]="emailAddress.name"
+              class="form-label">
+              Correio eletrónico
+            </label>
+            <!-- Input -->
+            <input
+              [class.is-invalid]="emailAddress.invalid"
+              [class.is-required]="emailAddress.required"
+              [formControl]="emailAddress.control"
+              [id]="emailAddress.name"
+              autocomplete="off"
+              class="form-control"
+              tabindex="1"
+              type="email" />
+          </app-sui-form-group>
+        </div>
+        <div class="col-lg-3">
+          <app-sui-form-group #faxNumber [name]="'faxNumber'" class="form-group d-block">
+            <!-- Label -->
+            <label
+              [class.is-invalid]="faxNumber.invalid"
+              [class.is-required]="faxNumber.required"
+              [for]="faxNumber.name"
+              class="form-label">
+              Fax
+            </label>
+            <!-- Input -->
+            <input
+              [class.is-invalid]="faxNumber.invalid"
+              [class.is-required]="faxNumber.required"
+              [formControl]="faxNumber.control"
+              [id]="faxNumber.name"
+              autocomplete="off"
+              class="form-control"
+              tabindex="1"
+              type="text" />
+          </app-sui-form-group>
+        </div>
+        <div class="col-lg-3">
+          <app-sui-form-group #mobileNumber [name]="'mobileNumber'" class="form-group d-block">
+            <!-- Label -->
+            <label
+              [class.is-invalid]="mobileNumber.invalid"
+              [class.is-required]="mobileNumber.required"
+              [for]="mobileNumber.name"
+              class="form-label">
+              Telemóvel
+            </label>
+            <!-- Input -->
+            <input
+              [class.is-invalid]="mobileNumber.invalid"
+              [class.is-required]="mobileNumber.required"
+              [formControl]="mobileNumber.control"
+              [id]="mobileNumber.name"
+              autocomplete="off"
+              class="form-control"
+              tabindex="1"
+              type="text" />
+          </app-sui-form-group>
+        </div>
+        <div class="col-lg-3">
+          <app-sui-form-group #phoneNumber [name]="'phoneNumber'" class="form-group d-block">
+            <!-- Label -->
+            <label
+              [class.is-invalid]="phoneNumber.invalid"
+              [class.is-required]="phoneNumber.required"
+              [for]="phoneNumber.name"
+              class="form-label">
+              Telefone
+            </label>
+            <!-- Input -->
+            <input
+              [class.is-invalid]="phoneNumber.invalid"
+              [class.is-required]="phoneNumber.required"
+              [formControl]="phoneNumber.control"
+              [id]="phoneNumber.name"
+              autocomplete="off"
+              class="form-control"
+              tabindex="1"
+              type="text" />
+          </app-sui-form-group>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

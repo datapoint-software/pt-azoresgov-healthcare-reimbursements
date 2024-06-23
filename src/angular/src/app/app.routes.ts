@@ -2,6 +2,12 @@ import { Routes } from "@angular/router";
 import { GenericErrorComponent } from "@app/components/generic-error/generic-error.component";
 import { GenericSignInComponent } from "@app/components/generic-sign-in/generic-sign-in.component";
 import { MainHomeComponent } from "@app/components/main-home/main-home.component";
+import { MainProcessCaptureConfirmationComponent } from "@app/components/main-process-capture-confirmation/main-process-capture-confirmation.component";
+import { MainProcessCaptureFamilyIncomeStatementComponent } from "@app/components/main-process-capture-family-income-statement/main-process-capture-family-income-statement.component";
+import { MainProcessCaptureLegalRepresentativeComponent } from "@app/components/main-process-capture-legal-representative/main-process-capture-legal-representative.component";
+import { MainProcessCapturePatientComponent } from "@app/components/main-process-capture-patient/main-process-capture-patient.component";
+import { MainProcessCapturePaymentComponent } from "@app/components/main-process-capture-payment/main-process-capture-payment.component";
+import { MainProcessCaptureUnemploymentStatementComponent } from "@app/components/main-process-capture-unemployment-statement/main-process-capture-unemployment-statement.component";
 import { MainProcessCaptureComponent } from "@app/components/main-process-capture/main-process-capture.component";
 import { MainProcessCreationConfirmationComponent } from "@app/components/main-process-creation-confirmation/main-process-creation-confirmation.component";
 import { MainProcessCreationEntitySelectionComponent } from "@app/components/main-process-creation-entity-selection/main-process-creation-entity-selection.component";
@@ -11,6 +17,12 @@ import { MainProcessSearchComponent } from "@app/components/main-process-search/
 import { MainComponent } from "@app/components/main/main.component";
 import { GenericErrorGuard } from "@app/guards/generic-error/generic-error.guard";
 import { GenericSignInGuard } from "@app/guards/generic-sign-in/generic-sign-in.guard";
+import { MainProcessCaptureConfirmationGuard } from "@app/guards/main-process-capture-confirmation/main-process-capture-confirmation.guard";
+import { MainProcessCaptureFamilyIncomeStatementGuard } from "@app/guards/main-process-capture-family-income-statement/main-process-capture-family-income-statement.guard";
+import { MainProcessCaptureLegalRepresentativeGuard } from "@app/guards/main-process-capture-legal-representative/main-process-capture-legal-representative.guard";
+import { MainProcessCapturePatientGuard } from "@app/guards/main-process-capture-patient/main-process-capture-patient.guard";
+import { MainProcessCapturePaymentGuard } from "@app/guards/main-process-capture-payment/main-process-capture-payment.guard";
+import { MainProcessCaptureUnemploymentStatementGuard } from "@app/guards/main-process-capture-unemployment-statement/main-process-capture-unemployment-statement.guard";
 import { MainProcessCaptureGuard } from "@app/guards/main-process-capture/main-process-capture.guard";
 import { MainProcessCreationConfirmationGuard } from "@app/guards/main-process-creation-confirmation/main-process-creation-confirmation.guard";
 import { MainProcessCreationEntitySelectionGuard } from "@app/guards/main-process-creation-entity-selection/main-process-creation-entity-selection.guard";
@@ -87,7 +99,44 @@ export const routes: Routes = [
                 path: "capture",
                 component: MainProcessCaptureComponent,
                 canActivate: [ MainProcessCaptureGuard.canActivate ],
-                providers: MainProcessCaptureGuard.providers
+                providers: MainProcessCaptureGuard.providers,
+                children: [
+                  {
+                    path: "",
+                    pathMatch: "full",
+                    redirectTo: "patient"
+                  },
+                  {
+                    path: "confirmation",
+                    component: MainProcessCaptureConfirmationComponent,
+                    canActivate: [ MainProcessCaptureConfirmationGuard.canActivate ]
+                  },
+                  {
+                    path: "family-income-statement",
+                    component: MainProcessCaptureFamilyIncomeStatementComponent,
+                    canActivate: [ MainProcessCaptureFamilyIncomeStatementGuard.canActivate ]
+                  },
+                  {
+                    path: "legal-representative",
+                    component: MainProcessCaptureLegalRepresentativeComponent,
+                    canActivate: [ MainProcessCaptureLegalRepresentativeGuard.canActivate ]
+                  },
+                  {
+                    path: "patient",
+                    component: MainProcessCapturePatientComponent,
+                    canActivate: [ MainProcessCapturePatientGuard.canActivate ]
+                  },
+                  {
+                    path: "payment",
+                    component: MainProcessCapturePaymentComponent,
+                    canActivate: [ MainProcessCapturePaymentGuard.canActivate ]
+                  },
+                  {
+                    path: "unemployment-statement",
+                    component: MainProcessCaptureUnemploymentStatementComponent,
+                    canActivate: [ MainProcessCaptureUnemploymentStatementGuard.canActivate ]
+                  }
+                ]
               }
             ]
           }

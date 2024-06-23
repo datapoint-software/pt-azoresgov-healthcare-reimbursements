@@ -1,0 +1,35 @@
+<div [formGroup]="form.controls.unemploymentStatement" class="card">
+  <div class="card-header">
+    <div class="card-header-title">Declaração de rendimentos</div>
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" id="unemploymentStatementEnabled">
+      <label class="form-check-label d-none" for="unemploymentStatementEnabled">Entregue</label>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-lg-3">
+        <app-sui-form-group #issue [name]="'issue'" class="form-group d-block">
+          <!-- Label -->
+          <label
+            [class.is-invalid]="issue.invalid"
+            [class.is-required]="issue.required"
+            [for]="issue.name"
+            class="form-label">
+            Emissão
+          </label>
+          <!-- Input -->
+          <input
+            [class.is-invalid]="issue.invalid"
+            [class.is-required]="issue.required"
+            [formControl]="issue.control"
+            [id]="issue.name"
+            autocomplete="off"
+            class="form-control"
+            tabindex="1"
+            type="text" />
+        </app-sui-form-group>
+      </div>
+    </div>
+  </div>
+</div>

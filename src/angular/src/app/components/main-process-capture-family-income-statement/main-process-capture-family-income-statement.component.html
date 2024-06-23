@@ -1,0 +1,101 @@
+<div [formGroup]="form.controls.familyIncomeStatement" class="card">
+  <div class="card-header">
+    <div class="card-header-title">Declaração de rendimentos</div>
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" id="familyIncomeStatementEnabled">
+      <label class="form-check-label d-none" for="familyIncomeStatementEnabled">Entregue</label>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-lg-3">
+        <app-sui-form-group #year [name]="'year'" class="form-group d-block">
+          <!-- Label -->
+          <label
+            [class.is-invalid]="year.invalid"
+            [class.is-required]="year.required"
+            [for]="year.name"
+            class="form-label">
+            Ano
+          </label>
+          <!-- Input -->
+          <input
+            [class.is-invalid]="year.invalid"
+            [class.is-required]="year.required"
+            [formControl]="year.control"
+            [id]="year.name"
+            autocomplete="off"
+            class="form-control"
+            tabindex="1"
+            type="text" />
+        </app-sui-form-group>
+      </div>
+      <div class="col-lg-3">
+        <app-sui-form-group #accessCode [name]="'accessCode'" class="form-group d-block">
+          <!-- Label -->
+          <label
+            [class.is-invalid]="accessCode.invalid"
+            [class.is-required]="accessCode.required"
+            [for]="accessCode.name"
+            class="form-label">
+            Código de acesso
+          </label>
+          <!-- Input -->
+          <input
+            [class.is-invalid]="accessCode.invalid"
+            [class.is-required]="accessCode.required"
+            [formControl]="accessCode.control"
+            [id]="accessCode.name"
+            autocomplete="off"
+            class="form-control"
+            tabindex="1"
+            type="text" />
+        </app-sui-form-group>
+      </div>
+      <div class="col-lg-3">
+        <app-sui-form-group #memberCount [name]="'memberCount'" class="form-group d-block">
+          <!-- Label -->
+          <label
+            [class.is-invalid]="memberCount.invalid"
+            [class.is-required]="memberCount.required"
+            [for]="memberCount.name"
+            class="form-label">
+            Agregado Familiar
+          </label>
+          <!-- Input -->
+          <input
+            [class.is-invalid]="memberCount.invalid"
+            [class.is-required]="memberCount.required"
+            [formControl]="memberCount.control"
+            [id]="memberCount.name"
+            autocomplete="off"
+            class="form-control"
+            tabindex="1"
+            type="text" />
+        </app-sui-form-group>
+      </div>
+      <div class="col-lg-3">
+        <app-sui-form-group #amount [name]="'amount'" class="form-group d-block">
+          <!-- Label -->
+          <label
+            [class.is-invalid]="amount.invalid"
+            [class.is-required]="amount.required"
+            [for]="amount.name"
+            class="form-label">
+            Rendimentos
+          </label>
+          <!-- Input -->
+          <input
+            [class.is-invalid]="amount.invalid"
+            [class.is-required]="amount.required"
+            [formControl]="amount.control"
+            [id]="amount.name"
+            autocomplete="off"
+            class="form-control"
+            tabindex="1"
+            type="text" />
+        </app-sui-form-group>
+      </div>
+    </div>
+  </div>
+</div>

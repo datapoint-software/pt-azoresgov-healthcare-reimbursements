@@ -3,6 +3,10 @@
 $default-transition-speed: 175ms;
 $default-transition-timing-function: ease-in;
 
+.modal {
+  --bs-modal-width: 450px;
+}
+
 .search-result-card {
 
   &.disabled {

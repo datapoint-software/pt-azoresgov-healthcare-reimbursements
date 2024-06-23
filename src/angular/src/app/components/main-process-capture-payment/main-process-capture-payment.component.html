@@ -1,0 +1,99 @@
+<div [formGroup]="form.controls.payment" class="card">
+  <div class="card-header">
+    <div class="card-header-title">Pagamento</div>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-12">
+        <app-sui-form-group #method [name]="'method'" class="form-group d-block">
+          <!-- Label -->
+          <label
+            [class.is-invalid]="method.invalid"
+            [class.is-required]="method.required"
+            [for]="method.name"
+            class="form-label">
+            Método
+          </label>
+          <!-- Input -->
+          <input
+            [class.is-invalid]="method.invalid"
+            [class.is-required]="method.required"
+            [formControl]="method.control"
+            [id]="method.name"
+            autocomplete="off"
+            class="form-control"
+            tabindex="1"
+            type="text" />
+        </app-sui-form-group>
+      </div>
+      <div class="col-12">
+        <app-sui-form-group #recipient [name]="'recipient'" class="form-group d-block">
+          <!-- Label -->
+          <label
+            [class.is-invalid]="recipient.invalid"
+            [class.is-required]="recipient.required"
+            [for]="recipient.name"
+            class="form-label">
+            À ordem de
+          </label>
+          <!-- Input -->
+          <input
+            [class.is-invalid]="recipient.invalid"
+            [class.is-required]="recipient.required"
+            [formControl]="recipient.control"
+            [id]="recipient.name"
+            autocomplete="off"
+            class="form-control"
+            tabindex="1"
+            type="text" />
+        </app-sui-form-group>
+      </div>
+    </div>
+    <div [formGroup]="form.controls.payment.controls.wireTransferDetails" class="row">
+      <div class="col-lg-9">
+        <app-sui-form-group #iban [name]="'iban'" class="form-group d-block">
+          <!-- Label -->
+          <label
+            [class.is-invalid]="iban.invalid"
+            [class.is-required]="iban.required"
+            [for]="iban.name"
+            class="form-label">
+            IBAN
+          </label>
+          <!-- Input -->
+          <input
+            [class.is-invalid]="iban.invalid"
+            [class.is-required]="iban.required"
+            [formControl]="iban.control"
+            [id]="iban.name"
+            autocomplete="off"
+            class="form-control"
+            tabindex="1"
+            type="text" />
+        </app-sui-form-group>
+      </div>
+      <div class="col-lg-3">
+        <app-sui-form-group #swiftCode [name]="'swiftCode'" class="form-group d-block">
+          <!-- Label -->
+          <label
+            [class.is-invalid]="swiftCode.invalid"
+            [class.is-required]="swiftCode.required"
+            [for]="swiftCode.name"
+            class="form-label">
+            BIC/SWIFT
+          </label>
+          <!-- Input -->
+          <input
+            [class.is-invalid]="swiftCode.invalid"
+            [class.is-required]="swiftCode.required"
+            [formControl]="swiftCode.control"
+            [id]="swiftCode.name"
+            autocomplete="off"
+            class="form-control"
+            tabindex="1"
+            type="text" />
+        </app-sui-form-group>
+      </div>
+    </div>
+  </div>
+</div>

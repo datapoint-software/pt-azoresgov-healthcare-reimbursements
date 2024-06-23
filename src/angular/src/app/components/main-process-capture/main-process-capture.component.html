@@ -1,0 +1,123 @@
+<div class="header">
+  <div class="container-fluid">
+
+    <!-- Body -->
+    <div class="header-body">
+      <div class="row align-items-end">
+        <div class="col">
+
+          <!-- Pretitle -->
+          <h6 class="header-pretitle">
+            Processos
+          </h6>
+
+          <!-- Title -->
+          <h1 class="header-title">
+            {{ process.number }}
+          </h1>
+
+        </div>
+      </div> <!-- / .row -->
+    </div> <!-- / .header-body -->
+
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-9">
+      <form [formGroup]="form">
+        <router-outlet></router-outlet>
+      </form>
+    </div>
+    <div class="col-lg-3">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-title">
+            Registo
+          </div>
+        </div>
+        <nav class="list-group list-group-flush">
+          <a
+            [class.active]="patientStep"
+            [routerLink]="[ '/processes', process.id, 'capture', 'patient' ]"
+            class="list-group-item d-flex justify-content-between align-items-center px-4">
+            Utente
+            @if (patientStep) { <span class="fe fe-edit-3"></span> }
+            @else if (!patientStepSeen) { <span class="fe fe-eye-off"></span> }
+            @else if (form.controls.patient.disabled) { <span class="fe fe-toggle-left"></span> }
+            @else if (form.controls.patient.invalid) { <span class="fe fe-alert-triangle text-danger"></span> }
+            @else if (form.controls.patient.valid) { <span class="fe fe-check text-success"></span> }
+            @else { <span class="fe fe-circle"></span> }
+          </a>
+          <a
+            [class.active]="legalRepresentativeStep"
+            [routerLink]="[ '/processes', process.id, 'capture', 'legal-representative' ]"
+            class="list-group-item d-flex justify-content-between align-items-center px-4">
+            Representante legal
+            @if (legalRepresentativeStep) { <span class="fe fe-edit-3"></span> }
+            @else if (!legalRepresentativeStepSeen) { <span class="fe fe-eye-off"></span> }
+            @else if (form.controls.legalRepresentative.disabled) { <span class="fe fe-toggle-left"></span> }
+            @else if (form.controls.legalRepresentative.invalid) { <span class="fe fe-alert-triangle text-danger"></span> }
+            @else if (form.controls.legalRepresentative.valid) { <span class="fe fe-check text-success"></span> }
+            @else { <span class="fe fe-circle"></span> }
+          </a>
+          <a
+            [class.active]="unemploymentStatementStep"
+            [routerLink]="[ '/processes', process.id, 'capture', 'unemployment-statement' ]"
+            class="list-group-item d-flex justify-content-between align-items-center px-4">
+            Declaração de desemprego
+            @if (unemploymentStatementStep) { <span class="fe fe-edit-3"></span> }
+            @else if (!unemploymentStatementStepSeen) { <span class="fe fe-eye-off"></span> }
+            @else if (form.controls.unemploymentStatement.disabled) { <span class="fe fe-toggle-left"></span> }
+            @else if (form.controls.unemploymentStatement.invalid) { <span class="fe fe-alert-triangle text-danger"></span> }
+            @else if (form.controls.unemploymentStatement.valid) { <span class="fe fe-check text-success"></span> }
+            @else { <span class="fe fe-circle"></span> }
+          </a>
+          <a
+            [class.active]="familyIncomeStatementStep"
+            [routerLink]="[ '/processes', process.id, 'capture', 'family-income-statement' ]"
+            class="list-group-item d-flex justify-content-between align-items-center px-4">
+            Declaração de rendimentos
+            @if (familyIncomeStatementStep) { <span class="fe fe-edit-3"></span> }
+            @else if (!familyIncomeStatementStepSeen) { <span class="fe fe-eye-off"></span> }
+            @else if (form.controls.familyIncomeStatement.disabled) { <span class="fe fe-toggle-left"></span> }
+            @else if (form.controls.familyIncomeStatement.invalid) { <span class="fe fe-alert-triangle text-danger"></span> }
+            @else if (form.controls.familyIncomeStatement.valid) { <span class="fe fe-check text-success"></span> }
+            @else { <span class="fe fe-circle"></span> }
+          </a>
+          <a
+            [class.active]="paymentStep"
+            [routerLink]="[ '/processes', process.id, 'capture', 'payment' ]"
+            class="list-group-item d-flex justify-content-between align-items-center px-4">
+            Pagamento
+            @if (paymentStep) { <span class="fe fe-edit-3"></span> }
+            @else if (!paymentStepSeen) { <span class="fe fe-eye-off"></span> }
+            @else if (form.controls.payment.disabled) { <span class="fe fe-toggle-left"></span> }
+            @else if (form.controls.payment.invalid) { <span class="fe fe-alert-triangle text-danger"></span> }
+            @else if (form.controls.payment.valid) { <span class="fe fe-check text-success"></span> }
+            @else { <span class="fe fe-circle"></span> }
+          </a>
+          @if (complete) {
+            <a
+              [class.active]="confirmationStep"
+              [routerLink]="[ '/processes', process.id, 'capture', 'confirmation' ]"
+              class="list-group-item d-flex justify-content-between align-items-center px-4">
+              Confirmação
+              @if (confirmationStep) { <span class="fe fe-eye"></span> }
+              @else { <span class="fe fe-eye-off"></span> }
+            </a>
+          }
+          @else {
+            <span
+              class="list-group-item d-flex justify-content-between align-items-center px-4 disabled">
+              Confirmação
+              @if (confirmationStep) { <span class="fe fe-eye"></span> }
+              @else { <span class="fe fe-eye-off"></span> }
+            </span>
+          }
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
