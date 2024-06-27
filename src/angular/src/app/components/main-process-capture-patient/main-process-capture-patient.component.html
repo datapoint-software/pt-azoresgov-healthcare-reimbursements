@@ -3,6 +3,10 @@
   <div [formGroup]="form.controls.patient.controls.identity" class="card">
     <div class="card-header">
       <div class="card-header-title">Utente</div>
+      <div class="form-check form-switch">
+        <input #patientEnabled [checked]="form.controls.patient.enabled" (change)="setPatientEnabled(patientEnabled.checked)" class="form-check-input" type="checkbox" id="patientEnabled">
+        <label class="form-check-label d-none" for="patientEnabled">Editar</label>
+      </div>
     </div>
     <div class="card-body">
       <div class="row">
@@ -12,6 +16,7 @@
             <label
               [class.is-invalid]="number.invalid"
               [class.is-required]="number.required"
+              [class.text-muted]="number.control.disabled"
               [for]="number.name"
               class="form-label"
               title="Número de utente">
@@ -21,6 +26,7 @@
             <input
               [class.is-invalid]="number.invalid"
               [class.is-required]="number.required"
+              [class.text-muted]="number.control.disabled"
               [formControl]="number.control"
               [id]="number.name"
               autocomplete="off"
@@ -35,6 +41,7 @@
             <label
               [class.is-invalid]="taxNumber.invalid"
               [class.is-required]="taxNumber.required"
+              [class.text-muted]="number.control.disabled"
               [for]="taxNumber.name"
               class="form-label"
               title="Número de identificação fiscal">
@@ -44,6 +51,7 @@
             <input
               [class.is-invalid]="taxNumber.invalid"
               [class.is-required]="taxNumber.required"
+              [class.text-muted]="number.control.disabled"
               [formControl]="taxNumber.control"
               [id]="taxNumber.name"
               autocomplete="off"
@@ -58,6 +66,7 @@
             <label
               [class.is-invalid]="name.invalid"
               [class.is-required]="name.required"
+              [class.text-muted]="number.control.disabled"
               [for]="name.name"
               class="form-label">
               Nome
@@ -66,6 +75,7 @@
             <input
               [class.is-invalid]="name.invalid"
               [class.is-required]="name.required"
+              [class.text-muted]="number.control.disabled"
               [formControl]="name.control"
               [id]="name.name"
               autocomplete="off"
@@ -298,3 +308,22 @@
     </div>
   </div>
 </section>
+
+<app-sui-modal #notice>
+  <div class="modal-card card">
+    <div class="card-header">
+      <h4 class="card-header-title">
+        Informação
+      </h4>
+    </div>
+    <div class="card-body">
+      <p>
+        As alterações aos dados pessoais do utente não serão
+        comunicadas ao <strong>Medicine One</strong>.
+      </p>
+    </div>
+    <div class="card-footer text-end">
+      <a (click)="notice.close()" class="btn btn-primary" type="button">Confirmar</a>
+    </div>
+  </div>
+</app-sui-modal>

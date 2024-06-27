@@ -1,10 +1,12 @@
 import { Injectable } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { MainProcessCaptureFeatureClient } from "@app/api/main-process-capture-feature/main-process-capture-feature.client";
+import { APP_INPUT_DEBOUNCE_TIME } from "@app/constants";
 import { ProcessPaymentMethod, ProcessPaymentRecipient } from "@app/enums";
 import { Feature } from "@app/features/feature.abstractions";
 import { MainProcessCaptureFeatureEntity, MainProcessCaptureFeatureForm, MainProcessCaptureFeaturePatient, MainProcessCaptureFeatureProcess, MainProcessCaptureFeatureStep } from "@app/features/main-process-capture/main-process-capture-feature.abstractions";
 import { AppValidators } from "@app/validators";
+import { debounceTime, filter, map } from "rxjs";
 
 @Injectable()
 export class MainProcessCaptureFeature implements Feature {
@@ -174,12 +176,39 @@ export class MainProcessCaptureFeature implements Feature {
     this._seenSteps = new Set();
     this._step = null;
 
-    const patient = this._form.controls.patient;
-    const legalRepresentative = this._form.controls.legalRepresentative;
+    this._form.controls.patient.disable();
+    this._form.controls.patient.controls.identity.disable();
 
-    // The following controls are disabled.
-    patient.controls.identity.disable();
-    legalRepresentative.controls.identity.disable();
+    this._form.controls.patient.valueChanges
+      .pipe(filter(() => this._form.controls.patient.enabled))
+      .pipe(filter(() => this._form.controls.patient.valid))
+      .pipe(debounceTime(APP_INPUT_DEBOUNCE_TIME))
+      .subscribe((values) => this._submitPatient(values));
+  }
+
+  public setPatientEnabled(enabled: boolean): void {
+
+    const ee = ({ emitEvent: false });
+
+    const { patient } = this._form.controls;
+
+    enabled ? patient.enable(ee) : patient.disable(ee);
+
+    if (enabled)
+      patient.controls.identity.disable(ee);
+  }
+
+  public async submitPatient(): Promise<void> {
+
+    if (this._form.controls.patient.disabled)
+      return;
+
+    if (this._form.controls.patient.invalid)
+      return;
+
+    await this._submitPatient(
+      this._form.controls.patient.value
+    );
   }
 
   // #endregion
@@ -188,5 +217,51 @@ export class MainProcessCaptureFeature implements Feature {
     private readonly _fb: FormBuilder,
     private readonly _processCaptureFeatureClient: MainProcessCaptureFeatureClient
   ) {}
+
+  private async _submitPatient(values: Partial<{
+    contacts: Partial<{
+      faxNumber: string | null;
+      mobileNumber: string | null;
+      phoneNumber: string | null;
+      emailAddress: string | null;
+    }>;
+    postalAddress: Partial<{
+      postalAddressArea: string | null;
+      postalAddressAreaCode: string | null;
+      postalAddressLine1: string | null;
+      postalAddressLine2: string | null;
+      postalAddressLine3: string | null;
+    }>;
+  }>): Promise<void> {
+
+    const response = await this._processCaptureFeatureClient.submitPatient({
+      processId: this._process.id,
+      processRowVersionId: this._process.rowVersionId,
+      patientId: this._patient.id,
+      patientRowVersionId: this._patient.rowVersionId,
+      faxNumber: values.contacts?.faxNumber || undefined,
+      mobileNumber: values.contacts?.mobileNumber || undefined,
+      phoneNumber: values.contacts?.phoneNumber || undefined,
+      emailAddress: values.contacts?.emailAddress || undefined,
+      postalAddressArea: values.postalAddress!.postalAddressArea!,
+      postalAddressAreaCode: values.postalAddress!.postalAddressAreaCode!,
+      postalAddressLine1: values.postalAddress!.postalAddressLine1!,
+      postalAddressLine2: values.postalAddress!.postalAddressLine2 || undefined,
+      postalAddressLine3: values.postalAddress!.postalAddressLine3 || undefined
+    });
+
+    this._patient.faxNumber = values.contacts?.faxNumber || null;
+    this._patient.mobileNumber = values.contacts?.mobileNumber || null;
+    this._patient.phoneNumber = values.contacts?.phoneNumber || null;
+    this._patient.emailAddress = values.contacts?.emailAddress || null;
+    this._patient.postalAddressArea = values.postalAddress!.postalAddressArea!;
+    this._patient.postalAddressAreaCode = values.postalAddress!.postalAddressAreaCode!;
+    this._patient.postalAddressLine1 = values.postalAddress!.postalAddressLine1!;
+    this._patient.postalAddressLine2 = values.postalAddress!.postalAddressLine2 || null;
+    this._patient.postalAddressLine3 = values.postalAddress!.postalAddressLine3 || null;
+
+    this._process.rowVersionId = response.processRowVersionId;
+    this._patient.rowVersionId = response.patientRowVersionId;
+  }
 
 }

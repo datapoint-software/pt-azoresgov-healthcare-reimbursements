@@ -46,3 +46,24 @@ export type MainProcessCaptureFeatureProcessModel = {
   number: string;
   creation: string;
 };
+
+export type MainProcessCaptureFeatureSubmitPatientModel = {
+  processId: string;
+  processRowVersionId: string;
+  patientId: string;
+  patientRowVersionId: string;
+  faxNumber?: string;
+  mobileNumber?: string;
+  phoneNumber?: string;
+  emailAddress?: string;
+  postalAddressArea: string;
+  postalAddressAreaCode: string;
+  postalAddressLine1: string;
+  postalAddressLine2?: string;
+  postalAddressLine3?: string;
+};
+
+export type MainProcessCaptureFeatureSubmitPatientResultModel = {
+  processRowVersionId: string;
+  patientRowVersionId: string;
+};

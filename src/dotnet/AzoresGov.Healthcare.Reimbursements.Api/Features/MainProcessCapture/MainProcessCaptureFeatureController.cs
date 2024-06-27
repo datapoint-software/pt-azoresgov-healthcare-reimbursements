@@ -66,5 +66,34 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.MainProcessCapture
                     result.Process.Number,
                     result.Process.Creation));
         }
+
+        [Administrative]
+        [HttpPost("update-patient")]
+        public async Task<MainProcessCaptureFeatureSubmitPatientResultModel> UpdatePatientAsync(
+            [FromBody] MainProcessCaptureFeatureSubmitPatientModel model,
+            CancellationToken ct)
+        {
+            var result = await _mediator.HandleCommandAsync<MainProcessCaptureFeatureSubmitPatientCommand, MainProcessCaptureFeatureSubmitPatientResult>(
+                new MainProcessCaptureFeatureSubmitPatientCommand(
+                    User.GetId(),
+                    model.ProcessId,
+                    model.ProcessRowVersionId,
+                    model.PatientId,
+                    model.PatientRowVersionId,
+                    model.FaxNumber,
+                    model.MobileNumber,
+                    model.PhoneNumber,
+                    model.EmailAddress,
+                    model.PostalAddressArea,
+                    model.PostalAddressAreaCode,
+                    model.PostalAddressLine1,
+                    model.PostalAddressLine2,
+                    model.PostalAddressLine3),
+                ct);
+
+            return new MainProcessCaptureFeatureSubmitPatientResultModel(
+                result.ProcessRowVersionId,
+                result.PatientRowVersionId);
+        }
     }
 }

@@ -13,10 +13,33 @@ import { MainProcessCaptureFeature } from "@app/features/main-process-capture/ma
 })
 export class MainProcessCapturePatientComponent {
 
+  // #region State
+
+  @ViewChild('notice')
+  private _notice: SuiModalComponent = undefined!;
+
+  // #endregion
+
   // #region State accessors
 
   public get form(): MainProcessCaptureFeatureForm {
     return this._processCapture.form;
+  }
+
+  // #endregion
+
+  // #region State actions
+
+  public setPatientEnabled(enabled: boolean): void {
+
+    this._processCapture.setPatientEnabled(enabled);
+
+    if (enabled)
+      this._notice.open();
+  }
+
+  public submitPatient(): Promise<void> {
+    return this._processCapture.submitPatient();
   }
 
   // #endregion
