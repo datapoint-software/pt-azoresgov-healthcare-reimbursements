@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { MainProcessCaptureFeatureOptionsModel, MainProcessCaptureFeatureOptionsResultModel, MainProcessCaptureFeatureSubmitPatientModel, MainProcessCaptureFeatureSubmitPatientResultModel } from "@app/api/main-process-capture-feature/main-process-capture-feature.abstractions";
+import { MainProcessCaptureFeatureLegalRepresentativeSearchModel, MainProcessCaptureFeatureLegalRepresentativeSearchResultModel, MainProcessCaptureFeatureOptionsModel, MainProcessCaptureFeatureOptionsResultModel, MainProcessCaptureFeatureSubmitPatientModel, MainProcessCaptureFeatureSubmitPatientResultModel } from "@app/api/main-process-capture-feature/main-process-capture-feature.abstractions";
 import { firstValueFrom } from "rxjs";
 
 const baseAddress = "/api/features/main-process-capture";
@@ -12,6 +12,15 @@ export class MainProcessCaptureFeatureClient {
     return await firstValueFrom(
       this._httpClient.post<MainProcessCaptureFeatureOptionsResultModel>(
         `${baseAddress}/get-options`,
+        model
+      )
+    );
+  }
+
+  public async searchLegalRepresentative(model: MainProcessCaptureFeatureLegalRepresentativeSearchModel): Promise<MainProcessCaptureFeatureLegalRepresentativeSearchResultModel> {
+    return await firstValueFrom(
+      this._httpClient.post<MainProcessCaptureFeatureLegalRepresentativeSearchResultModel>(
+        `${baseAddress}/search-legal-representative`,
         model
       )
     );

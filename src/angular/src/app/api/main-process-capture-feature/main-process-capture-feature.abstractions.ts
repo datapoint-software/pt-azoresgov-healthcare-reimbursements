@@ -9,6 +9,30 @@ export type MainProcessCaptureFeatureEntityModel = {
   nature: EntityNature;
 };
 
+export type MainProcessCaptureFeatureLegalRepresentativeModel = {
+  id: string;
+  rowVersionId: string;
+  taxNumber: string;
+  name: string;
+  faxNumber?: string;
+  mobileNumber?: string;
+  phoneNumber?: string;
+  emailAddress?: string;
+  postalAddressArea: string;
+  postalAddressAreaCode: string;
+  postalAddressLine1: string;
+  postalAddressLine2?: string;
+  postalAddressLine3?: string;
+};
+
+export type MainProcessCaptureFeatureLegalRepresentativeSearchModel = {
+  taxNumber: string;
+};
+
+export type MainProcessCaptureFeatureLegalRepresentativeSearchResultModel = {
+  legalRepresentative?: MainProcessCaptureFeatureLegalRepresentativeModel;
+};
+
 export type MainProcessCaptureFeatureOptionsModel = {
   processId: string;
 };

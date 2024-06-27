@@ -20,6 +20,14 @@ export class MainProcessCaptureLegalRepresentativeComponent {
 
   // #endregion
 
+  // #region State actions
+
+  public removeLegalRepresentative(): void {
+    this._processCapture.removeLegalRepresentative();
+  }
+
+  // #endregion
+
   constructor(
     private readonly _processCapture: MainProcessCaptureFeature
   ) {}

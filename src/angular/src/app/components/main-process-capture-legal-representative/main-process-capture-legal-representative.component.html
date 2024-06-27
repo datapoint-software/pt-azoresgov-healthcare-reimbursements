@@ -1,5 +1,5 @@
 <section [formGroup]="form.controls.legalRepresentative">
-  @if (!form.controls.legalRepresentativeSearch.valid) {
+  @if (form.controls.legalRepresentative.disabled) {
     <div [formGroup]="form.controls.legalRepresentativeSearch" class="card">
       <div class="card-header">
         <div class="card-header-title">Representante legal</div>
@@ -7,26 +7,26 @@
       <div class="card-body">
         <div class="row">
           <div class="col-lg-3">
-            <app-sui-form-group #filter [name]="'filter'" class="form-group d-block">
+            <app-sui-form-group #taxNumberFilter [name]="'taxNumber'" class="form-group d-block">
               <!-- Label -->
               <label
-                [class.is-invalid]="filter.invalid"
-                [class.is-required]="filter.required"
-                [for]="filter.name"
+                [class.is-invalid]="taxNumberFilter.invalid"
+                [class.is-required]="taxNumberFilter.required"
+                [for]="taxNumberFilter.name"
                 class="form-label">
                 NIF/NIPC
               </label>
               <!-- Input group -->
               <div
-                [class.is-invalid]="filter.invalid"
-                [class.is-required]="filter.required"
+                [class.is-invalid]="taxNumberFilter.invalid"
+                [class.is-required]="taxNumberFilter.required"
                 class="input-group input-group-merge">
                 <!-- Input -->
                 <input
-                  [class.is-invalid]="filter.invalid"
-                  [class.is-required]="filter.required"
-                  [formControl]="filter.control"
-                  [id]="filter.name"
+                  [class.is-invalid]="taxNumberFilter.invalid"
+                  [class.is-required]="taxNumberFilter.required"
+                  [formControl]="taxNumberFilter.control"
+                  [id]="taxNumberFilter.name"
                   autocomplete="off"
                   class="form-control"
                   placeholder="Número de identificação fiscal"
@@ -317,7 +317,7 @@
       </div>
     </div>
     <div class="my-2 text-end">
-      <button class="btn btn-danger" (click)="form.controls.legalRepresentativeSearch.reset()">Remover</button>
+      <button (click)="removeLegalRepresentative()" class="btn btn-danger">Remover</button>
     </div>
   }
 </section>

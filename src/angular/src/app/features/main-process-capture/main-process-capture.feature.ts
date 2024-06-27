@@ -9,6 +9,8 @@ import { MainProcessCaptureFeatureEntity, MainProcessCaptureFeatureForm, MainPro
 import { AppValidators } from "@app/validators";
 import { debounceTime, filter, map, mergeMap, tap } from "rxjs";
 
+const EMIT_EVENT_FALSE = { emitEvent: false };
+
 @Injectable()
 export class MainProcessCaptureFeature implements Feature {
 
@@ -140,7 +142,7 @@ export class MainProcessCaptureFeature implements Feature {
         amount: this._fb.control(null as number | null, [ Validators.required ])
       }),
       legalRepresentativeSearch: this._fb.group({
-        filter: this._fb.control('', [ Validators.required, AppValidators.taxNumber ]),
+        taxNumber: this._fb.control('', [ Validators.required, AppValidators.taxNumber ]),
       }),
       legalRepresentative: this._fb.group({
         identity: this._fb.group({
@@ -177,6 +179,8 @@ export class MainProcessCaptureFeature implements Feature {
     this._seenSteps = new Set();
     this._step = null;
 
+    this._form.controls.legalRepresentative.disable();
+
     this._form.controls.patient.disable();
     this._form.controls.patient.controls.identity.disable();
 
@@ -191,18 +195,31 @@ export class MainProcessCaptureFeature implements Feature {
       .pipe(mergeMap((values) => this._submitPatient(values)))
       .pipe(tap(() => this._taskOverlay.dequeue(submitTaskId)))
       .subscribe(() => {});
+
+    this._form.controls.legalRepresentativeSearch.valueChanges
+      .pipe(filter(() => this._form.controls.legalRepresentativeSearch.enabled))
+      .pipe(filter(() => this._form.controls.legalRepresentativeSearch.valid))
+      .subscribe((values) => this._searchLegalRepresentative(values));
+  }
+
+  public removeLegalRepresentative(): void {
+
+    this._form.controls.legalRepresentativeSearch.reset({}, EMIT_EVENT_FALSE);
+
+    this._form.controls.legalRepresentative.disable(EMIT_EVENT_FALSE);
+    this._form.controls.legalRepresentativeSearch.enable(EMIT_EVENT_FALSE);
   }
 
   public setPatientEnabled(enabled: boolean): void {
 
-    const ee = ({ emitEvent: false });
-
     const { patient } = this._form.controls;
 
-    enabled ? patient.enable(ee) : patient.disable(ee);
+    enabled
+      ? patient.enable(EMIT_EVENT_FALSE)
+      : patient.disable(EMIT_EVENT_FALSE);
 
     if (enabled)
-      patient.controls.identity.disable(ee);
+      patient.controls.identity.disable(EMIT_EVENT_FALSE);
   }
 
   public async submitPatient(): Promise<void> {
@@ -225,6 +242,44 @@ export class MainProcessCaptureFeature implements Feature {
     private readonly _processCaptureFeatureClient: MainProcessCaptureFeatureClient,
     private readonly _taskOverlay: CoreTaskOverlayFeature
   ) {}
+
+  private async _searchLegalRepresentative(values: Partial<{
+    taxNumber: string | null;
+  }>): Promise<void> {
+
+    const response = await this._processCaptureFeatureClient.searchLegalRepresentative({
+      taxNumber: values.taxNumber!
+    });
+
+    this._form.controls.legalRepresentativeSearch.disable(EMIT_EVENT_FALSE);
+
+    this._form.controls.legalRepresentative.enable(EMIT_EVENT_FALSE);
+
+    this._form.controls.legalRepresentative.setValue({
+      identity: {
+        taxNumber: response.legalRepresentative?.taxNumber ?? values.taxNumber!,
+        name: response.legalRepresentative?.name ?? null,
+      },
+      contacts: {
+        emailAddress: response.legalRepresentative?.emailAddress ?? null,
+        faxNumber: response.legalRepresentative?.faxNumber ?? null,
+        mobileNumber: response.legalRepresentative?.mobileNumber ?? null,
+        phoneNumber: response.legalRepresentative?.phoneNumber ?? null
+      },
+      postalAddress: {
+        postalAddressArea: response.legalRepresentative?.postalAddressArea ?? null,
+        postalAddressAreaCode: response.legalRepresentative?.postalAddressAreaCode ?? null,
+        postalAddressLine1: response.legalRepresentative?.postalAddressLine1 ?? null,
+        postalAddressLine2: response.legalRepresentative?.postalAddressLine2 ?? null,
+        postalAddressLine3: response.legalRepresentative?.postalAddressLine3 ?? null
+      }
+    }, EMIT_EVENT_FALSE);
+
+    if (response.legalRepresentative)
+      this._form.controls.legalRepresentative.controls.identity.disable(EMIT_EVENT_FALSE);
+    else
+      this._form.controls.legalRepresentative.controls.identity.controls.taxNumber.disable(EMIT_EVENT_FALSE);
+  }
 
   private async _submitPatient(values: Partial<{
     contacts: Partial<{

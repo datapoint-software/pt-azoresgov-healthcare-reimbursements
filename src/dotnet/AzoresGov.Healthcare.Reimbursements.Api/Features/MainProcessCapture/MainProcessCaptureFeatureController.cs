@@ -68,6 +68,37 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.MainProcessCapture
         }
 
         [Administrative]
+        [HttpPost("search-legal-representative")]
+        public async Task<MainProcessCaptureFeatureLegalRepresentativeSearchResultModel> SearchLegalRepresentativeAsync(
+            [FromBody] MainProcessCaptureFeatureLegalRepresentativeSearchModel model,
+            CancellationToken ct)
+        {
+            var result = await _mediator.HandleQueryAsync<MainProcessCaptureFeatureLegalRepresentativeSearchQuery, MainProcessCaptureFeatureLegalRepresentativeSearchResult>(
+                new MainProcessCaptureFeatureLegalRepresentativeSearchQuery(
+                    User.GetId(),
+                    model.TaxNumber),
+                ct);
+
+            return new MainProcessCaptureFeatureLegalRepresentativeSearchResultModel(
+                result.LegalRepresentative is null
+                    ? null
+                    : new MainProcessCaptureFeatureLegalRepresentativeModel(
+                        result.LegalRepresentative.Id,
+                        result.LegalRepresentative.RowVersionId,
+                        result.LegalRepresentative.TaxNumber,
+                        result.LegalRepresentative.Name,
+                        result.LegalRepresentative.FaxNumber,
+                        result.LegalRepresentative.MobileNumber,
+                        result.LegalRepresentative.PhoneNumber,
+                        result.LegalRepresentative.EmailAddress,
+                        result.LegalRepresentative.PostalAddressArea,
+                        result.LegalRepresentative.PostalAddressAreaCode,
+                        result.LegalRepresentative.PostalAddressLine1,
+                        result.LegalRepresentative.PostalAddressLine2,
+                        result.LegalRepresentative.PostalAddressLine3));
+        }
+
+        [Administrative]
         [HttpPost("update-patient")]
         public async Task<MainProcessCaptureFeatureSubmitPatientResultModel> UpdatePatientAsync(
             [FromBody] MainProcessCaptureFeatureSubmitPatientModel model,
