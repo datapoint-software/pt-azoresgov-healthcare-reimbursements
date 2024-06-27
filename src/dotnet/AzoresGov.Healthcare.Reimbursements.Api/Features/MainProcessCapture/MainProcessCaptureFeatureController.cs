@@ -100,12 +100,12 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.MainProcessCapture
 
         [Administrative]
         [HttpPost("update-patient")]
-        public async Task<MainProcessCaptureFeatureSubmitPatientResultModel> UpdatePatientAsync(
-            [FromBody] MainProcessCaptureFeatureSubmitPatientModel model,
+        public async Task<MainProcessCaptureFeaturePatientSubmitResultModel> UpdatePatientAsync(
+            [FromBody] MainProcessCaptureFeaturePatientSubmitModel model,
             CancellationToken ct)
         {
-            var result = await _mediator.HandleCommandAsync<MainProcessCaptureFeatureSubmitPatientCommand, MainProcessCaptureFeatureSubmitPatientResult>(
-                new MainProcessCaptureFeatureSubmitPatientCommand(
+            var result = await _mediator.HandleCommandAsync<MainProcessCaptureFeaturePatientSubmitCommand, MainProcessCaptureFeaturePatientSubmitResult>(
+                new MainProcessCaptureFeaturePatientSubmitCommand(
                     User.GetId(),
                     model.ProcessId,
                     model.ProcessRowVersionId,
@@ -122,7 +122,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.MainProcessCapture
                     model.PostalAddressLine3),
                 ct);
 
-            return new MainProcessCaptureFeatureSubmitPatientResultModel(
+            return new MainProcessCaptureFeaturePatientSubmitResultModel(
                 result.ProcessRowVersionId,
                 result.PatientRowVersionId);
         }

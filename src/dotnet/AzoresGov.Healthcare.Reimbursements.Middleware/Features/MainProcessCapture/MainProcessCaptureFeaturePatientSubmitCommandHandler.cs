@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.MainProcessCapture
 {
-    public sealed class MainProcessCaptureFeatureSubmitPatientCommandHandler : ICommandHandler<MainProcessCaptureFeatureSubmitPatientCommand, MainProcessCaptureFeatureSubmitPatientResult>
+    public sealed class MainProcessCaptureFeatureSubmitPatientCommandHandler : ICommandHandler<MainProcessCaptureFeaturePatientSubmitCommand, MainProcessCaptureFeaturePatientSubmitResult>
     {
         private readonly IEntityRepository _entities;
 
@@ -30,7 +30,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.MainProcessCap
             _users = users;
         }
 
-        public async Task<MainProcessCaptureFeatureSubmitPatientResult> HandleCommandAsync(MainProcessCaptureFeatureSubmitPatientCommand command, CancellationToken ct)
+        public async Task<MainProcessCaptureFeaturePatientSubmitResult> HandleCommandAsync(MainProcessCaptureFeaturePatientSubmitCommand command, CancellationToken ct)
         {
             var user = await _users.GetByPublicIdAsync(
                 command.UserId,
@@ -75,7 +75,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.MainProcessCap
             patient.RowVersionId = Guid.NewGuid();
             process.RowVersionId = Guid.NewGuid();
 
-            return new MainProcessCaptureFeatureSubmitPatientResult(
+            return new MainProcessCaptureFeaturePatientSubmitResult(
                 process.RowVersionId,
                 patient.RowVersionId);
         }

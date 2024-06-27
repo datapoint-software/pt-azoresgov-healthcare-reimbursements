@@ -2,9 +2,9 @@
 
 namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.MainProcessCapture
 {
-    public sealed class MainProcessCaptureFeatureSubmitPatientResult
+    public sealed class MainProcessCaptureFeaturePatientSubmitResult
     {
-        public MainProcessCaptureFeatureSubmitPatientResult(Guid processRowVersionId, Guid patientRowVersionId)
+        public MainProcessCaptureFeaturePatientSubmitResult(Guid processRowVersionId, Guid patientRowVersionId)
         {
             ProcessRowVersionId = processRowVersionId;
             PatientRowVersionId = patientRowVersionId;

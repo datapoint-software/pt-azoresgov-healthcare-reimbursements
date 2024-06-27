@@ -1,11 +1,13 @@
-﻿using System;
+﻿using Datapoint.Mediator;
+using System;
 
-namespace AzoresGov.Healthcare.Reimbursements.Api.Features.MainProcessCapture
+namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.MainProcessCapture
 {
-    public sealed class MainProcessCaptureFeatureSubmitPatientModel
+    public sealed class MainProcessCaptureFeaturePatientSubmitCommand : Command<MainProcessCaptureFeaturePatientSubmitResult>
     {
-        public MainProcessCaptureFeatureSubmitPatientModel(Guid processId, Guid processRowVersionId, Guid patientId, Guid patientRowVersionId, string? faxNumber, string? mobileNumber, string? phoneNumber, string? emailAddress, string postalAddressArea, string postalAddressAreaCode, string postalAddressLine1, string? postalAddressLine2, string? postalAddressLine3)
+        public MainProcessCaptureFeaturePatientSubmitCommand(Guid userId, Guid processId, Guid processRowVersionId, Guid patientId, Guid patientRowVersionId, string? faxNumber, string? mobileNumber, string? phoneNumber, string? emailAddress, string postalAddressArea, string postalAddressAreaCode, string postalAddressLine1, string? postalAddressLine2, string? postalAddressLine3)
         {
+            UserId = userId;
             ProcessId = processId;
             ProcessRowVersionId = processRowVersionId;
             PatientId = patientId;
@@ -20,6 +22,8 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.MainProcessCapture
             PostalAddressLine2 = postalAddressLine2;
             PostalAddressLine3 = postalAddressLine3;
         }
+
+        public Guid UserId { get; }
 
         public Guid ProcessId { get; }
 

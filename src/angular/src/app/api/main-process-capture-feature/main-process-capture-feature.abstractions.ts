@@ -71,7 +71,7 @@ export type MainProcessCaptureFeatureProcessModel = {
   creation: string;
 };
 
-export type MainProcessCaptureFeatureSubmitPatientModel = {
+export type MainProcessCaptureFeaturePatientSubmitModel = {
   processId: string;
   processRowVersionId: string;
   patientId: string;
@@ -87,7 +87,7 @@ export type MainProcessCaptureFeatureSubmitPatientModel = {
   postalAddressLine3?: string;
 };
 
-export type MainProcessCaptureFeatureSubmitPatientResultModel = {
+export type MainProcessCaptureFeaturePatientSubmitResultModel = {
   processRowVersionId: string;
   patientRowVersionId: string;
 };

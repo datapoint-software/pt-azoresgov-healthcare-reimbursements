@@ -2,9 +2,9 @@
 
 namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.MainProcessCapture
 {
-    public sealed class MainProcessCaptureFeatureSubmitPatientCommandValidator : AbstractValidator<MainProcessCaptureFeatureSubmitPatientCommand>
+    public sealed class MainProcessCaptureFeaturePatientSubmitCommandValidator : AbstractValidator<MainProcessCaptureFeaturePatientSubmitCommand>
     {
-        public MainProcessCaptureFeatureSubmitPatientCommandValidator()
+        public MainProcessCaptureFeaturePatientSubmitCommandValidator()
         {
             RuleFor(c => c.UserId)
                 .NotEmpty();
