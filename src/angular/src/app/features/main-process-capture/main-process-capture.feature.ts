@@ -3,10 +3,11 @@ import { FormBuilder, Validators } from "@angular/forms";
 import { MainProcessCaptureFeatureClient } from "@app/api/main-process-capture-feature/main-process-capture-feature.client";
 import { APP_INPUT_DEBOUNCE_TIME } from "@app/constants";
 import { ProcessPaymentMethod, ProcessPaymentRecipient } from "@app/enums";
+import { CoreTaskOverlayFeature } from "@app/features/core-task-overlay/core-task-overlay.feature";
 import { Feature } from "@app/features/feature.abstractions";
 import { MainProcessCaptureFeatureEntity, MainProcessCaptureFeatureForm, MainProcessCaptureFeaturePatient, MainProcessCaptureFeatureProcess, MainProcessCaptureFeatureStep } from "@app/features/main-process-capture/main-process-capture-feature.abstractions";
 import { AppValidators } from "@app/validators";
-import { debounceTime, filter, map } from "rxjs";
+import { debounceTime, filter, map, mergeMap, tap } from "rxjs";
 
 @Injectable()
 export class MainProcessCaptureFeature implements Feature {
@@ -179,11 +180,17 @@ export class MainProcessCaptureFeature implements Feature {
     this._form.controls.patient.disable();
     this._form.controls.patient.controls.identity.disable();
 
+    const submitTaskId = `${MainProcessCaptureFeature.name}.submit`;
+    const submitTaskMessage = "A guardar alterações...";
+
     this._form.controls.patient.valueChanges
       .pipe(filter(() => this._form.controls.patient.enabled))
       .pipe(filter(() => this._form.controls.patient.valid))
-      .pipe(debounceTime(APP_INPUT_DEBOUNCE_TIME))
-      .subscribe((values) => this._submitPatient(values));
+      .pipe(tap(() => this._taskOverlay.enqueue(submitTaskId, submitTaskMessage)))
+      .pipe(debounceTime(APP_INPUT_DEBOUNCE_TIME * 10))
+      .pipe(mergeMap((values) => this._submitPatient(values)))
+      .pipe(tap(() => this._taskOverlay.dequeue(submitTaskId)))
+      .subscribe(() => {});
   }
 
   public setPatientEnabled(enabled: boolean): void {
@@ -215,7 +222,8 @@ export class MainProcessCaptureFeature implements Feature {
 
   constructor(
     private readonly _fb: FormBuilder,
-    private readonly _processCaptureFeatureClient: MainProcessCaptureFeatureClient
+    private readonly _processCaptureFeatureClient: MainProcessCaptureFeatureClient,
+    private readonly _taskOverlay: CoreTaskOverlayFeature
   ) {}
 
   private async _submitPatient(values: Partial<{

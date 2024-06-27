@@ -1,0 +1,11 @@
+@for (task of tasks.values(); track task.id) {
+  <div class="sui-task-overlay p-4">
+    <app-sui-loading-spinner />
+    @if (task.message) {
+      <div class="sui-task-overlay-message ms-3">
+        {{ task.message }}
+      </div>
+    }
+  </div>
+}
+

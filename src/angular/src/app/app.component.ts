@@ -1,13 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterOutlet } from '@angular/router';
 import { SuiLoadingOverlayComponent } from '@app/components/sui-loading-overlay/sui-loading-overlay.component';
+import { SuiTaskOverlayComponent } from '@app/components/sui-task-overlay/sui-task-overlay.component';
 import { CoreLoadingOverlayFeature } from '@app/features/core-loading-overlay/core-loading-overlay.feature';
 import { Subscription, filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [ SuiLoadingOverlayComponent, RouterOutlet],
+  imports: [ SuiLoadingOverlayComponent, SuiTaskOverlayComponent, RouterOutlet],
   templateUrl: 'app.component.html',
   styleUrl: 'app.component.scss'
 })

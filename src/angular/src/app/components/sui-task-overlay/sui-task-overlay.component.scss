@@ -1,0 +1,40 @@
+@keyframes sui-task-overlay-animation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+:host {
+
+  position: fixed;
+  right: 2em;
+  bottom: 2em;
+
+  app-sui-loading-spinner {
+    border-width: 4px;
+    height: 24px;
+    width: 24px;
+  }
+
+  .sui-task-overlay {
+
+    display: flex;
+    align-items: center;
+
+    animation: sui-task-overlay-animation 250ms none ease-in;
+
+    box-sizing: border-box;
+
+    background: rgba(255, 255, 255, .90);
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius-lg);
+    box-shadow: var(--bs-card-box-shadow);
+    margin: 1em 0;
+
+    &:first-child { margin-top: 0; }
+    &:last-child { margin-bottom: 0; }
+  }
+}
