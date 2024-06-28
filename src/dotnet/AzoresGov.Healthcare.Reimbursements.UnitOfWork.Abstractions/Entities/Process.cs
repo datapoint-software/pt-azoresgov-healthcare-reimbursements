@@ -20,6 +20,10 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities
 
         public long PatientId { get; } = default!;
 
+        public LegalRepresentative? LegalRepresentative { get; set; } = default!;
+
+        public long? LegalRepresentativeId { get; } = default!;
+
         public string Number { get; set; } = default!;
 
         public ProcessStatus Status { get; set; } = default!;
