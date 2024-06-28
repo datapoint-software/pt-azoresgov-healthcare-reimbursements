@@ -99,8 +99,8 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.MainProcessCapture
         }
 
         [Administrative]
-        [HttpPost("update-patient")]
-        public async Task<MainProcessCaptureFeaturePatientSubmitResultModel> UpdatePatientAsync(
+        [HttpPost("submit-patient")]
+        public async Task<MainProcessCaptureFeaturePatientSubmitResultModel> SubmitPatientAsync(
             [FromBody] MainProcessCaptureFeaturePatientSubmitModel model,
             CancellationToken ct)
         {
@@ -125,6 +125,40 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.MainProcessCapture
             return new MainProcessCaptureFeaturePatientSubmitResultModel(
                 result.ProcessRowVersionId,
                 result.PatientRowVersionId);
+        }
+
+        [Administrative]
+        [HttpPost("submit-legal-representative")]
+        public async Task<MainProcessCaptureFeatureLegalRepresentativeSubmitResultModel> SubmitLegalRepresentativeAsync(
+            [FromBody] MainProcessCaptureFeatureLegalRepresentativeSubmitModel model,
+            CancellationToken ct)
+        {
+            var result = await _mediator.HandleCommandAsync<MainProcessCaptureFeatureLegalRepresentativeSubmitCommand, MainProcessCaptureFeatureLegalRepresentativeSubmitResult>(
+                new MainProcessCaptureFeatureLegalRepresentativeSubmitCommand(
+                    User.GetId(),
+                    model.ProcessId,
+                    model.ProcessRowVersionId,
+                    model.PatientRowVersionId,
+                    model.LegalRepresentativeId,
+                    model.LegalRepresentativeRowVersionId,
+                    model.TaxNumber,
+                    model.Name,
+                    model.FaxNumber,
+                    model.MobileNumber,
+                    model.PhoneNumber,
+                    model.EmailAddress,
+                    model.PostalAddressArea,
+                    model.PostalAddressAreaCode,
+                    model.PostalAddressLine1,
+                    model.PostalAddressLine2,
+                    model.PostalAddressLine3),
+                ct);
+
+            return new MainProcessCaptureFeatureLegalRepresentativeSubmitResultModel(
+                result.ProcessRowVersionId,
+                result.PatientRowVersionId,
+                result.LegalRepresentativeId,
+                result.LegalRepresentativeRowVersionId);
         }
     }
 }

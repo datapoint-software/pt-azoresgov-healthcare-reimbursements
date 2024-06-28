@@ -33,6 +33,32 @@ export type MainProcessCaptureFeatureLegalRepresentativeSearchResultModel = {
   legalRepresentative?: MainProcessCaptureFeatureLegalRepresentativeModel;
 };
 
+export type MainProcessCaptureFeatureLegalRepresentativeSubmitModel = {
+  processId: string;
+  processRowVersionId: string;
+  patientRowVersionId: string;
+  legalRepresentativeId?: string;
+  legalRepresentativeRowVersionId?: string;
+  taxNumber?: string;
+  name?: string;
+  faxNumber?: string;
+  mobileNumber?: string;
+  phoneNumber?: string;
+  emailAddress?: string;
+  postalAddressArea: string;
+  postalAddressAreaCode: string;
+  postalAddressLine1: string;
+  postalAddressLine2?: string;
+  postalAddressLine3?: string;
+};
+
+export type MainProcessCaptureFeatureLegalRepresentativeSubmitResultModel = {
+  processRowVersionId: string;
+  patientRowVersionId: string;
+  legalRepresentativeId?: string;
+  legalRepresentativeRowVersionId: string;
+};
+
 export type MainProcessCaptureFeatureOptionsModel = {
   processId: string;
 };

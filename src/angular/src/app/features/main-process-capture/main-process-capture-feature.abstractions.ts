@@ -74,6 +74,22 @@ export type MainProcessCaptureFeatureEntity = {
   nature: EntityNature;
 };
 
+export type MainProcessCaptureFeatureLegalRepresentative = {
+  id: string;
+  rowVersionId: string;
+  taxNumber: string;
+  name: string;
+  faxNumber: string | null;
+  mobileNumber: string | null;
+  phoneNumber: string | null;
+  emailAddress: string | null;
+  postalAddressArea: string;
+  postalAddressAreaCode: string;
+  postalAddressLine1: string;
+  postalAddressLine2: string | null;
+  postalAddressLine3: string | null;
+};
+
 export type MainProcessCaptureFeaturePatient = {
   id: string;
   rowVersionId: string;

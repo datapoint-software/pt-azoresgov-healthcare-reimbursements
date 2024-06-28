@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { MainProcessCaptureFeatureLegalRepresentativeSearchModel, MainProcessCaptureFeatureLegalRepresentativeSearchResultModel, MainProcessCaptureFeatureOptionsModel, MainProcessCaptureFeatureOptionsResultModel, MainProcessCaptureFeaturePatientSubmitModel, MainProcessCaptureFeaturePatientSubmitResultModel } from "@app/api/main-process-capture-feature/main-process-capture-feature.abstractions";
+import { MainProcessCaptureFeatureLegalRepresentativeSearchModel, MainProcessCaptureFeatureLegalRepresentativeSearchResultModel, MainProcessCaptureFeatureLegalRepresentativeSubmitModel, MainProcessCaptureFeatureLegalRepresentativeSubmitResultModel, MainProcessCaptureFeatureOptionsModel, MainProcessCaptureFeatureOptionsResultModel, MainProcessCaptureFeaturePatientSubmitModel, MainProcessCaptureFeaturePatientSubmitResultModel } from "@app/api/main-process-capture-feature/main-process-capture-feature.abstractions";
 import { firstValueFrom } from "rxjs";
 
 const baseAddress = "/api/features/main-process-capture";
@@ -29,7 +29,16 @@ export class MainProcessCaptureFeatureClient {
   public async submitPatient(model: MainProcessCaptureFeaturePatientSubmitModel): Promise<MainProcessCaptureFeaturePatientSubmitResultModel> {
     return await firstValueFrom(
       this._httpClient.post<MainProcessCaptureFeaturePatientSubmitResultModel>(
-        `${baseAddress}/update-patient`,
+        `${baseAddress}/submit-patient`,
+        model
+      )
+    );
+  }
+
+  public async submitLegalRepresentative(model: MainProcessCaptureFeatureLegalRepresentativeSubmitModel): Promise<MainProcessCaptureFeatureLegalRepresentativeSubmitResultModel> {
+    return await firstValueFrom(
+      this._httpClient.post<MainProcessCaptureFeatureLegalRepresentativeSubmitResultModel>(
+        `${baseAddress}/submit-legal-representative`,
         model
       )
     );

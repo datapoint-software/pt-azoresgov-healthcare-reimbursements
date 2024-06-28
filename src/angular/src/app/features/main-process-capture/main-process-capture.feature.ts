@@ -5,11 +5,11 @@ import { APP_INPUT_DEBOUNCE_TIME } from "@app/constants";
 import { ProcessPaymentMethod, ProcessPaymentRecipient } from "@app/enums";
 import { CoreTaskOverlayFeature } from "@app/features/core-task-overlay/core-task-overlay.feature";
 import { Feature } from "@app/features/feature.abstractions";
-import { MainProcessCaptureFeatureEntity, MainProcessCaptureFeatureForm, MainProcessCaptureFeaturePatient, MainProcessCaptureFeatureProcess, MainProcessCaptureFeatureStep } from "@app/features/main-process-capture/main-process-capture-feature.abstractions";
+import { MainProcessCaptureFeatureEntity, MainProcessCaptureFeatureForm, MainProcessCaptureFeatureLegalRepresentative, MainProcessCaptureFeaturePatient, MainProcessCaptureFeatureProcess, MainProcessCaptureFeatureStep } from "@app/features/main-process-capture/main-process-capture-feature.abstractions";
 import { AppValidators } from "@app/validators";
 import { debounceTime, filter, map, mergeMap, tap } from "rxjs";
 
-const EMIT_EVENT_FALSE = { emitEvent: false };
+const __EEF = { emitEvent: false };
 
 @Injectable()
 export class MainProcessCaptureFeature implements Feature {
@@ -19,6 +19,8 @@ export class MainProcessCaptureFeature implements Feature {
   private _entities: Map<string, MainProcessCaptureFeatureEntity> = undefined!;
 
   private _form: MainProcessCaptureFeatureForm = undefined!;
+
+  private _legalRepresentative: MainProcessCaptureFeatureLegalRepresentative | null = undefined!;
 
   private _patient: MainProcessCaptureFeaturePatient = undefined!;
 
@@ -191,7 +193,7 @@ export class MainProcessCaptureFeature implements Feature {
       .pipe(filter(() => this._form.controls.patient.enabled))
       .pipe(filter(() => this._form.controls.patient.valid))
       .pipe(tap(() => this._taskOverlay.enqueue(submitTaskId, submitTaskMessage)))
-      .pipe(debounceTime(APP_INPUT_DEBOUNCE_TIME * 10))
+      .pipe(debounceTime(APP_INPUT_DEBOUNCE_TIME))
       .pipe(mergeMap((values) => this._submitPatient(values)))
       .pipe(tap(() => this._taskOverlay.dequeue(submitTaskId)))
       .subscribe(() => {});
@@ -200,14 +202,24 @@ export class MainProcessCaptureFeature implements Feature {
       .pipe(filter(() => this._form.controls.legalRepresentativeSearch.enabled))
       .pipe(filter(() => this._form.controls.legalRepresentativeSearch.valid))
       .subscribe((values) => this._searchLegalRepresentative(values));
+
+    this._form.controls.legalRepresentative.valueChanges
+      .pipe(filter(() => this._form.controls.legalRepresentative.enabled))
+      .pipe(filter(() => this._form.controls.legalRepresentative.valid))
+      .pipe(map(() => this._form.controls.legalRepresentative.getRawValue()))
+      .pipe(tap(() => this._taskOverlay.enqueue(submitTaskId, submitTaskMessage)))
+      .pipe(debounceTime(APP_INPUT_DEBOUNCE_TIME))
+      .pipe(mergeMap((values) => this._submitLegalRepresentative(values)))
+      .pipe(tap(() => this._taskOverlay.dequeue(submitTaskId)))
+      .subscribe(() => {});
   }
 
   public removeLegalRepresentative(): void {
 
-    this._form.controls.legalRepresentativeSearch.reset({}, EMIT_EVENT_FALSE);
+    this._form.controls.legalRepresentativeSearch.reset({}, __EEF);
 
-    this._form.controls.legalRepresentative.disable(EMIT_EVENT_FALSE);
-    this._form.controls.legalRepresentativeSearch.enable(EMIT_EVENT_FALSE);
+    this._form.controls.legalRepresentative.disable(__EEF);
+    this._form.controls.legalRepresentativeSearch.enable(__EEF);
   }
 
   public setPatientEnabled(enabled: boolean): void {
@@ -215,11 +227,11 @@ export class MainProcessCaptureFeature implements Feature {
     const { patient } = this._form.controls;
 
     enabled
-      ? patient.enable(EMIT_EVENT_FALSE)
-      : patient.disable(EMIT_EVENT_FALSE);
+      ? patient.enable(__EEF)
+      : patient.disable(__EEF);
 
     if (enabled)
-      patient.controls.identity.disable(EMIT_EVENT_FALSE);
+      patient.controls.identity.disable(__EEF);
   }
 
   public async submitPatient(): Promise<void> {
@@ -251,9 +263,9 @@ export class MainProcessCaptureFeature implements Feature {
       taxNumber: values.taxNumber!
     });
 
-    this._form.controls.legalRepresentativeSearch.disable(EMIT_EVENT_FALSE);
+    this._form.controls.legalRepresentativeSearch.disable(__EEF);
 
-    this._form.controls.legalRepresentative.enable(EMIT_EVENT_FALSE);
+    this._form.controls.legalRepresentative.enable(__EEF);
 
     this._form.controls.legalRepresentative.setValue({
       identity: {
@@ -273,12 +285,100 @@ export class MainProcessCaptureFeature implements Feature {
         postalAddressLine2: response.legalRepresentative?.postalAddressLine2 ?? null,
         postalAddressLine3: response.legalRepresentative?.postalAddressLine3 ?? null
       }
-    }, EMIT_EVENT_FALSE);
+    }, __EEF);
 
     if (response.legalRepresentative)
-      this._form.controls.legalRepresentative.controls.identity.disable(EMIT_EVENT_FALSE);
+      this._form.controls.legalRepresentative.controls.identity.disable(__EEF);
     else
-      this._form.controls.legalRepresentative.controls.identity.controls.taxNumber.disable(EMIT_EVENT_FALSE);
+      this._form.controls.legalRepresentative.controls.identity.controls.taxNumber.disable(__EEF);
+
+    this._legalRepresentative = (response.legalRepresentative ?? null) && ({
+      id: response.legalRepresentative!.id,
+      rowVersionId: response.legalRepresentative!.rowVersionId,
+      taxNumber: response.legalRepresentative!.taxNumber,
+      name: response.legalRepresentative!.name,
+      faxNumber: response.legalRepresentative!.faxNumber ?? null,
+      mobileNumber: response.legalRepresentative!.mobileNumber ?? null,
+      phoneNumber: response.legalRepresentative!.phoneNumber ?? null,
+      emailAddress: response.legalRepresentative!.emailAddress ?? null,
+      postalAddressArea: response.legalRepresentative!.postalAddressArea,
+      postalAddressAreaCode: response.legalRepresentative!.postalAddressAreaCode,
+      postalAddressLine1: response.legalRepresentative!.postalAddressLine1,
+      postalAddressLine2: response.legalRepresentative!.postalAddressLine2 ?? null,
+      postalAddressLine3: response.legalRepresentative!.postalAddressLine3 ?? null
+    });
+  }
+
+  private async _submitLegalRepresentative(values: Partial<{
+    identity: Partial<{
+      taxNumber: string | null;
+      name: string | null;
+    }>;
+    contacts: Partial<{
+      faxNumber: string | null;
+      mobileNumber: string | null;
+      phoneNumber: string | null;
+      emailAddress: string | null;
+    }>;
+    postalAddress: Partial<{
+      postalAddressArea: string | null;
+      postalAddressAreaCode: string | null;
+      postalAddressLine1: string | null;
+      postalAddressLine2: string | null;
+      postalAddressLine3: string | null;
+    }>;
+  }>): Promise<void> {
+
+    const response = await this._processCaptureFeatureClient.submitLegalRepresentative({
+      processId: this._process.id,
+      processRowVersionId: this._process.rowVersionId,
+      patientRowVersionId: this._patient.rowVersionId,
+      legalRepresentativeId: this._legalRepresentative?.id ?? undefined,
+      legalRepresentativeRowVersionId: this._legalRepresentative?.rowVersionId ?? undefined,
+      taxNumber: this._legalRepresentative
+        ? undefined
+        : values.identity!.taxNumber!,
+      name: this._legalRepresentative
+        ? undefined
+        : values.identity!.name!,
+      faxNumber: values.contacts!.faxNumber || undefined,
+      mobileNumber: values.contacts!.mobileNumber || undefined,
+      phoneNumber: values.contacts!.phoneNumber || undefined,
+      emailAddress: values.contacts!.emailAddress || undefined,
+      postalAddressArea: values.postalAddress!.postalAddressArea!,
+      postalAddressAreaCode: values.postalAddress!.postalAddressAreaCode!,
+      postalAddressLine1: values.postalAddress!.postalAddressLine1!,
+      postalAddressLine2: values.postalAddress!.postalAddressLine2 || undefined,
+      postalAddressLine3: values.postalAddress!.postalAddressLine3 || undefined,
+    });
+
+    this._legalRepresentative = ({
+      ...(this._legalRepresentative ?? {
+        id: response.legalRepresentativeId!,
+        taxNumber: values.identity!.taxNumber!,
+        name: values.identity!.name!,
+      }),
+      rowVersionId: response.legalRepresentativeRowVersionId,
+      faxNumber: values.contacts!.faxNumber || null,
+      mobileNumber: values.contacts!.mobileNumber || null,
+      phoneNumber: values.contacts!.phoneNumber || null,
+      emailAddress: values.contacts!.emailAddress || null,
+      postalAddressArea: values.postalAddress!.postalAddressArea!,
+      postalAddressAreaCode: values.postalAddress!.postalAddressAreaCode!,
+      postalAddressLine1: values.postalAddress!.postalAddressLine1!,
+      postalAddressLine2: values.postalAddress!.postalAddressLine2 || null,
+      postalAddressLine3: values.postalAddress!.postalAddressLine3 || null
+    });
+
+    this._patient = ({
+      ...this._patient,
+      rowVersionId: response.patientRowVersionId
+    });
+
+    this._process = ({
+      ...this._process,
+      rowVersionId: response.processRowVersionId
+    });
   }
 
   private async _submitPatient(values: Partial<{

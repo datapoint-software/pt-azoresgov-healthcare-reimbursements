@@ -7,7 +7,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Helpers
     {
         private static readonly Regex TaxNumberExpression = new(@"^(([A-Z]{2})\d+)|(\d{9})$", RegexOptions.Compiled);
 
-        public static IRuleBuilderOptions<T, string> PatientNumber<T>(this IRuleBuilder<T, string> ruleBuilder) =>
+        public static IRuleBuilderOptions<T, string?> PatientNumber<T>(this IRuleBuilder<T, string?> ruleBuilder) =>
 
             ruleBuilder.Must((filter) =>
             {
@@ -19,7 +19,8 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Helpers
 
                 return false;
             });
-        public static IRuleBuilderOptions<T, string> TaxNumber<T>(this IRuleBuilder<T, string> ruleBuilder) =>
+
+        public static IRuleBuilderOptions<T, string?> TaxNumber<T>(this IRuleBuilder<T, string?> ruleBuilder) =>
 
             ruleBuilder.Must((filter) =>
             {
