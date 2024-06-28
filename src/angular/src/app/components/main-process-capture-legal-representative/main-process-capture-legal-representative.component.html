@@ -1,6 +1,6 @@
-<section [formGroup]="form.controls.legalRepresentative">
-  @if (form.controls.legalRepresentative.disabled) {
-    <div [formGroup]="form.controls.legalRepresentativeSearch" class="card">
+@if (form.controls.legalRepresentative.disabled) {
+  <form [formGroup]="form.controls.legalRepresentativeSearch">
+    <div class="card">
       <div class="card-header">
         <div class="card-header-title">Representante legal</div>
       </div>
@@ -42,9 +42,11 @@
         </div>
       </div>
     </div>
-  }
-  @else {
-    <div [formGroup]="form.controls.legalRepresentative.controls.identity" class="card">
+  </form>
+}
+@else {
+  <form [formGroup]="form.controls.legalRepresentative">
+    <div class="card">
       <div class="card-header">
         <div class="card-header-title">Representante legal</div>
       </div>
@@ -97,7 +99,7 @@
         </div>
       </div>
     </div>
-    <div [formGroup]="form.controls.legalRepresentative.controls.postalAddress" class="card">
+    <div class="card">
       <div class="card-header">
         <div class="card-header-title">Morada</div>
       </div>
@@ -191,7 +193,7 @@
                 type="text" />
             </app-sui-form-group>
           </div>
-          @if (form.controls.legalRepresentative.controls.postalAddress.controls.postalAddressLine3.value || postalAddressLine2.control.value) {
+          @if (form.controls.legalRepresentative.controls.postalAddressLine3.value || postalAddressLine2.control.value) {
             <div class="col-lg-12">
               <app-sui-form-group #postalAddressLine3 [name]="'postalAddressLine3'" class="form-group d-block">
                 <!-- Label -->
@@ -219,7 +221,7 @@
       </div>
     </div>
 
-    <div [formGroup]="form.controls.legalRepresentative.controls.contacts" class="card">
+    <div class="card">
       <div class="card-header">
         <div class="card-header-title">Contactos</div>
       </div>
@@ -319,6 +321,7 @@
     <div class="my-2 text-end">
       <button (click)="removeLegalRepresentative()" class="btn btn-danger">Remover</button>
     </div>
-  }
-</section>
+  </form>
+
+}
 

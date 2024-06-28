@@ -3,26 +3,20 @@ import { EntityNature, ProcessPaymentMethod, ProcessPaymentRecipient } from "@ap
 
 export type MainProcessCaptureFeatureForm = FormGroup<{
   patient: FormGroup<{
-    identity: FormGroup<{
-      number: FormControl<string | null>;
-      taxNumber: FormControl<string | null>;
-      name: FormControl<string | null>;
-      birth: FormControl<string | null>;
-      death: FormControl<string | null>;
-    }>;
-    contacts: FormGroup<{
-      faxNumber: FormControl<string | null>;
-      mobileNumber: FormControl<string | null>;
-      phoneNumber: FormControl<string | null>;
-      emailAddress: FormControl<string | null>;
-    }>;
-    postalAddress: FormGroup<{
-      postalAddressArea: FormControl<string | null>;
-      postalAddressAreaCode: FormControl<string | null>;
-      postalAddressLine1: FormControl<string | null>;
-      postalAddressLine2: FormControl<string | null>;
-      postalAddressLine3: FormControl<string | null>;
-    }>;
+    number: FormControl<string | null>;
+    taxNumber: FormControl<string | null>;
+    name: FormControl<string | null>;
+    birth: FormControl<string | null>;
+    death: FormControl<string | null>;
+    faxNumber: FormControl<string | null>;
+    mobileNumber: FormControl<string | null>;
+    phoneNumber: FormControl<string | null>;
+    emailAddress: FormControl<string | null>;
+    postalAddressArea: FormControl<string | null>;
+    postalAddressAreaCode: FormControl<string | null>;
+    postalAddressLine1: FormControl<string | null>;
+    postalAddressLine2: FormControl<string | null>;
+    postalAddressLine3: FormControl<string | null>;
   }>;
   familyIncomeStatement: FormGroup<{
     year: FormControl<number | null>;
@@ -34,28 +28,22 @@ export type MainProcessCaptureFeatureForm = FormGroup<{
     taxNumber: FormControl<string | null>;
   }>,
   legalRepresentative: FormGroup<{
-    identity: FormGroup<{
-      taxNumber: FormControl<string | null>;
-      name: FormControl<string | null>;
-    }>;
-    contacts: FormGroup<{
-      faxNumber: FormControl<string | null>;
-      mobileNumber: FormControl<string | null>;
-      phoneNumber: FormControl<string | null>;
-      emailAddress: FormControl<string | null>;
-    }>;
-    postalAddress: FormGroup<{
-      postalAddressArea: FormControl<string | null>;
-      postalAddressAreaCode: FormControl<string | null>;
-      postalAddressLine1: FormControl<string | null>;
-      postalAddressLine2: FormControl<string | null>;
-      postalAddressLine3: FormControl<string | null>;
-    }>;
+    taxNumber: FormControl<string | null>;
+    name: FormControl<string | null>;
+    faxNumber: FormControl<string | null>;
+    mobileNumber: FormControl<string | null>;
+    phoneNumber: FormControl<string | null>;
+    emailAddress: FormControl<string | null>;
+    postalAddressArea: FormControl<string | null>;
+    postalAddressAreaCode: FormControl<string | null>;
+    postalAddressLine1: FormControl<string | null>;
+    postalAddressLine2: FormControl<string | null>;
+    postalAddressLine3: FormControl<string | null>;
   }>;
   payment: FormGroup<{
     method: FormControl<ProcessPaymentMethod | null>;
     recipient: FormControl<ProcessPaymentRecipient | null>;
-    wireTransferDetails: FormGroup<{
+    wireTransfer: FormGroup<{
       iban: FormControl<string | null>;
       swiftCode: FormControl<string | null>;
     }>;

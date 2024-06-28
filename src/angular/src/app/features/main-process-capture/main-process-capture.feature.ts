@@ -116,26 +116,20 @@ export class MainProcessCaptureFeature implements Feature {
 
     this._form = this._fb.group({
       patient: this._fb.group({
-        identity: this._fb.group({
-          number: this._fb.control(this._patient.number, [ Validators.required, AppValidators.patientNumber ]),
-          taxNumber: this._fb.control(this._patient.taxNumber, [ Validators.required, AppValidators.taxNumber ]),
-          name: this._fb.control(this._patient.name, [ Validators.required, Validators.maxLength(256) ]),
-          birth: this._fb.control(this._patient.birth, [ Validators.required ]),
-          death: this._fb.control(this._patient.death, [ ]),
-        }),
-        contacts: this._fb.group({
-          faxNumber: this._fb.control(this._patient.faxNumber, [ Validators.maxLength(16) ]),
-          mobileNumber: this._fb.control(this._patient.mobileNumber, [ Validators.maxLength(16) ]),
-          phoneNumber: this._fb.control(this._patient.phoneNumber, [ Validators.maxLength(16) ]),
-          emailAddress: this._fb.control(this._patient.emailAddress, [ Validators.email ]),
-        }),
-        postalAddress: this._fb.group({
-          postalAddressArea: this._fb.control(this._patient.postalAddressArea, [ Validators.required, Validators.maxLength(64) ]),
-          postalAddressAreaCode: this._fb.control(this._patient.postalAddressAreaCode, [ Validators.required, Validators.maxLength(16) ]),
-          postalAddressLine1: this._fb.control(this._patient.postalAddressLine1, [ Validators.required, Validators.maxLength(256) ]),
-          postalAddressLine2: this._fb.control(this._patient.postalAddressLine2, [ Validators.maxLength(256) ]),
-          postalAddressLine3: this._fb.control(this._patient.postalAddressLine3, [ Validators.maxLength(256) ])
-        })
+        number: this._fb.control(this._patient.number, [ Validators.required, AppValidators.patientNumber ]),
+        taxNumber: this._fb.control(this._patient.taxNumber, [ Validators.required, AppValidators.taxNumber ]),
+        name: this._fb.control(this._patient.name, [ Validators.required, Validators.maxLength(256) ]),
+        birth: this._fb.control(this._patient.birth, [ Validators.required ]),
+        death: this._fb.control(this._patient.death, [ ]),
+        faxNumber: this._fb.control(this._patient.faxNumber, [ Validators.maxLength(16) ]),
+        mobileNumber: this._fb.control(this._patient.mobileNumber, [ Validators.maxLength(16) ]),
+        phoneNumber: this._fb.control(this._patient.phoneNumber, [ Validators.maxLength(16) ]),
+        emailAddress: this._fb.control(this._patient.emailAddress, [ Validators.email ]),
+        postalAddressArea: this._fb.control(this._patient.postalAddressArea, [ Validators.required, Validators.maxLength(64) ]),
+        postalAddressAreaCode: this._fb.control(this._patient.postalAddressAreaCode, [ Validators.required, Validators.maxLength(16) ]),
+        postalAddressLine1: this._fb.control(this._patient.postalAddressLine1, [ Validators.required, Validators.maxLength(256) ]),
+        postalAddressLine2: this._fb.control(this._patient.postalAddressLine2, [ Validators.maxLength(256) ]),
+        postalAddressLine3: this._fb.control(this._patient.postalAddressLine3, [ Validators.maxLength(256) ])
       }),
       familyIncomeStatement: this._fb.group({
         year: this._fb.control(null as number | null, [ Validators.required ]),
@@ -147,28 +141,22 @@ export class MainProcessCaptureFeature implements Feature {
         taxNumber: this._fb.control('', [ Validators.required, AppValidators.taxNumber ]),
       }),
       legalRepresentative: this._fb.group({
-        identity: this._fb.group({
-          taxNumber: this._fb.control('', [ Validators.required, AppValidators.taxNumber ]),
-          name: this._fb.control('', [ Validators.required ]),
-        }),
-        contacts: this._fb.group({
-          faxNumber: this._fb.control('', [ Validators.maxLength(16) ]),
-          mobileNumber: this._fb.control('', [ Validators.maxLength(16) ]),
-          phoneNumber: this._fb.control('', [ Validators.maxLength(16) ]),
-          emailAddress: this._fb.control('', [ Validators.email ]),
-        }),
-        postalAddress: this._fb.group({
-          postalAddressArea: this._fb.control('', [ Validators.required, Validators.maxLength(64) ]),
-          postalAddressAreaCode: this._fb.control('', [ Validators.required, Validators.maxLength(16) ]),
-          postalAddressLine1: this._fb.control('', [ Validators.required, Validators.maxLength(256) ]),
-          postalAddressLine2: this._fb.control('', [ Validators.maxLength(256) ]),
-          postalAddressLine3: this._fb.control('', [ Validators.maxLength(256) ])
-        })
+        taxNumber: this._fb.control('', [ Validators.required, AppValidators.taxNumber ]),
+        name: this._fb.control('', [ Validators.required ]),
+        faxNumber: this._fb.control('', [ Validators.maxLength(16) ]),
+        mobileNumber: this._fb.control('', [ Validators.maxLength(16) ]),
+        phoneNumber: this._fb.control('', [ Validators.maxLength(16) ]),
+        emailAddress: this._fb.control('', [ Validators.email ]),
+        postalAddressArea: this._fb.control('', [ Validators.required, Validators.maxLength(64) ]),
+        postalAddressAreaCode: this._fb.control('', [ Validators.required, Validators.maxLength(16) ]),
+        postalAddressLine1: this._fb.control('', [ Validators.required, Validators.maxLength(256) ]),
+        postalAddressLine2: this._fb.control('', [ Validators.maxLength(256) ]),
+        postalAddressLine3: this._fb.control('', [ Validators.maxLength(256) ])
       }),
       payment: this._fb.group({
         method: this._fb.control(null as ProcessPaymentMethod | null, [ Validators.required ]),
         recipient: this._fb.control(null as ProcessPaymentRecipient | null, [ Validators.required ]),
-        wireTransferDetails: this._fb.group({
+        wireTransfer: this._fb.group({
           iban: this._fb.control('', [ Validators.required ]),
           swiftCode: this._fb.control('', [ Validators.required ])
         })
@@ -182,9 +170,7 @@ export class MainProcessCaptureFeature implements Feature {
     this._step = null;
 
     this._form.controls.legalRepresentative.disable();
-
     this._form.controls.patient.disable();
-    this._form.controls.patient.controls.identity.disable();
 
     const submitTaskId = `${MainProcessCaptureFeature.name}.submit`;
     const submitTaskMessage = "A guardar alterações...";
@@ -230,8 +216,14 @@ export class MainProcessCaptureFeature implements Feature {
       ? patient.enable(__EEF)
       : patient.disable(__EEF);
 
-    if (enabled)
-      patient.controls.identity.disable(__EEF);
+    if (enabled) {
+
+      const { number, taxNumber, name } = this._form.controls.patient.controls;
+
+      number.disable();
+      taxNumber.disable();
+      name.disable();
+    }
   }
 
   public async submitPatient(): Promise<void> {
@@ -268,29 +260,25 @@ export class MainProcessCaptureFeature implements Feature {
     this._form.controls.legalRepresentative.enable(__EEF);
 
     this._form.controls.legalRepresentative.setValue({
-      identity: {
-        taxNumber: response.legalRepresentative?.taxNumber ?? values.taxNumber!,
-        name: response.legalRepresentative?.name ?? null,
-      },
-      contacts: {
-        emailAddress: response.legalRepresentative?.emailAddress ?? null,
-        faxNumber: response.legalRepresentative?.faxNumber ?? null,
-        mobileNumber: response.legalRepresentative?.mobileNumber ?? null,
-        phoneNumber: response.legalRepresentative?.phoneNumber ?? null
-      },
-      postalAddress: {
-        postalAddressArea: response.legalRepresentative?.postalAddressArea ?? null,
-        postalAddressAreaCode: response.legalRepresentative?.postalAddressAreaCode ?? null,
-        postalAddressLine1: response.legalRepresentative?.postalAddressLine1 ?? null,
-        postalAddressLine2: response.legalRepresentative?.postalAddressLine2 ?? null,
-        postalAddressLine3: response.legalRepresentative?.postalAddressLine3 ?? null
-      }
+      taxNumber: response.legalRepresentative?.taxNumber ?? values.taxNumber!,
+      name: response.legalRepresentative?.name ?? null,
+      emailAddress: response.legalRepresentative?.emailAddress ?? null,
+      faxNumber: response.legalRepresentative?.faxNumber ?? null,
+      mobileNumber: response.legalRepresentative?.mobileNumber ?? null,
+      phoneNumber: response.legalRepresentative?.phoneNumber ?? null,
+      postalAddressArea: response.legalRepresentative?.postalAddressArea ?? null,
+      postalAddressAreaCode: response.legalRepresentative?.postalAddressAreaCode ?? null,
+      postalAddressLine1: response.legalRepresentative?.postalAddressLine1 ?? null,
+      postalAddressLine2: response.legalRepresentative?.postalAddressLine2 ?? null,
+      postalAddressLine3: response.legalRepresentative?.postalAddressLine3 ?? null
     }, __EEF);
 
+    const { taxNumber, name } = this._form.controls.legalRepresentative.controls;
+
+    taxNumber.disable();
+
     if (response.legalRepresentative)
-      this._form.controls.legalRepresentative.controls.identity.disable(__EEF);
-    else
-      this._form.controls.legalRepresentative.controls.identity.controls.taxNumber.disable(__EEF);
+      name.disable();
 
     this._legalRepresentative = (response.legalRepresentative ?? null) && ({
       id: response.legalRepresentative!.id,
@@ -310,23 +298,17 @@ export class MainProcessCaptureFeature implements Feature {
   }
 
   private async _submitLegalRepresentative(values: Partial<{
-    identity: Partial<{
-      taxNumber: string | null;
-      name: string | null;
-    }>;
-    contacts: Partial<{
-      faxNumber: string | null;
-      mobileNumber: string | null;
-      phoneNumber: string | null;
-      emailAddress: string | null;
-    }>;
-    postalAddress: Partial<{
-      postalAddressArea: string | null;
-      postalAddressAreaCode: string | null;
-      postalAddressLine1: string | null;
-      postalAddressLine2: string | null;
-      postalAddressLine3: string | null;
-    }>;
+    taxNumber: string | null;
+    name: string | null;
+    faxNumber: string | null;
+    mobileNumber: string | null;
+    phoneNumber: string | null;
+    emailAddress: string | null;
+    postalAddressArea: string | null;
+    postalAddressAreaCode: string | null;
+    postalAddressLine1: string | null;
+    postalAddressLine2: string | null;
+    postalAddressLine3: string | null;
   }>): Promise<void> {
 
     const response = await this._processCaptureFeatureClient.submitLegalRepresentative({
@@ -337,37 +319,37 @@ export class MainProcessCaptureFeature implements Feature {
       legalRepresentativeRowVersionId: this._legalRepresentative?.rowVersionId ?? undefined,
       taxNumber: this._legalRepresentative
         ? undefined
-        : values.identity!.taxNumber!,
+        : values.taxNumber!,
       name: this._legalRepresentative
         ? undefined
-        : values.identity!.name!,
-      faxNumber: values.contacts!.faxNumber || undefined,
-      mobileNumber: values.contacts!.mobileNumber || undefined,
-      phoneNumber: values.contacts!.phoneNumber || undefined,
-      emailAddress: values.contacts!.emailAddress || undefined,
-      postalAddressArea: values.postalAddress!.postalAddressArea!,
-      postalAddressAreaCode: values.postalAddress!.postalAddressAreaCode!,
-      postalAddressLine1: values.postalAddress!.postalAddressLine1!,
-      postalAddressLine2: values.postalAddress!.postalAddressLine2 || undefined,
-      postalAddressLine3: values.postalAddress!.postalAddressLine3 || undefined,
+        : values.name!,
+      faxNumber: values.faxNumber || undefined,
+      mobileNumber: values.mobileNumber || undefined,
+      phoneNumber: values.phoneNumber || undefined,
+      emailAddress: values.emailAddress || undefined,
+      postalAddressArea: values.postalAddressArea!,
+      postalAddressAreaCode: values.postalAddressAreaCode!,
+      postalAddressLine1: values.postalAddressLine1!,
+      postalAddressLine2: values.postalAddressLine2 || undefined,
+      postalAddressLine3: values.postalAddressLine3 || undefined,
     });
 
     this._legalRepresentative = ({
       ...(this._legalRepresentative ?? {
         id: response.legalRepresentativeId!,
-        taxNumber: values.identity!.taxNumber!,
-        name: values.identity!.name!,
+        taxNumber: values.taxNumber!,
+        name: values.name!,
       }),
       rowVersionId: response.legalRepresentativeRowVersionId,
-      faxNumber: values.contacts!.faxNumber || null,
-      mobileNumber: values.contacts!.mobileNumber || null,
-      phoneNumber: values.contacts!.phoneNumber || null,
-      emailAddress: values.contacts!.emailAddress || null,
-      postalAddressArea: values.postalAddress!.postalAddressArea!,
-      postalAddressAreaCode: values.postalAddress!.postalAddressAreaCode!,
-      postalAddressLine1: values.postalAddress!.postalAddressLine1!,
-      postalAddressLine2: values.postalAddress!.postalAddressLine2 || null,
-      postalAddressLine3: values.postalAddress!.postalAddressLine3 || null
+      faxNumber: values.faxNumber || null,
+      mobileNumber: values.mobileNumber || null,
+      phoneNumber: values.phoneNumber || null,
+      emailAddress: values.emailAddress || null,
+      postalAddressArea: values.postalAddressArea!,
+      postalAddressAreaCode: values.postalAddressAreaCode!,
+      postalAddressLine1: values.postalAddressLine1!,
+      postalAddressLine2: values.postalAddressLine2 || null,
+      postalAddressLine3: values.postalAddressLine3 || null
     });
 
     this._patient = ({
@@ -382,19 +364,15 @@ export class MainProcessCaptureFeature implements Feature {
   }
 
   private async _submitPatient(values: Partial<{
-    contacts: Partial<{
-      faxNumber: string | null;
-      mobileNumber: string | null;
-      phoneNumber: string | null;
-      emailAddress: string | null;
-    }>;
-    postalAddress: Partial<{
-      postalAddressArea: string | null;
-      postalAddressAreaCode: string | null;
-      postalAddressLine1: string | null;
-      postalAddressLine2: string | null;
-      postalAddressLine3: string | null;
-    }>;
+    faxNumber: string | null;
+    mobileNumber: string | null;
+    phoneNumber: string | null;
+    emailAddress: string | null;
+    postalAddressArea: string | null;
+    postalAddressAreaCode: string | null;
+    postalAddressLine1: string | null;
+    postalAddressLine2: string | null;
+    postalAddressLine3: string | null;
   }>): Promise<void> {
 
     const response = await this._processCaptureFeatureClient.submitPatient({
@@ -402,26 +380,26 @@ export class MainProcessCaptureFeature implements Feature {
       processRowVersionId: this._process.rowVersionId,
       patientId: this._patient.id,
       patientRowVersionId: this._patient.rowVersionId,
-      faxNumber: values.contacts?.faxNumber || undefined,
-      mobileNumber: values.contacts?.mobileNumber || undefined,
-      phoneNumber: values.contacts?.phoneNumber || undefined,
-      emailAddress: values.contacts?.emailAddress || undefined,
-      postalAddressArea: values.postalAddress!.postalAddressArea!,
-      postalAddressAreaCode: values.postalAddress!.postalAddressAreaCode!,
-      postalAddressLine1: values.postalAddress!.postalAddressLine1!,
-      postalAddressLine2: values.postalAddress!.postalAddressLine2 || undefined,
-      postalAddressLine3: values.postalAddress!.postalAddressLine3 || undefined
+      faxNumber: values.faxNumber || undefined,
+      mobileNumber: values.mobileNumber || undefined,
+      phoneNumber: values.phoneNumber || undefined,
+      emailAddress: values.emailAddress || undefined,
+      postalAddressArea: values.postalAddressArea!,
+      postalAddressAreaCode: values.postalAddressAreaCode!,
+      postalAddressLine1: values.postalAddressLine1!,
+      postalAddressLine2: values.postalAddressLine2 || undefined,
+      postalAddressLine3: values.postalAddressLine3 || undefined
     });
 
-    this._patient.faxNumber = values.contacts?.faxNumber || null;
-    this._patient.mobileNumber = values.contacts?.mobileNumber || null;
-    this._patient.phoneNumber = values.contacts?.phoneNumber || null;
-    this._patient.emailAddress = values.contacts?.emailAddress || null;
-    this._patient.postalAddressArea = values.postalAddress!.postalAddressArea!;
-    this._patient.postalAddressAreaCode = values.postalAddress!.postalAddressAreaCode!;
-    this._patient.postalAddressLine1 = values.postalAddress!.postalAddressLine1!;
-    this._patient.postalAddressLine2 = values.postalAddress!.postalAddressLine2 || null;
-    this._patient.postalAddressLine3 = values.postalAddress!.postalAddressLine3 || null;
+    this._patient.faxNumber = values.faxNumber || null;
+    this._patient.mobileNumber = values.mobileNumber || null;
+    this._patient.phoneNumber = values.phoneNumber || null;
+    this._patient.emailAddress = values.emailAddress || null;
+    this._patient.postalAddressArea = values.postalAddressArea!;
+    this._patient.postalAddressAreaCode = values.postalAddressAreaCode!;
+    this._patient.postalAddressLine1 = values.postalAddressLine1!;
+    this._patient.postalAddressLine2 = values.postalAddressLine2 || null;
+    this._patient.postalAddressLine3 = values.postalAddressLine3 || null;
 
     this._process.rowVersionId = response.processRowVersionId;
     this._patient.rowVersionId = response.patientRowVersionId;

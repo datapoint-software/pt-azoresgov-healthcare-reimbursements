@@ -1,4 +1,4 @@
-import { Component, NgZone, ViewChild } from "@angular/core";
+import { Component } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { RouterLink, RouterOutlet } from "@angular/router";
 import { SuiModalComponent } from "@app/components/sui-modal/sui-modal.component";
@@ -78,7 +78,6 @@ export class MainProcessCaptureComponent {
   // #endregion
 
   constructor(
-    private readonly _ngZone: NgZone,
     private readonly _processCaptureFeature: MainProcessCaptureFeature
   ) {}
 }
