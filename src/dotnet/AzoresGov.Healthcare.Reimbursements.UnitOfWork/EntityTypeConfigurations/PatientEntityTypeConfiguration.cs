@@ -29,7 +29,12 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.EntityTypeConfiguration
             builder.HasOne(e => e.Entity)
                 .WithMany()
                 .HasForeignKey(e => e.EntityId)
-                .IsRequired();
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(e => e.LegalRepresentative)
+                .WithMany()
+                .HasForeignKey(e => e.LegalRepresentativeId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Property(e => e.Number)
                 .HasMaxLength(16)

@@ -3,6 +3,7 @@ using System;
 using AzoresGov.Healthcare.Reimbursements.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
 {
     [DbContext(typeof(HealthcareReimbursementsUnitOfWork))]
-    partial class HealthcareReimbursementsUnitOfWorkModelSnapshot : ModelSnapshot
+    [Migration("20240628095605_Patient_LegalRepresentativeId")]
+    partial class Patient_LegalRepresentativeId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -528,7 +531,7 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Migrations
                     b.HasOne("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.Entity", "Entity")
                         .WithMany()
                         .HasForeignKey("EntityId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities.LegalRepresentative", "LegalRepresentative")

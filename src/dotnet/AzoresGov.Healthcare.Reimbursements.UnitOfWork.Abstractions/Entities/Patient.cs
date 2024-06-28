@@ -15,6 +15,10 @@ namespace AzoresGov.Healthcare.Reimbursements.UnitOfWork.Entities
 
         public long EntityId { get; } = default!;
 
+        public LegalRepresentative? LegalRepresentative { get; set; } = default!;
+
+        public long? LegalRepresentativeId { get; } = default!;
+
         public string Number { get; set; } = default!;
 
         public string TaxNumber { get; set; } = default!;
