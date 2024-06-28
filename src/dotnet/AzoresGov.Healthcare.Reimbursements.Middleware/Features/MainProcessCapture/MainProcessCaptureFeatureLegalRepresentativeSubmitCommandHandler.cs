@@ -62,9 +62,9 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.MainProcessCap
             {
                 legalRepresentative.PublicId = Guid.NewGuid();
                 legalRepresentative.TaxNumber = command.TaxNumber!;
-                legalRepresentative.Name = command.Name!;
             }
 
+            legalRepresentative.Name = command.Name!;
             legalRepresentative.FaxNumber = command.FaxNumber;
             legalRepresentative.MobileNumber = command.MobileNumber;
             legalRepresentative.PhoneNumber = command.PhoneNumber;

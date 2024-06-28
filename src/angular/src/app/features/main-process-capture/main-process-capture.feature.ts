@@ -88,6 +88,24 @@ export class MainProcessCaptureFeature implements Feature {
       });
     }
 
+    this._legalRepresentative = options.legalRepresentative
+      ? ({
+        id: options.legalRepresentative.id,
+        rowVersionId: options.legalRepresentative.rowVersionId,
+        taxNumber: options.legalRepresentative.taxNumber,
+        name: options.legalRepresentative.name,
+        faxNumber: options.legalRepresentative.faxNumber ?? null,
+        mobileNumber: options.legalRepresentative.mobileNumber ?? null,
+        phoneNumber: options.legalRepresentative.phoneNumber ?? null,
+        emailAddress: options.legalRepresentative.emailAddress ?? null,
+        postalAddressArea: options.legalRepresentative.postalAddressArea,
+        postalAddressAreaCode: options.legalRepresentative.postalAddressAreaCode,
+        postalAddressLine1: options.legalRepresentative.postalAddressLine1,
+        postalAddressLine2: options.legalRepresentative.postalAddressLine2 ?? null,
+        postalAddressLine3: options.legalRepresentative.postalAddressLine3 ?? null
+      })
+      : null;
+
     this._patient = ({
       id: options.patient.id,
       rowVersionId: options.patient.rowVersionId,
@@ -139,21 +157,21 @@ export class MainProcessCaptureFeature implements Feature {
         memberCount: this._fb.control(null as number | null, [ Validators.required ]),
         amount: this._fb.control(null as number | null, [ Validators.required ])
       }),
-      legalRepresentativeSearch: this._fb.group({
+      legalRepresentativeSelection: this._fb.group({
         taxNumber: this._fb.control('', [ Validators.required, AppValidators.taxNumber ]),
       }),
       legalRepresentative: this._fb.group({
-        taxNumber: this._fb.control('', [ Validators.required, AppValidators.taxNumber ]),
-        name: this._fb.control('', [ Validators.required ]),
-        faxNumber: this._fb.control('', [ Validators.maxLength(16) ]),
-        mobileNumber: this._fb.control('', [ Validators.maxLength(16) ]),
-        phoneNumber: this._fb.control('', [ Validators.maxLength(16) ]),
-        emailAddress: this._fb.control('', [ Validators.email ]),
-        postalAddressArea: this._fb.control('', [ Validators.required, Validators.maxLength(64) ]),
-        postalAddressAreaCode: this._fb.control('', [ Validators.required, Validators.maxLength(16) ]),
-        postalAddressLine1: this._fb.control('', [ Validators.required, Validators.maxLength(256) ]),
-        postalAddressLine2: this._fb.control('', [ Validators.maxLength(256) ]),
-        postalAddressLine3: this._fb.control('', [ Validators.maxLength(256) ])
+        taxNumber: this._fb.control(this._legalRepresentative?.taxNumber ?? null, [ Validators.required, AppValidators.taxNumber ]),
+        name: this._fb.control(this._legalRepresentative?.name ?? null, [ Validators.required ]),
+        faxNumber: this._fb.control(this._legalRepresentative?.faxNumber ?? null, [ Validators.maxLength(16) ]),
+        mobileNumber: this._fb.control(this._legalRepresentative?.mobileNumber ?? null, [ Validators.maxLength(16) ]),
+        phoneNumber: this._fb.control(this._legalRepresentative?.phoneNumber ?? null, [ Validators.maxLength(16) ]),
+        emailAddress: this._fb.control(this._legalRepresentative?.emailAddress ?? null, [ Validators.email ]),
+        postalAddressArea: this._fb.control(this._legalRepresentative?.postalAddressArea ?? null, [ Validators.required, Validators.maxLength(64) ]),
+        postalAddressAreaCode: this._fb.control(this._legalRepresentative?.postalAddressAreaCode ?? null, [ Validators.required, Validators.maxLength(16) ]),
+        postalAddressLine1: this._fb.control(this._legalRepresentative?.postalAddressLine1 ?? null, [ Validators.required, Validators.maxLength(256) ]),
+        postalAddressLine2: this._fb.control(this._legalRepresentative?.postalAddressLine2 ?? null, [ Validators.maxLength(256) ]),
+        postalAddressLine3: this._fb.control(this._legalRepresentative?.postalAddressLine3 ?? null, [ Validators.maxLength(256) ])
       }),
       payment: this._fb.group({
         method: this._fb.control(null as ProcessPaymentMethod | null, [ Validators.required ]),
@@ -175,8 +193,11 @@ export class MainProcessCaptureFeature implements Feature {
     this._form.controls.patient.controls.taxNumber.disable();
     this._form.controls.patient.controls.name.disable();
 
-    const submitTaskId = `${MainProcessCaptureFeature.name}.submit`;
-    const submitTaskMessage = "A guardar alterações...";
+    if (this._legalRepresentative)
+      this._form.controls.legalRepresentative.controls.taxNumber.disable();
+    else
+      this._form.controls.legalRepresentative.disable();
+
 
     this._form.controls.patient.valueChanges
       .pipe(filter(() => this._form.controls.patient.enabled))
@@ -185,28 +206,55 @@ export class MainProcessCaptureFeature implements Feature {
       .pipe(filter(() => this._form.controls.patient.pristine === false))
       .subscribe((values) => this._submitPatientAutoSave(values));
 
-    this._form.controls.legalRepresentativeSearch.valueChanges
-      .pipe(filter(() => this._form.controls.legalRepresentativeSearch.enabled))
-      .pipe(filter(() => this._form.controls.legalRepresentativeSearch.valid))
-      .subscribe((values) => this._searchLegalRepresentative(values));
+    this._form.controls.legalRepresentativeSelection.valueChanges
+      .pipe(filter(() => this._form.controls.legalRepresentativeSelection.enabled))
+      .pipe(filter(() => this._form.controls.legalRepresentativeSelection.valid))
+      .subscribe((values) => this._selectLegalRepresentative(values));
 
     this._form.controls.legalRepresentative.valueChanges
       .pipe(filter(() => this._form.controls.legalRepresentative.enabled))
       .pipe(filter(() => this._form.controls.legalRepresentative.valid))
       .pipe(map(() => this._form.controls.legalRepresentative.getRawValue()))
-      .pipe(tap(() => this._taskOverlay.enqueue(submitTaskId, submitTaskMessage)))
-      .pipe(debounceTime(APP_INPUT_DEBOUNCE_TIME))
-      .pipe(mergeMap((values) => this._submitLegalRepresentative(values)))
-      .pipe(tap(() => this._taskOverlay.dequeue(submitTaskId)))
-      .subscribe(() => {});
+      .pipe(debounceTime(APP_AUTO_SAVE_DEBOUNCE_TIME))
+      .pipe(filter(() => this._form.controls.legalRepresentative.pristine === false))
+      .subscribe((values) => this._submitLegalRepresentativeAutoSave(values));
   }
 
-  public removeLegalRepresentative(): void {
+  public removeLegalRepresentative(): Promise<void> {
 
-    this._form.controls.legalRepresentativeSearch.reset({}, __EEF);
+    return this._loadingOverlay.enqueueWhile(async () => {
 
-    this._form.controls.legalRepresentative.disable(__EEF);
-    this._form.controls.legalRepresentativeSearch.enable(__EEF);
+      if (this._legalRepresentative) {
+
+        const response = await this._processCaptureFeatureClient.removeLegalRepresentative({
+          processId: this._process.id,
+          processRowVersionId: this._process.rowVersionId,
+          patientRowVersionId: this._patient.rowVersionId,
+          legalRepresentativeRowVersionId: this._legalRepresentative.rowVersionId
+        });
+
+        this._legalRepresentative = null;
+
+        this._process.rowVersionId = response.processRowVersionId;
+        this._patient.rowVersionId = response.patientRowVersionId;
+      }
+
+      this._form.controls.legalRepresentativeSelection.reset({}, __EEF);
+      this._form.controls.legalRepresentative.disable(__EEF);
+    });
+  }
+
+  public async submitLegalRepresentative(): Promise<void> {
+
+    if (this._form.controls.patient.disabled)
+      return;
+
+    if (this._form.controls.patient.invalid)
+      return;
+
+    await this._loadingOverlay.enqueueWhile(() =>
+      this._submitLegalRepresentative(this._form.controls.legalRepresentative.getRawValue())
+    );
   }
 
   public async submitPatient(): Promise<void> {
@@ -231,15 +279,20 @@ export class MainProcessCaptureFeature implements Feature {
     private readonly _taskOverlay: CoreTaskOverlayFeature
   ) {}
 
-  private async _searchLegalRepresentative(values: Partial<{
+  private async _selectLegalRepresentative(values: Partial<{
     taxNumber: string | null;
   }>): Promise<void> {
 
-    const response = await this._processCaptureFeatureClient.searchLegalRepresentative({
+    const loadingOverlayId = `${MainProcessCaptureFeature.name}.selectLegalRepresentative`;
+
+    this._loadingOverlay.enqueue(loadingOverlayId);
+
+    const response = await this._processCaptureFeatureClient.selectLegalRepresentative({
+      processId: this._process.id,
+      processRowVersionId: this._process.rowVersionId,
+      patientRowVersionId: this._patient.rowVersionId,
       taxNumber: values.taxNumber!
     });
-
-    this._form.controls.legalRepresentativeSearch.disable(__EEF);
 
     this._form.controls.legalRepresentative.enable(__EEF);
 
@@ -259,10 +312,10 @@ export class MainProcessCaptureFeature implements Feature {
 
     const { taxNumber, name } = this._form.controls.legalRepresentative.controls;
 
-    taxNumber.disable();
+    taxNumber.disable(__EEF);
 
     if (response.legalRepresentative)
-      name.disable();
+      name.disable(__EEF);
 
     this._legalRepresentative = (response.legalRepresentative ?? null) && ({
       id: response.legalRepresentative!.id,
@@ -279,6 +332,18 @@ export class MainProcessCaptureFeature implements Feature {
       postalAddressLine2: response.legalRepresentative!.postalAddressLine2 ?? null,
       postalAddressLine3: response.legalRepresentative!.postalAddressLine3 ?? null
     });
+
+    this._process = ({
+      ...this._process,
+      rowVersionId: response.processRowVersionId
+    });
+
+    this._patient = ({
+      ...this._patient,
+      rowVersionId: response.patientRowVersionId
+    });
+
+    this._loadingOverlay.dequeue(loadingOverlayId);
   }
 
   private async _submitLegalRepresentative(values: Partial<{
@@ -304,9 +369,7 @@ export class MainProcessCaptureFeature implements Feature {
       taxNumber: this._legalRepresentative
         ? undefined
         : values.taxNumber!,
-      name: this._legalRepresentative
-        ? undefined
-        : values.name!,
+      name: values.name!,
       faxNumber: values.faxNumber || undefined,
       mobileNumber: values.mobileNumber || undefined,
       phoneNumber: values.phoneNumber || undefined,
@@ -336,15 +399,30 @@ export class MainProcessCaptureFeature implements Feature {
       postalAddressLine3: values.postalAddressLine3 || null
     });
 
-    this._patient = ({
-      ...this._patient,
-      rowVersionId: response.patientRowVersionId
-    });
+    this._process.rowVersionId = response.processRowVersionId;
+    this._patient.rowVersionId = response.patientRowVersionId;
 
-    this._process = ({
-      ...this._process,
-      rowVersionId: response.processRowVersionId
-    });
+    if (isSameObject(this._form.controls.legalRepresentative.getRawValue(), values))
+      this._form.controls.legalRepresentative.markAsPristine();
+  }
+
+  private async _submitLegalRepresentativeAutoSave(values: Partial<{
+    taxNumber: string | null;
+    name: string | null;
+    faxNumber: string | null;
+    mobileNumber: string | null;
+    phoneNumber: string | null;
+    emailAddress: string | null;
+    postalAddressArea: string | null;
+    postalAddressAreaCode: string | null;
+    postalAddressLine1: string | null;
+    postalAddressLine2: string | null;
+    postalAddressLine3: string | null;
+  }>): Promise<void> {
+    await this._taskOverlay.enqueueWhile(
+      'A guardar alterações...',
+      () => this._submitLegalRepresentative(values)
+    );
   }
 
   private async _submitPatient(values: Partial<{

@@ -11,6 +11,8 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.MainProcessCap
     {
         private readonly IEntityRepository _entities;
 
+        private readonly ILegalRepresentativeRepository _legalRepresentatives;
+
         private readonly IPatientRepository _patients;
 
         private readonly IProcessRepository _processes;
@@ -19,9 +21,10 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.MainProcessCap
 
         private readonly IUserRepository _users;
 
-        public MainProcessCaptureFeatureOptionsQueryHandler(IEntityRepository entities, IPatientRepository patients, IProcessRepository processes, IUserEntityRepository userEntities, IUserRepository users)
+        public MainProcessCaptureFeatureOptionsQueryHandler(IEntityRepository entities, ILegalRepresentativeRepository legalRepresentatives, IPatientRepository patients, IProcessRepository processes, IUserEntityRepository userEntities, IUserRepository users)
         {
             _entities = entities;
+            _legalRepresentatives = legalRepresentatives;
             _patients = patients;
             _processes = processes;
             _userEntities = userEntities;
@@ -59,6 +62,10 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.MainProcessCap
                 ct);
 
             Assert.Found(patient);
+
+            var legalRepresentative = process.LegalRepresentativeId.HasValue
+                ? (await _legalRepresentatives.GetByIdAsync(process.LegalRepresentativeId.Value, ct))
+                : null;
 
             var patientEntity = await _entities.GetByIdAsync(
                 patient.EntityId,
@@ -116,7 +123,23 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.MainProcessCap
                     process.RowVersionId,
                     processEntity.PublicId,
                     process.Number,
-                    process.Creation));
+                    process.Creation),
+                legalRepresentative is null
+                    ? null
+                    : new MainProcessCaptureFeatureLegalRepresentative(
+                        legalRepresentative.PublicId,
+                        legalRepresentative.RowVersionId,
+                        legalRepresentative.TaxNumber,
+                        legalRepresentative.Name,
+                        legalRepresentative.FaxNumber,
+                        legalRepresentative.MobileNumber,
+                        legalRepresentative.PhoneNumber,
+                        legalRepresentative.EmailAddress,
+                        legalRepresentative.PostalAddressArea,
+                        legalRepresentative.PostalAddressAreaCode,
+                        legalRepresentative.PostalAddressLine1,
+                        legalRepresentative.PostalAddressLine2,
+                        legalRepresentative.PostalAddressLine3));
         }
     }
 }

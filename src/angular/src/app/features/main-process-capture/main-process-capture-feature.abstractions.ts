@@ -24,7 +24,7 @@ export type MainProcessCaptureFeatureForm = FormGroup<{
     memberCount: FormControl<number | null>;
     amount: FormControl<number | null>;
   }>,
-  legalRepresentativeSearch: FormGroup<{
+  legalRepresentativeSelection: FormGroup<{
     taxNumber: FormControl<string | null>;
   }>,
   legalRepresentative: FormGroup<{

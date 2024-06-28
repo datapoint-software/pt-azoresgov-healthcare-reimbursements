@@ -4,11 +4,12 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.MainProcessCap
 {
     public sealed class MainProcessCaptureFeatureOptionsResult
     {
-        public MainProcessCaptureFeatureOptionsResult(IReadOnlyCollection<MainProcessCaptureFeatureEntity> entities, MainProcessCaptureFeaturePatient patient, MainProcessCaptureFeatureProcess process)
+        public MainProcessCaptureFeatureOptionsResult(IReadOnlyCollection<MainProcessCaptureFeatureEntity> entities, MainProcessCaptureFeaturePatient patient, MainProcessCaptureFeatureProcess process, MainProcessCaptureFeatureLegalRepresentative? legalRepresentative)
         {
             Entities = entities;
             Patient = patient;
             Process = process;
+            LegalRepresentative = legalRepresentative;
         }
 
         public IReadOnlyCollection<MainProcessCaptureFeatureEntity> Entities { get; }
@@ -16,5 +17,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.MainProcessCap
         public MainProcessCaptureFeaturePatient Patient { get; }
 
         public MainProcessCaptureFeatureProcess Process { get; }
+
+        public MainProcessCaptureFeatureLegalRepresentative? LegalRepresentative { get; }
     }
 }

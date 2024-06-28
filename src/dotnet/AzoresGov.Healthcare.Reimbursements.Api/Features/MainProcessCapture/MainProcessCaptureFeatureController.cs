@@ -64,22 +64,63 @@ namespace AzoresGov.Healthcare.Reimbursements.Api.Features.MainProcessCapture
                     result.Process.RowVersionId,
                     result.Process.EntityId,
                     result.Process.Number,
-                    result.Process.Creation));
+                    result.Process.Creation),
+                result.LegalRepresentative is null
+                    ? null
+                    : new MainProcessCaptureFeatureLegalRepresentativeModel(
+                        result.LegalRepresentative.Id,
+                        result.LegalRepresentative.RowVersionId,
+                        result.LegalRepresentative.TaxNumber,
+                        result.LegalRepresentative.Name,
+                        result.LegalRepresentative.FaxNumber,
+                        result.LegalRepresentative.MobileNumber,
+                        result.LegalRepresentative.PhoneNumber,
+                        result.LegalRepresentative.EmailAddress,
+                        result.LegalRepresentative.PostalAddressArea,
+                        result.LegalRepresentative.PostalAddressAreaCode,
+                        result.LegalRepresentative.PostalAddressLine1,
+                        result.LegalRepresentative.PostalAddressLine2,
+                        result.LegalRepresentative.PostalAddressLine3));
         }
 
         [Administrative]
-        [HttpPost("search-legal-representative")]
-        public async Task<MainProcessCaptureFeatureLegalRepresentativeSearchResultModel> SearchLegalRepresentativeAsync(
-            [FromBody] MainProcessCaptureFeatureLegalRepresentativeSearchModel model,
+        [HttpPost("remove-legal-representative")]
+        public async Task<MainProcessCaptureFeatureLegalRepresentativeRemoveResultModel> RemoveLegalRepresentativeAsync(
+            [FromBody] MainProcessCaptureFeatureLegalRepresentativeRemoveModel model,
             CancellationToken ct)
         {
-            var result = await _mediator.HandleQueryAsync<MainProcessCaptureFeatureLegalRepresentativeSearchQuery, MainProcessCaptureFeatureLegalRepresentativeSearchResult>(
-                new MainProcessCaptureFeatureLegalRepresentativeSearchQuery(
+            var result = await _mediator.HandleCommandAsync<MainProcessCaptureFeatureLegalRepresentativeRemoveCommand, MainProcessCaptureFeatureLegalRepresentativeRemoveResult>(
+                new MainProcessCaptureFeatureLegalRepresentativeRemoveCommand(
                     User.GetId(),
+                    model.ProcessId,
+                    model.ProcessRowVersionId,
+                    model.PatientRowVersionId,
+                    model.LegalRepresentativeRowVersionId),
+                ct);
+
+            return new MainProcessCaptureFeatureLegalRepresentativeRemoveResultModel(
+                result.ProcessRowVersionId,
+                result.PatientRowVersionId);
+        }
+
+        [Administrative]
+        [HttpPost("select-legal-representative")]
+        public async Task<MainProcessCaptureFeatureLegalRepresentativeSelectResultModel> SelectLegalRepresentativeAsync(
+            [FromBody] MainProcessCaptureFeatureLegalRepresentativeSelectModel model,
+            CancellationToken ct)
+        {
+            var result = await _mediator.HandleCommandAsync<MainProcessCaptureFeatureLegalRepresentativeSelectCommand, MainProcessCaptureFeatureLegalRepresentativeSelectResult>(
+                new MainProcessCaptureFeatureLegalRepresentativeSelectCommand(
+                    User.GetId(),
+                    model.ProcessId,
+                    model.ProcessRowVersionId,
+                    model.PatientRowVersionId,
                     model.TaxNumber),
                 ct);
 
-            return new MainProcessCaptureFeatureLegalRepresentativeSearchResultModel(
+            return new MainProcessCaptureFeatureLegalRepresentativeSelectResultModel(
+                result.ProcessRowVersionId,
+                result.PatientRowVersionId,
                 result.LegalRepresentative is null
                     ? null
                     : new MainProcessCaptureFeatureLegalRepresentativeModel(

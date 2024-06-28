@@ -1,5 +1,5 @@
 @if (form.controls.legalRepresentative.disabled) {
-  <form [formGroup]="form.controls.legalRepresentativeSearch">
+  <form [formGroup]="form.controls.legalRepresentativeSelection">
     <div class="card">
       <div class="card-header">
         <div class="card-header-title">Representante legal</div>
@@ -12,6 +12,7 @@
               <label
                 [class.is-invalid]="taxNumberFilter.invalid"
                 [class.is-required]="taxNumberFilter.required"
+                [class.text-muted]="taxNumberFilter.control.disabled"
                 [for]="taxNumberFilter.name"
                 class="form-label">
                 NIF/NIPC
@@ -25,6 +26,7 @@
                 <input
                   [class.is-invalid]="taxNumberFilter.invalid"
                   [class.is-required]="taxNumberFilter.required"
+                  [class.text-muted]="taxNumberFilter.control.disabled"
                   [formControl]="taxNumberFilter.control"
                   [id]="taxNumberFilter.name"
                   autocomplete="off"
@@ -58,6 +60,7 @@
               <label
                 [class.is-invalid]="taxNumber.invalid"
                 [class.is-required]="taxNumber.required"
+                [class.text-muted]="taxNumber.control.disabled"
                 [for]="taxNumber.name"
                 class="form-label">
                 NIF/NIPC
@@ -66,6 +69,7 @@
               <input
                 [class.is-invalid]="taxNumber.invalid"
                 [class.is-required]="taxNumber.required"
+                [class.text-muted]="taxNumber.control.disabled"
                 [formControl]="taxNumber.control"
                 [id]="taxNumber.name"
                 autocomplete="off"
@@ -80,6 +84,7 @@
               <label
                 [class.is-invalid]="name.invalid"
                 [class.is-required]="name.required"
+                [class.text-muted]="name.control.disabled"
                 [for]="name.name"
                 class="form-label">
                 Nome
@@ -88,6 +93,7 @@
               <input
                 [class.is-invalid]="name.invalid"
                 [class.is-required]="name.required"
+                [class.text-muted]="name.control.disabled"
                 [formControl]="name.control"
                 [id]="name.name"
                 autocomplete="off"

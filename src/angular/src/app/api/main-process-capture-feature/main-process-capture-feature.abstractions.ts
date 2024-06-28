@@ -25,11 +25,28 @@ export type MainProcessCaptureFeatureLegalRepresentativeModel = {
   postalAddressLine3?: string;
 };
 
-export type MainProcessCaptureFeatureLegalRepresentativeSearchModel = {
+export type MainProcessCaptureFeatureLegalRepresentativeRemoveModel = {
+  processId: string;
+  processRowVersionId: string;
+  patientRowVersionId: string;
+  legalRepresentativeRowVersionId: string;
+};
+
+export type MainProcessCaptureFeatureLegalRepresentativeRemoveResultModel = {
+  processRowVersionId: string;
+  patientRowVersionId: string;
+};
+
+export type MainProcessCaptureFeatureLegalRepresentativeSelectModel = {
+  processId: string;
+  processRowVersionId: string;
+  patientRowVersionId: string;
   taxNumber: string;
 };
 
-export type MainProcessCaptureFeatureLegalRepresentativeSearchResultModel = {
+export type MainProcessCaptureFeatureLegalRepresentativeSelectResultModel = {
+  processRowVersionId: string;
+  patientRowVersionId: string;
   legalRepresentative?: MainProcessCaptureFeatureLegalRepresentativeModel;
 };
 
@@ -40,7 +57,7 @@ export type MainProcessCaptureFeatureLegalRepresentativeSubmitModel = {
   legalRepresentativeId?: string;
   legalRepresentativeRowVersionId?: string;
   taxNumber?: string;
-  name?: string;
+  name: string;
   faxNumber?: string;
   mobileNumber?: string;
   phoneNumber?: string;
@@ -67,6 +84,7 @@ export type MainProcessCaptureFeatureOptionsResultModel = {
   entities: MainProcessCaptureFeatureEntityModel[];
   patient: MainProcessCaptureFeaturePatientModel;
   process: MainProcessCaptureFeatureProcessModel;
+  legalRepresentative?: MainProcessCaptureFeatureLegalRepresentativeModel;
 };
 
 export type MainProcessCaptureFeaturePatientModel = {

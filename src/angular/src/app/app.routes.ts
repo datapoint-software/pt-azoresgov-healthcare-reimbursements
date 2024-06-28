@@ -119,7 +119,8 @@ export const routes: Routes = [
                   {
                     path: "legal-representative",
                     component: MainProcessCaptureLegalRepresentativeComponent,
-                    canActivate: [ MainProcessCaptureLegalRepresentativeGuard.canActivate ]
+                    canActivate: [ MainProcessCaptureLegalRepresentativeGuard.canActivate ],
+                    canDeactivate: [ MainProcessCaptureLegalRepresentativeGuard.canDeactivate ]
                   },
                   {
                     path: "patient",

@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { MainProcessCaptureFeatureLegalRepresentativeSearchModel, MainProcessCaptureFeatureLegalRepresentativeSearchResultModel, MainProcessCaptureFeatureLegalRepresentativeSubmitModel, MainProcessCaptureFeatureLegalRepresentativeSubmitResultModel, MainProcessCaptureFeatureOptionsModel, MainProcessCaptureFeatureOptionsResultModel, MainProcessCaptureFeaturePatientSubmitModel, MainProcessCaptureFeaturePatientSubmitResultModel } from "@app/api/main-process-capture-feature/main-process-capture-feature.abstractions";
+import { MainProcessCaptureFeatureLegalRepresentativeRemoveModel, MainProcessCaptureFeatureLegalRepresentativeRemoveResultModel, MainProcessCaptureFeatureLegalRepresentativeSelectModel, MainProcessCaptureFeatureLegalRepresentativeSelectResultModel, MainProcessCaptureFeatureLegalRepresentativeSubmitModel, MainProcessCaptureFeatureLegalRepresentativeSubmitResultModel, MainProcessCaptureFeatureOptionsModel, MainProcessCaptureFeatureOptionsResultModel, MainProcessCaptureFeaturePatientSubmitModel, MainProcessCaptureFeaturePatientSubmitResultModel } from "@app/api/main-process-capture-feature/main-process-capture-feature.abstractions";
 import { firstValueFrom } from "rxjs";
 
 const baseAddress = "/api/features/main-process-capture";
@@ -17,10 +17,19 @@ export class MainProcessCaptureFeatureClient {
     );
   }
 
-  public async searchLegalRepresentative(model: MainProcessCaptureFeatureLegalRepresentativeSearchModel): Promise<MainProcessCaptureFeatureLegalRepresentativeSearchResultModel> {
+  public async removeLegalRepresentative(model: MainProcessCaptureFeatureLegalRepresentativeRemoveModel): Promise<MainProcessCaptureFeatureLegalRepresentativeRemoveResultModel> {
     return await firstValueFrom(
-      this._httpClient.post<MainProcessCaptureFeatureLegalRepresentativeSearchResultModel>(
-        `${baseAddress}/search-legal-representative`,
+      this._httpClient.post<MainProcessCaptureFeatureLegalRepresentativeRemoveResultModel>(
+        `${baseAddress}/remove-legal-representative`,
+        model
+      )
+    );
+  }
+
+  public async selectLegalRepresentative(model: MainProcessCaptureFeatureLegalRepresentativeSelectModel): Promise<MainProcessCaptureFeatureLegalRepresentativeSelectResultModel> {
+    return await firstValueFrom(
+      this._httpClient.post<MainProcessCaptureFeatureLegalRepresentativeSelectResultModel>(
+        `${baseAddress}/select-legal-representative`,
         model
       )
     );

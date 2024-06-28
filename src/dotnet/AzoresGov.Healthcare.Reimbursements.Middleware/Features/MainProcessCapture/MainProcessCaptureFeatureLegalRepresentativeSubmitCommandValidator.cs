@@ -32,8 +32,7 @@ namespace AzoresGov.Healthcare.Reimbursements.Middleware.Features.MainProcessCap
 
             RuleFor(c => c.Name)
                 .NotEmpty()
-                .MaximumLength(256)
-                .When(c => c.LegalRepresentativeId.HasValue is false);
+                .MaximumLength(256);
 
             RuleFor(c => c.FaxNumber)
                 .MaximumLength(16);

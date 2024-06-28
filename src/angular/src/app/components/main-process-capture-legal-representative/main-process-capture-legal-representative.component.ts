@@ -26,6 +26,10 @@ export class MainProcessCaptureLegalRepresentativeComponent {
     this._processCapture.removeLegalRepresentative();
   }
 
+  public submitLegalRepresentative(): Promise<void> {
+    return this._processCapture.submitLegalRepresentative();
+  }
+
   // #endregion
 
   constructor(
