@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { RouterLink, RouterOutlet } from "@angular/router";
 import { SuiModalComponent } from "@app/components/sui-modal/sui-modal.component";

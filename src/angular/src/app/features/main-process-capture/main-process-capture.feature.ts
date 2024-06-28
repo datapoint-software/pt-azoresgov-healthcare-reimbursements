@@ -1,11 +1,13 @@
 import { Injectable } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { MainProcessCaptureFeatureClient } from "@app/api/main-process-capture-feature/main-process-capture-feature.client";
-import { APP_INPUT_DEBOUNCE_TIME } from "@app/constants";
+import { APP_AUTO_SAVE_DEBOUNCE_TIME, APP_INPUT_DEBOUNCE_TIME } from "@app/constants";
 import { ProcessPaymentMethod, ProcessPaymentRecipient } from "@app/enums";
+import { CoreLoadingOverlayFeature } from "@app/features/core-loading-overlay/core-loading-overlay.feature";
 import { CoreTaskOverlayFeature } from "@app/features/core-task-overlay/core-task-overlay.feature";
 import { Feature } from "@app/features/feature.abstractions";
 import { MainProcessCaptureFeatureEntity, MainProcessCaptureFeatureForm, MainProcessCaptureFeatureLegalRepresentative, MainProcessCaptureFeaturePatient, MainProcessCaptureFeatureProcess, MainProcessCaptureFeatureStep } from "@app/features/main-process-capture/main-process-capture-feature.abstractions";
+import { isSameObject } from "@app/helpers";
 import { AppValidators } from "@app/validators";
 import { debounceTime, filter, map, mergeMap, tap } from "rxjs";
 
@@ -169,8 +171,9 @@ export class MainProcessCaptureFeature implements Feature {
     this._seenSteps = new Set();
     this._step = null;
 
-    this._form.controls.legalRepresentative.disable();
-    this._form.controls.patient.disable();
+    this._form.controls.patient.controls.number.disable();
+    this._form.controls.patient.controls.taxNumber.disable();
+    this._form.controls.patient.controls.name.disable();
 
     const submitTaskId = `${MainProcessCaptureFeature.name}.submit`;
     const submitTaskMessage = "A guardar alterações...";
@@ -178,11 +181,9 @@ export class MainProcessCaptureFeature implements Feature {
     this._form.controls.patient.valueChanges
       .pipe(filter(() => this._form.controls.patient.enabled))
       .pipe(filter(() => this._form.controls.patient.valid))
-      .pipe(tap(() => this._taskOverlay.enqueue(submitTaskId, submitTaskMessage)))
-      .pipe(debounceTime(APP_INPUT_DEBOUNCE_TIME))
-      .pipe(mergeMap((values) => this._submitPatient(values)))
-      .pipe(tap(() => this._taskOverlay.dequeue(submitTaskId)))
-      .subscribe(() => {});
+      .pipe(debounceTime(APP_AUTO_SAVE_DEBOUNCE_TIME))
+      .pipe(filter(() => this._form.controls.patient.pristine === false))
+      .subscribe((values) => this._submitPatientAutoSave(values));
 
     this._form.controls.legalRepresentativeSearch.valueChanges
       .pipe(filter(() => this._form.controls.legalRepresentativeSearch.enabled))
@@ -208,24 +209,6 @@ export class MainProcessCaptureFeature implements Feature {
     this._form.controls.legalRepresentativeSearch.enable(__EEF);
   }
 
-  public setPatientEnabled(enabled: boolean): void {
-
-    const { patient } = this._form.controls;
-
-    enabled
-      ? patient.enable(__EEF)
-      : patient.disable(__EEF);
-
-    if (enabled) {
-
-      const { number, taxNumber, name } = this._form.controls.patient.controls;
-
-      number.disable();
-      taxNumber.disable();
-      name.disable();
-    }
-  }
-
   public async submitPatient(): Promise<void> {
 
     if (this._form.controls.patient.disabled)
@@ -234,8 +217,8 @@ export class MainProcessCaptureFeature implements Feature {
     if (this._form.controls.patient.invalid)
       return;
 
-    await this._submitPatient(
-      this._form.controls.patient.value
+    await this._loadingOverlay.enqueueWhile(() =>
+      this._submitPatient(this._form.controls.patient.value)
     );
   }
 
@@ -243,6 +226,7 @@ export class MainProcessCaptureFeature implements Feature {
 
   constructor(
     private readonly _fb: FormBuilder,
+    private readonly _loadingOverlay: CoreLoadingOverlayFeature,
     private readonly _processCaptureFeatureClient: MainProcessCaptureFeatureClient,
     private readonly _taskOverlay: CoreTaskOverlayFeature
   ) {}
@@ -403,6 +387,26 @@ export class MainProcessCaptureFeature implements Feature {
 
     this._process.rowVersionId = response.processRowVersionId;
     this._patient.rowVersionId = response.patientRowVersionId;
+
+    if (isSameObject(this._form.controls.patient.value, values))
+      this._form.controls.patient.markAsPristine();
+  }
+
+  private async _submitPatientAutoSave(values: Partial<{
+    faxNumber: string | null;
+    mobileNumber: string | null;
+    phoneNumber: string | null;
+    emailAddress: string | null;
+    postalAddressArea: string | null;
+    postalAddressAreaCode: string | null;
+    postalAddressLine1: string | null;
+    postalAddressLine2: string | null;
+    postalAddressLine3: string | null;
+  }>): Promise<void> {
+    await this._taskOverlay.enqueueWhile(
+      'A guardar alterações...',
+      () => this._submitPatient(values)
+    );
   }
 
 }

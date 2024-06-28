@@ -7,6 +7,8 @@ export class CoreTaskOverlayFeature implements Feature {
 
   // #region State
 
+  private _id: number = 0;
+
   private _tasks: Map<string, CoreTaskOverlayFeatureTask> = new Map();
 
   // #endregion
@@ -35,6 +37,21 @@ export class CoreTaskOverlayFeature implements Feature {
       message,
       enqueuement: new Date()
     }))
+  }
+
+  public async enqueueWhile<T>(message: string | null, fn: () => Promise<T>): Promise<T> {
+
+    const id = `generic-${++this._id}`;
+
+    this.enqueue(id, message);
+
+    try {
+      return await fn();
+    } catch (e) {
+      throw e;
+    } finally {
+      this.dequeue(id);
+    }
   }
 
   // #endregion

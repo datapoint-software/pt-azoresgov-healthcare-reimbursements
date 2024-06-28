@@ -124,7 +124,8 @@ export const routes: Routes = [
                   {
                     path: "patient",
                     component: MainProcessCapturePatientComponent,
-                    canActivate: [ MainProcessCapturePatientGuard.canActivate ]
+                    canActivate: [ MainProcessCapturePatientGuard.canActivate ],
+                    canDeactivate: [ MainProcessCapturePatientGuard.canDeactivate ]
                   },
                   {
                     path: "payment",

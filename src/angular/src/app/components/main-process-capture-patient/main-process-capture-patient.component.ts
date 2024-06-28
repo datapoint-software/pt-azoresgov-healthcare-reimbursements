@@ -1,5 +1,6 @@
 import { Component, ViewChild } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
+import { Router, UrlTree } from "@angular/router";
 import { SuiFormGroupComponent } from "@app/components/sui-form-group/sui-form-group.component";
 import { SuiModalComponent } from "@app/components/sui-modal/sui-modal.component";
 import { MainProcessCaptureFeatureForm } from "@app/features/main-process-capture/main-process-capture-feature.abstractions";
@@ -13,13 +14,6 @@ import { MainProcessCaptureFeature } from "@app/features/main-process-capture/ma
 })
 export class MainProcessCapturePatientComponent {
 
-  // #region State
-
-  @ViewChild('notice')
-  private _notice: SuiModalComponent = undefined!;
-
-  // #endregion
-
   // #region State accessors
 
   public get form(): MainProcessCaptureFeatureForm {
@@ -30,14 +24,6 @@ export class MainProcessCapturePatientComponent {
 
   // #region State actions
 
-  public setPatientEnabled(enabled: boolean): void {
-
-    this._processCapture.setPatientEnabled(enabled);
-
-    if (enabled)
-      this._notice.open();
-  }
-
   public submitPatient(): Promise<void> {
     return this._processCapture.submitPatient();
   }
@@ -45,6 +31,7 @@ export class MainProcessCapturePatientComponent {
   // #endregion
 
   constructor(
-    private readonly _processCapture: MainProcessCaptureFeature
+    private readonly _processCapture: MainProcessCaptureFeature,
+    private readonly _router: Router
   ) {}
 }

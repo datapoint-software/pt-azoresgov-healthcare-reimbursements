@@ -7,6 +7,8 @@ export class CoreLoadingOverlayFeature implements Feature {
 
   // #region State
 
+  private _id: number = 0;
+
   private _items: Map<string, CoreLoadingOverlayFeatureItem> = new Map<string, CoreLoadingOverlayFeatureItem>();
 
   // #endregion
@@ -38,6 +40,21 @@ export class CoreLoadingOverlayFeature implements Feature {
       id,
       enqueuement: new Date()
     });
+  }
+
+  public async enqueueWhile<T>(fn: () => Promise<T>): Promise<T> {
+
+    const id = `generic-${++this._id}`;
+
+    this.enqueue(id);
+
+    try {
+      return await fn();
+    } catch (e) {
+      throw e;
+    } finally {
+      this.dequeue(id);
+    }
   }
 
   // #endregion
